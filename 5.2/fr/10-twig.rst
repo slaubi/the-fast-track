@@ -95,7 +95,7 @@ La notation ``{% %}`` dans un template indique des *actions* et des éléments d
 La notation ``{{ }}`` est utilisée pour *afficher* quelque chose. ``{{ conference }}`` affiche la représentation de la conférence (le résultat de l'appel à la méthode``__toString`` de l'objet ``Conference``).
 
 Utiliser Twig dans un contrôleur
---------------------------------
+---------------------------------
 
 Mettez à jour le contrôleur pour générer le contenu du template Twig :
 
@@ -145,7 +145,7 @@ Dans le code du contrôleur, la méthode ``render()`` génère le rendu du templ
 Un contrôleur est une classe PHP standard. Nous n'avons même pas besoin d'étendre la classe ``AbstractController`` si nous voulons être explicites sur nos dépendances. Vous pouvez donc supprimer l'héritage (mais ne le faites pas, car nous utiliserons les raccourcis qu'il fournit dans les prochaines étapes).
 
 Créer la page d'une conférence
-------------------------------
+--------------------------------
 
 Chaque conférence devrait avoir une page dédiée à l'affichage de ses commentaires. L'ajout d'une nouvelle page consiste à ajouter un contrôleur, à définir une route et à créer le template correspondant.
 
@@ -433,7 +433,7 @@ Vous devriez maintenant pouvoir naviguer dans les commentaires avec les liens "P
     :figclass: with-browser
 
 Optimiser le contrôleur
------------------------
+------------------------
 
 Vous avez peut-être remarqué que les deux méthodes présentes dans ``ConferenceController`` prennent un environnement Twig comme argument. Au lieu de l'injecter dans chaque méthode, utilisons plutôt une injection dans le constructeur (ce qui rend la liste des arguments plus courte et moins redondante) :
 

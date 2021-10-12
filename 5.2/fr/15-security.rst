@@ -1,5 +1,5 @@
 Sécuriser l'interface d'administration
-======================================
+=======================================
 
 L'interface d'administration ne doit être accessible que par des personnes autorisées. La sécurisation de cette zone du site peut se faire à l'aide du composant Symfony Security.
 
@@ -14,7 +14,7 @@ Comme pour Twig, le composant de sécurité est déjà installé par des dépend
     $ symfony composer req security
 
 Définir une entité User
------------------------
+-------------------------
 
 Même si les internautes ne pourront pas créer leur propre compte sur le site, nous allons créer un système d'authentification entièrement fonctionnel pour l'admin. Nous n'aurons donc qu'un seul User, l'admin du site.
 
@@ -93,7 +93,7 @@ Il est temps de générer une migration et de migrer la base de données :
     $ symfony console doctrine:migrations:migrate -n
 
 Générer un mot de passe pour l'admin
-------------------------------------
+--------------------------------------
 
 .. index::
     single: Security;Encoding Passwords
@@ -133,7 +133,7 @@ Choisissez ce que vous voulez comme mot de passe et exécutez la commande suivan
      [OK] Password encoding succeeded
 
 Créer un admininistrateur
--------------------------
+--------------------------
 
 .. index::
     single: Symfony CLI;run psql
@@ -149,7 +149,7 @@ Insérez l'admin grâce à une requête SQL :
 Notez l'échappement du caractère ``$`` dans le mot de passe ; échappez tous les caractères qui en ont besoin !
 
 Configurer le système d'authentification
-----------------------------------------
+-----------------------------------------
 
 .. index::
     single: Command;make:auth
@@ -223,7 +223,7 @@ Comme l'indique la sortie de la commande, nous devons personnaliser la route dan
         $ symfony console debug:router
 
 Ajouter les règles de contrôle d'accès
---------------------------------------
+-----------------------------------------
 
 .. index::
     single: Security;Authorization

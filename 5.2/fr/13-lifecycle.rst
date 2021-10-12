@@ -1,12 +1,12 @@
 Gérer le cycle de vie des objets Doctrine
-=========================================
+==========================================
 
 Lors de la création d'un nouveau commentaire, ce serait bien si la date ``createdAt`` était automatiquement définie à la date et à l'heure courantes.
 
 Doctrine a différentes façons de manipuler les objets et leurs propriétés pendant leur cycle de vie (avant la création de la ligne dans la base de données, après la mise à jour de la ligne, etc.).
 
 Définir des *lifecycle callbacks*
----------------------------------
+----------------------------------
 
 .. index::
     single: Doctrine;Lifecycle
@@ -48,7 +48,7 @@ Lorsque le comportement n'a besoin d'aucun service et ne doit être appliqué qu
 L'*événement* ``@ORM\PrePersist`` est déclenché lorsque l'objet est enregistré dans la base de données pour la toute première fois. Lorsque cela se produit, la méthode ``setCreatedAtValue()`` est appelée et la date et l'heure courantes sont utilisées pour la valeur de la propriété ``createdAt``.
 
 Ajouter des *slugs* aux conférences
------------------------------------
+------------------------------------
 
 Les URLs des conférences n'ont pas de sens : ``/conference/1``. Plus important encore, ils dépendent d'un détail d'implémentation (la clé primaire de la base de données est révélée).
 
@@ -177,7 +177,7 @@ Comme vous l'aurez deviné, nous devons exécuter la danse de la migration :
     $ symfony console doctrine:migrations:migrate
 
 Générer des slugs
------------------
+-------------------
 
 .. index::
     single: Components;String
@@ -224,7 +224,7 @@ Dans la classe ``Conference``, ajoutez une méthode ``computeSlug()``, qui calcu
 La méthode ``computeSlug()`` ne calcule un slug que lorsque le slug courant est vide ou défini à la valeur spéciale ``-``. Pourquoi avons-nous besoin de cette valeur particulière ``-`` ? Parce que lors de l'ajout d'une conférence dans l'interface d'administration, le slug est nécessaire. Nous avons donc besoin d'une valeur non vide qui indique à l'application que nous voulons que le slug soit généré automatiquement.
 
 Définir un *lifecycle callback* complexe
-----------------------------------------
+-----------------------------------------
 
 .. index::
     single: Doctrine;Entity Listener

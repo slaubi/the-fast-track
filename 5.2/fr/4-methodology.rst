@@ -1,10 +1,10 @@
 Adopter une méthodologie
-========================
+=========================
 
 Enseigner, c'est répéter la même chose encore et encore. Je ne le ferai pas, c'est promis. À la fin de chaque étape, vous devriez faire une petite danse et sauvegarder votre travail. C'est comme faire un ``Ctrl+S`` mais pour un site web.
 
 Mettre en place une stratégie Git
----------------------------------
+----------------------------------
 
 .. index::
     single: Git;add
@@ -41,7 +41,7 @@ Les chaînes bizarres sont des marqueurs ajoutés par Symfony Flex pour qu'il sa
 Si vous déployez sur SymfonyCloud, vous avez déjà une copie du dépôt Git, mais vous ne devriez pas vous y fier. Il est réservé pour le déploiement. Ce n'est pas une sauvegarde de votre travail.
 
 Déploiement continu en production
----------------------------------
+----------------------------------
 
 .. index::
     single: Symfony CLI;deploy

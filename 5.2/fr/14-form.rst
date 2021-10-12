@@ -8,7 +8,7 @@ Accepter des commentaires avec les formulaires
 Il est temps de permettre aux personnes présentes de donner leur avis sur les conférences. Elles feront part de leurs commentaires au moyen d'un *formulaire HTML*.
 
 Générer un *form type*
-----------------------
+------------------------
 
 .. index::
     single: Command;make:form
@@ -208,7 +208,7 @@ La contrainte sur l'image fonctionne en vérifiant le type mime. Ajoutez le comp
     :figclass: with-browser
 
 Valider des modèles
--------------------
+--------------------
 
 Le form type configure le rendu du formulaire (grâce à un peu de validation HTML5). Voici le formulaire HTML généré :
 
@@ -282,7 +282,7 @@ Nous devons également ajouter certaines contraintes de validation à l'entité 
          /**
 
 Gérer un formulaire
--------------------
+--------------------
 
 Le code que nous avons écrit jusqu'à présent est suffisant pour afficher le formulaire.
 
@@ -411,7 +411,7 @@ Le paramètre ``bind`` permet à Symfony d'injecter la valeur à chaque fois qu'
 Essayez d'uploader un fichier PDF au lieu d'une photo. Vous devriez voir les messages d'erreur en action. Le design est encore assez laid, mais ne vous inquiétez pas, tout deviendra beau en quelques étapes lorsque nous travaillerons dessus. Pour les formulaires, nous allons changer une ligne de configuration pour styliser tous leurs éléments.
 
 Déboguer des formulaires
-------------------------
+-------------------------
 
 Lorsqu'un formulaire est soumis et que quelque chose ne fonctionne pas correctement, utilisez le panneau "Form" du Symfony Profiler. Il vous donne des informations sur le formulaire, toutes ses options, les données soumises et comment elles sont converties en interne. Si le formulaire contient des erreurs, elles seront également répertoriées.
 
@@ -443,7 +443,7 @@ Cliquez dessus pour accéder au profileur de la requête POST, et allez dans le 
     :figclass: with-browser
 
 Afficher les photos uploadées dans l'interface d'administration
----------------------------------------------------------------
+----------------------------------------------------------------
 
 L'interface d'administration affiche actuellement le nom du fichier photo, mais nous voulons voir la vraie photo :
 
@@ -472,7 +472,7 @@ L'interface d'administration affiche actuellement le nom du fichier photo, mais 
              ;
 
 Exclure les photos uploadées de Git
------------------------------------
+------------------------------------
 
 Ne *commitez* pas encore ! Nous ne voulons pas stocker les images uploadées dans le dépôt Git. Ajoutez le dossier ``/public/uploads`` au fichier ``.gitignore`` :
 
@@ -488,7 +488,7 @@ Ne *commitez* pas encore ! Nous ne voulons pas stocker les images uploadées dan
      /.env.local
 
 Stocker les fichiers uploadés sur les serveurs de production
-------------------------------------------------------------
+-------------------------------------------------------------
 
 La dernière étape consiste à stocker les fichiers uploadés sur les serveurs de production. Pourquoi devrions-nous faire quelque chose de spécial ? Parce que la plupart des plates-formes modernes de cloud utilisent des conteneurs en lecture seule pour diverses raisons. SymfonyCloud n'échappe pas à cette règle.
 

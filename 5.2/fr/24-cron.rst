@@ -1,5 +1,5 @@
 Exécuter des crons
-==================
+===================
 
 .. index::
     single: Cron
@@ -71,7 +71,7 @@ Créez des méthodes utilitaires dans le repository des commentaires pour trouve
     Pour les requêtes plus complexes, il est parfois utile de jeter un coup d'œil aux requêtes SQL générées (elles se trouvent dans les logs et dans le profileur de requêtes web).
 
 Utiliser des constantes de classe, des paramètres de conteneur et des variables d'environnement
------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 
 .. index::
     single: Container;Parameters
@@ -89,7 +89,7 @@ Voici quelques règles de base pour décider quelle abstraction utiliser :
 * Pour tout le reste, stockez la valeur dans le code, comme dans une *constante de classe*.
 
 Créer une commande de console
------------------------------
+------------------------------
 
 Supprimer les anciens commentaires est une tâche idéale pour un *cron job*. Il faut le faire de façon régulière, et un petit retard n'a pas d'impact majeur.
 

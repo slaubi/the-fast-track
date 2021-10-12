@@ -1,5 +1,5 @@
 De zéro à la production
-=======================
+=========================
 
 J'aime aller vite et je veux que notre petit projet soit réalisé le plus rapidement possible. Du genre en production, dès maintenant. Comme nous n'avons encore rien développé, nous allons commencer par déployer une simple page "En construction". Vous allez adorer !
 
@@ -58,7 +58,7 @@ Le répertoire ``vendor/`` contient tous les paquets installés par Composer, y 
 C'est tout ce que vous avez besoin de savoir pour l'instant.
 
 Créer des ressources publiques
-------------------------------
+-------------------------------
 
 Tout ce qui se trouve dans le répertoire ``public/`` est accessible par un navigateur. Par exemple, si vous déplacez votre fichier GIF animé (nommez-le ``under-construction.gif``) dans un nouveau répertoire ``public/images/``, il sera alors disponible à une URL comme ``https://localhost/images/under-construction.gif``.
 
@@ -132,7 +132,7 @@ Pour éviter que nos logs ne se remplissent de messages d'erreur 404 à cause d'
     $ git commit -m'Add a favicon'
 
 Se préparer pour la production
-------------------------------
+-------------------------------
 
 .. index::
     single: SymfonyCloud;Initialization

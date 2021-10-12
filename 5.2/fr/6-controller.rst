@@ -1,5 +1,5 @@
 Créer un contrôleur
-===================
+=====================
 
 .. index::
     single: Controller
@@ -56,7 +56,7 @@ Pour pouvoir utiliser les annotations, nous devons ajouter une autre dépendance
 Vous vous demandez peut-être comment vous pouvez deviner le nom du paquet à installer pour une fonctionnalité donnée ? La plupart du temps, vous n'avez pas besoin de le savoir, car Symfony propose le nom du paquet à installer dans ses messages d'erreur. Par exemple, exécuter ``symfony make:controller`` sans le paquet ``annotations`` se terminerait par une exception contenant une indication sur le bon paquet à installer.
 
 Générer un contrôleur
----------------------
+------------------------
 
 .. index::
     single: Command;make:controller

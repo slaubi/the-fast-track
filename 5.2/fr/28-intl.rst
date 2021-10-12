@@ -133,7 +133,7 @@ Nous avons presque fini. Cependant, nous n'avons plus de route correspondant à 
 Maintenant que toutes les routes principales bénéficient de la locale, remarquez que les URLs générées sur les pages prennent automatiquement en compte la locale courante.
 
 Ajouter un sélecteur de locale
-------------------------------
+-------------------------------
 
 .. index::
     single: Twig;path
@@ -448,7 +448,7 @@ Nous n'avons pas encore terminé car nous devons maintenant fournir la traductio
     </xliff>
 
 Mettre à jour les tests fonctionnels
-------------------------------------
+-------------------------------------
 
 N'oubliez pas de mettre à jour les tests fonctionnels pour prendre en compte les URLs et les changements de contenu :
 

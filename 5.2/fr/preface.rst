@@ -36,7 +36,17 @@ Mais pourquoi voudrions-nous de la documentation non anglaise dans un monde tech
 
 Comme vous pouvez l'imaginer, traduire plus de 300 pages représente un travail énorme, et je tiens à remercier toutes les personnes qui ont contribué à la traduction de ce livre :
 
-TRANSLATOR_LIST
+* Guillaume Sarramegna
+* Joachim Martin
+* Clément Delmas
+* Guillaume Sylvestre
+* Vincent MARY
+* Steeve Christen
+* Romain Gautier
+* Boris Baskovec
+* Jean-Vincent QUILICHINI
+* Gary Houbre
+* Laurent Prédine
 
 Entreprises sponsors
 --------------------

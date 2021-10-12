@@ -1,10 +1,10 @@
 Écouter les événements
-======================
+=========================
 
 Il manque une barre de navigation au layout actuel pour revenir à la page d'accueil ou pour passer d'une conférence à l'autre.
 
 Ajouter un en-tête au site web
-------------------------------
+-------------------------------
 
 .. index::
     single: Twig;for
@@ -34,8 +34,7 @@ Tout ce qui doit être affiché sur toutes les pages web, comme un en-tête, doi
          </body>
      </html>
 
-L'ajout de ce code au layout signifie que tous les templates qui l'étendent doivent définir une variable ``conferences``, créée et 
-transmise par leurs contrôleurs.
+L'ajout de ce code au layout signifie que tous les templates qui l'étendent doivent définir une variable ``conferences``, créée et  transmise par leurs contrôleurs.
 
 Comme nous n'avons que deux contrôleurs, vous *pourriez* procéder comme ceci (ne modifiez pas votre code car nous verrons très vite une meilleure façon de faire) :
 
@@ -65,7 +64,7 @@ Imaginez devoir mettre à jour des dizaines de contrôleurs. Et faire la même c
 Twig a la notion de variables globales. Une *variable globale* est disponible dans tous les templates générés. Vous pouvez les définir dans un fichier de configuration, mais cela ne fonctionne que pour les valeurs statiques. Pour ajouter toutes les conférences comme variable globale Twig, nous allons créer un *listener*.
 
 Découvrir les événements Symfony
---------------------------------
+-----------------------------------
 
 .. index::
     single: Components;Event Dispatcher
@@ -84,7 +83,7 @@ Tout paquet ou bundle peut également déclencher ses propres événements pour 
 Pour éviter d'avoir un fichier de configuration qui décrit les événements qu'un listener veut écouter, créez un subscriber. Un subscriber est un listener avec une méthode statique ``getSubscribedEvents()`` qui retourne sa configuration. Ceci permet aux subscribers d'être enregistrés automatiquement dans le dispatcher Symfony.
 
 Implémenter un subscriber
--------------------------
+--------------------------
 
 .. index::
     single: Event;Subscriber
@@ -142,7 +141,7 @@ Maintenant, vous pouvez ajouter autant de contrôleurs que vous le souhaitez : l
     Nous parlerons d'une alternative bien plus performante dans une prochaine étape.
 
 Trier les conférences par année et par ville
---------------------------------------------
+----------------------------------------------
 
 Le tri de la liste des conférences par année peut faciliter la navigation. Nous pourrions créer notre propre méthode pour récupérer et trier toutes les conférences, mais nous allons plutôt remplacer l'implémentation par défaut de la méthode ``findAll()``, afin que le tri s'applique partout :
 

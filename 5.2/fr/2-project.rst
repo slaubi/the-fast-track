@@ -1,5 +1,5 @@
 Présentation du projet
-======================
+=======================
 
 Nous devons trouver un projet sur lequel travailler. C'est un certain défi car nous devons choisir un projet assez vaste pour couvrir complètement Symfony, mais en même temps, il devrait être assez petit ; je ne veux pas que vous vous ennuyiez à implémenter des fonctionnalités similaires plusieurs fois.
 
@@ -13,14 +13,14 @@ Nous tenons notre sujet. Le projet a pour but d'obtenir un retour d'expérience 
 Le *projet* comprendra plusieurs *applications* : une application web traditionnelle avec une interface HTML, une API et une SPA pour les téléphones mobiles. Qu'en dites-vous ?
 
 La maîtrise s’acquiert par la pratique
---------------------------------------
+-----------------------------------------
 
 La maîtrise s’acquiert par la pratique. Point final. Lire un livre sur Symfony, c'est bien. Coder une application sur votre ordinateur tout en lisant un livre sur Symfony, c'est encore mieux. Ce livre est très spécial puisque tout a été fait pour que vous puissiez suivre, coder, et obtenir les mêmes résultats que ceux que j'avais localement sur ma machine lorsque je l'ai fait.
 
 Le livre contient tout le code que vous devez écrire ainsi que toutes les commandes que vous devez exécuter pour arriver au résultat final. Il ne manque aucun code. Toutes les commandes sont présentes. C'est possible parce que les applications développées avec Symfony n'ont besoin que de très peu de code pour démarrer. La plupart du code que nous allons écrire ensemble concerne la *logique métier* du projet. Tout le reste est automatisé ou généré automatiquement pour nous.
 
 À propos du diagramme de l'infrastructure finale
-------------------------------------------------
+-------------------------------------------------
 
 Même si l'idée du projet semble simple, nous n'allons pas construire un projet de type "Hello World". Nous n'utiliserons pas seulement PHP et une base de données.
 
@@ -47,7 +47,7 @@ L'un des avantages majeurs d'utiliser un framework est la faible quantité de co
 Envie de relever le défi ?
 
 Récupérer le code source du projet
-----------------------------------
+------------------------------------
 
 Pour continuer sur le thème à l'ancienne, j'aurais pu créer un CD contenant le code source, non ? Mais que diriez-vous d'un dépôt Git à la place ?
 
@@ -55,16 +55,16 @@ Pour continuer sur le thème à l'ancienne, j'aurais pu créer un CD contenant l
     single: Project;Git Repository
     single: Git;clone
 
-Clonez le `dépôt du livre d'or <https://github.com/the-fast-track/book-5.0-1>`_ quelque part sur votre machine :
+Clonez le `dépôt du livre d'or <https://github.com/the-fast-track/book-5.2-2>`_ quelque part sur votre machine :
 
 .. code-block:: bash
     :class: ignore
 
-    $ symfony new --version=5.0-1 --book guestbook
+    $ symfony new --version=5.2-2 --book guestbook
 
 Ce dépôt contient tout le code source du livre.
 
-Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-5.0-1``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
+Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-5.2-2``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
 
 Le code source est synchronisé à 100% avec le code source du livre (utilisez l'URL exacte du dépôt, indiquée ci-dessus). Essayer de synchroniser manuellement les changements du livre avec le code source du dépôt est presque impossible. J'ai tenté de le faire et je n'y suis pas arrivé. C'est tout simplement impossible. Surtout pour des livres comme ceux que j'écris, qui vous racontent l'histoire du développement d'un site web. Comme chaque chapitre dépend des précédents, un changement sur l'un d'eux peut avoir des conséquences sur tous les suivants.
 

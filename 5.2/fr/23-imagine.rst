@@ -107,7 +107,7 @@ Le redimensionnement d'une image peut être effectué via la classe de service s
 Après avoir optimisé la photo, nous stockons le nouveau fichier à la place de l'original. Par contre, vous voudrez peut-être garder l'image originale.
 
 Ajouter une nouvelle étape au workflow
---------------------------------------
+---------------------------------------
 
 Modifiez le workflow pour gérer le nouvel état :
 
@@ -174,7 +174,7 @@ Notez que ``$photoDir`` est automatiquement injecté parce que nous avons défin
                 $photoDir: "%kernel.project_dir%/public/uploads/photos"
 
 Enregistrer des données uploadées en production
------------------------------------------------
+-------------------------------------------------
 
 .. index::
     single: SymfonyCloud;File Service

@@ -15,7 +15,7 @@ Symfony s'appuie sur PHPUnit pour les tests unitaires. Installons-le :
     $ symfony composer req phpunit --dev
 
 Écrire des tests unitaires
---------------------------
+---------------------------
 
 .. index::
     single: Test;Unit Tests
@@ -129,7 +129,7 @@ Ajoutons des tests pour les cas qui fonctionnent :
 Les *data providers* de PHPUnit nous permettent de réutiliser la même logique de test pour plusieurs scénarios.
 
 Écrire des tests fonctionnels pour les contrôleurs
---------------------------------------------------
+----------------------------------------------------
 
 .. index::
     single: Test;Functional Tests
@@ -218,7 +218,7 @@ Pour faire fonctionner les tests, nous devons définir la clé secrète ``AKISME
     Comme vu dans le chapitre précédent, ``APP_ENV=test`` signifie que la variable d'environnement ``APP_ENV`` est définie pour le contexte de la commande. Sous Windows, utilisez plutôt ``--env=test`` : ``symfony console secrets:set AKISMET_KEY --env=test``
 
 Utiliser une base de données de test
-------------------------------------
+-------------------------------------
 
 .. index::
     single: Test;Database
@@ -246,7 +246,7 @@ Notez que nous définissons ``APP_ENV`` explicitement quand nous exécutons PHPU
     Lorsqu'un test échoue, il peut être utile d'analyser l'objet Response. Accédez-y grâce à ``$client->getResponse()`` et faites un ``echo`` pour voir à quoi il ressemble.
 
 Définir des *fixtures* (données de test)
-----------------------------------------
+------------------------------------------
 
 .. index::
     single: Doctrine;Fixtures
@@ -361,7 +361,7 @@ Lorsque nous chargerons les données de test, toutes les données présentes ser
         $ symfony console debug:autowiring encoder
 
 Charger des données de test
----------------------------
+----------------------------
 
 .. index:: ! Command;doctrine:fixtures:load
 
@@ -491,7 +491,7 @@ Si vous voulez vérifier le résultat dans un navigateur, arrêtez le serveur we
     :figclass: with-browser
 
 Recharger les données de test
------------------------------
+------------------------------
 
 .. index::
     single: Command;doctrine:fixtures:load
@@ -544,7 +544,7 @@ Chaque fois que vous voulez exécuter les tests, utilisez ``make tests`` :
     $ make tests
 
 Réinitialiser la base de données après chaque test
---------------------------------------------------
+-----------------------------------------------------
 
 .. index::
     single: PHPUnit;Performance
@@ -702,7 +702,7 @@ Vous pouvez ensuite écrire des tests qui utilisent un vrai navigateur Google Ch
 La variable d'environnement ``SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` contient l'URL du serveur web local.
 
 Exécuter des tests fonctionnels de boîte noire avec Blackfire
--------------------------------------------------------------
+---------------------------------------------------------------
 
 Une autre façon d'effectuer des tests fonctionnels est d'utiliser le `lecteur Blackfire <https://blackfire.io/player>`_. En plus de ce que vous pouvez faire avec les tests fonctionnels, il peut également effectuer des tests de performance.
 

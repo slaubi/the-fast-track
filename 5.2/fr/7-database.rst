@@ -1,5 +1,5 @@
 Mettre en place une base de données
-===================================
+====================================
 
 .. index::
     single: Database
@@ -11,7 +11,7 @@ Un commentaire est mieux décrit par une structure de données fixe : un nom, un
 PostgreSQL est le moteur de base de données que nous allons utiliser.
 
 Ajouter PostgreSQL à Docker Compose
------------------------------------
+------------------------------------
 
 .. index::
     single: Docker;PostgreSQL
@@ -42,7 +42,7 @@ Nous exposons également le port PostgreSQL (``5432``) du conteneur à l'hôte l
     L'extension ``pdo_pgsql`` a déjà dû être installée précédemment lors de l'installation de PHP.
 
 Démarrer Docker Compose
------------------------
+------------------------
 
 Lancez Docker Compose en arrière-plan (``-d``) :
 
@@ -69,7 +69,7 @@ S'il n'y a pas de conteneurs en cours d'exécution ou si la colonne ``State`` n'
     $ docker-compose logs
 
 Accéder à la base de données locale
------------------------------------
+--------------------------------------
 
 L'utilitaire en ligne de commande ``psql`` peut parfois s'avérer utile. Mais vous devez vous rappelez des informations d'identification et du nom de la base de données. Encore moins évident, vous devez aussi connaître le port local sur lequel la base de données tourne sur l'hôte. Docker choisit un port aléatoire pour que vous puissiez travailler sur plus d'un projet en utilisant PostgreSQL en même temps (le port local fait partie de la sortie de ``docker-compose ps``).
 
@@ -97,7 +97,7 @@ Grâce à ces conventions, accéder à la base de données avec ``symfony run`` 
         $ docker-compose exec database psql main
 
 Sauvegarder et restaurer les données de la base
------------------------------------------------
+------------------------------------------------
 
 .. index::
     single: Database;Dump
@@ -123,7 +123,7 @@ Et restaurer les données :
     N'appelez jamais ``docker-compose down`` si vous ne voulez pas perdre de données, ou faites une sauvegarde d'abord.
 
 Ajouter PostgreSQL à SymfonyCloud
----------------------------------
+----------------------------------
 
 .. index::
     single: SymfonyCloud;PostgreSQL
@@ -198,7 +198,7 @@ Commitez ces modifications et redéployez-les vers SymfonyCloud :
     $ symfony deploy
 
 Accéder à la base de données de SymfonyCloud
---------------------------------------------
+-----------------------------------------------
 
 PostgreSQL fonctionne maintenant localement via Docker et en production sur SymfonyCloud.
 
@@ -272,7 +272,7 @@ Lorsqu'un tunnel est ouvert vers SymfonyCloud avec l'option ``--expose-env-vars`
     $ symfony tunnel:close
 
 Décrire votre infrastructure
-----------------------------
+-----------------------------
 
 Vous ne vous en êtes peut-être pas encore rendu compte, mais le fait que l'infrastructure soit stockée dans des fichiers à côté du code aide beaucoup. Docker et SymfonyCloud utilisent des fichiers de configuration pour décrire l'infrastructure du projet. Lorsqu'une nouvelle fonctionnalité nécessite un service supplémentaire, le code et les modifications de l'infrastructure font partie du même patch.
 

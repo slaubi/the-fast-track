@@ -1,5 +1,5 @@
 Empêcher le spam avec une API
-=============================
+==============================
 
 .. index::
     single: Spam
@@ -17,7 +17,7 @@ S'inscrire sur Akismet
 Créez un compte gratuit sur `akismet.com <https://akismet.com>`_ et récupérez la clé de l'API Akismet.
 
 Ajouter une dépendance au composant Symfony HTTPClient
-------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: Components;HTTP Client
@@ -32,7 +32,7 @@ Pour effectuer des appels à l'API, utilisez le composant Symfony HttpClient :
     $ symfony composer req http-client
 
 Concevoir une classe de vérification de spam
---------------------------------------------
+---------------------------------------------
 
 Créez une nouvelle classe dans ``src/`` nommée ``SpamChecker`` pour contenir la logique d'appel à l'API d'Akismet et l'interprétation de ses réponses :
 
@@ -144,7 +144,7 @@ Pour la production, une variable d'environnement "réelle" doit être définie.
 Ça fonctionne bien, mais la gestion de nombreuses variables d'environnement peut devenir lourde. Dans un tel cas, Symfony a une "meilleure" alternative pour le stockage des chaînes secrètes.
 
 Stocker des chaînes secrètes
-----------------------------
+------------------------------
 
 .. index::
     single: Secret
@@ -225,7 +225,7 @@ Une façon simple de vérifier la présence de spam lorsqu'un nouveau commentair
 Vérifiez qu'il fonctionne bien.
 
 Gérer les chaînes secrètes en production
-----------------------------------------
+-------------------------------------------
 
 .. index::
     single: SymfonyCloud;Secret

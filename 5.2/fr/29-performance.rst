@@ -1,5 +1,5 @@
 Gérer les performances
-======================
+=======================
 
 .. index::
     single: Blackfire
@@ -22,7 +22,7 @@ Même de petites améliorations de performance peuvent faire la différence, en 
 La meilleure façon de trouver des optimisations de performance est d'utiliser un *profileur*. L'option la plus populaire de nos jours est `Blackfire <https://blackfire.io>`_ (*Avertissement* : je suis aussi le fondateur du projet Blackfire).
 
 Découvrir Blackfire
--------------------
+--------------------
 
 Blackfire est composé de plusieurs parties :
 
@@ -119,7 +119,7 @@ Vous pouvez maintenant lancer le nouveau conteneur :
     $ docker-compose up -d
 
 Réparer une installation Blackfire en panne
--------------------------------------------
+--------------------------------------------
 
 Si vous obtenez une erreur pendant le profilage, augmentez le niveau de log Blackfire pour obtenir plus d'informations :
 
@@ -311,7 +311,7 @@ Dans l'étape traitant du "Cache", nous avons ajouté une couche cache pour amé
 Vous devriez toujours mesurer l'impact de toute optimisation que vous faites avec un profileur. Blackfire facilite l'analyse grâce à sa `fonction de comparaison <https://blackfire.io/docs/cookbooks/understanding-comparisons>`_.
 
 Écrire les tests fonctionnels de boîte noire
---------------------------------------------
+----------------------------------------------
 
 .. index::
     single: Blackfire;Player
@@ -398,7 +398,7 @@ Ou en production :
 Les scénarios Blackfire peuvent également déclencher des profils pour chaque requête et exécuter des tests de performance en ajoutant l'option ``--blackfire``.
 
 Automatiser les contrôles de performance
-----------------------------------------
+-----------------------------------------
 
 La gestion de la performance ne consiste pas seulement à améliorer la performance du code existant, mais aussi à vérifier qu'aucune régression de performance n'est introduite.
 

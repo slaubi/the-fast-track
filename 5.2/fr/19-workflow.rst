@@ -1,5 +1,5 @@
 Prendre des décisions avec un workflow
-======================================
+=======================================
 
 .. index::
     single: Components;Workflow
@@ -22,7 +22,7 @@ La mise en œuvre de cette logique n'est pas trop complexe, mais vous pouvez ima
     $ symfony composer req workflow
 
 Décrire des workflows
----------------------
+----------------------
 
 Le workflow de commentaires peut être décrit dans le fichier ``config/packages/workflow.yaml`` :
 
@@ -193,7 +193,7 @@ Mettons en place une validation automatique en attendant le prochain chapitre :
 Exécutez ``symfony server:log`` et ajoutez un commentaire sur le site pour voir toutes les transitions se produire les unes après les autres.
 
 Trouver des services depuis le conteneur d'injection de dépendances
--------------------------------------------------------------------
+--------------------------------------------------------------------
 
 .. index::
     single: Command;debug:container

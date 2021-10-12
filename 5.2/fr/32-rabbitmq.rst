@@ -7,7 +7,7 @@ Utiliser RabbitMQ comme gestionnaire de messages
 RabbitMQ est un gestionnaire de messages très répandu que vous pouvez utiliser comme alternative à PostgreSQL
 
 Basculer de PostgreSQL à RabbitMQ
----------------------------------
+----------------------------------
 
 Pour utiliser RabbitMQ à la place de PostgreSQL comme gestionnaire de messages :
 
@@ -49,7 +49,7 @@ Comme vous l'avez sûrement deviné, nous avons aussi besoin d'ajouter RabbitMQ 
     +        ports: [5672, 15672]
 
 Redémarrer les services Docker
-------------------------------
+-------------------------------
 
 Pour forcer Docker Compose à prendre en compte le conteneur RabbitMQ, arrêter les conteneurs et relancer les :
 
@@ -91,7 +91,7 @@ Utilisez ``guest``/``guest`` pour vous connecter sur l'interface de gestion Rabb
     :figclass: with-browser
 
 Déployer RabbitMQ
------------------
+------------------
 
 .. index::
     single: SymfonyCloud;RabbitMQ

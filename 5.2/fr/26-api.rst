@@ -20,7 +20,7 @@ Exposer une API en écrivant du code est possible, mais si nous voulons utiliser
     $ symfony composer req api
 
 Exposer une API pour les conférences
-------------------------------------
+-------------------------------------
 
 .. index::
     single: Annotations;@ApiResource
@@ -209,7 +209,7 @@ Faites de même pour les commentaires :
 Le même type d'annotations est utilisé pour configurer la classe.
 
 Filtrer les commentaires exposés par l'API
-------------------------------------------
+-------------------------------------------
 
 Par défaut, API Platform expose toutes les entrées de la base de données. Mais pour les commentaires, seuls ceux qui ont été publiés devraient apparaître dans l'API.
 

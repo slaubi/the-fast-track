@@ -15,7 +15,7 @@ Tout d'abord, installez le composant Symfony Mailer :
     $ symfony composer req mailer
 
 Définir un email pour l'admin
------------------------------
+------------------------------
 
 Pour stocker l'email de l'admin, utilisez un paramètre de conteneur. Pour l'exemple, nous autorisons également son paramétrage grâce à une variable d'environnement (ce qui ne devrait pas être nécessaire dans la "vraie vie"). Pour faciliter l'injection de cette variable dans les services ayant besoin de l'email de l'admin, définissez un paramètre de conteneur (``bind``) :
 
@@ -119,7 +119,7 @@ Pour envoyer un email, nous avons besoin d'un expéditeur (l'en-tête   ``From``
     +            sender: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
 
 Hériter du template d'email de notification
--------------------------------------------
+--------------------------------------------
 
 .. index::
     single: Twig;extends
@@ -162,7 +162,7 @@ Ces deux fonctions font partie d'extensions Twig optionnelles qui doivent être 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
 Générer des URLs absolues dans une commande
--------------------------------------------
+---------------------------------------------
 
 .. index::
     single: Twig;Link
@@ -195,7 +195,7 @@ Définissez le nom de domaine et le schéma à utiliser explicitement :
 Les variables d'environnement ``SYMFONY_DEFAULT_ROUTE_HOST`` et ``SYMFONY_DEFAULT_ROUTE_PORT`` sont automatiquement définies localement lors de l'utilisation de la commande ``symfony`` et déterminées en fonction de la configuration sur SymfonyCloud.
 
 Lier une route à un contrôleur
-------------------------------
+--------------------------------
 
 La route ``review_comment`` n'existe pas encore. Créons un contrôleur admin pour la gérer :
 
@@ -325,7 +325,7 @@ Et redémarrez-le. ``MAILER_DSN`` est maintenant automatiquement défini :
     $ sleep 10
 
 Accéder au webmail
-------------------
+-------------------
 
 .. index::
     single: Symfony CLI;open:local:webmail
@@ -361,7 +361,7 @@ Cliquez sur le titre de l'email dans l'interface, puis acceptez ou rejetez le co
 Vérifiez les logs avec ``server:log`` si cela ne fonctionne pas comme prévu.
 
 Gérer des scripts de longue durée
----------------------------------
+-----------------------------------
 
 Le fait d'avoir des scripts de longue durée s'accompagne de comportements dont vous devez être conscient. Contrairement au modèle PHP utilisé pour les requêtes HTTP où chaque requête commence avec un nouvel état, le consumer du message s'exécute continuellement en arrière-plan. Chaque traitement d'un message hérite de l'état actuel, y compris le cache mémoire. Pour éviter tout problème avec Doctrine, ses entity managers sont automatiquement nettoyés après le traitement d'un message. Vous devriez vérifier si vos propres services doivent faire de même ou non.
 

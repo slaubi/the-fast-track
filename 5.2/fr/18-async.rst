@@ -341,7 +341,7 @@ Au lieu de dépendre du SpamChecker, nous envoyons maintenant un message dans le
 Nous avons fait quelque chose que nous n'avions pas prévu. Nous avons découplé notre contrôleur du vérificateur de spam, et déplacé la logique vers une nouvelle classe, le gestionnaire. C'est un cas d'utilisation parfait pour le bus. Testez le code, il fonctionne. Tout se fait encore de manière synchrone, mais le code est probablement déjà "mieux".
 
 Filtrer les commentaires affichés
----------------------------------
+----------------------------------
 
 Modifiez la logique d'affichage pour éviter que des commentaires non publiés n'apparaissent sur le site :
 
@@ -457,7 +457,7 @@ L'activité du consumer de messages est enregistrée dans les logs, mais vous po
 Pour arrêter le consumer, appuyez sur ``Ctrl+C``.
 
 Lancer des *workers* en arrière-plan
-------------------------------------
+-------------------------------------
 
 Au lieu de lancer le consumer à chaque fois que nous publions un commentaire et de l'arrêter immédiatement après, nous voulons l'exécuter en continu sans avoir trop de fenêtres ou d'onglets du terminal ouverts.
 
@@ -513,7 +513,7 @@ Pour arrêter un worker, arrêtez le serveur web ou tuez le PID (identifiant du 
     $ kill 15774
 
 Renvoyer des messages ayant échoué
-----------------------------------
+------------------------------------
 
 Que faire si Akismet est en panne alors qu'un message est en train d'être consommé ? Il n'y a aucun impact pour les personnes qui soumettent des commentaires, mais le message est perdu et le spam n'est pas vérifié.
 
@@ -562,7 +562,7 @@ Inspectez les messages ayant échoué et relancez-les à l'aide des commandes su
     $ symfony console messenger:failed:retry
 
 Exécuter des workers sur SymfonyCloud
--------------------------------------
+--------------------------------------
 
 .. index::
     single: SymfonyCloud;Workers

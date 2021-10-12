@@ -13,7 +13,7 @@ Adopter un workflow Git
 Un workflow possible est de créer une branche par nouvelle fonctionnalité ou correction de bogue. C'est simple et efficace.
 
 Créer des branches
-------------------
+-------------------
 
 .. index::
     single: Git;branch
@@ -33,7 +33,7 @@ Le workflow commence par la création d'une branche Git :
 Cette commande crée une branche ``sessions-in-db`` à partir de la branche ``master``. Elle "*fork*" le code et la configuration de l'infrastructure.
 
 Stocker les sessions dans la base de données
---------------------------------------------
+---------------------------------------------
 
 .. index::
     single: Session;Database
@@ -146,7 +146,7 @@ Committez vos changements sur la nouvelle branche :
     $ git commit -m'Configure database sessions'
 
 Déployer une branche
---------------------
+---------------------
 
 .. index::
     single: SymfonyCloud;Environment
@@ -209,7 +209,7 @@ Vous pouvez même synchroniser les données de master avec l'environnement ``ses
     $ symfony env:sync
 
 Déboguer les déploiements en production avant de déployer
----------------------------------------------------------
+------------------------------------------------------------
 
 .. index::
     single: SymfonyCloud;Debugging
@@ -236,7 +236,7 @@ Une fois terminé, revenez aux réglages de production :
     N'activez **jamais** l'environnement ``dev`` et n'activez jamais le Symfony Profiler sur la branche ``master`` ; cela rendrait votre application vraiment lente et ouvrirait de nombreuses failles de sécurité graves.
 
 Tester les déploiements en production avant de déployer
--------------------------------------------------------
+---------------------------------------------------------
 
 L'accès à la prochaine version du site web avec les données de production ouvre de nombreuses opportunités : des tests de régression visuelle aux tests de performance. `Blackfire <https://blackfire.io>`_ est l'outil parfait pour ce travail.
 
@@ -266,7 +266,7 @@ Et déployez :
 Lors du déploiement, seuls le code et les changements d'infrastructure sont poussés vers SymfonyCloud ; les données ne sont en aucun cas affectées.
 
 Faire le ménage
----------------
+----------------
 
 .. index::
     single: Symfony CLI;env:delete

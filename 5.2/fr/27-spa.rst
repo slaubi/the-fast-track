@@ -1,5 +1,5 @@
 Créer une SPA (Single Page Application)
-=======================================
+========================================
 
 .. index::
     single: SPA
@@ -10,7 +10,7 @@ La plupart des commentaires seront soumis pendant les conférences, et certaines
 Une façon de créer une telle application mobile est de créer une Single Page Application (SPA) Javascript. Une SPA s'exécute localement, a accès au stockage local, peut faire des appels à des API HTTP distantes et peut s'appuyer sur les *service workers* pour créer une expérience presque native.
 
 Créer l'application
--------------------
+--------------------
 
 Pour créer l'application mobile, nous allons utiliser `Preact`_ et **Symfony Encore**. **Preact** est une petite base efficace convenant parfaitement à la SPA du livre d'or.
 
@@ -75,7 +75,7 @@ La dernière étape de configuration consiste à créer la configuration Webpack
     module.exports = Encore.getWebpackConfig();
 
 Créer le template principal de la SPA
--------------------------------------
+--------------------------------------
 
 Il est temps de créer le template initial dans lequel Preact fera le rendu de l'application :
 
@@ -121,7 +121,7 @@ La dernière ligne enregistre la fonction ``App()`` sur l'élément ``#app`` de 
 Maintenant, tout est prêt !
 
 Exécuter la SPA dans le navigateur web
---------------------------------------
+---------------------------------------
 
 .. index::
     single: Symfony CLI;server:start
@@ -161,7 +161,7 @@ Et contemplez notre SPA hello world :
     :figclass: with-browser spa
 
 Ajouter un routeur pour gérer les états
----------------------------------------
+-----------------------------------------
 
 La SPA n'est actuellement pas en mesure de traiter plusieurs pages. Pour pouvoir les implémenter, nous avons besoin d'un routeur, comme pour Symfony. Nous allons utiliser **preact-router**. Il prend une URL en entrée et la fait correspondre à un composant Preact à afficher.
 
@@ -318,7 +318,7 @@ Vous pouvez à présent profiter d'une SPA entièrement stylisée :
     :figclass: with-browser spa
 
 Récupérer les données depuis l'API
-----------------------------------
+-------------------------------------
 
 La structure de l'application Preact est maintenant terminée : Preact Router gère les états de la page, incluant le slug des conférences dans l'URL, et la feuille de style principale de l'application est utilisée pour styliser la SPA.
 
@@ -542,7 +542,7 @@ Et l'application devrait maintenant fonctionner correctement dans le navigateur 
 Wow ! Nous avons à présent une SPA entièrement fonctionnelle, avec routeur et données réelles. Nous pourrions organiser l'application Preact davantage si nous le voulions, mais elle fonctionne déjà très bien.
 
 Déployer la SPA en production
------------------------------
+------------------------------
 
 .. index::
     single: SymfonyCloud;Multi-Applications

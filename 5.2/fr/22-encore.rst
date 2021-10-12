@@ -137,7 +137,7 @@ Nous pouvons maintenant styliser l'application. Téléchargez et extrayez l'arch
 Jetez un coup d’œil aux templates, vous pourriez apprendre un truc ou deux sur Twig.
 
 Générer les assets
-------------------
+--------------------
 
 .. index::
     single: Symfony CLI;run

@@ -9,7 +9,7 @@ Mettre en cache pour la performance
 Les problèmes de performance peuvent survenir avec la popularité. Quelques exemples typiques : des index de base de données manquants ou des tonnes de requêtes SQL par page. Vous n'aurez aucun problème avec une base de données vide, mais avec plus de trafic et des données croissantes, cela peut arriver à un moment donné.
 
 Ajouter des en-têtes de cache HTTP
-----------------------------------
+-----------------------------------
 
 .. index::
     single: HTTP Cache;HTTP Cache Headers
@@ -108,7 +108,7 @@ Pour les prochaines demandes, la réponse est mise en cache (l'``age`` a égalem
     content-length: 50978
 
 Éviter des requêtes SQL avec les ESIs
--------------------------------------
+---------------------------------------
 
 .. index::
     single: HTTP Cache;ESI
@@ -388,7 +388,7 @@ La sous-commande ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` retour
     Le contrôleur n'a pas de nom de route car il ne sera jamais référencé dans le code.
 
 Regrouper les routes similaires avec un préfixe
------------------------------------------------
+------------------------------------------------
 
 .. index::
     single: Annotations;Route
@@ -428,7 +428,7 @@ Les deux routes du contrôleur admin ont le même préfixe ``/admin``. Au lieu d
              if ('prod' === $kernel->getEnvironment()) {
 
 Mettre en cache les opérations coûteuses en CPU/mémoire
--------------------------------------------------------
+----------------------------------------------------------
 
 .. index::
     single: Process

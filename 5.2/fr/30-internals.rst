@@ -1,5 +1,5 @@
 Voyager au cœur de Symfony
-==========================
+===========================
 
 .. index::
     single: Blackfire
@@ -98,7 +98,7 @@ Comme nous venons de le découvrir, le code exécuté en développement et en pr
 Quelques expériences intéressantes : profilez une page d'erreur, profilez la page ``/`` (qui est une redirection) ou une ressource API. Chaque profil vous en dira un peu plus sur le fonctionnement de Symfony, les classes/méthodes appelées, ce qui est lent à exécuter et ce qui est rapide.
 
 Utiliser l'addon de débogage Blackfire
---------------------------------------
+---------------------------------------
 
 .. index::
     single: Blackfire;Debug Addon
@@ -138,7 +138,7 @@ D'où vient-il ? SymfonyCloud effectue certaines optimisations lors du déploiem
 Blackfire est un outil très puissant qui aide à comprendre comment le code est exécuté par PHP. L'amélioration des performances n'est qu'une raison parmi d'autres d'utiliser un profileur.
 
 Utiliser un point d'arrêt avec Xdebug
--------------------------------------
+--------------------------------------
 
 .. index::
     single: Xdebug

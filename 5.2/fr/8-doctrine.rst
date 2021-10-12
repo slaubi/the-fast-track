@@ -1,5 +1,5 @@
 Décrire la structure des données
-================================
+==================================
 
 .. index::
     single: Doctrine
@@ -59,7 +59,7 @@ Vous rappelez-vous du *nom du service* ``database`` utilisé dans les configurat
     Les bases de données ne sont pas les seuls services qui bénéficient des conventions Symfony. Il en va de même pour Mailer, par exemple (via la variable d'environnement ``MAILER_DSN``).
 
 Modifier la valeur par défaut de DATABASE_URL dans le fichier .env
-------------------------------------------------------------------
+-------------------------------------------------------------------
 
 Nous allons quand même changer le fichier ``.env`` pour initialiser la variable ``DATABASE_URL`` pour l'utilisation de PostgreSQL :
 
@@ -78,7 +78,7 @@ Nous allons quand même changer le fichier ``.env`` pour initialiser la variable
 Pourquoi l'information doit-elle être dupliquée à deux endroits différents ? Parce que sur certaines plates-formes de Cloud, au *moment de la compilation*, l'URL de la base de données n'est peut-être pas encore connue mais Doctrine a besoin de connaître le moteur de la base de données pour initialiser sa configuration. Ainsi, l'hôte, le pseudo et le mot de passe n'ont pas vraiment d'importance.
 
 Créer des classes d'entités
----------------------------
+-----------------------------
 
 Une conférence peut être décrite en quelques propriétés :
 
@@ -241,7 +241,7 @@ Entrez les réponses suivantes :
 * ``createdAt``, ``datetime``, ``no``.
 
 Lier les entités
-----------------
+-----------------
 
 .. index::
     single: Command;make:entity
@@ -440,7 +440,7 @@ Jetez un coup d'oeil au *diff* complet entre les classes d'entités après l'ajo
 Tout ce dont vous avez besoin pour gérer la relation a été généré pour vous. Une fois généré, le code devient le vôtre ; n'hésitez pas à le personnaliser comme vous le souhaitez.
 
 Ajouter d'autres propriétés
----------------------------
+-----------------------------
 
 .. index::
     single: Command;make:entity
@@ -455,7 +455,7 @@ Exécutez à nouveau ``make:entity`` et ajoutez une propriété/colonne ``photoF
     $ symfony console make:entity Comment
 
 Migrer la base de données
--------------------------
+--------------------------
 
 .. index:: ! Command;make:migration
 
@@ -504,7 +504,7 @@ Notez le nom du fichier généré (un nom qui ressemble à ``migrations/Version2
     }
 
 Mettre à jour la base de données locale
----------------------------------------
+-----------------------------------------
 
 .. index:: ! Command;doctrine:migrations:migrate
 
@@ -518,7 +518,7 @@ Vous pouvez maintenant exécuter la migration générée pour mettre à jour le 
 Le schéma de la base de données locale est à jour à présent, prêt à stocker des données.
 
 Mettre à jour la base de données de production
-----------------------------------------------
+------------------------------------------------
 
 Les étapes nécessaires à la migration de la base de données de production sont les mêmes que celles que vous connaissez déjà : *commiter* les changements et déployer.
 

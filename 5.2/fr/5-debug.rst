@@ -1,10 +1,10 @@
 Diagnostiquer les problèmes
-===========================
+============================
 
 Mettre en place un projet, c'est aussi avoir les bons outils pour déboguer les problèmes.
 
 Installer des dépendances supplémentaires
------------------------------------------
+-------------------------------------------
 
 Rappelez-vous que le projet a été créé avec très peu de dépendances. Pas de moteur de template. Aucun outil de débogage. Pas de système de log. L'idée est que vous pouvez ajouter d'autres dépendances dès que vous en avez besoin. Pourquoi dépendre d'un moteur de template si vous développez une API HTTP ou un outil CLI ?
 
@@ -53,7 +53,7 @@ Basculer d'un environnement à l'autre peut se faire en changeant la variable d'
 Lorsque vous avez déployé vers SymfonyCloud, l'environnement (stocké dans ``APP_ENV``) a été automatiquement modifié en ``prod``.
 
 Gérer la configuration des environnements
------------------------------------------
+------------------------------------------
 
 .. index::
     single: Environment Variables
@@ -113,7 +113,7 @@ Pour les outils de débogage, ne les installons que pour le développement :
     $ symfony composer req debug --dev
 
 Découvrir les outils de débogage de Symfony
--------------------------------------------
+---------------------------------------------
 
 Si vous rafraîchissez la page d'accueil, vous devriez maintenant voir une barre d'outils en bas de l'écran :
 
@@ -214,7 +214,7 @@ En environnement de développement, lorsqu'une exception est levée, Symfony aff
 Les fichiers liés ne sont pas limités à des exceptions. Par exemple, le contrôleur dans la *web debug toolbar* devient cliquable après avoir configuré l'IDE.
 
 Déboguer en production
-----------------------
+-----------------------
 
 .. index::
     single: SymfonyCloud;Remote Logs
