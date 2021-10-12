@@ -1,0 +1,91 @@
+使用 Redis 存储会话
+=========================
+
+.. index::
+    single: Redis
+
+根据网站的流量以及它的基础设施，你可能想用 Redis 取代 PostgreSQL 来管理用户的会话。
+
+之前我们谈到新建一个项目的代码分支来把会话从文件系统迁移到数据库时，我们列出了添加一个新服务的所有必要步骤。
+
+只在一个代码补丁中把 Redis 加入到你项目里，可以这样做：
+
+.. index::
+    single: Session;Redis
+    single: Redis
+    single: Docker;Redis
+    single: SymfonyCloud;Redis
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony.cloud.yaml
+    +++ b/.symfony.cloud.yaml
+    @@ -4,6 +4,7 @@ type: php:8.0
+
+     runtime:
+         extensions:
+    +        - redis
+             - blackfire
+             - xsl
+             - pdo_pgsql
+    @@ -26,6 +27,7 @@ disk: 512
+
+     relationships:
+         database: "db:postgresql"
+    +    redis: "rediscache:redis"
+
+     web:
+         locations:
+    --- a/.symfony/services.yaml
+    +++ b/.symfony/services.yaml
+    @@ -15,3 +15,6 @@ varnish:
+     files:
+         type: network-storage:1.0
+         disk: 256
+    +
+    +rediscache:
+    +    type: redis:5.0
+    --- a/config/packages/framework.yaml
+    +++ b/config/packages/framework.yaml
+    @@ -7,7 +7,7 @@ framework:
+         # Enables session support. Note that the session will ONLY be started if you read or write from it.
+         # Remove or comment this section to explicitly disable session support.
+         session:
+    -        handler_id: '%env(DATABASE_URL)%'
+    +        handler_id: '%env(REDIS_URL)%'
+             cookie_secure: auto
+             cookie_samesite: lax
+
+    --- a/docker-compose.yaml
+    +++ b/docker-compose.yaml
+    @@ -17,3 +17,7 @@ services:
+             image: blackfire/blackfire
+             env_file: .env.local
+             ports: [8707]
+    +
+    +    redis:
+    +        image: redis:5-alpine
+    +        ports: [6379]
+
+这难道不 *漂亮* 吗？
+
+“重启” Docker 来启动 Redis 服务：
+
+.. code-block:: bash
+
+    $ docker-compose stop
+    $ docker-compose up -d
+
+通过浏览网站来在本地测试；一切应该如之前一样正常运行。
+
+提交并且像往常一样部署：
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony deploy
+
+.. sidebar:: 深入学习
+
+    * `Redis 文档 <https://redis.io/documentation>`_。
