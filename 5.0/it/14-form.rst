@@ -1,0 +1,518 @@
+Accettare feedback con i form
+=============================
+
+.. index::
+    single: Components;Form
+    single: Form
+
+È arrivato il momento di permettere ai nostri partecipanti di lasciare un'opinione sulla conferenza. Potranno contribuire con i loro commenti attraverso un *form HTML*.
+
+Generare un form type
+---------------------
+
+.. index::
+    single: Command;make:form
+
+Usare MakerBundle per generare una classe form:
+
+.. code-block:: bash
+
+    $ symfony console make:form CommentFormType Comment
+
+.. code-block:: text
+    :class: ignore
+    :emphasize-lines: 1
+
+     created: src/Form/CommentFormType.php
+
+
+      Success!
+
+
+     Next: Add fields to your form and start using it.
+     Find the documentation at https://symfony.com/doc/current/forms.html
+
+La classe ``App\Form\CommentFormType`` definisce un form per l'entity ``App\Entity\Comment``:
+
+.. code-block:: php
+    :caption: src/App/Form/CommentFormType.php
+    :class: ignore
+
+    namespace App\Form;
+
+    use App\Entity\Comment;
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+
+    class CommentFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
+                ->add('author')
+                ->add('text')
+                ->add('email')
+                ->add('createdAt')
+                ->add('photoFilename')
+                ->add('conference')
+            ;
+        }
+
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults([
+                'data_class' => Comment::class,
+            ]);
+        }
+    }
+
+Un `form type`_ descrive i *campi del form* legati a un modello. Esegue la conversione tra dati inviati e proprietà della classe del modello. Per impostazione predefinita, Symfony usa i metadati dell'entity ``Comment``, come i metadati di Doctrine, per indovinare la configurazione di ogni campo. Per esempio, il campo ``text`` verrà visualizzato come ``textarea`` durante il render, poiché usa una colonna più grande nel database.
+
+Mostrare un form
+----------------
+
+Per mostrare il form all'utente, creare il form nel controller e passarlo al template:
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 18,24
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -2,7 +2,9 @@
+
+     namespace App\Controller;
+
+    +use App\Entity\Comment;
+     use App\Entity\Conference;
+    +use App\Form\CommentFormType;
+     use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    @@ -35,6 +37,9 @@ class ConferenceController extends AbstractController
+          */
+         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+         {
+    +        $comment = new Comment();
+    +        $form = $this->createForm(CommentFormType::class, $comment);
+    +
+             $offset = max(0, $request->query->getInt('offset', 0));
+             $paginator = $commentRepository->getCommentPaginator($conference, $offset);
+
+    @@ -43,6 +48,7 @@ class ConferenceController extends AbstractController
+                 'comments' => $paginator,
+                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+    +            'comment_form' => $form->createView(),
+             ]));
+         }
+     }
+
+Non dovreste mai istanziare direttamente il form type. Piuttosto, utilizzate il metodo ``createForm()``. Questo metodo fa parte di ``AbstractController`` e facilita la creazione dei form.
+
+.. index::
+    single: Twig;form
+
+Quando si passa un form a un template, utilizzare il metodo ``createView()`` per convertire i dati in un formato adatto ai template stessi.
+
+Si può mostrare un form all'interno di un template tramite la funzione ``form`` di Twig:
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 10
+
+    --- a/templates/conference/show.html.twig
+    +++ b/templates/conference/show.html.twig
+    @@ -30,4 +30,8 @@
+         {% else %}
+             <div>No comments have been posted yet for this conference.</div>
+         {% endif %}
+    +
+    +    <h2>Add your own feedback</h2>
+    +
+    +    {{ form(comment_form) }}
+     {% endblock %}
+
+Quando si aggiorna una pagina della conferenza nel browser, si noti che ogni campo del form mostra il widget HTML corretto (il tipo di dato viene derivato dal modello):
+
+.. figure:: screenshots/form.png
+    :alt: /conference/amsterdam-2019
+    :align: center
+    :figclass: with-browser
+
+La funzione ``form()`` genera il form HTML in base alle informazioni definite nel form type. Aggiunge ``enctype=multipart/form-data`` al tag ``<form>`` se è incluso un campo di input per il caricamento di file. Inoltre, in caso di errori, si occupa di visualizzarne i relativi messaggi. Tutto può essere personalizzato sovrascrivendo i template predefiniti, ma non ne avremo bisogno per questo progetto.
+
+Personalizzare un Form Type
+---------------------------
+
+Anche se i campi del form sono configurati in base alla loro controparte del modello, è possibile personalizzare la configurazione predefinita direttamente nella classe del form type:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Form/CommentFormType.php
+    +++ b/src/Form/CommentFormType.php
+    @@ -4,20 +4,31 @@ namespace App\Form;
+
+     use App\Entity\Comment;
+     use Symfony\Component\Form\AbstractType;
+    +use Symfony\Component\Form\Extension\Core\Type\EmailType;
+    +use Symfony\Component\Form\Extension\Core\Type\FileType;
+    +use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+     use Symfony\Component\Form\FormBuilderInterface;
+     use Symfony\Component\OptionsResolver\OptionsResolver;
+    +use Symfony\Component\Validator\Constraints\Image;
+
+     class CommentFormType extends AbstractType
+     {
+         public function buildForm(FormBuilderInterface $builder, array $options)
+         {
+             $builder
+    -            ->add('author')
+    +            ->add('author', null, [
+    +                'label' => 'Your name',
+    +            ])
+                 ->add('text')
+    -            ->add('email')
+    -            ->add('createdAt')
+    -            ->add('photoFilename')
+    -            ->add('conference')
+    +            ->add('email', EmailType::class)
+    +            ->add('photo', FileType::class, [
+    +                'required' => false,
+    +                'mapped' => false,
+    +                'constraints' => [
+    +                    new Image(['maxSize' => '1024k'])
+    +                ],
+    +            ])
+    +            ->add('submit', SubmitType::class)
+             ;
+         }
+
+Da notare che abbiamo aggiunto un pulsante di invio (che ci permette di continuare ad usare l'espressione semplice ``{{ form(comment_form) }}`` nel template).
+
+Non tutti i campi possono essere configurati automaticamente, come ad esempio ``photoFilename``. L'entity ``Comment`` ha bisogno di salvare il nome del file della foto, ma il form deve occuparsi del caricamento del file stesso. Per gestire questo caso, abbiamo aggiunto un campo chiamato ``photo``, con proprietà ``mapped`` falsa: non sarà mappato su nessuna proprietà di ``Comment``. Lo gestiremo manualmente per implementare alcune logiche specifiche (come la memorizzazione della foto caricata sul disco).
+
+Come esempio di personalizzazione, abbiamo modificato l'etichetta predefinita per alcuni campi.
+
+.. figure:: screenshots/form-customized.png
+    :alt: /conference/amsterdam-2019
+    :align: center
+    :figclass: with-browser
+
+Convalidare i modelli
+---------------------
+
+Il Form Type configura il rendering del form (tramite alcune validazioni HTML5). Ecco qui il codice HTML generato:
+
+.. code-block:: html
+    :class: ignore
+
+    <form name="comment_form" method="post" enctype="multipart/form-data">
+        <div id="comment_form">
+            <div >
+                <label for="comment_form_author" class="required">Your name</label>
+                <input type="text" id="comment_form_author" name="comment_form[author]" required="required" maxlength="255" />
+            </div>
+            <div >
+                <label for="comment_form_text" class="required">Text</label>
+                <textarea id="comment_form_text" name="comment_form[text]" required="required"></textarea>
+            </div>
+            <div >
+                <label for="comment_form_email" class="required">Email</label>
+                <input type="email" id="comment_form_email" name="comment_form[email]" required="required" />
+            </div>
+            <div >
+                <label for="comment_form_photo">Photo</label>
+                <input type="file" id="comment_form_photo" name="comment_form[photo]" />
+            </div>
+            <div >
+                <button type="submit" id="comment_form_submit" name="comment_form[submit]">Submit</button>
+            </div>
+            <input type="hidden" id="comment_form__token" name="comment_form[_token]" value="DwqsEanxc48jofxsqbGBVLQBqlVJ_Tg4u9-BL1Hjgac" />
+        </div>
+    </form>
+
+Il form usa il campo ``email`` per l'e-mail di commento e rende la maggior parte dei campi ``required``. Si noti che il form contiene anche un campo ``_token`` nascosto per proteggere dagli `attacchi CSRF <https://owasp.org/www-community/attacks/csrf>`_.
+
+Ma se l'invio del form aggira la validazione HTML (utilizzando un client HTTP che non applica queste regole di validazione, come cURL), dei dati non validi potrebbero arrivare al server.
+
+Dobbiamo aggiungere anche alcuni vincoli di validazione al modello dati di ``Comment``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Entity/Comment.php
+    +++ b/src/Entity/Comment.php
+    @@ -4,6 +4,7 @@ namespace App\Entity;
+
+     use App\Repository\CommentRepository;
+     use Doctrine\ORM\Mapping as ORM;
+    +use Symfony\Component\Validator\Constraints as Assert;
+
+     /**
+      * @ORM\Entity(repositoryClass=CommentRepository::class)
+    @@ -20,16 +21,20 @@ class Comment
+
+         /**
+          * @ORM\Column(type="string", length=255)
+    +     * @Assert\NotBlank
+          */
+         private $author;
+
+         /**
+          * @ORM\Column(type="text")
+    +     * @Assert\NotBlank
+          */
+         private $text;
+
+         /**
+          * @ORM\Column(type="string", length=255)
+    +     * @Assert\NotBlank
+    +     * @Assert\Email
+          */
+         private $email;
+
+Gestire un form
+---------------
+
+Il codice che abbiamo scritto finora è sufficiente per visualizzare il form.
+
+Ora dovremmo gestire l'invio del form e il salvataggio delle sue informazioni nel database tramite il controller:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+     use App\Form\CommentFormType;
+     use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+    +use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    @@ -16,10 +17,12 @@ use Twig\Environment;
+     class ConferenceController extends AbstractController
+     {
+         private $twig;
+    +    private $entityManager;
+
+    -    public function __construct(Environment $twig)
+    +    public function __construct(Environment $twig, EntityManagerInterface $entityManager)
+         {
+             $this->twig = $twig;
+    +        $this->entityManager = $entityManager;
+         }
+
+         /**
+    @@ -39,6 +42,15 @@ class ConferenceController extends AbstractController
+         {
+             $comment = new Comment();
+             $form = $this->createForm(CommentFormType::class, $comment);
+    +        $form->handleRequest($request);
+    +        if ($form->isSubmitted() && $form->isValid()) {
+    +            $comment->setConference($conference);
+    +
+    +            $this->entityManager->persist($comment);
+    +            $this->entityManager->flush();
+    +
+    +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
+    +        }
+
+             $offset = max(0, $request->query->getInt('offset', 0));
+             $paginator = $commentRepository->getCommentPaginator($conference, $offset);
+
+All'invio del form, l'oggetto ``Comment`` viene aggiornato in base ai dati inviati.
+
+La conferenza deve essere la stessa dell'URL (l'abbiamo rimossa dal form).
+
+Se il form non è valido, viene mostrata la pagina, ma ora il form conterrà i valori inviati e i messaggi di errore in modo che possano essere mostrati all'utente.
+
+Proviamo il form. Dovrebbe funzionare bene e i dati dovrebbero essere memorizzati nel database (controllare nel pannello amministrativo). Ma c'è un problema: le foto. Non funzionano perché non le abbiamo ancora gestite nel controller.
+
+Caricare file
+-------------
+
+Le foto che vogliamo caricare devono essere salvate sul disco locale, in un luogo accessibile dal frontend, in modo da poterle mostrare nella pagina della conferenza. Le memorizzeremo nella cartella ``public/uploads/photos``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+     use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    +use Symfony\Component\HttpFoundation\File\Exception\FileException;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\Routing\Annotation\Route;
+    @@ -38,13 +39,22 @@ class ConferenceController extends AbstractController
+         /**
+          * @Route("/conference/{slug}", name="conference")
+          */
+    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, string $photoDir): Response
+         {
+             $comment = new Comment();
+             $form = $this->createForm(CommentFormType::class, $comment);
+             $form->handleRequest($request);
+             if ($form->isSubmitted() && $form->isValid()) {
+                 $comment->setConference($conference);
+    +            if ($photo = $form['photo']->getData()) {
+    +                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
+    +                try {
+    +                    $photo->move($photoDir, $filename);
+    +                } catch (FileException $e) {
+    +                    // unable to upload the photo, give up
+    +                }
+    +                $comment->setPhotoFilename($filename);
+    +            }
+
+                 $this->entityManager->persist($comment);
+                 $this->entityManager->flush();
+
+Per gestire il caricamento delle foto, creiamo un nome casuale per il file. Poi, spostiamo il file caricato nella sua posizione finale (la cartella delle foto). Infine, salviamo il nome del file nell'oggetto Comment.
+
+.. index::
+    single: Container;Bind
+    single: Bind
+
+Avete notato il nuovo parametro nel metodo ``show()``? ``$photoDir`` è una stringa e non un servizio. Come può Symfony sapere cosa iniettarvi? Il container di Symfony è in grado di memorizzare *parametri* oltre che servizi. I parametri sono degli scalari che aiutano a configurare i servizi. Questi parametri possono essere iniettati esplicitamente nei servizi, oppure possono essere configurati *per nome*:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/config/services.yaml
+    +++ b/config/services.yaml
+    @@ -10,6 +10,8 @@ services:
+         _defaults:
+             autowire: true      # Automatically injects dependencies in your services.
+             autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+    +        bind:
+    +            $photoDir: "%kernel.project_dir%/public/uploads/photos"
+
+         # makes classes in src/ available to be used as services
+         # this creates a service per class whose id is the fully-qualified class name
+
+L'impostazione ``bind`` consente a Symfony di iniettare il valore ogni volta che un servizio ha un argomento ``$photoDir``.
+
+Provate a caricare un file PDF invece di una foto. Dovreste vedere i messaggi di errore in azione. L'aspetto è piuttosto brutto al momento, ma non preoccupatevi: tutto diventerà bello in pochi passi, quando lavoreremo al design del sito. Per i form, cambieremo una linea di configurazione per applicare lo stile a tutti gli elementi.
+
+Risolvere gli errori sui form
+-----------------------------
+
+Quando un form viene inviato e qualcosa non funziona correttamente, usare il pannello "Form" del Profiler. Fornisce informazioni sul form, su tutte le sue opzioni, sui dati inviati e su come vengono convertiti internamente. Se il form contiene degli errori, saranno elencati anche questi ultimi.
+
+Il flusso tipico di lavoro dei form si svolge in questo modo:
+
+* Il form viene mostrato su una pagina;
+
+* L'utente invia il form tramite una richiesta POST;
+
+* Il server reindirizza l'utente ad un'altra pagina o alla stessa pagina.
+
+Ma come si può accedere al profiler per una richiesta di invio di successo? Poiché la pagina viene immediatamente reindirizzata, non vedremo mai la barra degli strumenti di debug per la richiesta POST. Nessun problema: nella pagina reindirizzata, passare sopra la parte verde "200" a sinistra. Dovreste vedere il redirect "302" con un link al profilo (tra parentesi).
+
+.. figure:: screenshots/form-wdt.png
+    :alt: /conference/amsterdam-2019
+    :align: center
+    :figclass: with-browser
+
+Clicchiamolo per accedere al profilo della richiesta POST e andiamo al pannello "Form":
+
+.. code-block:: bash
+    :class: hide
+
+    $ rm -rf var/cache
+
+.. figure:: screenshots/form-profiler.png
+    :alt: /_profiler/450aa5
+    :align: center
+    :figclass: with-browser
+
+Visualizzare le foto caricate nel pannello amministrativo
+---------------------------------------------------------
+
+Il pannello amministrativo sta visualizzando il nome del file della foto, ma noi vogliamo vedere la foto vera e propria:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/config/packages/easy_admin.yaml
+    +++ b/config/packages/easy_admin.yaml
+    @@ -17,6 +17,7 @@ easy_admin:
+                     fields:
+                         - author
+                         - { property: 'email', type: 'email' }
+    +                    - { property: 'photoFilename', type: 'image', 'base_path': "/uploads/photos", label: 'Photo' }
+                         - { property: 'createdAt', type: 'datetime' }
+                     sort: ['createdAt', 'ASC']
+                     filters: ['conference']
+
+Escludere da Git le foto caricate
+---------------------------------
+
+Non fare ancora commit! Non vogliamo memorizzare le immagini caricate nel repository git. Aggiungete la cartella ``/public/uploads`` al file ``.gitignore``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.gitignore
+    +++ b/.gitignore
+    @@ -1,3 +1,4 @@
+    +/public/uploads
+
+     ###> symfony/framework-bundle ###
+     /.env.local
+
+Salvare i file caricati sui server di produzione
+------------------------------------------------
+
+L'ultimo passo è quello di salvare i file caricati sui server di produzione. Perché dovremmo fare qualcosa di speciale? Perché la maggior parte delle piattaforme cloud moderne utilizzano container di sola lettura per vari motivi. SymfonyCloud non fa eccezione.
+
+Non tutto è di sola lettura in un progetto Symfony. Cerchiamo di generare più cache possibile quando si costruisce il container (durante la fase di warmup della cache), ma Symfony deve comunque essere in grado di scrivere da qualche parte la cache dell'utente, i log, le sessioni (se memorizzate su filesystem) e altro ancora.
+
+Guardando in ``.symfony.cloud.yaml``, si può vedere che c'è già un *mount* scrivibile per la cartella ``var/``. La cartella ``var/`` è l'unica cartella in cui Symfony scrive (cache, log, ...).
+
+Creiamo un nuovo mount per le foto caricate:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony.cloud.yaml
+    +++ b/.symfony.cloud.yaml
+    @@ -38,6 +38,7 @@ web:
+
+     mounts:
+         "/var": { source: local, source_path: var }
+    +    "/public/uploads": { source: local, source_path: uploads }
+
+     hooks:
+         build: |
+
+Ora si può eseguire il deploy del codice e le foto saranno memorizzate nella cartella ``public/uploads/``, come nella nostra versione locale.
+
+.. sidebar:: Andare oltre
+
+    * `Guida ai Form su SymfonyCasts <https://symfonycasts.com/screencast/symfony-forms>`_;
+
+    * Come `personalizzare il rendering dei form di Symfony in HTML <https://symfony.com/doc/current/form/form_customization.html>`_;
+
+    * `Validazione dei form di Symfony <https://symfony.com/doc/current/forms.html#validating-forms>`_;
+
+    * `Riferimento ai Form Type di Symfony <https://symfony.com/doc/current/reference/forms/types.html>`_;
+
+    * La `documentazione di FlysystemBundle <https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md>`_, che fornisce l'integrazione con vari provider in cloud, come AWS S3, Azure e Google Cloud Storage;
+
+    * `Parametri di configurazione di Symfony <https://symfony.com/doc/current/configuration.html#configuration-parameters>`_.
+
+    * `Constraint di validazione di Symfony <https://symfony.com/doc/current/validation.html#basic-constraints>`_;
+
+    * `Cheat Sheet di Symfony Form <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony2/how_symfony2_forms_works_en.pdf>`_.
+
+.. _`form type`: https://symfony.com/doc/current/forms.html#form-types
