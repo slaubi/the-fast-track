@@ -1,0 +1,91 @@
+Nutze Redis um Sessions zu speichern
+====================================
+
+.. index::
+    single: Redis
+
+Abhängig vom Website-Verkehr und/oder der Infrastruktur möchtest Du vielleicht Redis nutzen anstelle von PostgreSQL um Benutzer-Sessions zu verwalten.
+
+Als wir über das Branchen von unserem Projektcode gesprochen haben um Sessions vom Dateisystem zur Datenbank umzustellen, haben wir alle Schritte aufgeführt, die wir brauchen um einen neuen Dienst hinzu zufügen.
+
+So kannst Du Redis auf einen Schlag zu deinem Projekt hinzufügen:
+
+.. index::
+    single: Session;Redis
+    single: Redis
+    single: Docker;Redis
+    single: SymfonyCloud;Redis
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony.cloud.yaml
+    +++ b/.symfony.cloud.yaml
+    @@ -4,6 +4,7 @@ type: php:8.0
+
+     runtime:
+         extensions:
+    +        - redis
+             - blackfire
+             - xsl
+             - pdo_pgsql
+    @@ -26,6 +27,7 @@ disk: 512
+
+     relationships:
+         database: "db:postgresql"
+    +    redis: "rediscache:redis"
+
+     web:
+         locations:
+    --- a/.symfony/services.yaml
+    +++ b/.symfony/services.yaml
+    @@ -15,3 +15,6 @@ varnish:
+     files:
+         type: network-storage:1.0
+         disk: 256
+    +
+    +rediscache:
+    +    type: redis:5.0
+    --- a/config/packages/framework.yaml
+    +++ b/config/packages/framework.yaml
+    @@ -7,7 +7,7 @@ framework:
+         # Enables session support. Note that the session will ONLY be started if you read or write from it.
+         # Remove or comment this section to explicitly disable session support.
+         session:
+    -        handler_id: '%env(DATABASE_URL)%'
+    +        handler_id: '%env(REDIS_URL)%'
+             cookie_secure: auto
+             cookie_samesite: lax
+
+    --- a/docker-compose.yaml
+    +++ b/docker-compose.yaml
+    @@ -17,3 +17,7 @@ services:
+             image: blackfire/blackfire
+             env_file: .env.local
+             ports: [8707]
+    +
+    +    redis:
+    +        image: redis:5-alpine
+    +        ports: [6379]
+
+Schick, oder?
+
+Starte Docker neu, um auch den Redis-Dienst zu starten:
+
+.. code-block:: bash
+
+    $ docker-compose stop
+    $ docker-compose up -d
+
+Teste lokal, indem Du Dir die Website anschaust. Alles sollte noch genauso funktionieren wie vorher.
+
+Commit und deploye wie üblich:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony deploy
+
+.. sidebar:: Weiterführendes
+
+    * `Redis-Dokumentation <https://redis.io/documentation>`_.
