@@ -4,8 +4,7 @@ Tester
 .. index::
     single: PHPUnit
 
-As we start to add more and more functionality to the application, it is
-probably the right time to talk about testing.
+Comme nous commençons à ajouter de plus en plus de fonctionnalités dans l'application, c'est probablement le bon moment pour parler des tests.
 
 *Fun fact* : j'ai trouvé un bogue en écrivant les tests de ce chapitre.
 
@@ -16,22 +15,20 @@ Symfony s'appuie sur PHPUnit pour les tests unitaires. Installons-le :
     $ symfony composer req phpunit --dev
 
 Écrire des tests unitaires
----------------------------
+--------------------------
 
 .. index::
     single: Test;Unit Tests
     single: Unit Tests
     single: Command;make:test
 
-``SpamChecker`` is the first class we are going to write tests for. Generate a
-unit test:
+``SpamChecker`` est la première classe pour laquelle nous allons écrire des tests. Générez un test unitaire :
 
 .. code-block:: bash
 
     $ symfony console make:test TestCase SpamCheckerTest
 
-Testing the SpamChecker is a challenge as we certainly don't want to hit
-the Akismet API. We are going to *mock* the API.
+Tester le SpamChecker est un défi car nous ne voulons certainement pas utiliser l'API Akismet. Nous allons *mocker* l'API.
 
 .. index::
     single: Mock
@@ -73,12 +70,9 @@ the Akismet API. We are going to *mock* the API.
          }
      }
 
-The ``MockHttpClient`` class makes it possible to mock any HTTP server. It
-takes an array of ``MockResponse`` instances that contain the expected body and
-Response headers.
+La classe ``MockHttpClient`` permet de simuler n'importe quel serveur HTTP. Elle prend un tableau d'instances ``MockResponse`` contenant le corps et les en-têtes de réponse attendus.
 
-Then, we call the ``getSpamScore()`` method and check that an exception is
-thrown via the ``expectException()`` method of PHPUnit.
+Ensuite, nous appelons la méthode ``getSpamScore()`` et vérifions qu'une exception est levée via la méthode``expectException()`` de PHPUnit.
 
 Lancez les tests pour vérifier qu'ils passent :
 
@@ -132,11 +126,10 @@ Ajoutons des tests pour les cas qui fonctionnent :
     +    }
      }
 
-PHPUnit data providers allow us to reuse the same test logic for several test
-cases.
+Les *data providers* de PHPUnit nous permettent de réutiliser la même logique de test pour plusieurs scénarios.
 
 Écrire des tests fonctionnels pour les contrôleurs
-----------------------------------------------------
+--------------------------------------------------
 
 .. index::
     single: Test;Functional Tests
@@ -145,8 +138,7 @@ cases.
     single: Browser Kit
     single: Command;make:functional-test
 
-Testing controllers is a bit different than testing a "regular" PHP class as we
-want to run them in the context of an HTTP request.
+Tester les contrôleurs est un peu différent de tester une classe PHP "ordinaire" car nous voulons les exécuter dans le contexte d'une requête HTTP.
 
 Créez un test fonctionnel pour le contrôleur Conference :
 
@@ -169,28 +161,17 @@ Créez un test fonctionnel pour le contrôleur Conference :
         }
     }
 
-Using ``Symfony\Bundle\FrameworkBundle\Test\WebTestCase`` instead of
-``PHPUnit\Framework\TestCase`` as a base class for our tests gives us a nice
-abstraction for functional tests.
+Utiliser ``Symfony\Bundle\FrameworkBundle\Test\WebTestCase`` à la place de ``PHPUnit\Framework\TestCase`` comme classe de base pour nos tests nous fournit une abstraction bien pratique pour les tests fonctionnels.
 
-The ``$client`` variable simulates a browser. Instead of making HTTP calls to
-the server though, it calls the Symfony application directly. This strategy has
-several benefits: it is much faster than having round-trips between the client
-and the server, but it also allows the tests to introspect the state of
-the services after each HTTP request.
+La variable ``$client`` simule un navigateur. Au lieu de faire des appels HTTP au serveur, il appelle directement l'application Symfony. Cette stratégie présente plusieurs avantages : elle est beaucoup plus rapide que les allers-retours entre le client et le serveur, mais elle permet aussi aux tests d'analyser l'état des services après chaque requête HTTP.
 
 Ce premier test vérifie que la page d'accueil renvoie une réponse HTTP 200.
 
-Assertions such as ``assertResponseIsSuccessful`` are added on top of PHPUnit
-to ease your work. There are many such assertions defined by Symfony.
+Des assertions telles que ``assertResponseIsSuccessful`` sont ajoutées à PHPUnit pour faciliter votre travail. Plusieurs assertions de ce type sont définies par Symfony.
 
 .. tip::
 
-    We have used ``/`` for the URL instead of generating it via the router.
-    This is done on purpose as testing end-user URLs is part of what we want to
-    test. If you change the route path, tests will break as a nice reminder
-    that you should probably redirect the old URL to the new one to be nice
-    with search engines and websites that link back to your website.
+    Nous avons utilisé ``/`` pour l'URL au lieu de la générer avec le routeur. C'est volontaire, car tester les URLs telles qu'elles seront déployées fait partie de ce que nous voulons tester. Si vous la modifiez, les tests vont échouer pour vous rappeler que vous devriez probablement rediriger l'ancienne URL vers la nouvelle, pour être gentil avec les moteurs de recherche et les sites web qui renvoient vers le vôtre.
 
 .. note::
 
@@ -206,8 +187,7 @@ Configurer l'environnement de test
 .. index::
     single: Symfony Environments
 
-By default, PHPUnit tests are run in the ``test`` Symfony environment as
-defined in the PHPUnit configuration file:
+Par défaut, les tests PHPUnit sont exécutés dans l'environnement Symfony ``test`` tel qu'il est défini dans le fichier de configuration de PHPUnit :
 
 .. code-block:: xml
     :caption: phpunit.xml.dist
@@ -226,8 +206,7 @@ defined in the PHPUnit configuration file:
 
 .. index:: Command;secrets:set
 
-To make tests work, we must set the ``AKISMET_KEY`` secret for this
-``test`` environment:
+Pour faire fonctionner les tests, nous devons définir la clé secrète ``AKISMET_KEY`` pour cet environnement ``test`` :
 
 .. code-block:: bash
     :class: answers(AKISMET_KEY_VALUE)
@@ -236,60 +215,44 @@ To make tests work, we must set the ``AKISMET_KEY`` secret for this
 
 .. note::
 
-    As seen in a previous chapter, ``APP_ENV=test`` means that the ``APP_ENV``
-    environment variable is set for the context of the command. On Windows, use
-    ``--env=test`` instead: ``symfony console secrets:set AKISMET_KEY
-    --env=test``
+    Comme vu dans le chapitre précédent, ``APP_ENV=test`` signifie que la variable d'environnement ``APP_ENV`` est définie pour le contexte de la commande. Sous Windows, utilisez plutôt ``--env=test`` : ``symfony console secrets:set AKISMET_KEY --env=test``
 
 Utiliser une base de données de test
--------------------------------------
+------------------------------------
 
 .. index::
     single: Test;Database
     single: Functional Tests,Database
 
-As we have already seen, the Symfony CLI automatically exposes the
-``DATABASE_URL`` environment variable. When ``APP_ENV`` is ``test``, like set
-when running PHPUnit, it changes the database name from ``main`` to
-``main_test`` so that tests have their very own database. This is very
-important as we will need some stable data to run our tests and we certainly
-don't want to override what we stored in the development database.
+Comme nous l'avons déjà vu, la commande Symfony définit automatiquement la variable d'environnement ``DATABASE_URL`` . Quand ``APP_ENV`` vaut ``test``, comme c'est le cas lors de l'exécution de PHPUnit, cela change le nom de la base de données de ``main`` en ``main_test`` pour que les tests utilisent leur propre base de données. Cela est très important car nous aurons besoin d'un jeu de données stable pour exécuter nos tests et nous ne voulons certainement pas écraser celui stocké dans la base de développement.
 
-Before being able to run the test, we need to "initialize" the ``test``
-database (create the database and migrate it):
+Avant de pouvoir lancer les tests, nous devons "initialiser" la base de données ``test`` (créez la base de données et jouez les migrations) :
 
 .. code-block:: bash
 
     $ APP_ENV=test symfony console doctrine:database:create
     $ APP_ENV=test symfony console doctrine:migrations:migrate -n
 
-If you now run the tests, PHPUnit won't interact with your development database
-anymore. To only run the new tests, pass the path to their class path:
+Si vous lancez les tests maintenant, PHPUnit n'interagira plus avec votre base de données de développement. Pour lancer les nouveaux tests uniquement, passez le chemin de leur classe en argument :
 
 .. code-block:: bash
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
-Note that we are setting ``APP_ENV`` explicitely even when runing PHPUnit to
-let the Symfony CLI set the database name to ``main_test``.
+Notez que nous définissons ``APP_ENV`` explicitement quand nous exécutons PHPUnit pour laisser la commande Symfony définir le nom de la base de données à ``main_test``.
 
 .. tip::
 
-    When a test fails, it might be useful to introspect the Response object.
-    Access it via ``$client->getResponse()`` and ``echo`` it to see what it
-    looks like.
+    Lorsqu'un test échoue, il peut être utile d'analyser l'objet Response. Accédez-y grâce à ``$client->getResponse()`` et faites un ``echo`` pour voir à quoi il ressemble.
 
 Définir des *fixtures* (données de test)
-------------------------------------------
+----------------------------------------
 
 .. index::
     single: Doctrine;Fixtures
     single: Fixtures
 
-To be able to test the comment list, the pagination, and the form submission,
-we need to populate the database with some data. And we want the data to be the
-same between test runs to make the tests pass. Fixtures are exactly what we
-need.
+Pour pouvoir tester la liste des commentaires, la pagination et la soumission du formulaire, nous devons remplir la base de données avec quelques données. Nous voulons également que les données soient identiques entre les cycles de tests pour qu'ils réussissent. Les fixtures sont exactement ce dont nous avons besoin.
 
 Installez le composant Doctrine Fixtures :
 
@@ -297,9 +260,7 @@ Installez le composant Doctrine Fixtures :
 
     $ symfony composer req orm-fixtures --dev
 
-A new ``src/DataFixtures/`` directory has been created during the installation
-with a sample class, ready to be customized. Add two conferences and one
-comment for now:
+Un nouveau répertoire ``src/DataFixtures/`` a été créé lors de l'installation, avec une classe d'exemple prête à être personnalisée. Ajoutez deux conférences et un commentaire pour le moment :
 
 .. code-block:: diff
     :caption: patch_file
@@ -343,8 +304,7 @@ comment for now:
              $manager->flush();
          }
 
-When we will load the fixtures, all data will be removed; including the admin
-user. To avoid that, let's add the admin user in the fixtures:
+Lorsque nous chargerons les données de test, toutes les données présentes seront supprimées, y compris celles de l'admin. Pour éviter cela, modifions les fixtures :
 
 .. code-block:: diff
 
@@ -394,15 +354,14 @@ user. To avoid that, let's add the admin user in the fixtures:
 
 .. tip::
 
-    If you don't remember which service you need to use for a given task, use
-    the ``debug:autowiring`` with some keyword:
+    Si vous ne vous souvenez pas quel service vous devez utiliser pour une tâche donnée, utilisez le ``debug:autowiring`` avec un mot-clé :
 
     .. code-block:: bash
 
         $ symfony console debug:autowiring encoder
 
 Charger des données de test
-----------------------------
+---------------------------
 
 .. index:: ! Command;doctrine:fixtures:load
 
@@ -422,8 +381,7 @@ Parcourir un site web avec des tests fonctionnels
     single: Test;Crawling
     single: Crawling
 
-As we have seen, the HTTP client used in the tests simulates a browser, so we
-can navigate through the website as if we were using a headless browser.
+Comme nous l'avons vu, le client HTTP utilisé dans les tests simule un navigateur, afin que nous puissions parcourir le site comme si nous utilisions un navigateur.
 
 Ajoutez un nouveau test qui clique sur une page de conférence depuis la page d'accueil :
 
@@ -455,28 +413,19 @@ Ajoutez un nouveau test qui clique sur une page de conférence depuis la page d'
 
 Décrivons ce qu’il se passe dans ce test :
 
-* Like the first test, we go to the homepage;
+* Comme pour le premier test, nous allons sur la page d'accueil ;
 
-* The ``request()`` method returns a ``Crawler`` instance that helps find
-  elements on the page (like links, forms, or anything you can reach with
-  CSS selectors or XPath);
+* La méthode ``request()`` retourne une instance de ``Crawler`` qui aide à trouver des éléments sur la page (comme des liens, des formulaires, ou tout ce que vous pouvez atteindre avec des sélecteurs CSS ou XPath) ;
 
-* Thanks to a CSS selector, we assert that we have two conferences listed on
-  the homepage;
+* Grâce à un sélecteur CSS, nous testons que nous avons bien deux conférences listées sur la page d'accueil ;
 
-* We then click on the "View" link (as it cannot click on more than one link at
-  a time, Symfony automatically chooses the first one it finds);
+* On clique ensuite sur le lien "View" (comme il n'est pas possible de cliquer sur plus d'un lien à la fois, Symfony choisit automatiquement le premier qu'il trouve) ;
 
-* We assert the page title, the response, and the page ``<h2>`` to be
-  sure we are on the right page (we could also have checked for the route that
-  matches);
+* Nous vérifions le titre de la page, la réponse et le ``<h2>`` de la page pour être sûr d'être sur la bonne page (nous aurions aussi pu vérifier la route correspondante) ;
 
-* Finally, we assert that there is 1 comment on the page. ``div:contains()`` is
-  not a valid CSS selector, but Symfony has some nice additions, borrowed from
-  jQuery.
+* Enfin, nous vérifions qu'il y a 1 commentaire sur la page. ``div:contains()`` n'est pas un sélecteur CSS valide, mais Symfony a quelques ajouts intéressants, empruntés à jQuery.
 
-Instead of clicking on text (i.e. ``View``), we could have selected the link
-via a CSS selector as well:
+Au lieu de cliquer sur le texte (i.e. ``View``), nous aurions également pu sélectionner le lien grâce à un sélecteur CSS :
 
 .. code-block:: php
     :class: ignore
@@ -492,10 +441,7 @@ Vérifiez que le nouveau test passe :
 Soumettre un formulaire dans un test fonctionnel
 ------------------------------------------------
 
-Do you want to get to the next level? Try adding a new comment with a photo on
-a conference from a test by simulating a form submission. That seems ambitious,
-doesn't it? Look at the needed code: not more complex than what we already
-wrote:
+Voulez-vous passer au niveau supérieur ? Essayez d'ajouter un nouveau commentaire avec une photo sur une conférence, à partir d'un test, en simulant une soumission de formulaire. Cela semble ambitieux, n'est-ce pas ? Regardez le code nécessaire : pas plus compliqué que ce que nous avons déjà écrit :
 
 .. code-block:: diff
     :caption: patch_file
@@ -523,9 +469,7 @@ wrote:
     +    }
      }
 
-To submit a form via ``submitForm()``, find the input names thanks to the
-browser DevTools or via the Symfony Profiler Form panel. Note the clever re-use
-of the under construction image!
+Pour soumettre un formulaire via ``submitForm()``, recherchez les noms de champs grâce aux outils de développement du navigateur ou via l'onglet Form du Symfony Profiler. Notez la réutilisation pratique de l'image en construction !
 
 Relancez les tests pour vérifier que tout est bon :
 
@@ -533,8 +477,7 @@ Relancez les tests pour vérifier que tout est bon :
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
-If you want to check the result in a browser, stop the Web server and re-run it
-for the ``test`` environment:
+Si vous voulez vérifier le résultat dans un navigateur, arrêtez le serveur web et relancer le pour l'environnement ``test`` :
 
 .. code-block:: bash
     :class: ignore
@@ -548,15 +491,12 @@ for the ``test`` environment:
     :figclass: with-browser
 
 Recharger les données de test
-------------------------------
+-----------------------------
 
 .. index::
     single: Command;doctrine:fixtures:load
 
-If you run the tests a second time, they should fail. As there are now more
-comments in the database, the assertion that checks the number of comments is
-broken. We need to reset the state of the database between each run by
-reloading the fixtures before each run:
+Si vous effectuez les tests une deuxième fois, ils devraient échouer. Comme il y a maintenant plus de commentaires dans la base de données, l'assertion qui vérifie le nombre de commentaires est erronée. Nous devons réinitialiser l'état de la base de données entre chaque exécution, en rechargeant les données de test avant chacune d'elles :
 
 .. code-block:: bash
     :class: answers(y)
@@ -570,11 +510,7 @@ Automatiser votre workflow avec un Makefile
 .. index::
     single: Makefile
 
-Having to remember a sequence of commands to run the tests is annoying. This
-should at least be documented. But documentation should be a last resort.
-Instead, what about automating day to day activities? That would serve as
-documentation, help discovery by other developers, and make developer lives
-easier and fast.
+Il est assez pénible d'avoir à se souvenir d'une séquence de commandes pour exécuter les tests. Cela devrait au moins être documenté, même si cette documentation ne devrait être consultée qu'en dernier recours. Et si on automatisait plutôt les opérations récurrentes ? Cela servirait aussi de documentation rapidement accessible aux autres, et rendrait le développement plus facile et plus productif.
 
 .. index::
     single: Command;doctrine:fixtures:load
@@ -597,11 +533,9 @@ L'utilisation d'un ``Makefile`` est une façon d'automatiser les commandes :
 
 .. warning::
 
-    In a Makefile rule, indentation **must** consist of a single tab character
-    instead of spaces.
+    Dans une règle Makefile, l'indentation **doit** être une seule tabulation et non des espaces.
 
-Note the ``-n`` flag on the Doctrine command; it is a global flag on Symfony
-commands that makes them non interactive.
+Notez l'option ``-n`` sur la commande Doctrine ; c'est une option standard sur les commandes Symfony qui les rend non interactives.
 
 Chaque fois que vous voulez exécuter les tests, utilisez ``make tests`` :
 
@@ -610,15 +544,12 @@ Chaque fois que vous voulez exécuter les tests, utilisez ``make tests`` :
     $ make tests
 
 Réinitialiser la base de données après chaque test
------------------------------------------------------
+--------------------------------------------------
 
 .. index::
     single: PHPUnit;Performance
 
-Resetting the database after each test run is nice, but having truly
-independent tests is even better. We don't want one test to rely on the results
-of the previous ones. Changing the order of the tests should not change the
-outcome. As we're going to figure out now, this is not the case for the moment.
+Réinitialiser la base de données après chaque test c'est bien, mais avoir des tests vraiment indépendants c'est encore mieux. Nous ne voulons pas qu'un test s'appuie sur les résultats des précédents. Le changement de l'ordre des tests ne devrait pas changer le résultat. Comme nous allons le découvrir maintenant, ce n'est pas le cas pour le moment.
 
 Déplacez le test ``testConferencePage`` après ``testCommentSubmission`` :
 
@@ -686,8 +617,7 @@ Pour réinitialiser la base de données entre les tests, installez DoctrineTestB
 
     $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
 
-You will need to confirm the execution of the recipe (as it is not an
-"officially" supported bundle):
+Vous devrez confirmer l'application de la recette (car il ne s'agit pas d'un bundle "officiellement" supporté) :
 
 .. code-block:: text
     :class: ignore
@@ -723,8 +653,7 @@ Activez le *listener* de PHPUnit :
              <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
          </listeners>
 
-And done. Any changes done in tests are now automatically rolled-back at the
-end of each test.
+Et voilà. Toute modification apportée pendant les tests est automatiquement annulée à la fin de chaque test.
 
 Les tests devraient passer à nouveau :
 
@@ -739,16 +668,13 @@ Utiliser un vrai navigateur pour les tests fonctionnels
     single: Test;Panther
     single: Panther
 
-Functional tests use a special browser that calls the Symfony layer directly.
-But you can also use a real browser and the real HTTP layer thanks to
-Symfony Panther:
+Les tests fonctionnels utilisent un navigateur spécial qui appelle directement la couche Symfony. Mais vous pouvez aussi utiliser un vrai navigateur et la vraie couche HTTP grâce à Symfony Panther :
 
 .. code-block:: bash
 
     $ symfony composer req panther --dev
 
-You can then write tests that use a real Google Chrome browser with the
-following changes:
+Vous pouvez ensuite écrire des tests qui utilisent un vrai navigateur Google Chrome avec les modifications suivantes :
 
 .. code-block:: diff
     :class: ignore
@@ -773,33 +699,25 @@ following changes:
 
              $this->assertResponseIsSuccessful();
 
-The ``SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` environment variable contains the URL
-of the local web server.
+La variable d'environnement ``SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` contient l'URL du serveur web local.
 
 Exécuter des tests fonctionnels de boîte noire avec Blackfire
----------------------------------------------------------------
+-------------------------------------------------------------
 
-Another way to run functional tests is to use the `Blackfire player
-<https://blackfire.io/player>`_. In addition to what you can do with functional
-tests, it can also perform performance tests.
+Une autre façon d'effectuer des tests fonctionnels est d'utiliser le `lecteur Blackfire <https://blackfire.io/player>`_. En plus de ce que vous pouvez faire avec les tests fonctionnels, il peut également effectuer des tests de performance.
 
 Reportez-vous à l'étape "Performance" pour en savoir plus.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `List of assertions defined by Symfony
-      <https://symfony.com/doc/current/testing/functional_tests_assertions.html>`_
-      for functional tests;
+    * `Liste des assertions définies par Symfony <https://symfony.com/doc/current/testing/functional_tests_assertions.html>`_ pour les tests fonctionnels ;
 
-    * `PHPUnit docs <https://phpunit.de/documentation.html>`_;
+    * `Documentation de PHPUnit <https://phpunit.de/documentation.html>`_ ;
 
-    * The `Faker library <https://github.com/FakerPHP/Faker>`_ to generate
-      realistic fixtures data;
+    * La `bibliothèque Faker <https://github.com/fzaninotto/Faker>`_ pour générer des données réalistes dans les fixtures ;
 
-    * The `CssSelector component docs
-      <https://symfony.com/doc/current/components/css_selector.html>`_;
+    * La `documentation du composant CssSelector <https://symfony.com/doc/current/components/css_selector.html>`_ ;
 
-    * The `Symfony Panther <https://github.com/symfony/panther>`_ library for
-      browser testing and web crawling in Symfony applications;
+    * La bibliothèque `Symfony Panther <https://github.com/symfony/panther>`_ pour les tests de navigateurs et le parcours de site web dans les applications Symfony ;
 
-    * The `Make/Makefile docs <https://www.gnu.org/software/make/manual/make.html>`_.
+    * La `documentation de Make/Makefile <https://www.gnu.org/software/make/manual/make.html>`_.

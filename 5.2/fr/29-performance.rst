@@ -1,5 +1,5 @@
 Gérer les performances
-=======================
+======================
 
 .. index::
     single: Blackfire
@@ -9,51 +9,39 @@ Gérer les performances
 
     L'optimisation prématurée est la racine de tous les maux.
 
-Maybe you have already read this quotation before. But I like to cite it in
-full:
+Peut-être avez-vous déjà lu cette citation auparavant, mais j’aimerais la citer en entier :
 
 .. epigraph::
 
-    We should forget about small efficiencies, say about 97% of the time:
-    premature optimization is the root of all evil. Yet we should not pass up
-    our opportunities in that critical 3%.
+    Nous devrions éviter les économies de bout de chandelles, disons dans environ 97 % des cas : l'optimisation prématurée est la racine de tous les maux. Pour autant, nous ne devrions pas ignorer ces occasions dans ces 3% cruciaux.
 
     --   Donald Knuth
 
-Even small performance improvements can make a difference, especially for
-e-commerce websites. Now that the guestbook application is ready for prime
-time, let's see how we can check its performance.
+Même de petites améliorations de performance peuvent faire la différence, en particulier pour les sites e-commerce. Maintenant que l'application du livre d'or est prête pour les heures de pointe, voyons comment nous pouvons analyser ses performances.
 
-The best way to find performance optimizations is to use a *profiler*. The most
-popular option nowadays is `Blackfire <https://blackfire.io>`_ (*full
-disclaimer*: I am also the founder of the Blackfire project).
+La meilleure façon de trouver des optimisations de performance est d'utiliser un *profileur*. L'option la plus populaire de nos jours est `Blackfire <https://blackfire.io>`_ (*Avertissement* : je suis aussi le fondateur du projet Blackfire).
 
 Découvrir Blackfire
---------------------
+-------------------
 
 Blackfire est composé de plusieurs parties :
 
-* A *client* that triggers profiles (the Blackfire CLI tool or a browser
-  extension for Google Chrome or Firefox);
+* Un *client* qui déclenche des profils (l'outil Blackfire CLI ou une extension de navigateur web pour Google Chrome ou Firefox) ;
 
-* An *agent* that prepares and aggregates data before sending them to
-  blackfire.io for display;
+* Un *agent* qui prépare et agrège les données avant de les envoyer à blackfire.io pour affichage ;
 
-* A PHP extension (the *probe*) that instruments the PHP code.
+* Une extension PHP (la *sonde*) qui analyse le code PHP.
 
-To work with Blackfire, you first need to `sign up
-<https://blackfire.io/signup>`_.
+Pour travailler avec Blackfire, vous devez d'abord vous `inscrire <https://blackfire.io/signup>`_.
 
-Install Blackfire on your local machine by running the following quick
-installation script:
+Installez Blackfire sur votre machine locale en exécutant le script d'installation suivant :
 
 .. code-block:: bash
     :class: ignore
 
     $ curl https://installer.blackfire.io/ | bash
 
-This installer downloads the Blackfire CLI Tool and then installs the PHP probe
-(without enabling it) on all available PHP versions.
+Cet installateur télécharge l'outil Blackfire CLI et installe ensuite la sonde PHP (sans l'activer) sur toutes les versions PHP disponibles.
 
 Activez la sonde PHP pour notre projet :
 
@@ -79,11 +67,7 @@ Redémarrez le serveur web pour que PHP puisse charger Blackfire :
     $ symfony server:stop
     $ symfony server:start -d
 
-The Blackfire CLI Tool needs to be configured with your personal **client**
-credentials (to store your project profiles under your personal account). Find
-them at the top of the ``Settings/Credentials`` `page
-<https://blackfire.io/my/settings/credentials>`_ and execute the following
-command by replacing the placeholders:
+L'outil Blackfire CLI doit être configuré avec vos identifiants **client** personnels (pour stocker vos profils de projet dans votre compte personnel). Vous les trouverez en haut de la `page <https://blackfire.io/my/settings/credentials>`_ ``Settings/Credentials``. Exécutez la commande suivante en remplaçant les espaces réservés :
 
 .. code-block:: bash
     :class: ignore
@@ -92,10 +76,7 @@ command by replacing the placeholders:
 
 .. note::
 
-    For full installation instructions, follow the `official detailed
-    installation guide
-    <https://blackfire.io/docs/up-and-running/installation>`_. They are useful
-    when installing Blackfire on a server.
+    Pour des instructions d'installation complètes, suivez le `guide d'installation officiel détaillé <https://blackfire.io/docs/up-and-running/installation>`_. Elles sont utiles lors de l'installation de Blackfire sur un serveur.
 
 Configurer l'agent Blackfire sur Docker
 ---------------------------------------
@@ -104,8 +85,7 @@ Configurer l'agent Blackfire sur Docker
     single: Docker;Blackfire
     single: Blackfire;Agent
 
-The last step is to add the Blackfire agent service in the Docker Compose
-stack:
+La dernière étape consiste à ajouter le service d'agent Blackfire dans Docker Compose :
 
 .. code-block:: diff
     :caption: patch_file
@@ -122,12 +102,7 @@ stack:
     +        env_file: .env.local
     +        ports: [8707]
 
-To communicate with the server, you need to get your personal **server**
-credentials (these credentials identify where you want to store the profiles --
-you can create one per project); they can be found at the bottom of the
-``Settings/Credentials`` `page
-<https://blackfire.io/my/settings/credentials>`_. Store them in a local
-``.env.local`` file:
+Pour communiquer avec le serveur, vous devez récupérer vos identifiants de **serveur** personnels (ces identifiants spécifient l'endroit où vous voulez stocker les profils - vous pouvez en créer un par projet) ; ils se trouvent au bas de la `page <https://blackfire.io/my/settings/credentials>`_ ``Settings/Credentials``. Stockez-les dans un fichier local ``.env.local`` :
 
 .. code-block:: text
     :class: ignore
@@ -144,10 +119,9 @@ Vous pouvez maintenant lancer le nouveau conteneur :
     $ docker-compose up -d
 
 Réparer une installation Blackfire en panne
---------------------------------------------
+-------------------------------------------
 
-If you get an error while profiling, increase the Blackfire log level to get
-more information in the logs:
+Si vous obtenez une erreur pendant le profilage, augmentez le niveau de log Blackfire pour obtenir plus d'informations :
 
 .. code-block:: diff
     :caption: patch_file
@@ -217,10 +191,7 @@ Configurer Varnish pour Blackfire
 .. index::
     single: SymfonyCloud;Varnish
 
-Before you can deploy to start profiling, you need a way to bypass the Varnish
-HTTP cache. If not, Blackfire will never hit the PHP application. You are going
-to authorize the bypass of Varnish only for profiling requests coming from your
-local machine.
+Avant de pouvoir déployer pour commencer le profilage, vous devez trouver un moyen de contourner le cache HTTP de Varnish, sinon Blackfire n'atteindra jamais l'application PHP. Vous n'allez autoriser que les demandes de profil provenant de votre machine locale à ignorer Varnish.
 
 Récupérez votre adresse IP actuelle :
 
@@ -274,13 +245,9 @@ Profiler les pages web
 .. index::
     single: Profiling;Web Pages
 
-You can profile traditional web pages from Firefox or Google Chrome via their
-`dedicated extensions
-<https://blackfire.io/docs/integrations/browsers/index>`_.
+Vous pouvez profiler les pages web traditionnelles depuis Firefox ou Google Chrome grâce à leurs `extensions dédiées <https://blackfire.io/docs/integrations/browsers/index>`_.
 
-On your local machine, don't forget to disable the HTTP cache in
-``config/packages/framework.yaml`` when profiling: if not, you will profile the
-Symfony HTTP cache layer instead of your own code:
+Sur votre machine locale, n'oubliez pas de désactiver le cache HTTP dans ``config/packages/framework.yaml`` lors du profilage : sinon, vous profilerez la couche de cache HTTP Symfony au lieu de votre propre code :
 
 .. code-block:: diff
     :caption: patch_file
@@ -295,17 +262,12 @@ Symfony HTTP cache layer instead of your own code:
     -    http_cache: true
     +    #http_cache: true
 
-To get a better picture of the performance of your application in production,
-you should also profile the "production" environment. By default, your local
-environment is using the "development" environment, which adds a significant
-overhead (mainly to gather data for the web debug toolbar and the Symfony
-profiler).
+Pour avoir une meilleure idée de la performance de votre application en production, vous devez également profiler l'environnement "production". Par défaut, votre environnement local utilise l'environnement de "développement", ce qui ajoute un surcoût important (principalement pour collecter des données pour la web debug toolbar et le profileur Symfony).
 
 .. index::
     single: Symfony CLI;server:prod
 
-Switching your local machine to the production environment can be done by
-changing the ``APP_ENV`` environment variable in the ``.env.local`` file:
+Le passage de votre machine locale à l'environnement de production peut se faire en changeant la variable d'environnement ``APP_ENV`` dans le fichier ``.env.local`` :
 
 .. code-block:: text
     :class: ignore
@@ -332,41 +294,29 @@ Profiler les ressources de l'API
 .. index::
     single: Profiling;API
 
-Profiling the API or the SPA is better done on the CLI via the Blackfire CLI
-Tool that you have installed previously:
+Le profilage de l'API ou de la SPA est plus efficace en ligne de commande, en utilisant l'outil Blackfire CLI que vous avez installé précédemment :
 
 .. code-block:: bash
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`api
 
-The ``blackfire curl`` command accepts the exact same arguments and options as
-`cURL <https://curl.haxx.se/docs/manpage.html>`_.
+La commande ``blackfire curl`` accepte exactement les mêmes arguments et options que `cURL <https://curl.haxx.se/docs/manpage.html>`_.
 
 Comparer les performances
 -------------------------
 
-In the step about "Cache", we added a cache layer to improve the performance of
-our code, but we did not check nor measure the performance impact of the
-change. As we are all very bad at guessing what will be fast and what is slow,
-you might end up in a situation where making some optimization actually makes
-your application slower.
+Dans l'étape traitant du "Cache", nous avons ajouté une couche cache pour améliorer les performances de notre code, mais nous n'avons pas vérifié ni mesuré l'impact du changement sur les performances. Comme nous sommes tous très mauvais pour deviner ce qui sera rapide et ce qui est lent, vous pourriez vous retrouver dans une situation où l'optimisation rend votre application plus lente.
 
-You should always measure the impact of any optimization you do with a
-profiler. Blackfire makes it visually easier thanks to its `comparison feature
-<https://blackfire.io/docs/cookbooks/understanding-comparisons>`_.
+Vous devriez toujours mesurer l'impact de toute optimisation que vous faites avec un profileur. Blackfire facilite l'analyse grâce à sa `fonction de comparaison <https://blackfire.io/docs/cookbooks/understanding-comparisons>`_.
 
 Écrire les tests fonctionnels de boîte noire
-----------------------------------------------
+--------------------------------------------
 
 .. index::
     single: Blackfire;Player
 
-We have seen how to write functional tests with Symfony. Blackfire can be used
-to write browsing scenarios that can be run on demand via the `Blackfire player
-<https://blackfire.io/player>`_. Let's write a scenario that submits a new
-comment and validates it via the email link in development, and via the admin
-in production.
+Nous avons vu comment écrire des tests fonctionnels avec Symfony. Blackfire peut être utilisé pour écrire des scénarios de navigation qui peuvent être exécutés à la demande via le `lecteur Blackfire <https://blackfire.io/player>`_. Rédigeons un scénario qui soumet un nouveau commentaire et le valide via le lien email en développement, et via l'interface d'admin en production.
 
 Créez un fichier ``.blackfire.yaml`` avec le contenu suivant :
 
@@ -445,25 +395,19 @@ Ou en production :
 
     $ ./blackfire-player.phar run --endpoint=`symfony env:urls --first` .blackfire.yaml --variable "webmail_url=NONE" --variable="env=prod"
 
-Blackfire scenarios can also trigger profiles for each request and run
-performance tests by adding the ``--blackfire`` flag.
+Les scénarios Blackfire peuvent également déclencher des profils pour chaque requête et exécuter des tests de performance en ajoutant l'option ``--blackfire``.
 
 Automatiser les contrôles de performance
------------------------------------------
+----------------------------------------
 
-Managing performance is not only about improving the performance of existing
-code, it is also about checking that no performance regressions are introduced.
+La gestion de la performance ne consiste pas seulement à améliorer la performance du code existant, mais aussi à vérifier qu'aucune régression de performance n'est introduite.
 
-The scenario written in the previous section can be run automatically in a
-Continuous Integration workflow or in production on a regular basis.
+Le scénario décrit dans la section précédente peut être exécuté automatiquement dans un workflow d'intégration continue ou régulièrement en production.
 
-SymfonyCloud also allows to `run the scenarios
-<https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_
-whenever you create a new branch or deploy to production to check the
-performance of the new code automatically.
+SymfonyCloud permet également d'`exécuter les scénarios <https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_ à chaque fois que vous créez une nouvelle branche ou déployez en production pour vérifier automatiquement les performances du nouveau code.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `The Blackfire book: PHP Code Performance Explained <https://blackfire.io/book>`_;
+    * `Le livre Blackfire : PHP Code Performance Explained <https://blackfire.io/book>`_ ;
 
-    * `SymfonyCasts Blackfire tutorial <https://symfonycasts.com/screencast/blackfire>`_.
+    * `Tutoriel SymfonyCasts sur Blackfire <https://symfonycasts.com/screencast/blackfire>`_.

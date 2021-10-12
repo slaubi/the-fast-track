@@ -1,12 +1,9 @@
 Redimensionner des images
 =========================
 
-On the conference page design, photos are constrained to a maximum size of
-200 by 150 pixels. What about optimizing the images and reducing their size if
-the uploaded original is larger than the limits?
+Dans le rendu de la page d'une conférence, les photos sont limitées à une taille maximale de 200 x 150 pixels. Ne faudrait-il pas optimiser les images, et réduire leur taille, si l'image originale est plus grande que celle qui est affichée ?
 
-That is a perfect job that can be added to the comment workflow, probably just
-after the comment is validated and just before it is published.
+C'est une tâche idéale pour être ajoutée au workflow des commentaires, probablement juste après la validation du commentaire, et juste avant sa publication.
 
 Ajoutons un nouvel état ``ready`` et une transition ``optimize`` :
 
@@ -46,8 +43,7 @@ Ajoutons un nouvel état ``ready`` et une transition ``optimize`` :
 .. index::
     single: Command;workflow:dump
 
-Generate a visual representation of the new workflow configuration to validate
-that it describes what we want:
+Générez une représentation visuelle de la nouvelle configuration du workflow pour valider qu'elle décrit ce que nous voulons :
 
 .. code-block:: bash
     :class: ignore
@@ -63,8 +59,7 @@ Optimiser les images avec Imagine
 .. index::
     single: Imagine
 
-Image optimizations will be done thanks to `GD`_ (check that your local PHP
-installation has the GD extension enabled) and `Imagine`_:
+L'optimisation des images se fera grâce à `GD`_ (vérifiez que l'extension GD est activée dans votre installation locale de PHP) et `Imagine`_ :
 
 .. code-block:: bash
 
@@ -109,11 +104,10 @@ Le redimensionnement d'une image peut être effectué via la classe de service s
         }
     }
 
-After optimizing the photo, we store the new file in place of the original one.
-You might want to keep the original image around though.
+Après avoir optimisé la photo, nous stockons le nouveau fichier à la place de l'original. Par contre, vous voudrez peut-être garder l'image originale.
 
 Ajouter une nouvelle étape au workflow
----------------------------------------
+--------------------------------------
 
 Modifiez le workflow pour gérer le nouvel état :
 
@@ -168,8 +162,7 @@ Modifiez le workflow pour gérer le nouvel état :
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
              }
 
-Note that ``$photoDir`` is automatically injected as we defined a container
-*bind* on this variable name in a previous step:
+Notez que ``$photoDir`` est automatiquement injecté parce que nous avons défini une *liaison* (bind) de conteneur sur ce nom de variable lors d'une étape précédente :
 
 .. code-block:: yaml
     :caption: config/packages/services.yaml
@@ -181,15 +174,12 @@ Note that ``$photoDir`` is automatically injected as we defined a container
                 $photoDir: "%kernel.project_dir%/public/uploads/photos"
 
 Enregistrer des données uploadées en production
--------------------------------------------------
+-----------------------------------------------
 
 .. index::
     single: SymfonyCloud;File Service
 
-We have already defined a special read-write directory for uploaded files in
-``.symfony.cloud.yaml``. But the mount is local. If we want the web container
-and the message consumer worker to be able to access the same mount, we need to
-create a *file service*:
+Nous avons déjà défini un dossier en lecture-écriture dédié pour les fichiers uploadés dans ``.symfony.cloud.yaml``. Mais le montage étant local, nous devons créer un *service de fichiers*, afin que le conteneur web et le *message consumer worker* puissent accéder au même support :
 
 .. code-block:: diff
     :caption: patch_file

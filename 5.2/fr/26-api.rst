@@ -6,33 +6,27 @@ Exposer une API avec API Platform
     single: HTTP API
     single: API Platform
 
-We have finished the implementation of the Guestbook website. To allow more
-usage of the data, what about exposing an API now? An API could be used by a
-mobile application to display all conferences, their comments, and maybe let
-attendees submit comments.
+Nous avons terminé la réalisation du site web du livre d'or. Maintenant, pour faciliter l'accès aux données, que diriez-vous d'exposer une API ? Une API pourrait être utilisée par une application mobile pour afficher toutes les conférences, leurs commentaires, et peut-être permettre la soumission de commentaires.
 
 Dans cette étape, nous allons implémenter une API en lecture seule.
 
 Installer API Platform
 ----------------------
 
-Exposing an API by writing some code is possible, but if we want to use
-standards, we'd better use a solution that already takes care of the heavy
-lifting. A solution like API Platform:
+Exposer une API en écrivant du code est possible, mais si nous voulons utiliser des standards, nous ferions mieux d'utiliser une solution qui prend déjà en charge le gros du travail. Une solution comme API Platform :
 
 .. code-block:: bash
 
     $ symfony composer req api
 
 Exposer une API pour les conférences
--------------------------------------
+------------------------------------
 
 .. index::
     single: Annotations;@ApiResource
     single: Annotations;Groups
 
-A few annotations on the Conference class is all we need to configure the
-API:
+Quelques annotations sur la classe Conference suffisent pour configurer l'API :
 
 .. code-block:: diff
     :caption: patch_file
@@ -100,13 +94,9 @@ API:
 
          public function __construct()
 
-The main ``@ApiResource`` annotation configures the API for conferences. It
-restricts possible operations to ``get`` and configures various things: like
-which fields to display and how to order the conferences.
+L'annotation principale ``@ApiResource`` configure l'API pour les conférences. Elle restreint les opérations possibles à ``get`` et configure différentes choses, comme par exemple, quels champs afficher et comment trier les conférences.
 
-By default, the main entry point for the API is ``/api`` thanks to
-configuration from ``config/routes/api_platform.yaml`` that was added by the
-package's recipe.
+Par défaut, le point d'entrée principal de l'API est ``/api``. Cette configuration a été ajoutée dans ``config/routes/api_platform.yaml`` par la recette du paquet.
 
 Une interface web vous permet d'interagir avec l'API :
 
@@ -219,14 +209,11 @@ Faites de même pour les commentaires :
 Le même type d'annotations est utilisé pour configurer la classe.
 
 Filtrer les commentaires exposés par l'API
--------------------------------------------
+------------------------------------------
 
-By default, API Platform exposes all entries from the database. But for
-comments, only the published ones should be part of the API.
+Par défaut, API Platform expose toutes les entrées de la base de données. Mais pour les commentaires, seuls ceux qui ont été publiés devraient apparaître dans l'API.
 
-When you need to restrict the items returned by the API, create a service that
-implements ``QueryCollectionExtensionInterface`` to control the Doctrine query
-used for collections and/or ``QueryItemExtensionInterface`` to control items:
+Lorsque vous avez besoin de filtrer les éléments retournés par l'API, créez un service qui implémente ``QueryCollectionExtensionInterface`` pour gérer la requête Doctrine utilisée pour les collections, et/ou ``QueryItemExtensionInterface`` pour gérer les éléments :
 
 .. code-block:: php
     :caption: src/Api/FilterPublishedCommentQueryExtension.php
@@ -257,9 +244,7 @@ used for collections and/or ``QueryItemExtensionInterface`` to control items:
         }
     }
 
-The query extension class applies its logic only for the ``Comment`` resource
-and modify the Doctrine query builder to only consider comments in the
-``published`` state.
+La classe d'extension de requête n'applique sa logique que pour la ressource ``Comment`` et modifie le query builder Doctrine pour ne considérer que les commentaires dans l'état ``published``.
 
 Configurer le CORS
 ------------------
@@ -268,19 +253,12 @@ Configurer le CORS
     single: CORS
     single: Cross-Origin Resource Sharing
 
-By default, the same-origin security policy of modern HTTP clients make calling
-the API from another domain forbidden. The CORS bundle, installed as part of
-``composer req api``, sends Cross-Origin Resource Sharing headers based on the
-``CORS_ALLOW_ORIGIN`` environment variable.
+Par défaut, la politique de sécurité de même origine des clients HTTP modernes interdit d'appeler l'API depuis un autre domaine. Le paquet CORS, installé par défaut avec ``composer req api``, envoie des en-têtes de *Cross-Origin Resource Sharing* en fonction de la variable d'environnement ``CORS_ALLOW_ORIGIN``.
 
-By default, its value, defined in ``.env``, allows HTTP requests from
-``localhost`` and ``127.0.0.1`` on any port. That's exactly what we need as for
-the next step as we will create an SPA that will have its own web server that
-will call the API.
+Par défaut, sa valeur, définie par le fichier ``.env``, autorise les requêtes HTTP depuis ``localhost`` et ``127.0.0.1`` sur n'importe quel port. C'est exactement ce dont nous avons besoin pour la prochaine étape, car nous allons créer une SPA qui aura son propre serveur web et qui appellera l'API.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCasts API Platform tutorial <https://symfonycasts.com/screencast/api-platform>`_;
+    * `Tutoriel SymfonyCasts sur API Platform  <https://symfonycasts.com/screencast/api-platform>`_ ;
 
-    * To enable the GraphQL support, run ``composer require
-      webonyx/graphql-php``, then browse to ``/api/graphql``.
+    * Pour activer la prise en charge de GraphQL, exécutez ``composer require webonyx/graphql-php``, puis accédez à ``/api/graphql``.

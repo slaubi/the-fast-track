@@ -4,11 +4,9 @@ Utiliser Redis pour stocker les sessions
 .. index::
     single: Redis
 
-Depending on the website traffic and/or its infrastructure, you might want to
-use Redis to manage user sessions instead of PostgreSQL.
+Selon le traffic de votre site web et/ou son infrastructure, vous pourriez vouloir utiliser Redis pour gérer les sessions utilisateur au lieu de PostgreSQL.
 
-When we talked about branching the project's code to move session from the
-filesystem to the database, we listed all the needed step to add a new service.
+Quand nous avons parlé de créer une branche du code du projet pour déplacer les sessions du système de fichiers vers la base de données, nous avons listé toutes les étapes nécessaire à l'ajout d'un nouveau service.
 
 Voici comment vous pouvez ajouter Redis à votre projet en un seul patch :
 
@@ -88,6 +86,6 @@ Commitez et déployez comme d'habitude :
 
     $ symfony deploy
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Redis docs <https://redis.io/documentation>`_.
+    * `Documentation de Redis <https://redis.io/documentation>`_.

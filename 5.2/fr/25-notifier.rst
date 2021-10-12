@@ -1,21 +1,13 @@
 Notifier à tout prix
-=====================
+====================
 
-The Guestbook application gathers feedback about the conferences. But we are
-not great at giving feedback to our users.
+L'application Livre d'or recueille les retours sur les conférences. Mais nous, de notre côté, quels retours donnons-nous aux internautes ?
 
-As comments are moderated, they probably don't understand why their comments
-are not published instantly. They might even re-submit them thinking there was
-some technical problems. Giving them feedback after posting a comment would be
-great.
+Comme les commentaires sont modérés, il leur est difficile de comprendre pourquoi ils ne sont pas publiés instantanément. Ils pourraient même avoir envie de les soumettre à nouveau, en pensant qu'il y a eu des problèmes techniques. Ce serait génial de donner un retour après avoir posté un commentaire.
 
-Also, we should probably ping them when their comment has been published. We
-ask for their email, so we'd better use it.
+De plus, nous devrions probablement les notifier lorsque leurs commentaires auront été publiés. Nous leur demandons leur adresse email, alors autant l'utiliser.
 
-There are many ways to notify users. Email is the first medium that you might
-think about, but notifications in the web application is another one. We could
-even think about sending SMS messages, posting a message on Slack or Telegram.
-There are many options.
+Il y a plusieurs façons d'envoyer des notifications. L'email est le premier support auquel vous pouvez penser, mais les notifications dans l'application web sont une autre possibilité. On pourrait même penser à envoyer des SMS ou à poster un message sur Slack ou Telegram. Les options sont nombreuses.
 
 .. index::
     single: Components;Notifier
@@ -33,8 +25,7 @@ Envoyez des notifications d'application web dans le navigateur
 .. index::
     single: Flash Messages
 
-As a first step, let's notify the users that comments are moderated directly in
-the browser after their submission:
+Dans un premier temps, avertissons les internautes que les commentaires sont modérés directement dans le navigateur après leur soumission :
 
 .. code-block:: diff
     :caption: patch_file
@@ -79,17 +70,14 @@ Le notifier *envoie* une *notification* aux *destinataires* via un *canal*.
 
 Une notification a un sujet, un contenu facultatif et une importance.
 
-A notification is sent on one or many channels depending on its importance.
-You can send urgent notifications by SMS and regular ones by email for
-instance.
+Une notification est envoyée sur un ou plusieurs canaux en fonction de son importance. Vous pouvez envoyer des notifications urgentes par SMS et des notifications régulières par email par exemple.
 
 Pour les notifications par navigateur, nous n'avons pas de destinataires.
 
 .. index::
     single: Twig;for
 
-The browser notification uses *flash messages* via the *notification* section.
-We need to display them by updating the conference template:
+La notification par navigateur utilise des *messages flash* via la section *notification*. Nous devons les afficher en mettant à jour le template d'une conférence :
 
 .. code-block:: diff
     :caption: patch_file
@@ -118,8 +106,7 @@ Les internautes seront maintenant prévenus que leurs commentaires sont modéré
     :align: center
     :figclass: with-browser
 
-As an added bonus, we have a nice notification at the top of the website if
-there is a form error:
+En prime, nous avons une belle notification en haut du site s'il y a une erreur de formulaire :
 
 .. figure:: screenshots/form-error-notification.png
     :alt: /conference/amsterdam-2019
@@ -128,20 +115,14 @@ there is a form error:
 
 .. tip::
 
-    Flash messages use the *HTTP session* system as a storage medium. The main
-    consequence is that the HTTP cache is disabled as the session system must
-    be started to check for messages.
+    Les messages flash utilisent le système de *session HTTP* comme support de stockage. La principale conséquence est que le cache HTTP est désactivé, car le système de session doit être démarré pour vérifier les messages.
 
-    This is the reason why we have added the flash messages snippet in the
-    ``show.html.twig`` template and not in the base one as we would have lost
-    HTTP cache for the homepage.
+    C'est la raison pour laquelle nous avons ajouté le code pour les messages flash dans le template ``show.html.twig`` et non dans le template de base, car nous aurions perdu le cache HTTP pour la page d'accueil.
 
 Notifier les admins par email
 -----------------------------
 
-Instead of sending an email via ``MailerInterface`` to notify the admin that a
-comment has just been posted, switch to use the Notifier component in the
-message handler:
+Au lieu d'envoyer un email via ``MailerInterface`` pour avertir l'admin qu'un commentaire vient d'être posté, utilisez le composant Notifier dans le gestionnaire de messages :
 
 .. code-block:: diff
     :caption: patch_file
@@ -207,8 +188,7 @@ message handler:
                  if ($comment->getPhotoFilename()) {
                      $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
 
-The ``getAdminRecipients()`` method returns the admin recipients as configured
-in the notifier configuration; update it now to add your own email address:
+La méthode ``getAdminRecipients()`` retourne les destinataires admin tels que configurés dans la configuration du notifier ; mettez-la à jour maintenant pour ajouter votre propre adresse email :
 
 .. code-block:: diff
     :caption: patch_file
@@ -258,16 +238,11 @@ Maintenant, créez la classe ``CommentReviewNotification`` :
         }
     }
 
-The ``asEmailMessage()`` method from ``EmailNotificationInterface`` is
-optional, but it allows to customize the email.
+La méthode ``asEmailMessage()`` de ``EmailNotificationInterface`` est facultative, mais elle permet de personnaliser l'email.
 
-One benefit of using the Notifier instead of the mailer directly to send emails
-is that it decouples the notification from the "channel" used for it. As
-you can see, nothing explicitly says that the notification should be sent by
-email.
+L'un des avantages d'utiliser le Notifier plutôt que d'expédier l'email directement est que cela dissocie la notification du "canal" utilisé pour l'envoyer. Comme vous pouvez le constater, rien n'indique explicitement que la notification doit être envoyée par email.
 
-Instead, the channel is configured in ``config/packages/notifier.yaml``
-depending on the *importance* of the notification (``low`` by default):
+Au lieu de cela, le canal est configuré dans ``config/packages/notifier.yaml`` en fonction de l'*importance* de la notification (``low`` par défaut) :
 
 .. code-block:: yaml
     :caption: config/packages/notifier.yaml
@@ -282,8 +257,7 @@ depending on the *importance* of the notification (``low`` by default):
             medium: ['email']
             low: ['email']
 
-We have talked about the ``browser`` and the ``email`` channels. Let's see some
-fancier ones.
+Nous avons parlé des canaux ``email`` et ``browser``. Voyons maintenant des cas plus sympas.
 
 Discuter avec les admins
 ------------------------
@@ -291,12 +265,9 @@ Discuter avec les admins
 .. index::
     single: Slack
 
-Let's be honest, we all wait for positive feedback. Or at least constructive
-feedback. If someone posts a comment with words like "great" or "awesome", we
-might want to accept them faster than the others.
+Soyons honnêtes, nous attendons tous des commentaires positifs. Ou au moins un retour constructif. Si quelqu'un poste un commentaire avec des mots comme "fantastique" ou "génial", nous pourrions vouloir les accepter plus rapidement que les autres.
 
-For such messages, we want to be alerted on an instant messaging system like
-Slack or Telegram in addition to the regular email.
+Pour de tels messages, nous voulons recevoir une alerte sur un système de messagerie instantanée comme Slack ou Telegram, en plus de l'email normal.
 
 .. index::
     single: Components;Notifier
@@ -308,9 +279,7 @@ Installez la prise en charge de Slack pour Symfony Notifier :
 
     $ symfony composer req slack-notifier
 
-To get started, compose the Slack DSN with a Slack access token and the Slack
-channel identifier where you want to send messages:
-``slack://ACCESS_TOKEN@default?channel=CHANNEL``.
+Pour commencer, ajouter au DSN Slack un jeton d'accès Slack et l'identifiant du canal Slack sur lequel vous voulez envoyer des messages : ``slack://ACCESS_TOKEN@default?channel=CHANNEL``.
 
 .. index::
     single: Command;secrets:set
@@ -347,8 +316,7 @@ Activez le support du chatter Slack :
              #texter_transports:
              #    twilio: '%env(TWILIO_DSN)%'
 
-Update the Notification class to route messages depending on the comment text
-content (a simple regex will do the job):
+Mettez à jour la classe Notification pour router les messages en fonction du contenu du texte du commentaire (une simple expression régulière fera l'affaire) :
 
 .. code-block:: diff
     :caption: patch_file
@@ -380,14 +348,11 @@ content (a simple regex will do the job):
     +    }
      }
 
-We have also changed the importance of "regular" comments as it slightly tweaks
-the design of the email.
+Nous avons également changé l'importance des commentaires "normaux", car ils modifient légèrement le design de l'email.
 
-And done! Submit a comment with "awesome" in the text, you should receive a
-message on Slack.
+Et voilà, c'est fait ! Soumettez un commentaire avec "awesome" dans le texte : vous devriez recevoir un message sur Slack.
 
-As for email, you can implement ``ChatNotificationInterface`` to override the
-default rendering of the Slack message:
+Comme pour l'email, vous pouvez implémenter ``ChatNotificationInterface`` pour remplacer le rendu par défaut du message Slack :
 
 .. code-block:: diff
     :caption: patch_file
@@ -444,11 +409,9 @@ default rendering of the Slack message:
          {
              if (preg_match('{\b(great|awesome)\b}i', $this->comment->getText())) {
 
-It is better, but let's go one step further. Wouldn't it be awesome to be able
-to accept or reject a comment directly from Slack?
+C'est mieux, mais allons plus loin. Ne serait-il pas génial de pouvoir accepter ou rejeter un commentaire directement depuis Slack ?
 
-Change the notification to accept the review URL and add two buttons in the
-Slack message:
+Modifiez la notification pour accepter l'URL de validation et ajoutez deux boutons dans le message Slack :
 
 .. code-block:: diff
     :caption: patch_file
@@ -489,8 +452,7 @@ Slack message:
 
              return $message;
 
-It is now a matter of tracking changes backward. First, update the message
-handler to pass the review URL:
+Nous devons maintenant gérer les changements dans le sens inverse. Tout d'abord, mettez à jour le gestionnaire de message pour passer l'URL de validation :
 
 .. code-block:: diff
     :caption: patch_file
@@ -508,8 +470,7 @@ handler to pass the review URL:
                  if ($comment->getPhotoFilename()) {
                      $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
 
-As you can see, the review URL should be part of the comment message, let's add
-it now:
+Comme vous pouvez le voir, l'URL de validation devrait faire partie du message de commentaire. Ajoutons-la maintenant :
 
 .. code-block:: diff
     :caption: patch_file
@@ -540,8 +501,7 @@ it now:
          {
              return $this->id;
 
-Finally, update the controllers to generate the review URL and pass it in the
-comment message constructor:
+Enfin, modifiez les contrôleurs pour générer l'URL de validation et passez-la dans le constructeur du message de commentaire :
 
 .. code-block:: diff
     :caption: patch_file
@@ -586,8 +546,7 @@ comment message constructor:
 
                  $notifier->send(new Notification('Thank you for the feedback; your comment will be posted after moderation.', ['browser']));
 
-Code decoupling means changes in more places, but it makes it easier to test,
-reason about, and reuse.
+Le découplage de code implique des changements dans un plus grand nombre d'endroits, mais il facilite les tests, le raisonnement et la réutilisation.
 
 Essayez encore une fois, le message devrait avoir une bonne tête maintenant :
 
@@ -597,12 +556,7 @@ Essayez encore une fois, le message devrait avoir une bonne tête maintenant :
 Utiliser le mode asynchrone
 ---------------------------
 
-Let me explain a slight issue that we should fix. For each comment, we receive
-an email and a Slack message. If the Slack message errors (wrong channel id,
-wrong token, ...), the messenger message will be retried three times before
-being discarded. But as the email is sent first, we will receive 3 emails and
-no Slack messages. One way to fix it is to send Slack messages asynchronously
-like emails:
+Permettez-moi d'expliquer un petit problème que nous devrions régler. Pour chaque commentaire, nous recevons un email et un message Slack. Si le message Slack génère une erreur (mauvais identifiant de canal, mauvais jeton, etc.), le message sera renvoyé trois fois avant d'être rejeté. Mais comme l'email est envoyé en premier, nous recevrons trois emails et aucun message Slack. Une façon d'y remédier est d'envoyer les messages Slack de manière asynchrone comme les emails :
 
 .. code-block:: diff
     :caption: patch_file
@@ -616,17 +570,13 @@ like emails:
     +            Symfony\Component\Notifier\Message\ChatMessage: async
     +            Symfony\Component\Notifier\Message\SmsMessage: async
 
-As soon as everything is asynchronous, messages become independent. We have
-also enabled asynchronous SMS messages in case you also want to be notified on
-your phone.
+Dès que tout est asynchrone, les messages deviennent indépendants. Nous avons également activé les messages SMS asynchrones au cas où vous souhaiteriez recevoir les notifications sur votre téléphone.
 
 Notifier les internautes par email
 ----------------------------------
 
-The last task is to notify users when their submission is approved. What about
-letting you implement that yourself?
+La dernière tâche consiste à notifier les internautes lorsque leur soumission est approuvée. Et si vous codiez cela vous même ?
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Symfony flash messages
-      <https://symfony.com/doc/current/controller.html#flash-messages>`_.
+    * `Messages flash Symfony <https://symfony.com/doc/current/controller.html#flash-messages>`_.

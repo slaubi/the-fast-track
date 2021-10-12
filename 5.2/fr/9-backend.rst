@@ -6,12 +6,9 @@ Configurer une interface d'administration
     single: Admin
     single: Backend
 
-Adding upcoming conferences to the database is the job of project admins. An
-*admin backend* is a protected section of the website where *project admins*
-can manage the website data, moderate feedback submissions, and more.
+L'ajout des prochaines conférences à la base de données est le travail des admins du projet. Une *interface d'administration* est une section protégée du site web où les *admins du projet* peuvent gérer les données du site web, modérer les commentaires, et plus encore.
 
-How can we create this fast? By using a bundle that is able to generate an admin
-backend based on the project's model. EasyAdmin fits the bill perfectly.
+Comment pouvons-nous le créer aussi rapidement ? En utilisant un *bundle* capable de générer une interface d'administration basée sur la structure du projet. EasyAdmin convient parfaitement.
 
 Configurer EasyAdmin
 --------------------
@@ -22,16 +19,13 @@ Tout d'abord, ajoutez EasyAdmin comme dépendance du projet :
 
     $ symfony composer req "admin:^3"
 
-EasyAdmin automatically generates an admin area for your application based on
-specific controllers. Create a a new ``src/Controller/Admin/`` directory where
-we will store these controllers:
+EasyAdmin crée automatiquement une section d'administration pour votre application basée sur des contrôleurs spécifiques. Créez un répertoire ``src/Controller/Admin/`` dans lequel nous stockerons ces contrôleurs :
 
 .. code-block:: bash
 
     $ mkdir src/Controller/Admin/
 
-To get started with EasyAdmin, let's generate a "web admin dashboard" which
-will be the main entry point to manage the website data:
+Pour débuter avec EasyAdmin, commençons par générer un "tableau de bord d'administration" qui sera le point d'entrée principal pour gérer les données du site.
 
 .. code-block:: bash
     :class: answers(DashboardController||src/Controller/Admin/)
@@ -75,31 +69,23 @@ Accepter les réponses par défaut crée le contrôleur suivant :
         }
     }
 
-By convention, all admin controllers are stored under their own
-``App\Controller\Admin`` namespace.
+Par convention, les contrôleurs d'administration sont stockés dans leur propre espace de nom ``App\Controller\Admin``.
 
-Access the generated admin backend at ``/admin`` as configured by the
-``index()`` method; you can change the URL to anything you like:
+Accédez à l'interface d'administration générée grâce à l'URL ``/admin`` telle que configurée par la méthode ``index()`` (vous pouvez modifier l'URL comme bon vous semble) :
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
     :align: center
     :figclass: with-browser
 
-Boom! We have a nice looking admin interface shell, ready to be customized to
-our needs.
+Boom ! Nous avons une belle interface d'administration, prête à être adaptée à nos besoins.
 
 .. index::
     single: CRUD
 
 L'étape suivante consiste à créer des contrôleurs pour gérer les conférences et les commentaires.
 
-In the dashboard controller, you might have noticed the
-``configureMenuItems()`` method which has a comment about adding links to
-"CRUDs". **CRUD** is an acronym for "Create, Read, Update, and Delete", the
-four basic operations you want to do on any entity. That's exactly what we want
-an admin to perform for us; EasyAdmin even takes it to the next level by also
-taking care of searching and filtering.
+Dans le contrôleur du tableau de bord, vous avez peut-être remarqué la méthode ``configureMenuItems()`` qui contient un commentaire à propos de l'ajout de liens aux "CRUDs". "CRUD" est un acronyme pour "Create, Read, Update and Delete", les quatre opérations de base que vous allez effectuer sur une entité. C'est exactement ce que nous voulons que notre page d'administration fasse pour nous. EasyAdmin facilite encore plus les choses en prenant en charge les fonctionnalités de filtre et de recherche.
 
 Générons un CRUD pour les conférences :
 
@@ -108,8 +94,7 @@ Générons un CRUD pour les conférences :
 
     $ symfony console make:admin:crud
 
-Select ``1`` to create an admin interface for conferences and use the defaults
-for the other questions. The following file should be generated:
+Sélectionnez ``1`` pour créer une interface d'administration pour les conférences et utiliser les valeurs par défaut pour les autres questions. Le fichier suivant devrait être généré :
 
 .. code-block:: php
     :caption: src/Controller/Admin/ConferenceCrudController.php
@@ -146,8 +131,7 @@ Faites la même chose pour les commentaires :
 
     $ symfony console make:admin:crud
 
-The last step is to link the conference and comment admin CRUDs to the
-dashboard:
+La dernière étape consiste à relier les CRUDs d'administration des conférences et des commentaires au tableau de bord :
 
 .. code-block:: diff
     :caption: patch_file
@@ -175,16 +159,11 @@ dashboard:
          }
      }
 
-We have overridden the ``configureMenuItems()`` method to add menu items with
-relevant icons for conferences and comments and to add a link back to the
-website home page.
+Nous avons surchargé la méthode ``configureMenuItems()`` pour ajouter les éléments de menu avec les icônes adéquates pour les conférences et les commentaires, et pour ajouter un lien de retour vers la page d'accueil du site.
 
-EasyAdmin exposes an API to ease linking to entity CRUDs via the
-``MenuItem::linkToRoute()`` method.
+EasyAdmin expose une API pour faciliter les liaisons avec les CRUDs des entités via la méthode ``MenuItem::linkToRoute()``.
 
-The main dashboard page is empty for now. This is where you can display some
-statistics, or any relevant information. As we don't have any important to
-display, let's redirect to the conference list:
+Le tableau de bord principal est vide pour le moment. C'est ici que vous pouvez afficher certaines statistiques, ou n'importe quelle information pertinente. Comme nous n'avons rien d'important à y afficher, redirigeons cette page vers la liste des conférences :
 
 .. code-block:: diff
     :caption: patch_file
@@ -212,12 +191,7 @@ display, let's redirect to the conference list:
 
          public function configureDashboard(): Dashboard
 
-When displaying entity relationships (the conference linked to a comment),
-EasyAdmin tries to use a string representation of the conference. By default,
-it uses a convention that uses the entity name and the primary key (like
-``Conference #1``) if the entity does not define the "magic" ``__toString()``
-method. To make the display more meaningful, add such a method on the
-``Conference`` class:
+Quand nous affichons les relations entre les entités (la conférence liée à un commentaire), EasyAdmin essaie d'utiliser la représentation textuelle de la conférence. Par défaut, il s'appuie sur une convention qui utilise le nom de l'entité et la clé primaire (par exemple ``Conference #1`) si l'entité ne définit pas la méthode "magique" ``__toString()``. Pour rendre l'affichage plus parlant, ajoutez cette méthode sur la classe ``Conference`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -257,16 +231,14 @@ Faites de même pour la classe ``Comment`` :
          {
              return $this->id;
 
-You can now add/modify/delete conferences directly from the admin backend. Play
-with it and add at least one conference.
+Vous pouvez maintenant ajouter/modifier/supprimer des conférences directement depuis l'interface d'administration. Jouez avec et ajoutez au moins une conférence.
 
 .. figure:: screenshots/easy-admin.png
     :alt: /admin
     :align: center
     :figclass: with-browser
 
-Add some comments without photos. Set the date manually for now; we will
-fill-in the ``createdAt`` column automatically in a later step.
+Ajoutez quelques commentaires sans photos. Réglez la date manuellement pour l'instant ; nous remplirons la colonne ``createdAt`` automatiquement dans une étape ultérieure.
 
 .. figure:: screenshots/easy-admin-comments.png
     :alt: /admin?crudAction=index&crudId=2bfa220&menuIndex=2&submenuIndex=-1
@@ -276,9 +248,7 @@ fill-in the ``createdAt`` column automatically in a later step.
 Personnaliser EasyAdmin
 -----------------------
 
-The default admin backend works well, but it can be customized in many ways to
-improve the experience. Let's do some simple changes to the Comment entity to
-demonstrate some possibilities:
+L'interface d'administration par défaut fonctionne bien, mais elle peut être personnalisée de plusieurs façons pour améliorer son utilisation. Faisons quelques changements simples pour montrer quelques possibilités :
 
 .. code-block:: diff
     :caption: patch_file
@@ -354,35 +324,28 @@ demonstrate some possibilities:
     -    */
      }
 
-To customize the ``Comment`` section, listing the fields explicitly in the
-``configureFields()`` method lets us order them the way we want. Some fields
-are further configured, like hiding the text field on the index page.
+Pour personnaliser la section ``Commentaire``, lister les champs de manière explicite dans la méthode ``configureFields()`` nous permet de les ordonner comme nous le souhaitons. Certains champs bénéficient d'une configuration supplémentaire, comme masquer le champ texte sur la page d'index.
 
-The ``configureFilters()`` methods defines which filters to expose on top of
-the search field.
+Les méthodes ``configureFilters()`` définissent quels filtres apparaissent au dessus du champ de recherche.
 
 .. figure:: screenshots/easy-admin-filter.png
     :alt: /admin?crudAction=index&crudId=2bfa220&menuIndex=2&submenuIndex=-1
     :align: center
     :figclass: with-browser
 
-These customizations are just a small introduction of the possibilities given
-by EasyAdmin.
+Ces personnalisations ne sont qu'une petite introduction aux possibilités offertes par EasyAdmin.
 
-Play with the admin, filter the comments by conference, or search comments by
-email for instance. The only issue is that anybody can access the backend.
-Don't worry, we will secure it in a future step.
+Jouez avec l'interface d'administration, filtrez les commentaires par conférence, ou recherchez des commentaires par email par exemple. Le seul problème, c'est que n'importe qui peut accéder à cette interface. Ne vous inquiétez pas, nous la sécuriserons dans une prochaine étape.
 
 .. code-block:: bash
     :class: hide
 
     $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `EasyAdmin docs <https://symfony.com/doc/3.x/bundles/EasyAdminBundle/index.html>`_;
+    * `Documentation d'EasyAdmin <https://symfony.com/doc/3.x/bundles/EasyAdminBundle/index.html>`_ ;
 
-    * `Symfony framework configuration reference
-      <https://symfony.com/doc/current/reference/configuration/framework.html>`_;
+    * `Configuration de référence du framework Symfony <https://symfony.com/doc/current/reference/configuration/framework.html>`_.
 
-    * `PHP magic methods <https://www.php.net/manual/en/language.oop5.magic.php>`_.
+    * `Les méthodes magiques PHP <https://www.php.net/manual/fr/language.oop5.magic.php>`_.

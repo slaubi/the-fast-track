@@ -4,11 +4,10 @@ Utiliser RabbitMQ comme gestionnaire de messages
 .. index::
     single: RabbitMQ
 
-RabbitMQ is a very popular message broker that you can use as an alternative to
-PostgreSQL.
+RabbitMQ est un gestionnaire de messages très répandu que vous pouvez utiliser comme alternative à PostgreSQL
 
 Basculer de PostgreSQL à RabbitMQ
-----------------------------------
+---------------------------------
 
 Pour utiliser RabbitMQ à la place de PostgreSQL comme gestionnaire de messages :
 
@@ -33,8 +32,7 @@ Ajouter RabbitMQ aux services Docker
 .. index::
     single: Docker;RabbitMQ
 
-As you might have guessed, we also need to add RabbitMQ to the Docker Compose
-stack:
+Comme vous l'avez sûrement deviné, nous avons aussi besoin d'ajouter RabbitMQ aux services Docker Compose :
 
 .. code-block:: diff
     :caption: patch_file
@@ -51,10 +49,9 @@ stack:
     +        ports: [5672, 15672]
 
 Redémarrer les services Docker
--------------------------------
+------------------------------
 
-To force Docker Compose to take the RabbitMQ container into account, stop the
-containers and restart them:
+Pour forcer Docker Compose à prendre en compte le conteneur RabbitMQ, arrêter les conteneurs et relancer les :
 
 .. code-block:: bash
 
@@ -72,8 +69,7 @@ Explorer l'interface web de gestion de RabbitMQ
 .. index::
     single: Symfony CLI;open:local:rabbitmq
 
-If you want to see queues and messages flowing through RabbitMQ, open its web
-management interface:
+Si vous voulez voir les files et les messages défilant dans RabbitMQ, ouvrez son interface web de gestion :
 
 .. code-block:: bash
     :class: ignore
@@ -95,14 +91,13 @@ Utilisez ``guest``/``guest`` pour vous connecter sur l'interface de gestion Rabb
     :figclass: with-browser
 
 Déployer RabbitMQ
-------------------
+-----------------
 
 .. index::
     single: SymfonyCloud;RabbitMQ
     single: RabbitMQ
 
-Adding RabbitMQ to the production servers can be done by adding it to the list
-of services:
+Ajouter RabbitMQ aux serveurs de production peut être fait en l'ajoutant à la liste des services :
 
 .. code-block:: diff
     :caption: patch_file
@@ -119,8 +114,7 @@ of services:
     +    disk: 1024
     +    size: S
 
-Reference it in the web container configuration as well and enable the ``amqp``
-PHP extension:
+Référencez-le également dans la configuration du conteneur web et activez l'extension PHP ``amqp`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -150,8 +144,7 @@ PHP extension:
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;open:remote:rabbitmq
 
-When the RabbitMQ service is installed on a project, you can access its web
-management interface by opening the tunnel first:
+Quand le service RabbitMQ est installé sur un projet, vous pouvez accéder à l'interface web de gestion en ouvrant tout d'abord un tunnel :
 
 .. code-block:: bash
     :class: ignore
@@ -162,6 +155,6 @@ management interface by opening the tunnel first:
     # when done
     $ symfony tunnel:close
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `RabbitMQ docs <https://www.rabbitmq.com/documentation.html>`_.
+    * `Documentation de RabbitMQ <https://www.rabbitmq.com/documentation.html>`_.

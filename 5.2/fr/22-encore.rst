@@ -7,25 +7,17 @@ Styliser l'interface avec Webpack
     single: Components;Encore
     single: Stylesheet
 
-We have spent no time on the design of the user interface. To style like a pro,
-we will use a modern stack, based on `Webpack <https://webpack.js.org/>`_. And
-to add a Symfony touch and ease its integration with the application, let's
-install *Webpack Encore*:
+Nous n'avons pas encore travaillé sur la conception de l'interface. Pour styliser comme un pro, nous utiliserons une stack moderne, basée sur `Webpack <https://webpack.js.org/>`_. Et pour ajouter une touche de Symfony et faciliter son intégration avec l'application, installons *Webpack Encore* :
 
 .. code-block:: bash
 
     $ symfony composer req encore
 
-A full Webpack environment has been created for you: ``package.json`` and
-``webpack.config.js`` have been generated and contain good default
-configuration. Open ``webpack.config.js``, it uses the Encore abstraction to
-configure Webpack.
+Un environnement Webpack complet a été créé pour vous : les fichiers ``package.json`` et ``webpack.config.js`` ont été générés avec une bonne configuration par défaut. Ouvrez ``webpack.config.js``, il utilise l'abstraction Encore pour configurer Webpack.
 
-The ``package.json`` file defines some nice commands that we will use all the
-time.
+Le fichier ``package.json`` définit des commandes très pratiques que nous utiliserons sans arrêt.
 
-The ``assets`` directory contains the main entry points for the project assets:
-``styles/app.css`` and ``app.js``.
+Le répertoire ``assets`` contient les principaux points d'entrée des *assets* du projet : ``styles/app.css`` et ``app.js``.
 
 Utiliser Sass
 -------------
@@ -77,9 +69,7 @@ Et activez-le dans webpack :
          // uncomment if you use TypeScript
          //.enableTypeScriptLoader()
 
-How did I know which packages to install? If we had tried to build our assets
-without them, Encore would have given us a nice error message suggesting the
-``yarn add`` command needed to install dependencies to load ``.scss`` files.
+Comment savoir quels paquets installer ? Si nous avions essayé de générer nos *assets* sans ceux-ci, Encore nous aurait donné un joli message d'erreur suggérant la commande ``yarn add`` à exécuter pour installer les dépendances servant à charger les fichiers ``.scss``.
 
 Tirer parti de Bootstrap
 ------------------------
@@ -87,9 +77,7 @@ Tirer parti de Bootstrap
 .. index::
     single: Bootstrap
 
-To start with good defaults and build a responsive website, a CSS framework
-like `Bootstrap <https://getbootstrap.com/>`_ can go a long way. Install it as
-a package:
+Pour commencer avec de bonnes bases et construire un site web *responsive*, un framework CSS comme `Bootstrap <https://getbootstrap.com/>`_ sera très utile. Installez-le comme paquet :
 
 .. code-block:: bash
 
@@ -127,8 +115,7 @@ Faites de même pour le fichier JS :
     +
     +bsCustomFileInput.init();
 
-The Symfony form system supports Bootstrap natively with a special theme,
-enable it:
+Le système de formulaire de Symfony supporte Bootstrap nativement avec un thème spécial. Activez-le :
 
 .. code-block:: yaml
     :caption: config/packages/twig.yaml
@@ -139,8 +126,7 @@ enable it:
 Styliser le HTML
 ----------------
 
-We are now ready to style the application. Download and expand the archive at
-the root of the project:
+Nous pouvons maintenant styliser l'application. Téléchargez et extrayez l'archive à la racine du projet :
 
 .. code-block:: bash
 
@@ -151,31 +137,27 @@ the root of the project:
 Jetez un coup d’œil aux templates, vous pourriez apprendre un truc ou deux sur Twig.
 
 Générer les assets
---------------------
+------------------
 
 .. index::
     single: Symfony CLI;run
 
-One major change when using Webpack is that CSS and JS files are not usable
-directly by the application. They need to be "compiled" first.
+Il y a une différence majeure quand on utilise Webpack : les fichiers CSS et JS ne sont pas utilisables directement par l'application. Ils doivent d'abord être "compilés".
 
-In development, compiling the assets can be done via the ``encore dev``
-command:
+En développement, la compilation des ressources peut se faire avec la commande ``encore dev`` :
 
 .. code-block:: bash
 
     $ symfony run yarn encore dev
 
-Instead of executing the command each time there is a change, send it to the
-background and let it watch JS and CSS changes:
+Au lieu d'exécuter la commande chaque fois qu'il y a une modification, exécutez-la en arrière-plan et laissez-la surveiller les changements des fichiers JS et CSS :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony run -d yarn encore dev --watch
 
-Take the time to discover the visual changes. Have a look at the new design in
-a browser.
+Prenez le temps de découvrir les modifications visuelles. Jetez un coup d'œil au nouveau design dans un navigateur.
 
 .. figure:: screenshots/design-homepage.png
     :alt: /
@@ -187,21 +169,19 @@ a browser.
     :align: center
     :figclass: with-browser
 
-The generated login form is now styled as well as the Maker bundle uses
-Bootstrap CSS classes by default:
+Étant donné que le *Maker Bundle* utilise les classes CSS de Bootstrap par défaut, le formulaire de connexion précédemment généré est maintenant automatiquement stylisé :
 
 .. figure:: screenshots/login-styled.png
     :alt: /login
     :align: center
     :figclass: with-browser
 
-For production, SymfonyCloud automatically detects that you are using Encore
-and compiles the assets for you during the build phase.
+En production, SymfonyCloud détecte automatiquement que vous utilisez Encore et compile les ressources pour vous pendant la phase de *build*.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Webpack docs <https://webpack.js.org/concepts/>`_;
+    * `Documentation Webpack <https://webpack.js.org/concepts/>`_ ;
 
-    * `Symfony Webpack Encore docs <https://symfony.com/doc/current/frontend.html>`_;
+    * `Documentation Symfony Webpack Encore <https://symfony.com/doc/current/frontend.html>`_ ;
 
-    * `SymfonyCasts Webpack Encore tutorial <https://symfonycasts.com/screencast/webpack-encore>`_.
+    * `Tutoriel SymfonyCasts sur Webpack Encore <https://symfonycasts.com/screencast/webpack-encore>`_.

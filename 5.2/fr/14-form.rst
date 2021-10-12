@@ -5,11 +5,10 @@ Accepter des commentaires avec les formulaires
     single: Components;Form
     single: Form
 
-Time to let our attendees give feedback on conferences. They will contribute
-their comments through an *HTML form*.
+Il est temps de permettre aux personnes présentes de donner leur avis sur les conférences. Elles feront part de leurs commentaires au moyen d'un *formulaire HTML*.
 
 Générer un *form type*
-------------------------
+----------------------
 
 .. index::
     single: Command;make:form
@@ -33,8 +32,7 @@ Utilisez le *Maker Bundle* pour générer une classe de formulaire :
      Next: Add fields to your form and start using it.
      Find the documentation at https://symfony.com/doc/current/forms.html
 
-The ``App\Form\CommentFormType`` class defines a form for the
-``App\Entity\Comment`` entity:
+La classe ``App\Form\CommentFormType`` définit un formulaire pour l'entité ``App\Entity\Comment`` :
 
 .. code-block:: php
     :caption: src/App/Form/CommentFormType.php
@@ -69,18 +67,12 @@ The ``App\Form\CommentFormType`` class defines a form for the
         }
     }
 
-A `form type`_ describes the *form fields* bound to a model. It does the data
-conversion between submitted data and the model class properties. By default,
-Symfony uses metadata from the ``Comment`` entity - such as the Doctrine
-metadata - to guess configuration about each field. For example, the ``text``
-field renders as a ``textarea`` because it uses a larger column in the
-database.
+Un `form type`_ décrit les *champs de formulaire* liés à un modèle. Il effectue la conversion des données entre les données soumises et les propriétés de la classe de modèle. Par défaut, Symfony utilise les métadonnées de l'entité ``Comment``, comme les métadonnées Doctrine, pour deviner la configuration de chaque champ. Par exemple, le champ ``text`` se présente sous la forme d'un ``textarea`` parce qu'il utilise une colonne plus grande dans la base de données.
 
 Afficher un formulaire
 ----------------------
 
-To display the form to the user, create the form in the controller and pass it
-to the template:
+Pour afficher le formulaire, créez-le dans le contrôleur et transmettez-le au template :
 
 .. code-block:: diff
     :caption: patch_file
@@ -117,15 +109,12 @@ to the template:
          }
      }
 
-You should never instantiate the form type directly. Instead, use the
-``createForm()`` method. This method is part of ``AbstractController`` and
-eases the creation of forms.
+Vous ne devriez jamais instancier directement le form type. Utilisez plutôt la méthode ``createForm()``. Cette méthode fait partie d'``AbstractController`` et facilite la création de formulaires.
 
 .. index::
     single: Twig;form
 
-When passing a form to a template, use ``createView()`` to convert the data to
-a format suitable for templates.
+Lorsque vous transmettez un formulaire à un template, utilisez ``createView()`` pour convertir les données dans un format adapté aux templates.
 
 L'affichage du formulaire dans le template peut se faire via la fonction Twig ``form`` :
 
@@ -145,26 +134,19 @@ L'affichage du formulaire dans le template peut se faire via la fonction Twig ``
     +    {{ form(comment_form) }}
      {% endblock %}
 
-When refreshing a conference page in the browser, note that each form field
-shows the right HTML widget (the data type is derived from the model):
+Lorsque vous rafraîchissez la page d'une conférence dans le navigateur, notez que chaque champ de formulaire affiche la balise HTML appropriée (le type de données est défini à partir du modèle) :
 
 .. figure:: screenshots/form.png
     :alt: /conference/amsterdam-2019
     :align: center
     :figclass: with-browser
 
-The ``form()`` function generates the HTML form based on all the information
-defined in the Form type. It also adds ``enctype=multipart/form-data`` on the
-``<form>`` tag as required by the file upload input field. Moreover, it takes
-care of displaying error messages when the submission has some errors.
-Everything can be customized by overriding the default templates, but we won't
-need it for this project.
+La fonction ``form()`` génère le formulaire HTML en fonction de toutes les informations définies dans le form type. Elle ajoute également ``enctype=multipart/form-data`` à la balise ``<form>`` comme l'exige le champ d'upload de fichier. De plus, elle se charge d'afficher les messages d'erreur lorsque la soumission comporte des erreurs. Tout peut être personnalisé en remplaçant les templates par défaut, mais nous n'en aurons pas besoin pour ce projet.
 
 Personnaliser un form type
 --------------------------
 
-Even if form fields are configured based on their model counterpart, you can
-customize the default configuration in the form type class directly:
+Même si les champs de formulaire sont configurés en fonction de leur modèle associé, vous pouvez personnaliser la configuration par défaut directement dans la classe de form type :
 
 .. code-block:: diff
     :caption: patch_file
@@ -208,21 +190,13 @@ customize the default configuration in the form type class directly:
              ;
          }
 
-Note that we have added a submit button (that allows us to keep using the
-simple ``{{ form(comment_form) }}`` expression in the template).
+Notez que nous avons ajouté un bouton submit (qui nous permet de continuer à utiliser simplement ``{{ form(comment_form) }}`` dans le template).
 
-Some fields cannot be auto-configured, like the ``photoFilename`` one. The
-``Comment`` entity only needs to save the photo filename, but the form has to
-deal with the file upload itself. To handle this case, we have added a field
-called ``photo`` as un-``mapped`` field: it won't be mapped to any property on
-``Comment``. We will manage it manually to implement some specific logic (like
-storing the uploaded photo on the disk).
+Certains champs ne peuvent pas être auto-configurés, comme par exemple ``photoFilename``. L'entité ``Comment`` n'a besoin d'enregistrer que le nom du fichier photo, mais le formulaire doit s'occuper de l'upload du fichier lui-même. Pour traiter ce cas, nous avons ajouté un champ appelé ``photo`` qui est un champ non ``mapped`` : il ne sera associé à aucune propriété de ``Comment``. Nous le gérerons manuellement pour implémenter une logique spécifique (comme l'upload de la photo sur le disque).
 
-As an example of customization, we have also modified the default label for
-some fields.
+Comme exemple de personnalisation, nous avons également modifié le libellé par défaut de certains champs.
 
-The image constraint works by checking the mime type; require the Mime
-component to make it work:
+La contrainte sur l'image fonctionne en vérifiant le type mime. Ajoutez le composant Mime pour la faire fonctionner :
 
 .. code-block:: bash
 
@@ -234,10 +208,9 @@ component to make it work:
     :figclass: with-browser
 
 Valider des modèles
---------------------
+-------------------
 
-The Form Type configures the frontend rendering of the form (via some HTML5
-validation). Here is the generated HTML form:
+Le form type configure le rendu du formulaire (grâce à un peu de validation HTML5). Voici le formulaire HTML généré :
 
 .. code-block:: html
     :class: ignore
@@ -267,14 +240,9 @@ validation). Here is the generated HTML form:
         </div>
     </form>
 
-The form uses the ``email`` input for the comment email and makes most of the
-fields ``required``. Note that the form also contains a ``_token`` hidden field
-to protect the form from `CSRF attacks
-<https://owasp.org/www-community/attacks/csrf>`_.
+Le formulaire utilise le type de champ ``email`` pour l'email du commentaire et définit la plupart des champs en ``required``. Notez qu'il contient également un champ ``_token`` caché pour nous protéger des `attaques CSRF <https://owasp.org/www-community/attacks/csrf>`_.
 
-But if the form submission bypasses the HTML validation (by using an HTTP
-client that does not enforce these validation rules like cURL), invalid data
-can hit the server.
+Mais si la soumission du formulaire contourne la validation HTML (en utilisant un client HTTP comme cURL, qui n'applique pas ces règles de validation), des données invalides peuvent atteindre le serveur.
 
 Nous devons également ajouter certaines contraintes de validation à l'entité ``Comment`` :
 
@@ -314,12 +282,11 @@ Nous devons également ajouter certaines contraintes de validation à l'entité 
          /**
 
 Gérer un formulaire
---------------------
+-------------------
 
 Le code que nous avons écrit jusqu'à présent est suffisant pour afficher le formulaire.
 
-We should now handle the form submission and the persistence of its information
-to the database in the controller:
+Nous devrions maintenant nous occuper de la soumission du formulaire et de la persistance de ses informations dans la base de données depuis le contrôleur :
 
 .. code-block:: diff
     :caption: patch_file
@@ -365,26 +332,18 @@ to the database in the controller:
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-When the form is submitted, the ``Comment`` object is updated according to the
-submitted data.
+Lorsque le formulaire est soumis, l'objet ``Comment`` est mis à jour en fonction des données soumises.
 
-The conference is forced to be the same as the one from the URL (we removed it
-from the form).
+La conférence doit être la même que celle de l'URL (nous l'avons supprimée du formulaire).
 
-If the form is not valid, we display the page, but the form will now contain
-submitted values and error messages so that they can be displayed back to the
-user.
+Si le formulaire n'est pas valide, nous affichons la page, mais le formulaire contiendra maintenant les valeurs soumises et les messages d'erreur afin qu'ils puissent être affichés à l'internaute.
 
-Try the form. It should work well and the data should be stored in the
-database (check it in the admin backend). There is one problem though: photos.
-They do not work as we have not handled them yet in the controller.
+Essayez le formulaire. Il devrait fonctionner correctement et les données devraient être stockées dans la base de données (vérifiez-les dans l'interface d'administration). Il y a cependant un problème : les photos. Elles ne fonctionnent pas puisque nous ne les avons pas encore traitées dans le contrôleur.
 
 Uploader des fichiers
 ---------------------
 
-Uploaded photos should be stored on the local disk, somewhere accessible by the
-frontend so that we can display them on the conference page. We will store them
-under the ``public/uploads/photos`` directory:
+Les photos uploadées doivent être stockées sur le disque local, à un endroit accessible par un navigateur afin que nous puissions les afficher sur la page d'une conférence. Nous les stockerons dans le dossier ``public/uploads/photos`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -424,19 +383,13 @@ under the ``public/uploads/photos`` directory:
                  $this->entityManager->persist($comment);
                  $this->entityManager->flush();
 
-To manage photo uploads, we create a random name for the file. Then, we move
-the uploaded file to its final location (the photo directory). Finally, we
-store the filename in the Comment object.
+Pour gérer les uploads de photos, nous créons un nom aléatoire pour le fichier. Ensuite, nous déplaçons le fichier uploadé à son emplacement final (le répertoire photo). Enfin, nous stockons le nom du fichier dans l'objet ``Comment``.
 
 .. index::
     single: Container;Bind
     single: Bind
 
-Notice the new argument on the ``show()`` method? ``$photoDir`` is a string
-and not a service. How can Symfony know what to inject here? The Symfony
-Container is able to store *parameters* in addition to services. Parameters are
-scalars that help configure services. These parameters can be injected into
-services explicitly, or they can be *bound by name*:
+Remarquez-vous le nouvel argument de la méthode ``show()`` ? ``$photoDir`` est une chaîne de caractères et non un service. Comment Symfony peut-il savoir quoi injecter ici ? Le conteneur Symfony est capable de stocker des *paramètres* en plus des services. Les paramètres sont des valeurs scalaires qui aident à configurer les services. Ces paramètres peuvent être injectés explicitement dans les services ou être *liés par leur nom* :
 
 .. code-block:: diff
     :caption: patch_file
@@ -453,36 +406,24 @@ services explicitly, or they can be *bound by name*:
          # makes classes in src/ available to be used as services
          # this creates a service per class whose id is the fully-qualified class name
 
-The ``bind`` setting allows Symfony to inject the value whenever a service has
-a ``$photoDir`` argument.
+Le paramètre ``bind`` permet à Symfony d'injecter la valeur à chaque fois qu'un service a un argument ``$photoDir``.
 
-Try to upload a PDF file instead of a photo. You should see the error messages
-in action. The design is quite ugly at the moment, but don't worry, everything
-will turn beautiful in a few steps when we will work on the design of the
-website. For the forms, we will change one line of configuration to style all
-form elements.
+Essayez d'uploader un fichier PDF au lieu d'une photo. Vous devriez voir les messages d'erreur en action. Le design est encore assez laid, mais ne vous inquiétez pas, tout deviendra beau en quelques étapes lorsque nous travaillerons dessus. Pour les formulaires, nous allons changer une ligne de configuration pour styliser tous leurs éléments.
 
 Déboguer des formulaires
--------------------------
+------------------------
 
-When a form is submitted and something does not work quite well, use the "Form"
-panel of the Symfony Profiler. It gives you information about the
-form, all its options, the submitted data and how they are converted
-internally. If the form contains any errors, they will be listed as well.
+Lorsqu'un formulaire est soumis et que quelque chose ne fonctionne pas correctement, utilisez le panneau "Form" du Symfony Profiler. Il vous donne des informations sur le formulaire, toutes ses options, les données soumises et comment elles sont converties en interne. Si le formulaire contient des erreurs, elles seront également répertoriées.
 
 Le workflow classique d'un formulaire est le suivant :
 
-* The form is displayed on a page;
+* Le formulaire est affiché sur une page ;
 
-* The user submits the form via a POST request;
+* L'internaute soumet le formulaire via une requête POST ;
 
-* The server redirects the user to another page or the same page.
+* Le serveur redirige l'internaute, soit vers une autre page, soit vers la même page.
 
-But how can you access the profiler for a successful submit request? Because
-the page is immediately redirected, we never see the web debug toolbar for the
-POST request. No problem: on the redirected page, hover over the left "200"
-green part. You should see the "302" redirection with a link to the profile (in
-parenthesis).
+Mais comment pouvez-vous accéder au profileur pour une requête de soumission réussie ? Étant donné que la page est immédiatement redirigée, nous ne voyons jamais la barre d'outils de débogage Web pour la requête POST. Pas de problème : sur la page redirigée, survolez la partie verte "200" à gauche. Vous devriez voir la redirection "302" avec un lien vers le profileur (entre parenthèses).
 
 .. figure:: screenshots/form-wdt.png
     :alt: /conference/amsterdam-2019
@@ -502,10 +443,9 @@ Cliquez dessus pour accéder au profileur de la requête POST, et allez dans le 
     :figclass: with-browser
 
 Afficher les photos uploadées dans l'interface d'administration
-----------------------------------------------------------------
+---------------------------------------------------------------
 
-The admin backend is currently displaying the photo filename, but we want
-to see the actual photo:
+L'interface d'administration affiche actuellement le nom du fichier photo, mais nous voulons voir la vraie photo :
 
 .. code-block:: diff
     :caption: patch_file
@@ -532,10 +472,9 @@ to see the actual photo:
              ;
 
 Exclure les photos uploadées de Git
-------------------------------------
+-----------------------------------
 
-Don't commit yet! We don't want to store uploaded images in the Git repository.
-Add the ``/public/uploads`` directory to the ``.gitignore`` file:
+Ne *commitez* pas encore ! Nous ne voulons pas stocker les images uploadées dans le dépôt Git. Ajoutez le dossier ``/public/uploads`` au fichier ``.gitignore`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -549,20 +488,13 @@ Add the ``/public/uploads`` directory to the ``.gitignore`` file:
      /.env.local
 
 Stocker les fichiers uploadés sur les serveurs de production
--------------------------------------------------------------
+------------------------------------------------------------
 
-The last step is to store the uploaded files on production servers. Why would
-we have to do something special? Because most modern cloud platforms use
-read-only containers for various reasons. SymfonyCloud is no exception.
+La dernière étape consiste à stocker les fichiers uploadés sur les serveurs de production. Pourquoi devrions-nous faire quelque chose de spécial ? Parce que la plupart des plates-formes modernes de cloud utilisent des conteneurs en lecture seule pour diverses raisons. SymfonyCloud n'échappe pas à cette règle.
 
-Not everything is read-only in a Symfony project. We try hard to generate as
-much cache as possible when building the container (during the cache warmup
-phase), but Symfony still needs to be able to write somewhere for the user
-cache, the logs, the sessions if they are stored on the filesystem, and more.
+Tout n'est pas en lecture seule dans un projet Symfony. Nous essayons de générer autant de cache que possible lors de la construction du conteneur (pendant la phase de démarrage du cache), mais Symfony doit quand même être capable d'écrire quelque part pour le cache, les logs, les sessions si elles sont stockées dans le système de fichiers, etc.
 
-Have a look at ``.symfony.cloud.yaml``, there is already a writeable *mount*
-for the ``var/`` directory. The ``var/`` directory is the only directory where
-Symfony writes (caches, logs, ...).
+Jetez un coup d'oeil au fichier ``.symfony.cloud.yaml``, il y a déjà un *montage* accessible en écriture pour le dossier ``var/``. Le dossier ``var/`` est le seul répertoire où Symfony écrit (caches, logs, etc.).
 
 Créez un nouveau montage pour les photos uploadées :
 
@@ -580,34 +512,24 @@ Créez un nouveau montage pour les photos uploadées :
      hooks:
          build: |
 
-You can now deploy the code and photos will be stored in the
-``public/uploads/`` directory like our local version.
+Vous pouvez maintenant déployer le code, et les photos seront stockées dans le dossier ``public/uploads/`` comme pour notre version locale.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCasts Forms tutorial <https://symfonycasts.com/screencast/symfony-forms>`_;
+    * `Tutoriel SymfonyCasts sur les formulaires <https://symfonycasts.com/screencast/symfony-forms>`_ ;
 
-    * How to `customize Symfony Form rendering in HTML
-      <https://symfony.com/doc/current/form/form_customization.html>`_;
+    * Comment `personnaliser le rendu des formulaires Symfony en HTML <https://symfony.com/doc/current/form/form_customization.html>`_ ;
 
-    * `Validating Symfony Forms
-      <https://symfony.com/doc/current/forms.html#validating-forms>`_;
+    * `Validation des formulaires Symfony <https://symfony.com/doc/current/forms.html#validating-forms>`_ ;
 
-    * The `Symfony Form Types reference
-      <https://symfony.com/doc/current/reference/forms/types.html>`_;
+    * La `référence des form types Symfony <https://symfony.com/doc/current/reference/forms/types.html>`_ ;
 
-    * The `FlysystemBundle docs
-      <https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md>`_,
-      which provides integration with multiple cloud storage providers, such as
-      AWS S3, Azure and Google Cloud Storage;
+    * La `documentation de FlysystemBundle <https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md>`_, qui permet l'intégration avec plusieurs fournisseurs de stockage dans le cloud, tels que AWS S3, Azure et Google Cloud Storage ;
 
-    * The `Symfony Configuration Parameters
-      <https://symfony.com/doc/current/configuration.html#configuration-parameters>`_.
+    * Les `paramètres de configuration de Symfony <https://symfony.com/doc/current/configuration.html#configuration-parameters>`_.
 
-    * The `Symfony Validation Constraints
-      <https://symfony.com/doc/current/validation.html#basic-constraints>`_;
+    * Les `contraintes de validation de Symfony <https://symfony.com/doc/current/validation.html#basic-constraints>`_ ;
 
-    * The `Symfony Form Cheat Sheet
-      <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony2/how_symfony2_forms_works_en.pdf>`_.
+    * La `cheat sheet des formulaires Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony2/how_symfony2_forms_works_en.pdf>`_.
 
 .. _`form type`: https://symfony.com/doc/current/forms.html#form-types

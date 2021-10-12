@@ -6,22 +6,13 @@ Remerciements
 
 J'aime les livres. Des livres que je peux tenir dans mes mains.
 
-The last time I wrote a book about Symfony was exactly 10 years ago. It was
-about Symfony 1.4. I have never written about Symfony since then!
+La dernière fois que j'ai écrit un livre sur Symfony, c'était il y a 10 ans exactement. C'était sur Symfony 1.4. Je n'ai plus écrit sur Symfony depuis !
 
-I was so excited to write again about Symfony that I finished the first draft
-in a week. But the version you are reading took way more time. Writing a book
-takes a lot of time and energy. From the cover design to the page layout. From
-code tweaks to peer reviews. It is almost never finished. You can always
-improve a section, enhance some piece of code, fix some typos, or rewrite an
-explanation to make it shorter and better.
+J'étais tellement excité d'écrire à nouveau sur Symfony que j'ai terminé la première version en une semaine. Mais celle que vous lisez a pris beaucoup plus de temps. Écrire un livre demande beaucoup de temps et d'énergie, de la conception de la couverture à la mise en page, de l'ajustement du code à la relecture par les pairs. C'est presque sans fin. Vous pouvez toujours améliorer une section, améliorer un morceau de code, corriger des fautes de frappe ou réécrire une explication pour la rendre plus courte et meilleure.
 
-Writing a book is a journey that you don't want to do alone. Many people
-contributed directly or indirectly. Thank you all!
+Écrire un livre est un voyage que vous ne voulez pas faire seul. De nombreuses personnes ont contribué directement ou indirectement. Merci à vous tous !
 
-I want to sincerely thank all the great people who spent a lot of time
-reviewing the content to spot typos and improve the content; some even helped
-me write some of the code snippets:
+Je tiens à remercier sincèrement toutes les personnes formidables qui ont passé beaucoup de temps à relire le contenu pour corriger les fautes de frappe et l'améliorer ; certaines m'ont même aidé à écrire quelques extraits de code :
 
 * Javier Eguiluz
 * Ryan Weaver
@@ -35,28 +26,15 @@ me write some of the code snippets:
 Traducteurs
 -----------
 
-The official Symfony documentation is only available in English. We had some
-translations in the past but we decided to stop providing them as they were
-always out of sync. And outdated documentation is probably worse than no
-documentation at all.
+La documentation officielle de Symfony n'est disponible qu'en anglais. Nous avions quelques traductions dans le passé, mais nous avons décidé de ne plus les fournir car elles étaient toujours désynchronisées. Et une documentation périmée est probablement encore pire que pas de documentation du tout.
 
-The main issue with translations is maintenance. The Symfony documentation is
-updated every single day by dozens of contributors. Having a team of volunteers
-translating all changes in near real time is almost impossible.
+Le principal problème avec les traductions est la maintenance. La documentation de Symfony est mise à jour chaque jour par des dizaines de contributeurs. Il est presque impossible d'avoir une équipe de bénévoles qui traduisent tous les changements en quasi temps réel.
 
-However, translating a book like the one you are currently reading is more
-manageable as I tried to write about features that won't change much over time.
-This is why the book contents should stay quite stable over time.
+Cependant, la traduction d'un livre comme celui que vous êtes en train de lire est plus facile à gérer car j'ai essayé d'écrire sur des fonctionnalités qui ne changeront pas beaucoup avec le temps. C'est pourquoi le contenu du livre devrait rester assez stable dans le temps.
 
-But why would we ever want non-English documentation in a tech world where
-English is the de facto default language? Symfony is used by developers
-everywhere in the world. And some of them are less comfortable reading English
-material. Translating some "getting started" documentation is part of the
-Symfony diversity initiative in which we strive to find ways to make Symfony as
-inclusive as possible.
+Mais pourquoi voudrions-nous de la documentation non anglaise dans un monde technologique où l'anglais est de facto la langue par défaut ? Symfony est utilisé dans le monde entier, et nous ne sommes pas tous aussi à l'aise pour lire des ressources en anglais. Traduire de la documentation "de démarrage" fait partie de l'initiative Symfony sur la diversité dans laquelle nous nous efforçons de trouver des moyens de rendre Symfony aussi accessible que possible.
 
-As you can imagine, translating more than 300 pages is a huge amount of work,
-and I want to thank all the people who helped translating this book:
+Comme vous pouvez l'imaginer, traduire plus de 300 pages représente un travail énorme, et je tiens à remercier toutes les personnes qui ont contribué à la traduction de ce livre :
 
 TRANSLATOR_LIST
 
@@ -66,11 +44,7 @@ Entreprises sponsors
 .. index::
     Backers;Companies
 
-This book has been `backed
-<https://www.kickstarter.com/projects/fabpot/symfony-5-the-fast-track>`_ by
-people around the world who helped this project financially. Thanks to them,
-this content is available online for free and available as a paper book during
-Symfony conferences.
+Ce livre a été `soutenu <https://www.kickstarter.com/projects/fabpot/symfony-5-the-fast-track>`_ par des gens du monde entier qui ont aidé financièrement ce projet. Grâce à eux, ce contenu est disponible en ligne gratuitement et sous forme de livre papier lors des conférences Symfony.
 
 .. figure:: images/logos/packagist.svg
     :align: center
@@ -274,8 +248,7 @@ Appui familial
 .. index::
     Amour
 
-Family support is everything. A big thank-you to my wife, **Hélène** and my two
-wonderful children, **Thomas** and **Lucas**, for their continuous support.
+Le soutien de sa famille est important. Un grand merci à ma femme, **Hélène** et à mes deux merveilleux enfants, **Thomas** et **Lucas**, pour leur soutien continu.
 
 *Profitez de l'illustration de Thomas... et du livre !*
 

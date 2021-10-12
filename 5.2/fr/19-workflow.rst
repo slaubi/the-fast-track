@@ -1,37 +1,30 @@
 Prendre des décisions avec un workflow
-=======================================
+======================================
 
 .. index::
     single: Components;Workflow
     single: Workflow
 
-Having a state for a model is quite common. The comment state is only
-determined by the spam checker. What if we add more decision factors?
+Avoir un état pour un modèle est assez commun. L'état du commentaire n'est déterminé que par le vérificateur de spam. Et si on ajoutait d'autres critères de décision ?
 
-We might want to let the website admin moderate all comments after the spam
-checker. The process would be something along the lines of:
+Nous pourrions laisser l'admin du site modérer tous les commentaires après le vérificateur de spam. Le processus serait quelque chose comme :
 
-* Start with a ``submitted`` state when a comment is submitted by a user;
+* Commencez par un état ``submitted`` lorsqu'un commentaire est soumis par un internaute ;
 
-* Let the spam checker analyze the comment and switch the state to either
-  ``potential_spam``, ``ham``, or ``rejected``;
+* Laissez le vérificateur de spam analyser le commentaire et changer l'état en ``potential_spam``, ``ham`` ou ``rejected``
 
-* If not rejected, wait for the website admin to decide if the comment is good
-  enough by switching the state to ``published`` or ``rejected``.
+* S'il n'est pas rejeté, attendez que l'admin du site décide si le commentaire est suffisamment utile en changeant l'état pour ``published`` ou ``rejected``.
 
-Implementing this logic is not too complex, but you can imagine that adding
-more rules would greatly increase the complexity. Instead of coding the logic
-ourselves, we can use the Symfony Workflow Component:
+La mise en œuvre de cette logique n'est pas trop complexe, mais vous pouvez imaginer que l'ajout de règles supplémentaires augmenterait considérablement la complexité. Au lieu de coder la logique nous-mêmes, nous pouvons utiliser le composant Symfony Workflow :
 
 .. code-block:: bash
 
     $ symfony composer req workflow
 
 Décrire des workflows
-----------------------
+---------------------
 
-The comment workflow can be described in the ``config/packages/workflow.yaml``
-file:
+Le workflow de commentaires peut être décrit dans le fichier ``config/packages/workflow.yaml`` :
 
 .. code-block:: yaml
     :caption: config/packages/workflow.yaml
@@ -167,20 +160,17 @@ Remplacez la logique actuelle dans le gestionnaire de messages par le workflow :
 
 La nouvelle logique se lit comme ceci :
 
-* If the ``accept`` transition is available for the comment in the message,
-  check for spam;
+* Si la transition ``accept`` est disponible pour le commentaire dans le message, vérifiez si c'est un spam ;
 
-* Depending on the outcome, choose the right transition to apply;
+* Selon le résultat, choisissez la bonne transition à appliquer ;
 
-* Call ``apply()`` to update the Comment via a call to the ``setState()``
-  method;
+* Appellez ``apply()`` pour mettre à jour le Comment via un appel à la méthode ``setState()`` ;
 
-* Call ``flush()`` to commit the changes to the database;
+* Appelez ``flush()`` pour valider les changements dans la base de données ;
 
-* Re-dispatch the message to allow the workflow to transition again.
+* Réexpédiez le message pour permettre au workflow d'effectuer une nouvelle transition.
 
-As we haven't implemented the admin validation, the next time the message is
-consumed, the "Dropping comment message" will be logged.
+Comme nous n'avons pas implémenté la fonctionnalité de validation par l'admin, la prochaine fois que le message sera consommé, le message "Dropping comment message" sera enregistré.
 
 Mettons en place une validation automatique en attendant le prochain chapitre :
 
@@ -200,33 +190,23 @@ Mettons en place une validation automatique en attendant le prochain chapitre :
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
              }
 
-Run ``symfony server:log`` and add a comment in the frontend to see all
-transitions happening one after the other.
+Exécutez ``symfony server:log`` et ajoutez un commentaire sur le site pour voir toutes les transitions se produire les unes après les autres.
 
 Trouver des services depuis le conteneur d'injection de dépendances
---------------------------------------------------------------------
+-------------------------------------------------------------------
 
 .. index::
     single: Command;debug:container
     single: Container;Debug
     single: Debug;Container
 
-When using dependency injection, we get services from the dependency injection
-container by type hinting an interface or sometimes a concrete implementation
-class name. But when an interface has several implementations, Symfony cannot
-guess which one you need. We need a way to be explicit.
+Quand nous utilisons l'injection de dépendances, nous récupérons des services depuis le conteneur d'injection de dépendances en utilisant le typage par interface ou parfois par une implémentation de classe concrète. Mais quand une interface à plusieurs implémentations, Symfony ne peut deviner celle dont vous avez besoin. Nous avons besoin d'être explicite.
 
-We have just come across such an example with the injection of a
-``WorkflowInterface`` in the previous section.
+Nous venons juste de rencontrer un cas semblable avec l'injection de ``WorkflowInterface`` dans la section précédente.
 
-As we inject any instance of the generic ``WorkflowInterface`` interface in the
-contructor, how can Symfony guess which workflow implementation to use? Symfony
-uses a convention based on the argument name: ``$commentStateMachine`` refers
-to the ``comment`` workflow in the configuration (which type is
-``state_machine``). Try any other argument name and it will fail.
+Comme nous injectons n'importe quelle instance de l'interface générique ``WorkflowInterface`` dans le constructeur, comment Symfony peut savoir quelle implémentation du workflow utiliser ? Symfony utilise une convention basée sur le nom de l'argument : ``$commentStateMachine`` fait référence au workflow ``comment`` de la configuration (dont le type est ``state_machine``). Essayez n'importe quel autre argument et l'injection échouera.
 
-If you don't remember the convention, use the ``debug:container`` command.
-Search for all services containing "workflow":
+Si vous ne vous rappelez pas de la convention, utilisez la commande ``debug:container``. Cherchez tous les services contenant "workflow" :
 
 .. code-block:: bash
     :emphasize-lines: 12
@@ -247,25 +227,20 @@ Search for all services containing "workflow":
       [9] Psr\Log\LoggerInterface $workflowLogger
      >
 
-Notice choice ``8``, ``Symfony\Component\Workflow\WorkflowInterface
-$commentStateMachine`` which tells you that using ``$commentStateMachine`` as
-an argument name has a special meaning.
+Remarquez le choix ``8``, ``Symfony\Component\Workflow\WorkflowInterface $commentStateMachine`` qui vous indique qu'utiliser ``$commentStateMachine`` comme argument nommé a une signification particulière.
 
 .. note::
 
-    We could have used the ``debug:autowiring`` command as seen in a previous
-    chapter:
+    Nous aurions pu utiliser la commande ``debug:autowiring`` comme vu dans un précédent chapitre :
 
     .. code-block:: bash
 
         $ symfony console debug:autowiring workflow
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Workflows and State Machines
-      <https://symfony.com/doc/current/workflow/workflow-and-state-machine.html>`_
-      and when to choose each one;
+    * `Workflows et State Machines <https://symfony.com/doc/current/workflow/workflow-and-state-machine.html>`_ et quand les choisir ;
 
-    * The `Symfony Workflow docs <https://symfony.com/doc/current/workflow.html>`_.
+    * La `documentation du composant Symfony Workflow <https://symfony.com/doc/current/workflow.html>`_.
 
 .. _`Graphviz`: https://www.graphviz.org/

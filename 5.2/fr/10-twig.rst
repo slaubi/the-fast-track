@@ -5,25 +5,16 @@ Construire l'interface
     single: Twig
     single: Templates
 
-Everything is now in place to create the first version of the website user
-interface. We won't make it pretty. Just functional for now.
+Tout est maintenant en place pour créer la première version de l'interface du site. On ne la fera pas jolie pour le moment, seulement fonctionnelle.
 
-Remember the escaping we had to do in the controller for the easter egg to
-avoid security issues? We won't use PHP for our templates for that reason.
-Instead, we will use Twig. Besides handling output escaping for us, `Twig`_
-brings a lot of nice features we will leverage, like template inheritance.
+Vous vous souvenez de l'échappement de caractères que nous avons dû faire dans le contrôleur, pour l'*easter egg*, afin d'éviter les problèmes de sécurité ? Nous n'utiliserons pas PHP pour nos templates pour cette raison. À la place, nous utiliserons Twig. En plus de gérer l'échappement de caractères, `Twig`_ apporte de nombreuses fonctionnalités intéressantes, comme l'héritage des modèles.
 
 Installer Twig
 --------------
 
-We don't need to add Twig as a dependency as it has already been installed as a
-*transitive dependency* of EasyAdmin. But what if you decide to switch to
-another admin bundle later on? One that uses an API and a React front-end for
-instance. It will probably not depend on Twig anymore, and so Twig will
-automatically be removed when you remove EasyAdmin.
+Nous n'avons pas besoin d'ajouter Twig comme dépendance car il a déjà été installé comme *dépendance transitive* d'EasyAdmin. Mais que se passera-t-il si vous décidez un jour de passer à un autre bundle d'administration ? Un qui utilise une API et un front-end React par exemple ? Il ne dépendra probablement plus de Twig, et Twig sera donc automatiquement supprimé lorsque vous supprimerez EasyAdmin.
 
-For good measure, let's tell Composer that the project really depends on Twig,
-independently of EasyAdmin. Adding it like any other dependency is enough:
+Pour faire bonne mesure, disons à Composer que le projet dépend vraiment de Twig, indépendamment d'EasyAdmin. L'ajouter comme n'importe quelle autre dépendance suffit :
 
 .. code-block:: bash
 
@@ -52,9 +43,7 @@ Utiliser Twig pour les templates
     single: Twig;Layout
     single: Twig;block
 
-All pages on the website will share the same *layout*. When installing Twig, a
-``templates/`` directory has been created automatically and a
-sample layout was created as well in ``base.html.twig``.
+Toutes les pages du site Web suivront le même *modèle* de mise en page, la même structure HTML de base. Lors de l'installation de Twig, un répertoire ``templates/`` a été créé automatiquement, ainsi qu'un exemple de structure de base dans ``base.html.twig``.
 
 .. code-block:: twig
     :caption: templates/base.html.twig
@@ -73,15 +62,13 @@ sample layout was created as well in ``base.html.twig``.
         </body>
     </html>
 
-A layout can define ``block`` elements, which are the places where
-*child templates* that *extend* the layout add their contents.
+Un modèle peut définir des ``blocks``. Un ``block`` est un emplacement où les *templates enfants*, qui *étendent* le modèle, ajoutent leur contenu.
 
 .. index::
     single: Twig;extends
     single: Twig;for
 
-Let's create a template for the project's homepage in
-``templates/conference/index.html.twig``:
+Créons un template pour la page d'accueil du projet dans ``templates/conference/index.html.twig`` :
 
 .. code-block:: twig
     :caption: templates/conference/index.html.twig
@@ -98,20 +85,17 @@ Let's create a template for the project's homepage in
         {% endfor %}
     {% endblock %}
 
-The template *extends* ``base.html.twig`` and redefines the ``title`` and
-``body`` blocks.
+Le template *étend* (ou *extends*) ``base.html.twig`` et redéfinit les blocs ``title`` et ``body``.
 
 .. index::
     single: Twig;Syntax
 
 La notation ``{% %}`` dans un template indique des *actions* et des éléments de *structure*.
 
-The ``{{ }}`` notation is used to *display* something. ``{{ conference }}``
-displays the conference representation (the result of calling ``__toString`` on
-the ``Conference`` object).
+La notation ``{{ }}`` est utilisée pour *afficher* quelque chose. ``{{ conference }}`` affiche la représentation de la conférence (le résultat de l'appel à la méthode``__toString`` de l'objet ``Conference``).
 
 Utiliser Twig dans un contrôleur
----------------------------------
+--------------------------------
 
 Mettez à jour le contrôleur pour générer le contenu du template Twig :
 
@@ -152,29 +136,18 @@ Mettez à jour le contrôleur pour générer le contenu du template Twig :
 
 Il se passe beaucoup de choses ici.
 
-To be able to render a template, we need the Twig ``Environment`` object (the
-main Twig entry point). Notice that we ask for the Twig instance by
-type-hinting it in the controller method. Symfony is smart enough to know how
-to inject the right object.
+Pour pouvoir générer le contenu du template, nous avons besoin de l'objet ``Environment`` de Twig (le point d'entrée principal de Twig). Notez que nous demandons l'instance Twig en spécifiant son type dans la méthode du contrôleur. Symfony est assez intelligent pour savoir comment injecter le bon objet.
 
-We also need the conference repository to get all conferences from the
-database.
+Nous avons également besoin du *repository* des conférences pour récupérer toutes les conférences depuis la base de données.
 
-In the controller code, the ``render()`` method renders the template and passes
-an array of variables to the template. We are passing the list of
-``Conference`` objects as a ``conferences`` variable.
+Dans le code du contrôleur, la méthode ``render()`` génère le rendu du template et lui passe un tableau de variables. Nous passons la liste des objets ``Conference`` dans une variable ``conferences``.
 
-A controller is a standard PHP class. We don't even need to extend the
-``AbstractController`` class if we want to be explicit about our dependencies.
-You can remove it (but don't do it, as we will use the nice shortcuts it
-provides in future steps).
+Un contrôleur est une classe PHP standard. Nous n'avons même pas besoin d'étendre la classe ``AbstractController`` si nous voulons être explicites sur nos dépendances. Vous pouvez donc supprimer l'héritage (mais ne le faites pas, car nous utiliserons les raccourcis qu'il fournit dans les prochaines étapes).
 
 Créer la page d'une conférence
---------------------------------
+------------------------------
 
-Each conference should have a dedicated page to list its comments. Adding a new
-page is a matter of adding a controller, defining a route for it, and creating
-the related template.
+Chaque conférence devrait avoir une page dédiée à l'affichage de ses commentaires. L'ajout d'une nouvelle page consiste à ajouter un contrôleur, à définir une route et à créer le template correspondant.
 
 Ajoutez une méthode ``show()`` dans le fichier ``src/Controller/ConferenceController.php`` :
 
@@ -207,14 +180,9 @@ Ajoutez une méthode ``show()`` dans le fichier ``src/Controller/ConferenceContr
     +    }
      }
 
-This method has a special behavior we have not seen yet. We ask for a
-``Conference`` instance to be injected in the method. But there may be many
-of these in the database. Symfony is able to determine which one you want based
-on the ``{id}`` passed in the request path (``id`` being the primary key of the
-``conference`` table in the database).
+Cette méthode a un comportement particulier que nous n'avons pas encore vu. Nous demandons qu'une instance de ``Conference`` soit injectée dans la méthode. Mais il y en a peut-être beaucoup dans la base de données. Symfony est capable de déterminer celle que vous voulez en se basant sur l'``{id}`` passé dans le chemin de la requête (``id`` étant la clé primaire de la table ``conference`` dans la base de données).
 
-Retrieving the comments related to the conference can be done via the
-``findBy()`` method which takes a criteria as a first argument.
+La récupération des commentaires associés à la conférence peut se faire via la méthode ``findBy()``, qui prend un critère comme premier argument.
 
 .. index::
     single: Twig;extends
@@ -226,8 +194,7 @@ Retrieving the comments related to the conference can be done via the
     single: Twig;format_datetime
     single: Twig;length
 
-The last step is to create the ``templates/conference/show.html.twig``
-file:
+La dernière étape consiste à créer le fichier ``templates/conference/show.html.twig`` :
 
 .. code-block:: twig
     :caption: templates/conference/show.html.twig
@@ -257,22 +224,16 @@ file:
         {% endif %}
     {% endblock %}
 
-In this template, we are using the ``|`` notation to call Twig *filters*. A
-filter transforms a value. ``comments|length`` returns the number of comments
-and ``comment.createdAt|format_datetime('medium', 'short')`` formats the date
-in a human readable representation.
+Dans ce template, nous utilisons le symbole ``|`` pour appeler les *filtres* Twig. Un filtre transforme une valeur. ``comments|length`` retourne le nombre de commentaires et ``comment.createdAt|format_datetime('medium', 'short')`` affiche la date dans un format lisible par l'internaute.
 
-Try to reach the "first" conference via ``/conference/1``, and notice the
-following error:
+Essayez d'afficher la "première" conférence en naviguant vers ``/conference/1``, et constatez l'erreur suivante :
 
 .. figure:: screenshots/intl-twig-error.png
     :alt: /conference/1
     :align: center
     :figclass: with-browser
 
-The error comes from the ``format_datetime`` filter as it is not part of Twig
-core. The error message gives you a hint about which package should be
-installed to fix the problem:
+L'erreur vient du filtre ``format_datetime``, qui ne fait pas partie du noyau de Twig. Le message d'erreur vous donne un indice sur le paquet à installer pour résoudre le problème :
 
 .. code-block:: bash
 
@@ -287,8 +248,7 @@ Lier des pages entre elles
     single: Twig;Link
     single: Link
 
-The very last step to finish our first version of the user interface is to link
-the conference pages from the homepage:
+La toute dernière étape pour terminer notre première version de l'interface est de rendre les pages de la conférence accessibles depuis la page d'accueil :
 
 .. code-block:: diff
     :caption: patch_file
@@ -305,9 +265,7 @@ the conference pages from the homepage:
          {% endfor %}
      {% endblock %}
 
-But hard-coding a path is a bad idea for several reasons. The most important
-reason is if you change the path (from ``/conference/{id}`` to
-``/conferences/{id}`` for instance), all links must be updated manually.
+Mais coder un chemin en dur est une mauvaise idée pour plusieurs raisons. La raison principale est que si vous transformez le chemin (de ``/conference/{id}`` en ``/conferences/{id}`` par exemple), tous les liens doivent être mis à jour manuellement.
 
 .. index::
     single: Twig;path
@@ -329,8 +287,7 @@ Utilisez plutôt la *fonction* Twig ``path()`` avec le *nom de la route* :
          {% endfor %}
      {% endblock %}
 
-The ``path()`` function generates the path to a page using its route name. The
-values of the route parameters are passed as a Twig map.
+La fonction ``path()`` génère le chemin d'accès vers une page à l'aide du nom de la route. Les valeurs des paramètres dynamiques de la route sont transmises sous la forme d'un objet Twig.
 
 Paginer les commentaires
 ------------------------
@@ -339,12 +296,9 @@ Paginer les commentaires
     single: Doctrine;Paginator
     single: Paginator
 
-With thousands of attendees, we can expect quite a few comments. If we display
-them all on a single page, it will grow very fast.
+Avec des milliers de personnes présentes, on peut s'attendre à un nombre important de commentaires. Si nous les affichons tous sur une seule page, elle deviendra rapidement énorme.
 
-Create a ``getCommentPaginator()`` method in the Comment Repository that
-returns a Comment *Paginator* based on a conference and an offset (where to
-start):
+Créez une méthode ``getCommentPaginator()`` dans ``CommentRepository``. Cette méthode renvoie un *Paginator* de commentaires basé sur une conférence et un décalage (où commencer) :
 
 .. code-block:: diff
     :caption: patch_file
@@ -393,8 +347,7 @@ start):
 
 Nous avons fixé le nombre maximum de commentaires par page à 2 pour faciliter les tests.
 
-To manage the pagination in the template, pass the Doctrine Paginator instead
-of the Doctrine Collection to Twig:
+Pour gérer la pagination dans le template, transmettez à Twig le Doctrine Paginator au lieu de la Doctrine Collection :
 
 .. code-block:: diff
     :caption: patch_file
@@ -429,12 +382,9 @@ of the Doctrine Collection to Twig:
          }
      }
 
-The controller gets the ``offset`` from the Request query string
-(``$request->query``) as an integer (``getInt()``), defaulting to 0
-if not available.
+Le contrôleur récupère la valeur du décalage (``offset``) depuis les paramètres de l'URL (``$request->query``) sous forme d'entier (``getInt()``). Par défaut, sa valeur sera 0 si le paramètre n'est pas défini.
 
-The ``previous`` and ``next`` offsets are computed based on all the information
-we have from the paginator.
+Les décalages ``précédent`` et ``suivant`` sont calculés sur la base de toutes les informations que nous avons reçues du paginateur.
 
 .. index::
     single: Twig;if
@@ -470,8 +420,7 @@ Enfin, mettez à jour le template pour ajouter des liens vers les pages suivante
              <div>No comments have been posted yet for this conference.</div>
          {% endif %}
 
-You should now be able to navigate the comments via the "Previous" and "Next"
-links:
+Vous devriez maintenant pouvoir naviguer dans les commentaires avec les liens "Previous" et "Next" :
 
 .. figure:: screenshots/pagination-next.png
     :alt: /conference/1
@@ -484,12 +433,9 @@ links:
     :figclass: with-browser
 
 Optimiser le contrôleur
-------------------------
+-----------------------
 
-You might have noticed that both methods in ``ConferenceController`` take a
-Twig environment as an argument. Instead of injecting it into each method,
-let's use some constructor injection instead (that makes the list of arguments
-shorter and less redundant):
+Vous avez peut-être remarqué que les deux méthodes présentes dans ``ConferenceController`` prennent un environnement Twig comme argument. Au lieu de l'injecter dans chaque méthode, utilisons plutôt une injection dans le constructeur (ce qui rend la liste des arguments plus courte et moins redondante) :
 
 .. code-block:: diff
     :caption: patch_file
@@ -530,19 +476,16 @@ shorter and less redundant):
                  'comments' => $paginator,
                  'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Twig docs <https://twig.symfony.com/doc/2.x/>`_;
+    * `Documentation Twig <https://twig.symfony.com/doc/2.x/>`_ ;
 
-    * `Creating and Using Templates <https://symfony.com/doc/current/templates.html>`_
-      in Symfony applications;
+    * `Créer et utiliser des templates <https://symfony.com/doc/current/templates.html>`_ dans les applications Symfony ;
 
-    * `SymfonyCasts Twig tutorial <https://symfonycasts.com/screencast/symfony/twig-recipe>`_;
+    * `Tutoriel SymfonyCasts sur Twig <https://symfonycasts.com/screencast/symfony/twig-recipe>`_ ;
 
-    * `Twig functions and filters only available in Symfony
-      <https://symfony.com/doc/current/reference/twig_reference.html>`_;
+    * `Fonctions et filtres Twig disponibles uniquement dans Symfony <https://symfony.com/doc/current/reference/twig_reference.html>`_ ;
 
-    * The `AbstractController base controller
-      <https://symfony.com/doc/current/controller.html#the-base-controller-classes-services>`_.
+    * Le `contrôleur de base AbstractController <https://symfony.com/doc/current/controller.html#the-base-controller-classes-services>`_.
 
 .. _`Twig`: https://twig.symfony.com/

@@ -1,22 +1,17 @@
 Exécuter des crons
-===================
+==================
 
 .. index::
     single: Cron
 
-Crons are useful to do maintenance tasks. Unlike workers, they run on a
-schedule for a short period of time.
+Les crons sont utiles pour les tâches de maintenance. Contrairement aux *workers*, ils travaillent selon un horaire établi pour une courte période de temps.
 
 Nettoyer les commentaires
 -------------------------
 
-Comments marked as spam or rejected by the admin are kept in the database as
-the admin might want to inspect them for a little while. But they should
-probably be removed after some time. Keeping them around for a week after their
-creation is probably enough.
+Les commentaires marqués comme spam ou refusés par l'admin sont conservés dans la base de données, car l'admin peut vouloir les inspecter pendant un certain temps. Mais ils devraient probablement être supprimés au bout d'un moment. Les garder pendant une semaine après leur création devrait être suffisant.
 
-Create some utility methods in the comment repository to find rejected
-comments, count them, and delete them:
+Créez des méthodes utilitaires dans le repository des commentaires pour trouver les commentaires rejetés, les compter et les supprimer :
 
 .. code-block:: diff
     :caption: patch_file
@@ -73,42 +68,32 @@ comments, count them, and delete them:
 
 .. tip::
 
-    For more complex queries, it is sometimes useful to have a look at the
-    generated SQL statements (they can be found in the logs and in the profiler
-    for Web requests).
+    Pour les requêtes plus complexes, il est parfois utile de jeter un coup d'œil aux requêtes SQL générées (elles se trouvent dans les logs et dans le profileur de requêtes web).
 
 Utiliser des constantes de classe, des paramètres de conteneur et des variables d'environnement
-------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
 
 .. index::
     single: Container;Parameters
 
-7 days? We could have chosen another number, maybe 10 or 20. This number might
-evolve over time. We have decided to store it as a constant on the class, but
-we might have stored it as a parameter in the container, or we might have even
-defined it as an environment variable.
+7 jours ? Nous aurions pu choisir un autre chiffre, pourquoi pas 10 ou 20 ? Ce nombre pourrait évoluer avec le temps. Nous avons décidé de le stocker en tant que constante dans la classe, mais nous aurions peut-être pu le stocker en tant que paramètre dans le conteneur, ou même le définir en tant que variable d'environnement.
 
 Voici quelques règles de base pour décider quelle abstraction utiliser :
 
-* If the value is sensitive (passwords, API tokens, ...), use the Symfony
-  *secret storage* or a Vault;
+* Si la valeur est sensible (mots de passe, jetons API, etc.), utilisez le *stockage de chaîne secrète* de Symfony ou un Vault ;
 
-* If the value is dynamic and you should be able to change it *without*
-  re-deploying, use an *environment variable*;
+* Si la valeur est dynamique et que vous devriez pouvoir la modifier *sans* redéployer, utilisez une *variable d'environnement* ;
 
-* If the value can be different between environments, use a *container
-  parameter*;
+* Si la valeur peut être différente d'un environnement à l'autre, utilisez un *paramètre de conteneur* ;
 
-* For everything else, store the value in code, like in a *class constant*.
+* Pour tout le reste, stockez la valeur dans le code, comme dans une *constante de classe*.
 
 Créer une commande de console
-------------------------------
+-----------------------------
 
-Removing the old comments is the perfect task for a cron job. It should be done
-on a regular basis, and a little delay does not have any major impact.
+Supprimer les anciens commentaires est une tâche idéale pour un *cron job*. Il faut le faire de façon régulière, et un petit retard n'a pas d'impact majeur.
 
-Create a CLI command named ``app:comment:cleanup`` by creating a
-``src/Command/CommentCleanupCommand.php`` file:
+Créez une commande nommée ``app:comment:cleanup`` en créant un fichier ``src/Command/CommentCleanupCommand.php`` :
 
 .. code-block:: php
     :caption: src/Command/CommentCleanupCommand.php
@@ -161,14 +146,9 @@ Create a CLI command named ``app:comment:cleanup`` by creating a
         }
     }
 
-All application commands are registered alongside Symfony built-in ones and
-they are all accessible via ``symfony console``. As the number of available
-commands can be large, you should namespace them. By convention, the
-application commands should be stored under the ``app`` namespace. Add any
-number of sub-namespaces by separating them by a colon (``:``).
+Toutes les commandes de l'application sont enregistrées avec les commandes par défaut de Symfony, et sont toutes accessibles avec ``symfony console``. Comme le nombre de commandes disponibles peut être important, vous devez les mettre dans le bon *namespace*. Par convention, les commandes spécifiques à l'application devraient être stockées sous le namespace ``app``. Ajoutez autant de sous-namespaces que vous le souhaitez en les séparant par deux points (``:``).
 
-A command gets the *input* (arguments and options passed to the command) and
-you can use the *output* to write to the console.
+Une commande reçoit l'*entrée* (les arguments et les options passés à la commande) et vous pouvez utiliser la *sortie* pour écrire dans la console.
 
 Nettoyez la base de données en exécutant la commande :
 
@@ -183,9 +163,7 @@ Configurer un cron sur SymfonyCloud
     single: SymfonyCloud;Cron
     single: SymfonyCloud;Croncape
 
-One of the nice things about SymfonyCloud is that most of the configuration is
-stored in one file: ``.symfony.cloud.yaml``. The web container, the workers,
-and the cron jobs are described together to help maintenance:
+L'un des avantages de SymfonyCloud est qu'une bonne partie de la configuration est stockée dans un seul fichier : ``.symfony.cloud.yaml``. Le conteneur web, les *workers* et les *cron jobs* sont décrits au même endroit pour faciliter la maintenance :
 
 .. code-block:: diff
     :caption: patch_file
@@ -209,12 +187,9 @@ and the cron jobs are described together to help maintenance:
          messages:
              commands:
 
-The ``crons`` section defines all cron jobs. Each cron runs according to a
-``spec`` schedule.
+La section ``crons`` définit tous les *cron jobs*. Chaque cron fonctionne selon un planning spécifique (``spec``).
 
-The ``croncape`` utility monitors the execution of the command and sends an
-email to the addresses defined in the ``MAILTO`` environment variable if the
-command returns any exit code different than ``0``.
+L'utilitaire ``croncape`` surveille l'exécution de la commande et envoie un email aux adresses définies dans la variable d'environnement ``MAILTO`` si la commande retourne un code de sortie différent de ``0``.
 
 .. index::
     single: Symfony CLI;var:set
@@ -233,9 +208,7 @@ Vous pouvez forcer un cron à s'exécuter sur votre machine locale :
 
     $ symfony cron comment_cleanup
 
-Note that crons are set up on all SymfonyCloud branches. If you don't want to
-run some on non-production environments, check the ``$SYMFONY_BRANCH``
-environment variable:
+Notez que les crons sont installés sur toutes les branches de SymfonyCloud. Si vous ne voulez pas en exécuter sur des environnements hors production, vérifiez la variable d'environnement ``$SYMFONY_BRANCH`` :
 
 .. code-block:: bash
     :class: ignore
@@ -244,13 +217,12 @@ environment variable:
         croncape symfony app:invoices:send
     fi
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Cron/crontab syntax <https://en.wikipedia.org/wiki/Cron>`_;
+    * `Syntaxe cron/crontab <https://en.wikipedia.org/wiki/Cron>`_ ;
 
-    * `Croncape repository <https://github.com/symfonycorp/croncape>`_;
+    * `Dépôt de croncape <https://github.com/symfonycorp/croncape>`_ ;
 
-    * `Symfony Console commands <https://symfony.com/doc/current/console.html>`_;
+    * `Commandes de la console Symfony <https://symfony.com/doc/current/console.html>`_ ;
 
-    * The `Symfony Console Cheat Sheet
-      <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/console_en_42.pdf>`_.
+    * La `cheat sheet de la console Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/console_en_42.pdf>`_.

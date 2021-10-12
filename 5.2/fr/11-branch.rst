@@ -1,28 +1,19 @@
 Utiliser des branches
 =====================
 
-There are many ways to organize the workflow of code changes in a project. But
-working directly on the Git master branch and deploying directly to production
-without testing is probably not the best one.
+Il existe de nombreuses façons d'organiser le workflow des changements apportés au code d'un projet. Mais travailler directement sur la branche *master* de Git et déployer directement en production sans tester n'est probablement pas la meilleure solution.
 
-Testing is not just about unit or functional tests, it is also about checking
-the application behavior with production data. If you or your `stakeholders`_
-can browse the application exactly as it will be deployed to end users, this
-becomes a huge advantage and allows you to deploy with confidence. It is
-especially powerful when non-technical people can validate new features.
+Tester ne se résume pas à un test unitaire ou fonctionnel, il s'agit aussi de vérifier le comportement de l'application avec les données de production. Le fait que vous, ou vos `collègues`_, puissiez utiliser l'application exactement de la même manière que lorsqu'elle sera déployée est un énorme avantage. Cela vous permet de déployer en toute confiance. C'est particulièrement vrai lorsque des personnes non-techniques peuvent valider de nouvelles fonctionnalités.
 
-We will continue doing all the work in the Git master branch in the next steps
-for simplicity sake and to avoid repeating ourselves, but let's see how this
-could work better.
+Par souci de simplicité et pour éviter de nous répéter, nous continuerons à travailler sur la branche *master* de Git dans les prochaines étapes, mais voyons comment nous pourrions améliorer cela.
 
 Adopter un workflow Git
 -----------------------
 
-One possible workflow is to create one branch per new feature or bug fix. It is
-simple and efficient.
+Un workflow possible est de créer une branche par nouvelle fonctionnalité ou correction de bogue. C'est simple et efficace.
 
 Créer des branches
--------------------
+------------------
 
 .. index::
     single: Git;branch
@@ -39,44 +30,39 @@ Le workflow commence par la création d'une branche Git :
 
     $ git checkout -b sessions-in-db
 
-This command creates a ``sessions-in-db`` branch from the ``master`` branch.
-It "forks" the code and the infrastructure configuration.
+Cette commande crée une branche ``sessions-in-db`` à partir de la branche ``master``. Elle "*fork*" le code et la configuration de l'infrastructure.
 
 Stocker les sessions dans la base de données
----------------------------------------------
+--------------------------------------------
 
 .. index::
     single: Session;Database
 
-As you might have guessed from the branch name, we want to switch session
-storage from the filesystem to a database store (our PostgreSQL database here).
+Comme vous l'avez deviné d'après le nom de la branche, nous voulons passer du stockage de session dans le système de fichiers à un stockage en base de données (notre base de données PostgreSQL ici).
 
 Les étapes nécessaires pour le faire sont classiques :
 
-#. Create a Git branch;
+#. Créez une branche Git ;
 
-#. Update the Symfony configuration if needed;
+#. Mettez à jour la configuration de Symfony si nécessaire ;
 
-#. Write and/or update some code if needed;
+#. Écrivez et/ou mettez à jour le code si nécessaire ;
 
-#. Update the PHP configuration if needed (like adding the PostgreSQL PHP
-   extension);
+#. Mettez à jour la configuration PHP si nécessaire (ajoutez l'extension PHP PostgreSQL par exemple) ;
 
-#. Update the infrastructure on Docker and SymfonyCloud if needed (add the
-   PostgreSQL service);
+#. Mettez à jour l'infrastructure pour Docker et SymfonyCloud (ajoutez le service PostgreSQL) ;
 
-#. Test locally;
+#. Testez localement ;
 
-#. Test remotely;
+#. Testez à distance ;
 
-#. Merge the branch to master;
+#. *Mergez* la branche dans master ;
 
-#. Deploy to production;
+#. Déployez en production ;
 
-#. Delete the branch.
+#. Supprimez la branche.
 
-To store sessions in the database, change the ``session.handler_id``
-configuration to point to the database DSN:
+Pour stocker les sessions en base de données, modifiez la configuration ``session.handler_id`` pour pointer sur le DSN de la base de données :
 
 .. code-block:: diff
     :caption: patch_file
@@ -92,8 +78,7 @@ configuration to point to the database DSN:
              cookie_secure: auto
              cookie_samesite: lax
 
-To store sessions in the database, we need to create the ``sessions`` table. Do
-so with a Doctrine migration:
+Pour stocker les sessions en base de données, nous devons créer une table ``sessions``. Faites-le avec une migration Doctrine :
 
 .. code-block:: bash
 
@@ -129,18 +114,13 @@ Migrez la base de données :
 
     $ symfony console doctrine:migrations:migrate
 
-Test locally by browsing the website. As there are no visual changes and
-because we are not using sessions yet, everything should still work as before.
+Testez localement en naviguant sur le site. Comme il n'y a pas de changement visuel et que nous n'utilisons pas encore les sessions, tout devrait continuer à fonctionner comme avant.
 
 .. note::
 
-    We don't need steps 3 to 5 here as we are re-using the database as the
-    session storage, but the chapter about using Redis shows how
-    straightforward it is to add, test, and deploy a new service in both Docker
-    and SymfonyCloud.
+    Nous n'avons pas besoin des étapes 3 à 5 ici puisque nous ré-utilisons la base de données comme stockage de session, mais le chapitre à propos de l'utilisation de Redis montre à quel point il est facile d'ajouter, tester et déployer un nouveau service avec Docker et SymfonyCloud.
 
-As the new table is not "managed" by Doctrine, we must configure Doctrine to
-not remove it in the next database migration:
+Comme la nouvelle table n'est pas "gérée" par Doctrine, nous devons configurer Doctrine pour qu'il ne la supprime pas lors de la prochaine migration :
 
 .. code-block:: diff
     :caption: patch_file
@@ -166,15 +146,12 @@ Committez vos changements sur la nouvelle branche :
     $ git commit -m'Configure database sessions'
 
 Déployer une branche
----------------------
+--------------------
 
 .. index::
     single: SymfonyCloud;Environment
 
-Before deploying to production, we should test the branch on the same
-infrastructure as the production one. We should also validate that everything
-works fine for the Symfony ``prod`` environment (the local website used the
-Symfony ``dev`` environment).
+Avant le déploiement en production, nous devrions tester la branche sur la même infrastructure que celle de production. Nous devrions également valider que tout fonctionne bien pour l'environnement ``prod`` de Symfony (le site local utilise l'environnement ``dev`` de Symfony).
 
 .. index::
     single: Symfony CLI;env:delete
@@ -193,22 +170,15 @@ Maintenant, créons un *environnement SymfonyCloud* basé sur la *branche Git* :
 
 Cette commande crée un nouvel environnement comme suit :
 
-* The branch inherits the code and infrastructure from the current Git branch
-  (``sessions-in-db``);
+* La branche hérite du code et de l'infrastructure de la branche Git actuelle (``sessions-in-db``) ;
 
-* The data come from the master (aka production) environment by taking a
-  consistent snapshot of all service data, including files (user uploaded files
-  for instance) and databases;
+* Les données proviennent de l'environnement ``master`` (c'est-à-dire la production) en prenant un instantané de toutes les données du service, y compris les fichiers (fichiers uploadés par l'internaute par exemple) et les bases de données ;
 
-* A new dedicated cluster is created to deploy the code, the data, and the
-  infrastructure.
+* Un nouveau cluster dédié est créé pour déployer le code, les données et l'infrastructure.
 
-As the deployment follows the same steps as deploying to production, database
-migrations will also be executed. This is a great way to validate that the
-migrations work with production data.
+Comme le déploiement suit les mêmes étapes que le déploiement en production, les migrations de bases de données seront également exécutées. C'est un excellent moyen de valider que les migrations fonctionnent avec les données de production.
 
-The non-``master`` environments are very similar to the ``master`` one except
-for some small differences: for instance, emails are not sent by default.
+Les environnements autres que ``master`` sont très similaires à ``master``, à quelques petites différences près : par exemple, les emails ne sont pas envoyés par défaut.
 
 .. index::
     single: Symfony CLI;open:remote
@@ -220,26 +190,18 @@ Une fois le déploiement terminé, ouvrez la nouvelle branche dans un navigateur
 
     $ symfony open:remote
 
-Note that all SymfonyCloud commands work on the current Git branch. This
-command opens the deployed URL for the ``sessions-in-db`` branch; the URL
-will look like ``https://sessions-in-db-xxx.eu.s5y.io/``.
+Notez que toutes les commandes SymfonyCloud fonctionnent sur la branche Git courante. Cela ouvrira l'URL de la branche ``sessions-in-db`` déployée. L'URL ressemblera à ``https://sessions-in-db-xxx.eu.s5y.io/``.
 
-Test the website on this new environment, you should see all the data that you
-created in the master environment.
+Testez le site web sur ce nouvel environnement. Vous devriez voir toutes les données que vous avez créées dans l'environnement ``master``.
 
-If you add more conferences on the ``master`` environment, they won't show up
-in the ``sessions-in-db`` environment and vice-versa. The environments are
-independent and isolated.
+Si vous ajoutez d'autres conférences sur l'environnement ``master``, elles n'apparaîtront pas dans l'environnement ``sessions-in-db`` et vice-versa. Les environnements sont indépendants et isolés.
 
-If the code evolves on master, you can always rebase the Git branch and deploy
-the updated version, resolving the conflicts for both the code and the
-infrastructure.
+Si le code évolue sur master, vous pouvez toujours *rebaser* la branche Git et déployer la version mise à jour, résolvant ainsi les conflits tant pour le code que pour l'infrastructure.
 
 .. index::
     single: Symfony CLI;env:sync
 
-You can even synchronize the data from master back to the ``sessions-in-db``
-environment:
+Vous pouvez même synchroniser les données de master avec l'environnement ``sessions-in-db`` :
 
 .. code-block:: bash
     :class: answers(y)
@@ -247,23 +209,17 @@ environment:
     $ symfony env:sync
 
 Déboguer les déploiements en production avant de déployer
-------------------------------------------------------------
+---------------------------------------------------------
 
 .. index::
     single: SymfonyCloud;Debugging
 
-By default, all SymfonyCloud environments use the same settings as the
-``master``/``prod`` environment (aka the Symfony ``prod`` environment). This
-allows you to test the application in real-life conditions. It gives you the
-feeling of developing and testing directly on production servers, but without
-the risks associated with it. This reminds me of the good old days when we were
-deploying via FTP.
+Par défaut, tous les environnements SymfonyCloud utilisent les mêmes paramètres que l'environnement ``master``/``prod`` (c'est à dire l'environnement Symfony ``prod``). Cela vous permet de tester l'application dans des conditions réelles. Il vous donne l'impression de développer et de tester directement sur des serveurs de production, mais sans les risques qui y sont associés. Cela me rappelle le bon vieux temps où nous déployions par FTP.
 
 .. index::
     single: Symfony CLI;env:debug
 
-In case of a problem, you might want to switch to the ``dev`` Symfony
-environment:
+En cas de problème, vous pouvez passer à l'environnement Symfony ``dev`` :
 
 .. code-block:: bash
 
@@ -277,19 +233,14 @@ Une fois terminé, revenez aux réglages de production :
 
 .. warning::
 
-    **Never** enable the ``dev`` environment and never enable the Symfony
-    Profiler on the ``master`` branch; it would make your application really
-    slow and open a lot of serious security vulnerabilities.
+    N'activez **jamais** l'environnement ``dev`` et n'activez jamais le Symfony Profiler sur la branche ``master`` ; cela rendrait votre application vraiment lente et ouvrirait de nombreuses failles de sécurité graves.
 
 Tester les déploiements en production avant de déployer
----------------------------------------------------------
+-------------------------------------------------------
 
-Having access to the upcoming version of the website with production data opens
-up a lot of opportunities: from visual regression testing to performance
-testing. `Blackfire <https://blackfire.io>`_ is the perfect tool for the job.
+L'accès à la prochaine version du site web avec les données de production ouvre de nombreuses opportunités : des tests de régression visuelle aux tests de performance. `Blackfire <https://blackfire.io>`_ est l'outil parfait pour ce travail.
 
-Refer to the step about "Performance" to learn more about how you can use
-Blackfire to test your code before deploying.
+Reportez-vous à l'étape "Performances" pour en savoir plus sur la façon dont vous pouvez utiliser Blackfire pour tester votre code avant de le déployer.
 
 Merger en production
 --------------------
@@ -299,8 +250,7 @@ Merger en production
     single: Git;checkout
     single: Git;merge
 
-When you are satisfied with the branch changes, merge the code and the
-infrastructure back to the Git master branch:
+Lorsque vous êtes satisfait des changements de la branche, mergez le code et l'infrastructure dans la branche ``master`` de Git :
 
 .. code-block:: bash
 
@@ -313,11 +263,10 @@ Et déployez :
 
     $ symfony deploy
 
-When deploying, only the code and infrastructure changes are pushed to
-SymfonyCloud; the data are not affected in any way.
+Lors du déploiement, seuls le code et les changements d'infrastructure sont poussés vers SymfonyCloud ; les données ne sont en aucun cas affectées.
 
 Faire le ménage
-----------------
+---------------
 
 .. index::
     single: Symfony CLI;env:delete
@@ -330,8 +279,8 @@ Enfin, faites le ménage en supprimant la branche Git et l'environnement Symfony
     $ git branch -d sessions-in-db
     $ symfony env:delete --env=sessions-in-db --no-interaction
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Git branching <https://www.git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell>`_;
+    * `Les branches Git <https://www.git-scm.com/book/fr/v2/Les-branches-avec-Git-Les-branches-en-bref>`_ ;
 
 .. _`stakeholders`: https://en.wikipedia.org/wiki/Project_stakeholder

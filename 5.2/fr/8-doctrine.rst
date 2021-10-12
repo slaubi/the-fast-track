@@ -1,20 +1,17 @@
 Décrire la structure des données
-==================================
+================================
 
 .. index::
     single: Doctrine
     single: Database
 
-To deal with the database from PHP, we are going to depend on `Doctrine`_, a
-set of libraries that help developers manage databases:
+Pour interagir avec la base de données depuis PHP, nous allons nous appuyer sur `Doctrine`_, un ensemble de bibliothèques qui nous aide à gérer les bases de données :
 
 .. code-block:: bash
 
     $ symfony composer req "orm:^2"
 
-This command installs a few dependencies: Doctrine DBAL (a database abstraction
-layer), Doctrine ORM (a library to manipulate our database content using PHP objects),
-and Doctrine Migrations.
+Cette commande installe quelques dépendances : Doctrine DBAL (une couche d'abstraction de base de données), Doctrine ORM (une bibliothèque pour manipuler le contenu de notre base de données en utilisant des objets PHP) et Doctrine Migrations.
 
 Configurer Doctrine ORM
 -----------------------
@@ -22,15 +19,9 @@ Configurer Doctrine ORM
 .. index::
     single: Doctrine;Configuration
 
-How does Doctrine know the database connection? Doctrine's recipe added a
-configuration file, ``config/packages/doctrine.yaml``, that controls its
-behavior. The main setting is the *database DSN*, a string containing all the
-information about the connection: credentials, host, port, etc. By default,
-Doctrine looks for a ``DATABASE_URL`` environment variable.
+Comment est-ce que Doctrine est au courant de notre connexion à la base de données ? La recette de Doctrine a ajouté un fichier de configuration qui contrôle son comportement : ``config/packages/doctrine.yaml``. Le paramètre principal est le *DSN de la base de données*, une chaîne contenant toutes les informations sur la connexion : identifiants, hôte, port, etc. Par défaut, Doctrine recherche une variable d'environnement ``DATABASE_URL``.
 
-Almost all installed packages have a configuration under the
-``config/packages/`` directory. Most of the time, the defaults have been chosen
-carefully to work for most applications.
+Presque tous les paquets installés sont configurés dans le répertoire ``config/packages/``. Les valeurs par défaut ont été choisies avec soin pour fonctionner avec la plupart des applications.
 
 Comprendre les conventions des variables d'environnement de Symfony
 -------------------------------------------------------------------
@@ -40,18 +31,11 @@ Comprendre les conventions des variables d'environnement de Symfony
     single: .env
     single: .env.local
 
-You can define the ``DATABASE_URL`` manually in the ``.env`` or ``.env.local``
-file. In fact, thanks to the package's recipe, you'll see an example
-``DATABASE_URL`` in your ``.env`` file. But because the local port to
-PostgreSQL exposed by Docker can change, it is quite cumbersome. There is a
-better way.
+Vous pouvez définir la variable ``DATABASE_URL`` manuellement dans le fichier ``.env`` ou ``.env.local``. En fait, grâce à la recette du paquet, vous verrez un exemple de variable ``DATABASE_URL`` dans votre fichier ``.env``. Mais comme le port exposé par Docker vers PostgreSQL peut changer, c'est assez lourd. Il y a une meilleure solution.
 
-Instead of hard-coding ``DATABASE_URL`` in a file, we can prefix all commands
-with ``symfony``. This will detect services ran by Docker and/or SymfonyCloud
-(when the tunnel is open) and set the environment variable automatically.
+Au lieu de coder en dur la variable ``DATABASE_URL`` dans un fichier, nous pouvons préfixer toutes les commandes avec ``symfony``. Ceci détectera les services exécutés par Docker et/ou SymfonyCloud (lorsque le tunnel est ouvert) et définira automatiquement la variable d'environnement.
 
-Docker Compose and SymfonyCloud work seamlessly with Symfony thanks to
-these environment variables.
+Docker Compose et SymfonyCloud fonctionnent parfaitement avec Symfony grâce à ces variables d'environnement.
 
 .. index::
     single: Symfony CLI;var:export
@@ -68,22 +52,16 @@ Vérifiez toutes les variables d'environnement exposées en exécutant ``symfony
     DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
     # ...
 
-Remember the ``database`` *service name* used in the Docker and SymfonyCloud
-configurations? The service names are used as prefixes to define environment
-variables like ``DATABASE_URL``. If your services are named according to the
-Symfony conventions, no other configuration is needed.
+Vous rappelez-vous du *nom du service* ``database`` utilisé dans les configurations Docker et SymfonyCloud ? Les noms des services sont utilisés comme préfixes pour définir des variables d'environnement telles que ``DATABASE_URL``. Si vos services sont nommés selon les conventions Symfony, aucune autre configuration n'est nécessaire.
 
 .. note::
 
-    Databases are not the only service that benefit from the Symfony
-    conventions. The same goes for Mailer, for example (via the ``MAILER_DSN``
-    environment variable).
+    Les bases de données ne sont pas les seuls services qui bénéficient des conventions Symfony. Il en va de même pour Mailer, par exemple (via la variable d'environnement ``MAILER_DSN``).
 
 Modifier la valeur par défaut de DATABASE_URL dans le fichier .env
--------------------------------------------------------------------
+------------------------------------------------------------------
 
-We will still change the ``.env`` file to setup the default ``DATABASE_URL`` to
-use PostgreSQL:
+Nous allons quand même changer le fichier ``.env`` pour initialiser la variable ``DATABASE_URL`` pour l'utilisation de PostgreSQL :
 
 .. code-block:: diff
 
@@ -97,39 +75,32 @@ use PostgreSQL:
     +DATABASE_URL="postgresql://127.0.0.1:5432/db?serverVersion=13&charset=utf8"
      ###< doctrine/doctrine-bundle ###
 
-Why does the information need to be duplicated in two different places? Because
-on some Cloud platforms, at *build time*, the database URL might not be known
-yet but Doctrine needs to know the database's engine to build its
-configuration. So, the host, username, and password do not really matter.
+Pourquoi l'information doit-elle être dupliquée à deux endroits différents ? Parce que sur certaines plates-formes de Cloud, au *moment de la compilation*, l'URL de la base de données n'est peut-être pas encore connue mais Doctrine a besoin de connaître le moteur de la base de données pour initialiser sa configuration. Ainsi, l'hôte, le pseudo et le mot de passe n'ont pas vraiment d'importance.
 
 Créer des classes d'entités
------------------------------
+---------------------------
 
 Une conférence peut être décrite en quelques propriétés :
 
-* The *city* where the conference is organized;
+* La *ville* où la conférence est organisée ;
 
-* The *year* of the conference;
+* L'*année* de la conférence ;
 
-* An *international* flag to indicate if the conference is local or
-  international (SymfonyLive vs SymfonyCon).
+* Une option *international* pour indiquer si la conférence est locale ou internationale (SymfonyLive vs SymfonyCon).
 
 .. index:: ! Command;make:entity
 
-The Maker bundle can help us generate a class (an *Entity* class) that
-represents a conference:
+Le *Maker Bundle* peut nous aider à générer une classe (une classe *Entity*) qui représente une conférence :
 
 .. code-block:: bash
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
 
     $ symfony console make:entity Conference
 
-This command is interactive: it will guide you through the process of adding
-all the fields you need. Use the following answers (most of them are
-the defaults, so you can hit the "Enter" key to use them):
+Cette commande est interactive : elle vous guidera dans le processus d'ajout de tous les champs dont vous avez besoin. Utilisez les réponses suivantes (la plupart d'entre elles sont les valeurs par défaut, vous pouvez donc appuyer sur la touche "Entrée" pour les utiliser) :
 
-* ``city``, ``string``, ``255``, ``no``;
-* ``year``, ``string``, ``4``, ``no``;
+* ``city``, ``string``, ``255``, ``no`` ;
+* ``year``, ``string``, ``4``, ``no`` ;
 * ``isInternational``, ``boolean``, ``no``.
 
 Voici la sortie complète lors de l'exécution de la commande :
@@ -195,8 +166,7 @@ Voici la sortie complète lors de l'exécution de la commande :
 
 La classe ``Conference`` a été stockée sous le *namespace* ``App\Entity\``.
 
-The command also generated a Doctrine *repository* class:
-``App\Repository\ConferenceRepository``.
+La commande a également généré une classe de *repository* Doctrine : ``App\Repository\ConferenceRepository``.
 
 .. index::
     single: Annotations;@ORM\\Entity
@@ -204,8 +174,7 @@ The command also generated a Doctrine *repository* class:
     single: Annotations;@ORM\\GeneratedValue
     single: Annotations;@ORM\\Column
 
-The generated code looks like the following (only a small portion of the file
-is replicated here):
+Le code généré ressemble à ce qui suit (seule une petite partie du fichier est retranscrite ici) :
 
 .. code-block:: php
     :caption: src/App/Entity/Conference.php
@@ -250,13 +219,9 @@ is replicated here):
         // ...
     }
 
-Note that the class itself is a plain PHP class with no signs of Doctrine.
-Annotations are used to add metadata useful for Doctrine to map the class to
-its related database table.
+Notez que la classe elle-même est une classe PHP sans aucune référence à Doctrine. Les annotations sont utilisées pour ajouter des métadonnées utiles à Doctrine afin de mapper la classe à sa table associée dans la base de données.
 
-Doctrine added an ``id`` property to store the primary key of the row in
-the database table. This key (``@ORM\Id()``) is automatically generated
-(``@ORM\GeneratedValue()``) via a strategy that depends on the database engine.
+Doctrine a ajouté un attribut ``id`` pour stocker la clé primaire de la ligne dans la table de la base de données. Cette clé (``@ORM\Id()``) est générée automatiquement (``@ORM\GeneratedValue()``) avec une stratégie qui dépend du moteur de base de données.
 
 .. index::
     single: Command;make:entity
@@ -270,23 +235,20 @@ Maintenant, générez une classe d'entité pour les commentaires de la conféren
 
 Entrez les réponses suivantes :
 
-* ``author``, ``string``, ``255``, ``no``;
-* ``text``, ``text``, ``no``;
-* ``email``, ``string``, ``255``, ``no``;
+* ``author``, ``string``, ``255``, ``no`` ;
+* ``text``, ``text``, ``no`` ;
+* ``email``, ``string``, ``255``, ``no`` ;
 * ``createdAt``, ``datetime``, ``no``.
 
 Lier les entités
------------------
+----------------
 
 .. index::
     single: Command;make:entity
 
-The two entities, Conference and Comment, should be linked together. A
-Conference can have zero or more Comments, which is called a *one-to-many*
-relationship.
+Les deux entités, *Conference* et *Comment*, devraient être liées l'une à l'autre. Une conférence peut avoir zéro commentaire ou plus, ce qui s'appelle une relation *one-to-many*.
 
-Use the ``make:entity`` command again to add this relationship to the
-``Conference`` class:
+Utilisez à nouveau la commande ``make:entity`` pour ajouter cette relation à la classe ``Conference`` :
 
 .. code-block:: bash
     :class: answers(comments||OneToMany||Comment||conference||no||yes)
@@ -373,8 +335,7 @@ Use the ``make:entity`` command again to add this relationship to the
     single: Annotations;@ORM\\JoinColumn
     single: Annotations;@ORM\\OneToMany
 
-Have a look at the full diff for the entity classes after adding the
-relationship:
+Jetez un coup d'oeil au *diff* complet entre les classes d'entités après l'ajout de la relation :
 
 .. code-block:: diff
     :class: ignore
@@ -476,21 +437,17 @@ relationship:
     +    }
      }
 
-Everything you need to manage the relationship has been generated for you. Once
-generated, the code becomes yours; feel free to customize it the way you want.
+Tout ce dont vous avez besoin pour gérer la relation a été généré pour vous. Une fois généré, le code devient le vôtre ; n'hésitez pas à le personnaliser comme vous le souhaitez.
 
 Ajouter d'autres propriétés
------------------------------
+---------------------------
 
 .. index::
     single: Command;make:entity
 
-I just realized that we have forgotten to add one property on the Comment
-entity: attendees might want to attach a photo of the conference to illustrate
-their feedback.
+Je viens de réaliser que nous avons oublié d'ajouter une propriété sur l'entité *Comment* : une photo de la conférence peut être jointe afin d'illustrer un retour d'expérience.
 
-Run ``make:entity`` once more and add a ``photoFilename`` property/column of
-type ``string``, but allow it to be ``null`` as uploading a photo is optional:
+Exécutez à nouveau ``make:entity`` et ajoutez une propriété/colonne ``photoFilename`` de type ``string``. Mais, comme l'ajout d'une photo est facultatif, permettez-lui d'être ``null`` :
 
 .. code-block:: bash
     :class: answers(photoFilename||string||255||yes)
@@ -498,7 +455,7 @@ type ``string``, but allow it to be ``null`` as uploading a photo is optional:
     $ symfony console make:entity Comment
 
 Migrer la base de données
---------------------------
+-------------------------
 
 .. index:: ! Command;make:migration
 
@@ -506,13 +463,9 @@ La structure du projet est maintenant entièrement décrite par les deux classes
 
 Ensuite, nous devons créer les tables de base de données liées à ces entités PHP.
 
-*Doctrine Migrations* is the perfect match for such a task. It has already been
-installed as part of the ``orm`` dependency.
+*Doctrine Migrations* est la solution idéale pour cela. Le paquet a déjà été installé dans le cadre de la dépendance ``orm``.
 
-A *migration* is a class that describes the changes needed to update a
-database schema from its current state to the new one defined by the
-entity annotations. As the database is empty for now, the migration should
-consist of two table creations.
+Une *migration* est une classe qui décrit les changements nécessaires pour mettre à jour un schéma de base de données, de son état actuel vers le nouveau, en fonction des annotations de l'entité. Comme la base de données est vide pour l'instant, la migration devrait consister en la création de deux tables.
 
 Voyons ce que Doctrine génère :
 
@@ -520,8 +473,7 @@ Voyons ce que Doctrine génère :
 
     $ symfony console make:migration
 
-Notice the generated file name in the output (a name that looks like
-``migrations/Version20191019083640.php``):
+Notez le nom du fichier généré (un nom qui ressemble à ``migrations/Version20191019083640.php``) :
 
 .. code-block:: php
     :caption: migrations/Version20191019083640.php
@@ -552,7 +504,7 @@ Notice the generated file name in the output (a name that looks like
     }
 
 Mettre à jour la base de données locale
------------------------------------------
+---------------------------------------
 
 .. index:: ! Command;doctrine:migrations:migrate
 
@@ -566,27 +518,20 @@ Vous pouvez maintenant exécuter la migration générée pour mettre à jour le 
 Le schéma de la base de données locale est à jour à présent, prêt à stocker des données.
 
 Mettre à jour la base de données de production
-------------------------------------------------
+----------------------------------------------
 
-The steps needed to migrate the production database are the same as the ones
-you are already familiar with: commit the changes and deploy.
+Les étapes nécessaires à la migration de la base de données de production sont les mêmes que celles que vous connaissez déjà : *commiter* les changements et déployer.
 
-When deploying the project, SymfonyCloud updates the code, but also runs the
-database migration if any (it detects if the ``doctrine:migrations:migrate``
-command exists).
+Lors du déploiement du projet, SymfonyCloud met à jour le code, mais exécute également la migration de la base de données si nécessaire (il détecte si la commande ``doctrine:migrations:migrate`` existe).
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Databases and Doctrine ORM
-      <https://symfony.com/doc/current/doctrine.html>`_ in Symfony applications;
+    * `Bases de données et Doctrine ORM <https://symfony.com/doc/current/doctrine.html>`_ dans les applications Symfony ;
 
-    * `SymfonyCasts Doctrine tutorial
-      <https://symfonycasts.com/screencast/symfony-doctrine/install>`_;
+    * `Tutoriel SymfonyCasts sur Doctrine <https://symfonycasts.com/screencast/symfony-doctrine/install>`_ ;
 
-    * `Working with Doctrine Associations/Relations
-      <https://symfony.com/doc/current/doctrine/associations.html>`_;
+    * `Travailler avec les associations/relations de Doctrine <https://symfony.com/doc/current/doctrine/associations.html>`_ ;
 
-    * `DoctrineMigrationsBundle docs
-      <https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html>`_.
+    * `Documentation du DoctrineMigrationsBundle <https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html>`_.
 
 .. _`Doctrine`: https://www.doctrine-project.org/

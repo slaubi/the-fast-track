@@ -1,27 +1,22 @@
 Mettre en place une base de données
-====================================
+===================================
 
 .. index::
     single: Database
 
-The Conference Guestbook website is about gathering feedback during
-conferences. We need to store the comments contributed by the conference
-attendees in a permanent storage.
+Le site web du livre d'or de la conférence permet de recueillir des commentaires pendant les conférences. Nous avons besoin de stocker ces commentaires dans un stockage persistant.
 
-A comment is best described by a fixed data structure: an author, their email,
-the text of the feedback, and an optional photo. The kind of data that can be
-best stored in a traditional relational database engine.
+Un commentaire est mieux décrit par une structure de données fixe : un nom, un email, le texte du commentaire et une photo facultative. Ce type de données se stocke facilement dans un moteur de base de données relationnelle traditionnel.
 
 PostgreSQL est le moteur de base de données que nous allons utiliser.
 
 Ajouter PostgreSQL à Docker Compose
-------------------------------------
+-----------------------------------
 
 .. index::
     single: Docker;PostgreSQL
 
-On our local machine, we have decided to use Docker to manage services. Create
-a ``docker-compose.yaml`` file and add PostgreSQL as a service:
+Sur notre machine locale, nous avons décidé d'utiliser Docker pour gérer nos services. Créez un fichier ``docker-compose.yaml`` et ajoutez PostgreSQL en tant que service :
 
 .. code-block:: yaml
     :caption: docker-compose.yaml
@@ -38,20 +33,16 @@ a ``docker-compose.yaml`` file and add PostgreSQL as a service:
                 POSTGRES_DB: main
             ports: [5432]
 
-This will install a PostgreSQL server and configure some environment variables
-that control the database name and credentials. The values do not really
-matter.
+Un serveur PostgreSQL sera alors installé et certaines variables d'environnement, qui contrôlent le nom de la base de données et ses identifiants, seront configurées. Les valeurs n'ont pas vraiment d'importance.
 
-We also expose the PostgreSQL port (``5432``) of the container to the local
-host. That will help us access the database from our machine.
+Nous exposons également le port PostgreSQL (``5432``) du conteneur à l'hôte local. Cela nous aidera à accéder à la base de données à partir de notre machine.
 
 .. note::
 
-    The ``pdo_pgsql`` extension should have been installed when PHP was set up
-    in a previous step.
+    L'extension ``pdo_pgsql`` a déjà dû être installée précédemment lors de l'installation de PHP.
 
 Démarrer Docker Compose
-------------------------
+-----------------------
 
 Lancez Docker Compose en arrière-plan (``-d``) :
 
@@ -59,8 +50,7 @@ Lancez Docker Compose en arrière-plan (``-d``) :
 
     $ docker-compose up -d
 
-Wait a bit to let the database start up and check that everything is running
-fine:
+Attendez un peu pour laisser démarrer la base de données, puis vérifiez que tout fonctionne bien :
 
 .. code-block:: bash
     :class: ignore
@@ -71,8 +61,7 @@ fine:
     ---------------------------------------------------------------------------------------
     guestbook_database_1   docker-entrypoint.sh postgres   Up      0.0.0.0:32780->5432/tcp
 
-If there are no running containers or if the ``State`` column does not read
-``Up``, check the Docker Compose logs:
+S'il n'y a pas de conteneurs en cours d'exécution ou si la colonne ``State`` n'indique pas ``Up``, vérifiez les logs de Docker Compose :
 
 .. code-block:: bash
     :class: ignore
@@ -80,26 +69,18 @@ If there are no running containers or if the ``State`` column does not read
     $ docker-compose logs
 
 Accéder à la base de données locale
---------------------------------------
+-----------------------------------
 
-Using the ``psql`` command-line utility might prove useful from time to time.
-But you need to remember the credentials and the database name. Less obvious,
-you also need to know the local port the database runs on the host. Docker
-chooses a random port so that you can work on more than one project using
-PostgreSQL at the same time (the local port is part of the output of
-``docker-compose ps``).
+L'utilitaire en ligne de commande ``psql`` peut parfois s'avérer utile. Mais vous devez vous rappelez des informations d'identification et du nom de la base de données. Encore moins évident, vous devez aussi connaître le port local sur lequel la base de données tourne sur l'hôte. Docker choisit un port aléatoire pour que vous puissiez travailler sur plus d'un projet en utilisant PostgreSQL en même temps (le port local fait partie de la sortie de ``docker-compose ps``).
 
 Si vous utilisez ``psql`` avec la commande ``symfony``, vous n'avez pas besoin de vous souvenir de quoi que ce soit.
 
-The Symfony CLI automatically detects the Docker services running for the
-project and exposes the environment variables that ``psql`` needs to connect to
-the database.
+La commande ``symfony`` détecte automatiquement les services Docker en cours d'exécution pour le projet et expose les variables d'environnement dont ``psql`` a besoin pour se connecter à la base de données.
 
 .. index::
     single: Symfony CLI;run psql
 
-Thanks to these conventions, accessing the database via ``symfony run`` is much
-easier:
+Grâce à ces conventions, accéder à la base de données avec ``symfony run`` est beaucoup plus facile :
 
 .. code-block:: bash
     :class: ignore
@@ -108,8 +89,7 @@ easier:
 
 .. note::
 
-    If you don't have the ``psql`` binary on your local host, you can also run
-    it via ``docker-compose``:
+    Si vous n'avez pas le binaire ``psql`` sur votre hôte local, vous pouvez également l'exécuter avec ``docker-compose`` :
 
     .. code-block:: bash
         :class: ignore
@@ -117,7 +97,7 @@ easier:
         $ docker-compose exec database psql main
 
 Sauvegarder et restaurer les données de la base
-------------------------------------------------
+-----------------------------------------------
 
 .. index::
     single: Database;Dump
@@ -140,18 +120,15 @@ Et restaurer les données :
 
 .. warning::
 
-    Never call ``docker-compose down`` if you don't want to lose data. Or
-    backup first.
+    N'appelez jamais ``docker-compose down`` si vous ne voulez pas perdre de données, ou faites une sauvegarde d'abord.
 
 Ajouter PostgreSQL à SymfonyCloud
-----------------------------------
+---------------------------------
 
 .. index::
     single: SymfonyCloud;PostgreSQL
 
-For the production infrastructure on SymfonyCloud, adding a service like
-PostgreSQL should be done in the currently empty ``.symfony/services.yaml``
-file:
+Pour l'infrastructure de production sur SymfonyCloud, l'ajout d'un service comme PostgreSQL doit se faire dans le fichier actuellement vide ``.symfony/services.yaml`` :
 
 .. code-block:: yaml
     :caption: .symfony/services.yaml
@@ -161,11 +138,9 @@ file:
         disk: 1024
         size: S
 
-The ``db`` service is a PostgreSQL database (same version as for Docker) that
-we want to provision on a small container with 1GB of disk.
+Le service ``db`` est une base de données PostgreSQL (même version que pour Docker) que nous voulons provisionner sur un petit conteneur avec 1 Go d'espace disque.
 
-We also need to "link" the DB to the application container, which is described
-in ``.symfony.cloud.yaml``:
+Nous devons également "lier" la BDD au conteneur de l'application, qui est décrit dans ``.symfony.cloud.yaml`` :
 
 .. code-block:: yaml
     :caption: .symfony.cloud.yaml
@@ -174,8 +149,7 @@ in ``.symfony.cloud.yaml``:
     relationships:
         database: "db:postgresql"
 
-The ``db`` service of type ``postgresql`` is referenced as ``database`` on the
-application container.
+Le service ``db`` de type ``postgresql`` est référencé comme ``database`` sur le conteneur d'application.
 
 La dernière étape consiste à ajouter l'extension ``pdo_pgsql`` à PHP :
 
@@ -224,14 +198,11 @@ Commitez ces modifications et redéployez-les vers SymfonyCloud :
     $ symfony deploy
 
 Accéder à la base de données de SymfonyCloud
------------------------------------------------
+--------------------------------------------
 
-PostgreSQL is now running both locally via Docker and in production on
-SymfonyCloud.
+PostgreSQL fonctionne maintenant localement via Docker et en production sur SymfonyCloud.
 
-As we have just seen, running ``symfony run psql`` automatically connects to
-the database hosted by Docker thanks to environment variables exposed by
-``symfony run``.
+Comme nous venons de le voir, exécuter``symfony run psql`` permet de se connecter automatiquement à la base de données hébergée avec Docker grâce aux variables d'environnement exposées par ``symfony run``.
 
 .. index::
     single: SymfonyCloud;Tunnel
@@ -239,23 +210,16 @@ the database hosted by Docker thanks to environment variables exposed by
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;run psql
 
-If you want to connect to PostgreSQL hosted on the production containers, you
-can open an SSH tunnel between the local machine and the SymfonyCloud
-infrastructure:
+Si vous souhaitez vous connecter à PostgreSQL hébergé dans les conteneurs de production, vous pouvez ouvrir un tunnel SSH entre la machine locale et l'infrastructure SymfonyCloud :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
 
-By default, SymfonyCloud services are not exposed as environment variables on
-the local machine. You must explicitly do so by using the ``--expose-env-vars``
-flag. Why? Connecting to the production database is a dangerous operation. You
-can mess with *real* data. Requiring the flag is how you confirm that this *is*
-what you want to do.
+Par défaut, les services SymfonyCloud ne sont pas exposés comme variables d'environnement sur la machine locale. Vous devez le faire explicitement en utilisant l'option ``--expose-env-vars``. Pourquoi ? La connexion à la base de données de production est une opération dangereuse et vous risquez de compromettre de *vraies* données. L'utilisation de l'option vous permet de confirmer que vous comprenez ce que vous vous apprêtez à faire.
 
-Now, connect to the remote PostgreSQL database via ``symfony run psql`` as
-before:
+Comme précédemment, connectez-vous à la base de données PostgreSQL distante avec ``symfony run psql`` :
 
 .. code-block:: bash
     :class: ignore
@@ -271,8 +235,7 @@ Quand vous avez terminé, n'oubliez pas de fermer le tunnel :
 
 .. tip::
 
-    To run some SQL queries on the production database instead of getting a
-    shell, you can also use the ``symfony sql`` command.
+    Au lieu d'ouvrir un shell, vous pouvez également utiliser la commande ``symfony sql`` pour exécuter des requêtes SQL sur la base de données de production.
 
 Exposer des variables d'environnement
 -------------------------------------
@@ -281,11 +244,9 @@ Exposer des variables d'environnement
     single: SymfonyCloud;Environment Variables
     single: Symfony CLI;var:export
 
-Docker Compose and SymfonyCloud work seamlessly with Symfony thanks to
-environment variables.
+Docker Compose et SymfonyCloud fonctionnent en harmonie avec Symfony grâce aux variables d'environnement.
 
-Check all environment variables exposed by ``symfony`` by executing ``symfony
-var:export``:
+Vérifier toutes les variables d'environnement exposées par ``symfony`` en exécutant ``symfony var:export`` :
 
 .. code-block:: bash
     :class: ignore
@@ -299,11 +260,9 @@ var:export``:
     PGPASSWORD=main
     # ...
 
-The ``PG*`` environment variables are read by the ``psql`` utility. What about
-the others?
+Les variables d'environnement commençant par ``PG`` sont utilisées par l'utilitaire ``psql``. Et les autres ?
 
-When a tunnel is open to SymfonyCloud with the ``--expose-env-vars`` flag set,
-the ``var:export`` command returns remote environment variables:
+Lorsqu'un tunnel est ouvert vers SymfonyCloud avec l'option ``--expose-env-vars``, la commande ``var:export`` retourne les variables d'environnement distantes :
 
 .. code-block:: bash
     :class: ignore
@@ -313,22 +272,16 @@ the ``var:export`` command returns remote environment variables:
     $ symfony tunnel:close
 
 Décrire votre infrastructure
------------------------------
+----------------------------
 
-You might not have realized it yet, but having the infrastructure stored in
-files alongside of the code helps a lot. Docker and SymfonyCloud use
-configuration files to describe the project infrastructure. When a new feature
-needs an additional service, the code changes and the infrastructure changes
-are part of the same patch.
+Vous ne vous en êtes peut-être pas encore rendu compte, mais le fait que l'infrastructure soit stockée dans des fichiers à côté du code aide beaucoup. Docker et SymfonyCloud utilisent des fichiers de configuration pour décrire l'infrastructure du projet. Lorsqu'une nouvelle fonctionnalité nécessite un service supplémentaire, le code et les modifications de l'infrastructure font partie du même patch.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCloud services
-      <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_;
+    * `Services SymfonyCloud <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_ ;
 
-    * `SymfonyCloud tunnel
-      <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_;
+    * `Tunnel SymfonyCloud <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_ ;
 
-    * `PostgreSQL documentation <https://www.postgresql.org/docs/>`_;
+    * `Documentation PostgreSQL <https://www.postgresql.org/docs/>`_ ;
 
-    * `docker-compose commands <https://docs.docker.com/compose/reference/>`_.
+    * `Les commandes docker-compose <https://docs.docker.com/compose/reference/>`_.

@@ -4,13 +4,9 @@ Faire de l'asynchrone
 .. index::
     single: Async
 
-Checking for spam during the handling of the form submission might lead to some
-problems. If the Akismet API becomes slow, our website will also be slow for
-users. But even worse, if we hit a timeout or if the Akismet API is
-unavailable, we might lose comments.
+Vérifier la présence de spam pendant le traitement de la soumission du formulaire peut entraîner certains problèmes. Si l'API d'Akismet devient lente, notre site web sera également lent pour les internautes. Mais pire encore, si nous atteignons le délai d'attente maximal ou si l'API d'Akismet n'est pas disponible, nous pourrions perdre des commentaires.
 
-Ideally, we should store the submitted data without publishing it, and
-immediately return a response. Checking for spam can then be done out of band.
+Idéalement, nous devrions stocker les données soumises, sans les publier, et renvoyer une réponse immédiatement. La vérification du spam pourra être faite par la suite.
 
 Marquer les commentaires
 ------------------------
@@ -18,8 +14,7 @@ Marquer les commentaires
 .. index::
     single: Command;make:entity
 
-We need to introduce a ``state`` for comments: ``submitted``, ``spam``, and
-``published``.
+Nous avons besoin d'introduire un état (``state``) pour les commentaires : ``submitted``, ``spam`` et ``published``.
 
 Ajoutez la propriété ``state`` à la classe ``Comment`` :
 
@@ -37,8 +32,7 @@ Créez une migration de base de données :
 
     $ symfony console make:migration
 
-Modify the migration to update all existing comments to be ``published`` by
-default:
+Modifiez la migration pour mettre à jour tous les commentaires existants comme étant ``published`` par défaut :
 
 .. code-block:: diff
     :caption: patch_file
@@ -70,8 +64,7 @@ Migrez la base de données :
 .. index::
     single: Annotations;@ORM\\Column
 
-We should also make sure that, by default, the ``state`` is set to
-``submitted``:
+Nous devrions également nous assurer que, par défaut, le paramètre ``state`` est initialisé avec la valeur ``submitted`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -171,8 +164,7 @@ Pour les tests du contrôleur, simulez la validation :
              $this->assertSelectorExists('div:contains("There are 2 comments")');
          }
 
-From a PHPUnit test, you can get any service from the container via
-``self::$container->get()``; it also gives access to non-public services.
+À partir d'un test PHPUnit, vous pouvez obtenir n'importe quel service depuis le conteneur grâce à ``self::$container->get()`` ; il donne également accès aux services non publics.
 
 Comprendre Messenger
 --------------------
@@ -187,22 +179,16 @@ La gestion du code asynchrone avec Symfony est faite par le composant Messenger 
 
     $ symfony composer req messenger
 
-When some logic should be executed asynchronously, send a *message* to a
-*messenger bus*. The bus stores the message in a *queue* and returns
-immediately to let the flow of operations resume as fast as possible.
+Lorsqu'une action doit être exécutée de manière asynchrone, envoyez un *message* à un *messenger bus*. Le bus stocke le message dans une *file d'attente* et rend immédiatement la main pour permettre au flux des opérations de reprendre aussi vite que possible.
 
-A *consumer* runs continuously in the background to read new messages on the
-queue and execute the associated logic. The consumer can run on the same server
-as the web application or on a separate one.
+Un *consumer* s'exécute continuellement en arrière-plan pour lire les nouveaux messages dans la file d'attente et exécuter la logique associée. Le consumer peut s'exécuter sur le même serveur que l'application web, ou sur un serveur séparé.
 
-It is very similar to the way HTTP requests are handled, except that we don't
-have responses.
+C'est très similaire à la façon dont les requêtes HTTP sont traitées, sauf que nous n'avons pas de réponse.
 
 Coder un gestionnaire de messages
 ---------------------------------
 
-A message is a data object class that should not hold any logic. It will be
-serialized to be stored in a queue, so only store "simple" serializable data.
+Un message est une classe de données (*data object*), qui ne doit contenir aucune logique. Il sera sérialisé pour être stocké dans une file d'attente, donc ne stockez que des données "simples" et sérialisables.
 
 Créez la classe ``CommentMessage`` :
 
@@ -235,8 +221,7 @@ Créez la classe ``CommentMessage`` :
 
 Dans le monde de Messenger, nous n'avons pas de contrôleurs, mais des gestionnaires de messages.
 
-Create a ``CommentMessageHandler`` class under a new ``App\MessageHandler``
-namespace that knows how to handle ``CommentMessage`` messages:
+Sous un nouveau namespace ``App\MessageHandler``, créez une classe ``CommentMessageHandler`` qui saura comment gérer les messages ``CommentMessage`` :
 
 .. code-block:: php
     :caption: src/MessageHandler/CommentMessageHandler.php
@@ -279,11 +264,7 @@ namespace that knows how to handle ``CommentMessage`` messages:
         }
     }
 
-``MessageHandlerInterface`` is a *marker* interface. It only helps Symfony
-auto-register and auto-configure the class as a Messenger handler. By
-convention, the logic of a handler lives in a method called ``__invoke()``. The
-``CommentMessage`` type hint on this method's one argument tells Messenger
-which class this will handle.
+``MessageHandlerInterface`` est une interface de *marqueur*. Elle aide seulement Symfony à enregistrer et à configurer automatiquement la classe en tant que gestionnaire Messenger. Par convention, la logique d'un gestionnaire réside dans une méthode appelée ``__invoke()``. Le type ``CommentMessage`` précisé en tant qu'argument unique de cette méthode indique à Messenger quelle classe elle va gérer.
 
 Modifiez le contrôleur pour utiliser le nouveau système :
 
@@ -355,19 +336,14 @@ Modifiez le contrôleur pour utiliser le nouveau système :
                  return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
              }
 
-Instead of depending on the Spam Checker, we now dispatch a message on the bus.
-The handler then decides what to do with it.
+Au lieu de dépendre du SpamChecker, nous envoyons maintenant un message dans le bus. Le gestionnaire décide alors ce qu'il en fait.
 
-We have achieved something unexpected. We have decoupled our controller from
-the Spam Checker and moved the logic to a new class, the handler. It is a
-perfect use case for the bus. Test the code, it works. Everything is still
-done synchronously, but the code is probably already "better".
+Nous avons fait quelque chose que nous n'avions pas prévu. Nous avons découplé notre contrôleur du vérificateur de spam, et déplacé la logique vers une nouvelle classe, le gestionnaire. C'est un cas d'utilisation parfait pour le bus. Testez le code, il fonctionne. Tout se fait encore de manière synchrone, mais le code est probablement déjà "mieux".
 
 Filtrer les commentaires affichés
-----------------------------------
+---------------------------------
 
-Update the display logic to avoid non-published comments from appearing on the
-frontend:
+Modifiez la logique d'affichage pour éviter que des commentaires non publiés n'apparaissent sur le site :
 
 .. code-block:: diff
     :caption: patch_file
@@ -388,9 +364,7 @@ frontend:
 Faire vraiment de l'asynchrone
 ------------------------------
 
-By default, handlers are called synchronously. To go async, you need to
-explicitly configure which queue to use for each handler in the
-``config/packages/messenger.yaml`` configuration file:
+Par défaut, les gestionnaires sont appelés de manière synchrone. Pour les rendre asynchrone, vous devez configurer explicitement la file d'attente à utiliser pour chaque gestionnaire dans le fichier de configuration ``config/packages/messenger.yaml`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -427,11 +401,7 @@ explicitly configure which queue to use for each handler in the
     -            # 'App\Message\YourMessage': async
     +            App\Message\CommentMessage: async
 
-The configuration tells the bus to send instances of
-``App\Message\CommentMessage`` to the ``async`` queue, which is defined by a
-DSN (``MESSENGER_TRANSPORT_DSN``), which points to Doctrine as configured in
-``.env``. In plain English, we are using PostgreSQL as a queue for our
-messages.
+La configuration indique au bus d'envoyer les instances de ``App\Message\CommentMessage`` à la file d'attente ``async``, qui est définie par un DSN (``MESSENGER_TRANSPORT_DSN``), qui pointe vers Doctrine tel que défini dans le fichier ``.env``. En clair, nous utilisons PostgreSQL comme file d'attente pour nos messages.
 
 Configurez les tables et triggers PostgreSQL :
 
@@ -448,18 +418,12 @@ Jouez les migrations :
 
 .. tip::
 
-    Behind the scenes, Symfony uses the PostgreSQL builtin, performant,
-    scalable, and transactional pub/sub system (``LISTEN``/``NOTIFY``). You can
-    also read the RabbitMQ chapter if you want to use it instead of PostgreSQL
-    as a message broker.
+    En coulisses, Symfony utilise le système pub/sub intégré, performant, dimensionnable (``LISTEN``/``NOTIFY``). Vous pouvez aussi lire le chapitre sur RabbitMQ si vous voulez l'utiliser à la place de PostgreSQL comme gestionnaire de messages.
 
 Consommer des messages
 ----------------------
 
-If you try to submit a new comment, the spam checker won't be called anymore.
-Add an ``error_log()`` call in the ``getSpamScore()`` method to confirm.
-Instead, a message is waiting in the queue, ready to be consumed by some
-processes.
+Si vous essayez de soumettre un nouveau commentaire, le vérificateur de spam ne sera plus appelé. Ajoutez un appel à la fonction ``error_log()`` dans la méthode ``getSpamScore()`` pour le confirmer. Au lieu d'avoir un nouveau commentaire, un message est en attente dans la file d'attente, prêt à être consommé par d'autres processus.
 
 .. index::
     single: Command;messenger:consume
@@ -488,21 +452,16 @@ Cette commande devrait immédiatement consommer le message envoyé pour le comme
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-The message consumer activity is logged, but you get instant feedback on the
-console by passing the ``-vv`` flag. You should even be able to spot the call
-to the Akismet API.
+L'activité du consumer de messages est enregistrée dans les logs, mais vous pouvez avoir un affichage instantané dans la console en passant l'option ``-vv``. Vous devriez même voir l'appel vers l'API d'Akismet.
 
 Pour arrêter le consumer, appuyez sur ``Ctrl+C``.
 
 Lancer des *workers* en arrière-plan
--------------------------------------
+------------------------------------
 
-Instead of launching the consumer every time we post a comment and stopping it
-immediately after, we want to run it continuously without having too many
-terminal windows or tabs open.
+Au lieu de lancer le consumer à chaque fois que nous publions un commentaire et de l'arrêter immédiatement après, nous voulons l'exécuter en continu sans avoir trop de fenêtres ou d'onglets du terminal ouverts.
 
-The Symfony CLI can manage such background commands or workers by using the
-daemon flag (``-d``) on the ``run`` command.
+La commande ``symfony`` peut gérer des commandes en tâche de fond ou des workers en utilisant l'option daemon (``-d``) sur la commande ``run``.
 
 .. index::
     single: Command;messenger:consume
@@ -514,24 +473,18 @@ Exécutez à nouveau le consumer du message, mais en tâche de fond :
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
-The ``--watch`` option tells Symfony that the command must be restarted
-whenever there is a filesystem change in the ``config/``, ``src/``,
-``templates/``, or ``vendor/`` directories.
+L'option ``--watch`` indique à Symfony que la commande doit être redémarrée chaque fois qu'il y a un changement dans un des fichiers des répertoires ``config/``, ``vendor/``, ``src/`` ou ``templates/``.
 
 .. note::
 
-    Do not use ``-vv`` as you would have duplicated messages in ``server:log``
-    (logged messages and console messages).
+    N'utilisez pas ``-vv`` pour éviter les doublons dans ``server:log`` (messages enregistrés et messages de la console).
 
-If the consumer stops working for some reason (memory limit, bug, ...), it
-will be restarted automatically. And if the consumer fails too fast, the
-Symfony CLI will give up.
+Si le consumer cesse de fonctionner pour une raison quelconque (limite de mémoire, bogue, etc.), il sera redémarré automatiquement. Et s'il tombe en panne trop rapidement, la commande ``symfony`` s'arrêtera.
 
 .. index::
     single: Symfony CLI;server:log
 
-Logs are streamed via ``symfony server:log`` with all the other logs coming
-from PHP, the web server, and the application:
+Les logs sont diffusés en continu par la commande ``symfony server:log``, en même temps que ceux de PHP, du serveur web et de l'application :
 
 .. code-block:: bash
     :class: ignore
@@ -542,8 +495,7 @@ from PHP, the web server, and the application:
     single: Command;messenger:consume
     single: Symfony CLI;server:status
 
-Use the ``server:status`` command to list all background workers managed for
-the current project:
+Utilisez la commande ``server:status`` pour lister tous les workers en arrière-plan gérés pour le projet en cours :
 
 .. code-block:: bash
     :class: ignore
@@ -553,8 +505,7 @@ the current project:
     Web server listening on https://127.0.0.1:8000
       Command symfony console messenger:consume async running with PID 15774 (watching config/, src/, templates/)
 
-To stop a worker, stop the web server or kill the PID given by the
-``server:status`` command:
+Pour arrêter un worker, arrêtez le serveur web ou tuez le PID (identifiant du processus) donné par la commande ``server:status`` :
 
 .. code-block:: bash
     :class: ignore
@@ -562,13 +513,11 @@ To stop a worker, stop the web server or kill the PID given by the
     $ kill 15774
 
 Renvoyer des messages ayant échoué
-------------------------------------
+----------------------------------
 
-What if Akismet is down while consuming a message? There is no impact for
-people submitting comments, but the message is lost and spam is not checked.
+Que faire si Akismet est en panne alors qu'un message est en train d'être consommé ? Il n'y a aucun impact pour les personnes qui soumettent des commentaires, mais le message est perdu et le spam n'est pas vérifié.
 
-Messenger has a retry mechanism for when an exception occurs while handling a
-message. Let's configure it:
+Messenger dispose d'un mécanisme de relance lorsqu'une exception se produit lors du traitement d'un message. Configurons-le :
 
 .. code-block:: diff
     :caption: patch_file
@@ -601,9 +550,7 @@ message. Let's configure it:
     single: Command;messenger:failed:show
     single: Command;messenger:failed:retry
 
-If a problem occurs while handling a message, the consumer will retry 3 times
-before giving up. But instead of discarding the message, it will store it
-permanently in the ``failed`` queue, which uses another database table.
+Si un problème survient lors de la manipulation d'un message, le consumer réessaiera 3 fois avant d'abandonner. Mais au lieu de jeter le message, il le stockera indéfiniment dans la file d'attente ``failed``, qui utilise une autre table de la base de données.
 
 Inspectez les messages ayant échoué et relancez-les à l'aide des commandes suivantes :
 
@@ -615,14 +562,13 @@ Inspectez les messages ayant échoué et relancez-les à l'aide des commandes su
     $ symfony console messenger:failed:retry
 
 Exécuter des workers sur SymfonyCloud
---------------------------------------
+-------------------------------------
 
 .. index::
     single: SymfonyCloud;Workers
     single: Workers
 
-To consume messages from PostgreSQL, we need to run the ``messenger:consume``
-command continuously. On SymfonyCloud, this is the role of a *worker*:
+Pour consommer les messages de PostgreSQL, nous devons exécuter la commande ``messenger:consume`` en continu. Sur SymfonyCloud, c'est le rôle d'un *worker* :
 
 .. code-block:: diff
     :caption: patch_file
@@ -651,12 +597,10 @@ Pour obtenir les logs d'un worker, utilisez :
 
     $ symfony logs --worker=messages all
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCasts Messenger tutorial <https://symfonycasts.com/screencast/messenger>`_;
+    * `Tutoriel SymfonyCasts sur Messenger <https://symfonycasts.com/screencast/messenger>`_ ;
 
-    * The `Enterprise service bus
-      <https://en.wikipedia.org/wiki/Enterprise_service_bus>`_ architecture and
-      the `CQRS pattern <https://martinfowler.com/bliki/CQRS.html>`_;
+    * L'architecture de l'`Enterprise service bus <https://fr.wikipedia.org/wiki/Enterprise_service_bus>`_ et le `modèle CQRS <https://martinfowler.com/bliki/CQRS.html>`_ ;
 
-    * The `Symfony Messenger docs <https://symfony.com/doc/current/messenger.html>`_;
+    * La `documentation de Symfony Messenger <https://symfony.com/doc/current/messenger.html>`_ ;

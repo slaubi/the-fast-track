@@ -1,12 +1,10 @@
 Adopter une méthodologie
-=========================
+========================
 
-Teaching is about repeating the same thing again and again. I won't do that. I
-promise. At the end of each step, you should do a little dance and save your
-work. It is like ``Ctrl+S`` but for a website.
+Enseigner, c'est répéter la même chose encore et encore. Je ne le ferai pas, c'est promis. À la fin de chaque étape, vous devriez faire une petite danse et sauvegarder votre travail. C'est comme faire un ``Ctrl+S`` mais pour un site web.
 
 Mettre en place une stratégie Git
-----------------------------------
+---------------------------------
 
 .. index::
     single: Git;add
@@ -20,9 +18,7 @@ Mettre en place une stratégie Git
     $ git add .
     $ git commit -m'Add some new feature'
 
-You can safely add "everything" as Symfony manages a ``.gitignore`` file for
-you. And each package can add more configuration. Have a look at the current
-content:
+Vous pouvez "tout" ajouter sans risque car Symfony gère un fichier ``.gitignore`` pour vous. Et chaque paquet peut y ajouter plus de configuration. Jetez un coup d'œil au contenu actuel :
 
 .. code-block:: text
     :caption: .gitignore
@@ -38,25 +34,19 @@ content:
     /vendor/
     ###< symfony/framework-bundle ###
 
-The funny strings are markers added by Symfony Flex so that it knows what to
-remove if you decide to uninstall a dependency. I told you, all the tedious
-work is done by Symfony, not you.
+Les chaînes bizarres sont des marqueurs ajoutés par Symfony Flex pour qu'il sache quoi supprimer si vous décidiez de désinstaller une dépendance. Je vous l'ai dit, tout le travail fastidieux est fait par Symfony, pas vous.
 
-It could be nice to push your repository to a server somewhere. GitHub,
-GitLab, or Bitbucket are good choices.
+Ça pourrait être une bonne idée de pusher votre dépôt vers un serveur quelque part. GitHub, GitLab ou Bitbucket sont de bons choix.
 
-If you are deploying on SymfonyCloud, you already have a copy of the Git
-repository, but you should not rely on it. It is only for deployment usage. It
-is not a backup.
+Si vous déployez sur SymfonyCloud, vous avez déjà une copie du dépôt Git, mais vous ne devriez pas vous y fier. Il est réservé pour le déploiement. Ce n'est pas une sauvegarde de votre travail.
 
 Déploiement continu en production
-----------------------------------
+---------------------------------
 
 .. index::
     single: Symfony CLI;deploy
 
-Another good habit is to deploy frequently. Deploying at the end of each step
-is a good pace:
+Une autre bonne habitude est de déployer fréquemment. Un bon rythme serait de déployer à la fin de chaque étape :
 
 .. code-block:: bash
     :class: ignore

@@ -1,31 +1,22 @@
 Créer une SPA (Single Page Application)
-========================================
+=======================================
 
 .. index::
     single: SPA
     single: Mobile
 
-Most of the comments will be submitted during the conference where some people
-do not bring a laptop. But they probably have a smartphone. What about creating
-a mobile app to quickly check the conference comments?
+La plupart des commentaires seront soumis pendant les conférences, et certaines personnes n'y apportent pas leur ordinateur portable. Mais ils auront probablement leur téléphone. Pourquoi ne pas créer une application mobile permettant de lire rapidement les commentaires de la conférence ?
 
-One way to create such a mobile application is to build a Javascript Single
-Page Application (SPA). An SPA runs locally, can use local storage, can call a
-remote HTTP API, and can leverage service workers to create an almost native
-experience.
+Une façon de créer une telle application mobile est de créer une Single Page Application (SPA) Javascript. Une SPA s'exécute localement, a accès au stockage local, peut faire des appels à des API HTTP distantes et peut s'appuyer sur les *service workers* pour créer une expérience presque native.
 
 Créer l'application
---------------------
+-------------------
 
-To create the mobile application, we are going to use `Preact`_ and **Symfony
-Encore**. **Preact** is a small and efficient foundation well-suited for the
-Guestbook SPA.
+Pour créer l'application mobile, nous allons utiliser `Preact`_ et **Symfony Encore**. **Preact** est une petite base efficace convenant parfaitement à la SPA du livre d'or.
 
-To make both the website and the SPA consistent, we are going to reuse the Sass
-stylesheets of the website for the mobile application.
+Afin de rendre le site web et la SPA uniforme, nous allons réutiliser les feuilles de style Sass du site web pour l'application mobile.
 
-Create the SPA application under the ``spa`` directory and copy the
-website stylesheets:
+Créez la SPA dans le répertoire ``spa`` et copiez les feuilles de style du site web :
 
 .. code-block:: bash
 
@@ -35,9 +26,7 @@ website stylesheets:
 
 .. note::
 
-    We have created a ``public`` directory as we will mainly interact with the
-    SPA via a browser. We could have named it ``build`` if we only wanted to
-    build a mobile application.
+    Nous avons créé un répertoire ``public`` car nous allons principalement interagir avec la SPA via un navigateur. Nous aurions pu le nommer ``build`` si nous avions voulu nous limiter à une application mobile.
 
 Pour bien faire les choses, créez un fichier ``.gitignore`` :
 
@@ -86,10 +75,9 @@ La dernière étape de configuration consiste à créer la configuration Webpack
     module.exports = Encore.getWebpackConfig();
 
 Créer le template principal de la SPA
---------------------------------------
+-------------------------------------
 
-Time to create the initial template in which Preact will render the
-application:
+Il est temps de créer le template initial dans lequel Preact fera le rendu de l'application :
 
 .. code-block:: html
     :caption: src/index.ejs
@@ -110,8 +98,7 @@ application:
     </body>
     </html>
 
-The ``<div>`` tag is where the application will be rendered by JavaScript. Here
-is the first version of the code that renders the "Hello World" view:
+JavaScript générera le rendu de l'application dans la balise ``<div>``. Voici la première version du code qui affichera la vue "Hello World" :
 
 .. code-block:: text
     :caption: src/app.js
@@ -129,20 +116,18 @@ is the first version of the code that renders the "Hello World" view:
 
     render(<App />, document.getElementById('app'));
 
-The last line registers the ``App()`` function on the ``#app`` element of the
-HTML page.
+La dernière ligne enregistre la fonction ``App()`` sur l'élément ``#app`` de la page HTML.
 
 Maintenant, tout est prêt !
 
 Exécuter la SPA dans le navigateur web
----------------------------------------
+--------------------------------------
 
 .. index::
     single: Symfony CLI;server:start
     single: Symfony CLI;server:stop
 
-As this application is independent of the main website, we need to run another
-web server:
+Comme cette application est indépendante du site web principal, nous avons besoin d'un autre serveur web :
 
 .. code-block:: bash
     :class: hide
@@ -153,10 +138,7 @@ web server:
 
     $ symfony server:start -d --passthru=index.html
 
-The ``--passthru`` flag tells the web server to pass all HTTP requests to the
-``public/index.html`` file (``public/`` is the web server default web root
-directory). This page is managed by the Preact application and it gets the page
-to render via the "browser" history.
+L'option ``--passthru`` indique au serveur web de transmettre toutes les requêtes HTTP au fichier ``public/index.html`` (``public/`` est le répertoire racine par défaut du serveur web). Cette page est gérée par l'application Preact et récupère la page à afficher via l'historique du "navigateur".
 
 Pour compiler les fichiers CSS **et JavaScript**, exécutez ``yarn`` :
 
@@ -179,12 +161,9 @@ Et contemplez notre SPA hello world :
     :figclass: with-browser spa
 
 Ajouter un routeur pour gérer les états
------------------------------------------
+---------------------------------------
 
-The SPA is currently not able to handle different pages. To implement several
-pages, we need a router, like for Symfony. We are going to use
-**preact-router**. It takes a URL as an input and matches a Preact component to
-display.
+La SPA n'est actuellement pas en mesure de traiter plusieurs pages. Pour pouvoir les implémenter, nous avons besoin d'un routeur, comme pour Symfony. Nous allons utiliser **preact-router**. Il prend une URL en entrée et la fait correspondre à un composant Preact à afficher.
 
 Installez preact-router :
 
@@ -257,9 +236,7 @@ Rebuildez l'application :
 
     $ yarn encore dev
 
-If you refresh the application in the browser, you can now click on the "Home"
-and conference links. Note that the browser URL and the back/forward buttons of
-your browser work as you would expect it.
+Si vous rafraîchissez l'application dans le navigateur, vous pouvez maintenant cliquer sur les liens "Accueil" et conférence. Notez que l'URL du navigateur et les boutons précédent/suivant de votre navigateur fonctionnent normalement.
 
 Styliser la SPA
 ---------------
@@ -341,11 +318,9 @@ Vous pouvez à présent profiter d'une SPA entièrement stylisée :
     :figclass: with-browser spa
 
 Récupérer les données depuis l'API
--------------------------------------
+----------------------------------
 
-The Preact application structure is now finished: Preact Router handles the
-page states - including the conference slug placeholder - and the main
-application stylesheet is used to style the SPA.
+La structure de l'application Preact est maintenant terminée : Preact Router gère les états de la page, incluant le slug des conférences dans l'URL, et la feuille de style principale de l'application est utilisée pour styliser la SPA.
 
 Pour rendre la SPA dynamique, nous avons besoin de récupérer les données de l'API via des appels HTTP.
 
@@ -372,9 +347,7 @@ Configurez Webpack pour exposer la variable d'environnement contenant le point d
 
      module.exports = Encore.getWebpackConfig();
 
-The ``API_ENDPOINT`` environment variable should point to the web server of the
-website where we have the API endpoint under ``/api``. We will configure it
-properly when we will run ``yarn encore`` soon.
+La variable d'environnement ``API_ENDPOINT`` doit pointer vers le serveur du site web où nous hébergeons le point d'entrée de l'API, ``/api``. Nous le configurerons correctement plus tard quand nous exécuterons ``yarn encore``.
 
 Créez un fichier ``api.js`` qui abstrait la récupération des données de l'API :
 
@@ -482,9 +455,7 @@ Vous pouvez maintenant adapter l'en-tête et les composants de l'accueil :
     -};
     +}
 
-Finally, Preact Router is passing the "slug" placeholder to the Conference
-component as a property. Use it to display the proper conference and its
-comments, again using the API; and adapt the rendering to use the API data:
+Enfin, Preact Router passe le paramètre "slug" au composant Conference en tant que propriété. Utilisez-le pour afficher la conférence appropriée et ses commentaires, toujours en utilisant l'API ; et adaptez le rendu pour utiliser les données de l'API :
 
 .. code-block:: diff
     :caption: patch_file
@@ -544,9 +515,7 @@ comments, again using the API; and adapt the rendering to use the API data:
     -};
     +}
 
-The SPA now needs to know the URL to our API, via the ``API_ENDPOINT``
-environment variable. Set it to the API web server URL (running in the ``..``
-directory):
+La SPA a maintenant besoin de connaître l'URL de notre API grâce à la variable d'environnement ``API_ENDPOINT``. Définissez-la avec l'URL du serveur web de l'API (tournant dans le répertoire ``..``) :
 
 .. code-block:: bash
 
@@ -570,18 +539,15 @@ Et l'application devrait maintenant fonctionner correctement dans le navigateur 
     :align: center
     :figclass: with-browser spa
 
-Wow! We now have a fully-functional, SPA with router and real data. We could
-organize the Preact app further if we want, but it is already working great.
+Wow ! Nous avons à présent une SPA entièrement fonctionnelle, avec routeur et données réelles. Nous pourrions organiser l'application Preact davantage si nous le voulions, mais elle fonctionne déjà très bien.
 
 Déployer la SPA en production
-------------------------------
+-----------------------------
 
 .. index::
     single: SymfonyCloud;Multi-Applications
 
-SymfonyCloud allows to deploy multiple applications per project. Adding another
-application can be done by creating a ``.symfony.cloud.yaml`` file in any
-sub-directory. Create one under ``spa/`` named ``spa``:
+SymfonyCloud permet de déployer plusieurs applications par projet. L'ajout d'une autre application peut se faire en créant un fichier ``.symfony.cloud.yaml`` dans n'importe quel sous-répertoire. Créez-en un sous ``spa/`` nommé ``spa`` :
 
 .. code-block:: yaml
     :caption: .symfony.cloud.yaml
@@ -625,8 +591,7 @@ sub-directory. Create one under ``spa/`` named ``spa``:
 .. index::
     single: SymfonyCloud;Routes
 
-Edit the ``.symfony/routes.yaml`` file to route the ``spa.`` subdomain to the
-``spa`` application stored in the project root directory:
+Modifiez le fichier ``.symfony/routes.yaml`` pour faire pointer le sous-domaine ``spa.`` vers l'application ``spa`` stockée dans le répertoire racine du projet :
 
 .. code-block:: bash
 
@@ -652,9 +617,7 @@ Configurer CORS pour la SPA
     single: CORS
     single: Cross-Origin Resource Sharing
 
-If you deploy the code now, it won't work as a browser would block the API
-request. We need to explicitly allow the SPA to access the API. Get the current
-domain name attached to your application:
+Si vous déployez le code maintenant, il ne fonctionnera pas car les navigateurs bloqueraient la requête à l'API. Nous devons explicitement autoriser la SPA à accéder à l'API. Récupérez le nom de domaine correspondant à votre application :
 
 .. code-block:: bash
 
@@ -666,9 +629,7 @@ Définissez la variable d'environnement ``CORS_ALLOW_ORIGIN`` en conséquence :
 
     $ symfony var:set "CORS_ALLOW_ORIGIN=^`symfony env:urls --first | sed 's#/$##' | sed 's#https://#https://spa.#'`$"
 
-If your domain is ``https://master-5szvwec-hzhac461b3a6o.eu.s5y.io/``, the
-``sed`` calls will convert it to
-``https://spa.master-5szvwec-hzhac461b3a6o.eu.s5y.io``.
+Si votre domaine est ``https://master-5szvwec-hzhac461b3a6o.eu.s5y.io/``, les appels ``sed`` le convertiront en ``https://spa.master-5szvwec-hzhac461b3a6o.eu.s5y.io``.
 
 Nous devons également définir la variable d'environnement ``API_ENDPOINT`` :
 
@@ -700,8 +661,7 @@ Utiliser Cordova pour construire une application mobile
     single: Apache Cordova
     single: Cordova
 
-**Apache Cordova** is a tool that builds cross-platform smartphone
-applications. And good news, it can use the SPA that we have just created.
+**Apache Cordova** est un outil qui génère des applications mobiles multiplateformes. Et bonne nouvelle, il peut utiliser la SPA que nous venons de créer.
 
 Installons-le :
 
@@ -712,8 +672,7 @@ Installons-le :
 
 .. note::
 
-    You also need to install the Android SDK. This section only mentions
-    Android, but Cordova works with all mobile platforms, including iOS.
+    Vous devez également installer le SDK Android. Cette section ne mentionne qu'Android, mais Cordova fonctionne avec toutes les plateformes mobiles, y compris iOS.
 
 Créez la structure des répertoires de l'application :
 
@@ -731,8 +690,7 @@ Et générez l'application Android :
     $ ~/.yarn/bin/cordova platform add android
     $ cd ..
 
-That's all you need. You can now build the production files and move them to
-Cordova:
+C'est tout ce dont vous avez besoin. Vous pouvez maintenant *builder* les fichiers de production et les déplacer vers Cordova :
 
 .. code-block:: bash
 
@@ -748,10 +706,10 @@ Exécutez l'application sur un smartphone ou un émulateur :
 
     $ ~/.yarn/bin/cordova run android
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `The official Preact website <https://preactjs.com/>`_;
+    * `Le site officiel de Preact <https://preactjs.com/>`_ ;
 
-    * `The official Cordova website <https://cordova.apache.org/>`_.
+    * `Le site officiel de Cordova <https://cordova.apache.org/>`_.
 
 .. _`preact`: https://preactjs.com/

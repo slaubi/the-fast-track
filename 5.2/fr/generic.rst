@@ -18,16 +18,6 @@ Quel est ton dernier souhait, Maître Développeur ?
 
 Donne-moi le livre Symfony 5 !
 
-Is it possible to quickly build a modern web application and love the
-process? With Symfony 5, you can. This book - written by Symfony's
-creator - lays out a pragmatic approach to developing web applications
-with Symfony 5: from scratch to production. Whether you are discovering
-Symfony for the first time or refreshing your knowledge, this practical
-guide provides the definitive introduction to modern Symfony
-applications.
+Est-il possible de construire rapidement une application web moderne et d'en aimer le déroulement ? Avec Symfony 5, c'est possible. Ce livre, écrit par le créateur de Symfony, présente une approche pragmatique du développement d'applications web avec Symfony 5 : de zéro à la production. Que vous découvriez Symfony pour la première fois ou que vous rafraîchissiez vos connaissances, ce guide pratique constitue l'introduction ultime aux applications Symfony modernes.
 
-Learn how to combine Symfony with Docker, APIs, notifications, queues &
-asynchronous tasks, Webpack, Single-Page Applications, and other
-powerful tools. By the end of this book, you'll have the confidence,
-understanding and a clear path to dive in and start building your next
-application with Symfony.
+Apprenez comment combiner Symfony avec Docker, des APIs, des notifications, des files d'attente et des tâches asynchrones, Webpack, des Single-Page Applications, et d'autres outils puissants. À la fin de ce livre, vous aurez la confiance, la compréhension et une vision claire pour vous plonger et commencer à construire votre prochaine application avec Symfony.

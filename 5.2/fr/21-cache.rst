@@ -6,20 +6,15 @@ Mettre en cache pour la performance
     single: HTTP Cache
     single: Cache
 
-Performance problems might come with popularity. Some typical examples: missing
-database indexes or tons of SQL requests per page. You won't have any problems
-with an empty database, but with more traffic and growing data, it might arise
-at some point.
+Les problèmes de performance peuvent survenir avec la popularité. Quelques exemples typiques : des index de base de données manquants ou des tonnes de requêtes SQL par page. Vous n'aurez aucun problème avec une base de données vide, mais avec plus de trafic et des données croissantes, cela peut arriver à un moment donné.
 
 Ajouter des en-têtes de cache HTTP
------------------------------------
+----------------------------------
 
 .. index::
     single: HTTP Cache;HTTP Cache Headers
 
-Using HTTP caching strategies is a great way to maximize the performance for
-end users with little effort. Add a reverse proxy cache in production to enable
-caching, and use a `CDN`_ to cache on the edge for even better performance.
+L'utilisation de stratégies de mise en cache HTTP est un excellent moyen de maximiser les performances de notre site avec un minimum d'effort. Ajoutez un cache reverse proxy en production pour permettre la mise en cache et utilisez un `CDN`_  pour aller encore plus loin.
 
 Mettons en cache la page d'accueil pendant une heure :
 
@@ -43,13 +38,9 @@ Mettons en cache la page d'accueil pendant une heure :
 
          #[Route('/conference/{slug}', name: 'conference')]
 
-The ``setSharedMaxAge()`` method configures the cache expiration for reverse
-proxies. Use ``setMaxAge()`` to control the browser cache. Time is expressed in
-seconds (1 hour = 60 minutes = 3600 seconds).
+La méthode ``setSharedMaxAge()`` configure l'expiration du cache pour les reverse proxies. Utiliser ``setMaxAge()`` permet de contrôler le cache du navigateur. Le temps est exprimé en secondes (1 heure = 60 minutes = 3600 secondes).
 
-Caching the conference page is more challenging as it is more dynamic. Anyone
-can add a comment anytime, and nobody wants to wait for an hour to see it
-online. In such cases, use the *HTTP validation* strategy.
+La mise en cache de la page de la conférence est plus difficile car elle est plus dynamique. N'importe qui peut ajouter un commentaire à tout moment, et personne ne veut attendre une heure pour le voir en ligne. Dans de tels cas, utilisez la stratégie de *validation HTTP*.
 
 Activer le noyau de cache HTTP de Symfony
 -----------------------------------------
@@ -71,9 +62,7 @@ Pour tester la stratégie de cache HTTP, activez le reverse proxy HTTP de Symfon
     +
     +    http_cache: true
 
-Besides being a full-fledged HTTP reverse proxy, the Symfony HTTP reverse proxy
-(via the ``HttpCache`` class) adds some nice debug info as HTTP headers. That
-helps greatly in validating the cache headers we have set.
+En plus d'être un véritable reverse proxy HTTP, le reverse proxy HTTP de Symfony (via la classe ``HttpCache``) ajoute quelques informations de débogage sous forme d'en-têtes HTTP. Cela aide grandement à valider les en-têtes de cache que nous avons définis.
 
 Vérifiez sur la page d'accueil :
 
@@ -98,12 +87,9 @@ Vérifiez sur la page d'accueil :
     x-symfony-cache: GET /: miss, store
     content-length: 50978
 
-For the very first request, the cache server tells you that it was a ``miss``
-and that it performed a ``store`` to cache the response. Check the
-``cache-control`` header to see the configured cache strategy.
+Pour la toute première requête, le serveur de cache vous indique que c'était un ``miss`` et qu'il a exécuté une action de ``store`` pour mettre la réponse en cache. Vérifiez l'en-tête ``cache-control`` pour voir la stratégie de cache configurée.
 
-For subsequent requests, the response is cached (the ``age`` has also been
-updated):
+Pour les prochaines demandes, la réponse est mise en cache (l'``age`` a également été mis à jour) :
 
 .. code-block:: text
     :class: ignore
@@ -122,28 +108,21 @@ updated):
     content-length: 50978
 
 Éviter des requêtes SQL avec les ESIs
----------------------------------------
+-------------------------------------
 
 .. index::
     single: HTTP Cache;ESI
     single: ESI
 
-The ``TwigEventSubscriber`` listener injects a global variable in Twig with all
-conference objects. It does so for every single page of the website. It is
-probably a great target for optimization.
+Le *listener* ``TwigEventSubscriber`` injecte une variable globale dans Twig avec tous les objets de conférence, et ce sur chaque page du site web. C'est probablement une excellente chose à optimiser.
 
-You won't add new conferences every day, so the code is querying the exact same
-data from the database over and over again.
+Vous n'ajouterez pas de nouvelles conférences tous les jours, donc le code interroge la base de données pour récupérer exactement les mêmes données encore et encore.
 
-We might want to cache the conference names and slugs with the Symfony Cache,
-but whenever possible I like to rely on the HTTP caching infrastructure.
+Nous pourrions vouloir mettre en cache les noms et les *slugs* des conférences avec le cache Symfony, mais dès que possible, j'aime me reposer sur le système de mise en cache HTTP.
 
-When you want to cache a fragment of a page, move it outside of the current
-HTTP request by creating a *sub-request*. *ESI* is a perfect match for this use
-case. An ESI is a way to embed the result of an HTTP request into another.
+Lorsque vous voulez mettre en cache un fragment d'une page, déplacez-le en dehors de la requête HTTP en cours en créant une *sous-requête*. *ESI* correspond parfaitement à ce cas d'utilisation. Un ESI est un moyen d'intégrer le résultat d'une requête HTTP dans une autre.
 
-Create a controller that only returns the HTML fragment that displays the
-conferences:
+Créez un contrôleur qui ne renvoie que le fragment HTML qui affiche les conférences :
 
 .. code-block:: diff
     :caption: patch_file
@@ -183,8 +162,7 @@ Interrogez la route ``/conference_header`` pour vérifier que tout fonctionne bi
     single: Twig;render
     single: Twig;path
 
-Time to reveal the trick! Update the Twig layout to call the controller we have
-just created:
+Il est temps de dévoiler l'astuce ! Mettez à jour le template Twig pour appeler le contrôleur que nous venons de créer :
 
 .. code-block:: diff
     :caption: patch_file
@@ -209,16 +187,11 @@ Et voilà. Rafraîchissez la page et le site web affiche toujours la même chose
 
 .. tip::
 
-    Use the "Request / Response" Symfony profiler panel to learn more about the
-    main request and its sub-requests.
+    Utilisez le panneau du profileur Symfony "Request / Response" pour en savoir plus sur la requête principale et ses sous-requêtes.
 
-Now, every time you hit a page in the browser, two HTTP requests are executed,
-one for the header and one for the main page. You have made performance worse.
-Congratulations!
+Maintenant, chaque fois que vous affichez une page dans le navigateur, deux requêtes HTTP sont exécutées : une pour l'en-tête et une pour la page principale. Vous avez dégradé les performances. Félicitations !
 
-The conference header HTTP call is currently done internally by Symfony, so no
-HTTP round-trip is involved. This also means that there is no way to benefit
-from HTTP cache headers.
+L'appel HTTP pour l'en-tête est actuellement effectué en interne par Symfony, donc aucun aller-retour HTTP n'est impliqué. Cela signifie également qu'il n'y a aucun moyen de bénéficier des en-têtes de cache HTTP.
 
 Convertissez l'appel en un "vrai" appel HTTP à l'aide d'un ESI.
 
@@ -260,12 +233,9 @@ Ensuite, utilisez ``render_esi`` au lieu de ``render`` :
              </header>
              {% block body %}{% endblock %}
 
-If Symfony detects a reverse proxy that knows how to deal with ESIs, it enables
-support automatically (if not, it falls back to render the sub-request
-synchronously).
+Si Symfony détecte un reverse proxy qui sait comment traiter les ESIs, il active automatiquement le support (sinon, par défaut, il génère le rendu de la sous-demande de manière synchrone).
 
-As the Symfony reverse proxy does support ESIs, let's check its logs (remove
-the cache first - see "Purging" below):
+Comme le reverse proxy de Symfony supporte les ESIs, vérifions ses logs (supprimons d'abord le cache - voir "Purger le cache" ci-dessous) :
 
 .. code-block:: bash
     :class: ignore
@@ -289,12 +259,9 @@ the cache first - see "Purging" below):
     x-symfony-cache: GET /: miss, store; GET /conference_header: miss
     content-length: 50978
 
-Refresh a few times: the ``/`` response is cached and the
-``/conference_header`` one is not. We have achieved something great: having the
-whole page in the cache but still having one part dynamic.
+Rafraîchissez quelques fois : la réponse à la route``/`` est mise en cache et celle à ``/conference_header`` ne l'est pas. Nous avons réalisé quelque chose de génial : toute la page est dans le cache mais elle conserve toujours une partie dynamique.
 
-This is not what we want though. Cache the header page for an hour,
-independently of everything else:
+Mais ce n'est pas ce que nous voulons. Mettez l'en-tête de la page en cache pendant une heure, indépendamment de tout le reste :
 
 .. code-block:: diff
     :caption: patch_file
@@ -339,13 +306,9 @@ Le cache est maintenant activé pour les deux requêtes :
     x-symfony-cache: GET /: fresh; GET /conference_header: fresh
     content-length: 50978
 
-The ``x-symfony-cache`` header contains two elements: the main ``/`` request
-and a sub-request (the ``conference_header`` ESI). Both are in the cache
-(``fresh``).
+L'en-tête ``x-symfony-cache`` contient deux éléments : la requête principale ``/`` et une sous-requête (l'ESI ``conference_header``). Les deux sont dans le cache (``fresh``).
 
-The cache strategy can be different from the main page and its ESIs. If we have
-an "about" page, we might want to store it for a week in the cache, and still
-have the header be updated every hour.
+La stratégie de cache peut être différente entre la page principale et ses ESIs. Si nous avons une page "about", nous pourrions vouloir la stocker pendant une semaine dans le cache, tout en ayant l'en-tête mis à jour toutes les heures.
 
 Supprimez le listener car nous n'en avons plus besoin :
 
@@ -356,8 +319,7 @@ Supprimez le listener car nous n'en avons plus besoin :
 Purger le cache HTTP pour les tests
 -----------------------------------
 
-Testing the website in a browser or via automated tests becomes a little bit
-more difficult with a caching layer.
+Tester le site web dans un navigateur ou via des tests automatisés devient un peu plus difficile avec une couche de cache.
 
 You can manually remove all the HTTP cache by removing the
 ``var/cache/dev/http_cache/`` directory:
@@ -369,9 +331,7 @@ You can manually remove all the HTTP cache by removing the
 .. index::
     single: Annotations;Route
 
-This strategy does not work well if you only want to invalidate some URLs or if
-you want to integrate cache invalidation in your functional tests. Let's add a
-small, admin only, HTTP endpoint to invalidate some URLs:
+Cette stratégie ne fonctionne pas bien si vous voulez seulement invalider certaines URLs ou si vous voulez intégrer l'invalidation du cache dans vos tests fonctionnels. Ajoutons un petit point d'entrée HTTP, réservé à l'admin, pour invalider certaines URLs :
 
 .. code-block:: diff
     :caption: patch_file
@@ -408,17 +368,11 @@ small, admin only, HTTP endpoint to invalidate some URLs:
     +    }
      }
 
-The new controller has been restricted to the ``PURGE`` HTTP method. This
-method is not in the HTTP standard, but it is widely used to invalidate caches.
+Le nouveau contrôleur a été limité à la méthode HTTP ``PURGE``. Cette méthode n'est pas dans le standard HTTP, mais elle est largement utilisée pour invalider les caches.
 
-By default, route parameters cannot contain ``/`` as it separates URL segments.
-You can override this restriction for the last route parameter, like ``uri``,
-by setting your own requirement pattern (``.*``).
+Par défaut, les paramètres de routage ne peuvent pas contenir ``/`` car ils séparent les segments d'une URL. Vous pouvez remplacer cette restriction pour le dernier paramètre de routage, comme ``uri`` par exemple, en définissant votre propre masque (``.*``).
 
-The way we get the ``HttpCache`` instance can also look a bit strange; we are
-using an anonymous class as accessing the "real" one is not possible. The
-``HttpCache`` instance wraps the real kernel, which is unaware of the cache
-layer as it should be.
+La manière par laquelle nous obtenons l'instance ``HttpCache`` peut aussi sembler un peu étrange ; nous utilisons une classe anonyme, car l'accès à la classe "réelle" n'est pas possible. L'instance ``HttpCache`` enveloppe le noyau réel, qui n'est volontairement pas conscient de la couche de cache.
 
 Invalidez la page d'accueil et l'en-tête avec les conférences via les appels cURL suivants :
 
@@ -427,23 +381,19 @@ Invalidez la page d'accueil et l'en-tête avec les conférences via les appels c
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
 
-The ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` sub-command returns the
-current URL of the local web server.
+La sous-commande ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` retourne l'URL courante du serveur web local.
 
 .. note::
 
-    The controller does not have a route name as it will never be referenced in
-    the code.
+    Le contrôleur n'a pas de nom de route car il ne sera jamais référencé dans le code.
 
 Regrouper les routes similaires avec un préfixe
-------------------------------------------------
+-----------------------------------------------
 
 .. index::
     single: Annotations;Route
 
-The two routes in the admin controller have the same ``/admin`` prefix. Instead
-of repeating it on all routes, refactor the routes to configure the prefix on
-the class itself:
+Les deux routes du contrôleur admin ont le même préfixe ``/admin``. Au lieu de le répéter sur toutes les routes, refactorisez-les pour configurer le préfixe sur la classe elle-même :
 
 .. code-block:: diff
     :caption: patch_file
@@ -478,19 +428,15 @@ the class itself:
              if ('prod' === $kernel->getEnvironment()) {
 
 Mettre en cache les opérations coûteuses en CPU/mémoire
-----------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: Process
     single: Components;Process
 
-We don't have CPU or memory-intensive algorithms on the website. To talk about
-*local caches*, let's create a command that displays the current step we are
-working on (to be more precise, the Git tag name attached to the current Git
-commit).
+Nous n'avons pas d'algorithmes gourmands en CPU ou en mémoire sur le site web. Pour parler des *caches locaux*, créons une commande qui affiche l'étape en cours sur laquelle nous travaillons (pour être plus précis, le nom du tag Git attaché au commit actuel).
 
-The Symfony Process component allows you to run a command and get the result back
-(standard and error output); install it:
+Le composant Symfony Process vous permet d'exécuter une commande et de récupérer le résultat (sortie standard et erreur) ; installez-le :
 
 .. code-block:: bash
 
@@ -587,22 +533,16 @@ Et insérez le code dans la logique de cache :
              return 0;
          }
 
-The process is now only called if the ``app.current_step`` item is not in the
-cache.
+Le processus n'est maintenant appelé que si l'élément ``app.current_step`` n'est pas dans le cache.
 
 Analyser et comparer les performances
 -------------------------------------
 
-Never add cache blindly. Keep in mind that adding some cache adds a layer of
-complexity. And as we are all very bad at guessing what will be fast and what
-is slow, you might end up in a situation where the cache makes your application
-slower.
+N'ajoutez jamais de cache à l'aveuglette. Gardez à l'esprit que l'ajout d'un cache ajoute une couche de complexité. Et comme nous sommes tous très mauvais pour deviner ce qui sera rapide et ce qui est lent, vous pourriez vous retrouver dans une situation où le cache rend votre application plus lente.
 
-Always measure the impact of adding a cache with a profiler tool like
-`Blackfire <https://blackfire.io/>`_.
+Mesurez toujours l'impact de l'ajout d'un cache avec un outil de profilage comme `Blackfire <https://blackfire.io/>`_.
 
-Refer to the step about "Performance" to learn more about how you can use
-Blackfire to test your code before deploying.
+Reportez-vous à l'étape "Performances" pour en savoir plus sur la façon dont vous pouvez utiliser Blackfire pour tester votre code avant de le déployer.
 
 Configurer un cache de reverse proxy en production
 --------------------------------------------------
@@ -612,8 +552,7 @@ Configurer un cache de reverse proxy en production
     single: SymfonyCloud;Varnish
     single: Varnish
 
-Don't use the Symfony reverse proxy in production. Always prefer a reverse
-proxy like Varnish on your infrastructure or a commercial CDN.
+N'utilisez pas le reverse proxy Symfony en production. Préférez toujours un reverse proxy comme Varnish sur votre infrastructure, ou un CDN commercial.
 
 Ajoutez Varnish aux services SymfonyCloud :
 
@@ -663,9 +602,7 @@ Enfin, créez un fichier ``config.vcl`` pour configurer Varnish :
 Activer le support ESI sur Varnish
 ----------------------------------
 
-ESI support on Varnish should be enabled explicitly for each request. To make
-it universal, Symfony uses the standard ``Surrogate-Capability`` and
-``Surrogate-Control`` headers to negotiate ESI support:
+La prise en charge des ESIs sur Varnish devrait être activée explicitement pour chaque requête. Pour le rendre global, Symfony utilise les en-têtes standard ``Surrogate-Capability`` et ``Surrogate-Control`` pour activer le support ESI :
 
 .. code-block:: vcl
     :caption: .symfony/config.vcl
@@ -685,11 +622,7 @@ it universal, Symfony uses the standard ``Surrogate-Capability`` and
 Purger le cache de Varnish
 --------------------------
 
-Invalidating the cache in production should probably never be needed, except
-for emergency purposes and maybe on non-``master`` branches. If you need to
-purge the cache often, it probably means that the caching strategy should be
-tweaked (by lowering the TTL or by using a validation strategy instead of an
-expiration one).
+L'invalidation du cache en production ne devrait probablement jamais être nécessaire, sauf en cas d'urgence, et peut-être si vous n'êtes pas dans la branche ``master``. Si vous avez besoin de souvent purger le cache, cela signifie probablement que la stratégie de mise en cache doit être modifiée (en réduisant le TTL, ou en utilisant une stratégie de validation au lieu d'une stratégie d'expiration).
 
 Quoi qu'il en soit, voyons comment configurer Varnish pour l'invalidation du cache :
 
@@ -713,9 +646,7 @@ Quoi qu'il en soit, voyons comment configurer Varnish pour l'invalidation du cac
 
      sub vcl_backend_response {
 
-In real life, you would probably restrict by IPs instead like described in the
-`Varnish docs
-<https://varnish-cache.org/docs/trunk/users-guide/purging.html>`_.
+Dans la vraie vie, vous restreindriez probablement plutôt par IPs comme décrit dans la `documentation de Varnish <https://varnish-cache.org/docs/trunk/users-guide/purging.html>`_.
 
 Purgez quelques URLs maintenant :
 
@@ -724,22 +655,18 @@ Purgez quelques URLs maintenant :
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header
 
-The URLs looks a bit strange because the URLs returned by ``env:urls`` already
-ends with ``/``.
+Les URLs semblent un peu étranges parce que celles renvoyées par ``env:urls`` se terminent déjà par ``/``.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Cloudflare <https://www.cloudflare.com>`_, the global cloud platform;
+    * `Cloudflare <https://www.cloudflare.com>`_, la plate-forme cloud globale ;
 
-    * `Varnish HTTP Cache docs <https://varnish-cache.org/docs/index.html>`_;
+    * `Documentation du cache HTTP de Varnish <https://varnish-cache.org/docs/index.html>`_ ;
 
-    * `ESI specification <https://www.w3.org/TR/esi-lang>`_ and
-      `ESI developer resources <https://www.akamai.com/us/en/support/esi.jsp>`_;
+    * `Spécifications ESI <https://www.w3.org/TR/esi-lang>`_ et `ressources ESI <https://www.akamai.com/us/en/support/esi.jsp>`_ ;
 
-    * `HTTP cache validation model
-      <https://symfony.com/doc/current/http_cache/validation.html>`_;
+    * `Modèle de validation de cache HTTP <https://symfony.com/doc/current/http_cache/validation.html>`_ ;
 
-    * `HTTP Cache in SymfonyCloud
-      <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_.
+    * `Cache HTTP dans SymfonyCloud <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_.
 
 .. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network

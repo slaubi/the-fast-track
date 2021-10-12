@@ -1,12 +1,9 @@
 Sécuriser l'interface d'administration
-=======================================
+======================================
 
-The admin backend interface should only be accessible by trusted people.
-Securing this area of the website can be done using the Symfony Security
-component.
+L'interface d'administration ne doit être accessible que par des personnes autorisées. La sécurisation de cette zone du site peut se faire à l'aide du composant Symfony Security.
 
-Like for Twig, the security component is already installed via transitive
-dependencies. Let's add it explicitly to the project's ``composer.json`` file:
+Comme pour Twig, le composant de sécurité est déjà installé par des dépendances transitives. Ajoutons-le explicitement au fichier ``composer.json`` du projet :
 
 .. index::
     single: Components;Security
@@ -17,37 +14,27 @@ dependencies. Let's add it explicitly to the project's ``composer.json`` file:
     $ symfony composer req security
 
 Définir une entité User
--------------------------
+-----------------------
 
-Even if attendees won't be able to create their own accounts on the website, we
-are going to create a fully functional authentication system for the admin. We
-will therefore only have one user, the website admin.
+Même si les internautes ne pourront pas créer leur propre compte sur le site, nous allons créer un système d'authentification entièrement fonctionnel pour l'admin. Nous n'aurons donc qu'un seul User, l'admin du site.
 
-The first step is to define a ``User`` entity. To avoid any confusions, let's
-name it ``Admin`` instead.
+La première étape consiste à définir une entité ``User``. Pour éviter toute confusion, nommons-la plutôt ``Admin``.
 
-To integrate the ``Admin`` entity with the Symfony Security authentication
-system, it needs to follow some specific requirements. For instance, it needs a
-``password`` property.
+Pour utiliser l'entité ``Admin`` dans le système d'authentification de Symfony, celle-ci doit respecter certaines exigences spécifiques. Par exemple, elle a besoin d'une propriété ``password``.
 
 .. index::
     single: Command;make:user
 
-Use the dedicated ``make:user`` command to create the ``Admin`` entity instead
-of the traditional ``make:entity`` one:
+Utilisez la commande dédiée ``make:user`` pour créer l'entité ``Admin``  au lieu de la commande traditionnelle ``make:entity`` :
 
 .. code-block:: bash
     :class: answers(yes||username||yes)
 
     $ symfony console make:user Admin
 
-Answer the interactive questions: we want to use Doctrine to store the admins
-(``yes``), use ``username`` for the unique display name of admins, and each
-user will have a password (``yes``).
+Répondez aux questions qui vous sont posées : nous voulons utiliser Doctrine pour stocker nos users (``yes``), utiliser ``username`` pour le nom d'affichage unique des admins et chaque admin aura un mot de passe (``yes``).
 
-The generated class contains methods like ``getRoles()``,
-``eraseCredentials()``, and a few others that are needed by the Symfony
-authentication system.
+La classe générée contient des méthodes comme ``getRoles()``, ``eraseCredentials()`` et d'autres qui sont nécessaires au système d'authentification de Symfony.
 
 Si vous voulez ajouter d'autres propriétés à l'entité ``Admin``, exécutez ``make:entity``.
 
@@ -70,8 +57,7 @@ Ajoutons une méthode ``__toString()`` comme EasyAdmin les aime :
           * @see UserInterface
           */
 
-In addition to generating the ``Admin`` entity, the command also updated
-the security configuration to wire the entity with the authentication system:
+En plus de générer l'entité ``Admin``, la commande a également mis à jour la configuration de sécurité pour connecter l'entité au système d'authentification :
 
 .. code-block:: diff
     :class: ignore
@@ -97,8 +83,7 @@ the security configuration to wire the entity with the authentication system:
              dev:
                  pattern: ^/(_(profiler|wdt)|css|images|js)/
 
-We let Symfony select the best possible algorithm for encoding passwords (which
-will evolve over time).
+Nous laissons Symfony choisir le meilleur algorithme possible pour encoder les mots de passe (il évoluera avec le temps).
 
 Il est temps de générer une migration et de migrer la base de données :
 
@@ -108,20 +93,17 @@ Il est temps de générer une migration et de migrer la base de données :
     $ symfony console doctrine:migrations:migrate -n
 
 Générer un mot de passe pour l'admin
---------------------------------------
+------------------------------------
 
 .. index::
     single: Security;Encoding Passwords
 
-We won't develop a dedicated system to create admin accounts. Again, we will
-only ever have one admin. The login will be ``admin`` and we need to encode the
-password.
+Nous ne développerons pas de système dédié pour créer des comptes d'administration. Encore une fois, nous n'aurons qu'un seul admin. Le login sera ``admin`` et nous devons encoder le mot de passe.
 
 .. index::
     single: Command;security:encode-password
 
-Choose whatever you like as a password and run the following command to
-generate the encoded password:
+Choisissez ce que vous voulez comme mot de passe et exécutez la commande suivante pour générer le mot de passe encodé :
 
 .. code-block:: bash
     :class: answers(admin)
@@ -151,7 +133,7 @@ generate the encoded password:
      [OK] Password encoding succeeded
 
 Créer un admininistrateur
---------------------------
+-------------------------
 
 .. index::
     single: Symfony CLI;run psql
@@ -164,11 +146,10 @@ Insérez l'admin grâce à une requête SQL :
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
       '\$argon2id\$v=19\$m=65536,t=4,p=1\$BQG+jovPcunctc30xG5PxQ\$TiGbx451NKdo+g9vLtfkMy4KjASKSOcnNxjij4gTX1s')"
 
-Note the escaping of the ``$`` sign in the password column value; escape them
-all!
+Notez l'échappement du caractère ``$`` dans le mot de passe ; échappez tous les caractères qui en ont besoin !
 
 Configurer le système d'authentification
------------------------------------------
+----------------------------------------
 
 .. index::
     single: Command;make:auth
@@ -177,21 +158,16 @@ Configurer le système d'authentification
     single: Login
     single: Logout
 
-Now that we have an admin user, we can secure the admin backend. Symfony
-supports several authentication strategies. Let's use a classic and popular
-*form authentication system*.
+Maintenant que nous avons un admin, nous pouvons sécuriser l'interface d'administration. Symfony accepte plusieurs stratégies d'authentification. Utilisons un classique *système d'authentification par formulaire*.
 
-Run the ``make:auth`` command to update the security configuration, generate a
-login template, and create an *authenticator*:
+Exécutez la commande ``make:auth`` pour mettre à jour la configuration de sécurité, générer un template pour la connexion et créer une classe d'authentification (*authenticator*) :
 
 .. code-block:: bash
     :class: answers(1||AppAuthenticator||SecurityController||yes)
 
     $ symfony console make:auth
 
-Select ``1`` to generate a login form authenticator, name the authenticator
-class ``AppAuthenticator``, the controller ``SecurityController``, and
-generate a ``/logout`` URL (``yes``).
+Sélectionnez ``1`` pour générer une classe d'authentification pour le  formulaire de connexion, nommez la classe d'authentification ``AppAuthenticator``, le contrôleur ``SecurityController`` et créez une URL ``/logout`` (``yes``).
 
 La commande a mis à jour la configuration de sécurité pour lier les classes générées :
 
@@ -216,9 +192,7 @@ La commande a mis à jour la configuration de sécurité pour lier les classes g
                  # activate different ways to authenticate
                  # https://symfony.com/doc/current/security.html#firewalls-authentication
 
-As hinted by the command output, we need to customize the route in the
-``onAuthenticationSuccess()`` method to redirect the user when they
-successfully sign in:
+Comme l'indique la sortie de la commande, nous devons personnaliser la route dans la méthode ``onAuthenticationSuccess()`` pour rediriger l'admin lorsqu'il a réussi à se connecter :
 
 .. code-block:: diff
 
@@ -242,26 +216,20 @@ successfully sign in:
 
 .. tip::
 
-    How do I remember that the EasyAdmin route is ``admin`` (as configured in
-    ``App\Controller\Admin\DashboardController``)? I don't. You can have a look
-    at the file, but you can also run the following command that shows the
-    association between route names and paths:
+    Comment puis-je savoir que la route d'EasyAdmin est ``admin`` (comme spécifié dans ``App\Controller\Admin\DashboardController``) ? Je ne peux pas. Mais j'ai lancé la commande suivante qui montre l'association entre les noms de route et les chemins :
 
     .. code-block:: bash
 
         $ symfony console debug:router
 
 Ajouter les règles de contrôle d'accès
------------------------------------------
+--------------------------------------
 
 .. index::
     single: Security;Authorization
     single: Security;Access Control
 
-A security system is made of two parts: *authentication* and *authorization*.
-When creating the admin user, we gave them the ``ROLE_ADMIN`` role. Let's
-restrict the ``/admin`` section to users having this role by adding a rule to
-``access_control``:
+Un système de sécurité se compose de deux parties : l'*authentification* et l'*autorisation*. Lors de la création de l'admin, nous lui avons donné le rôle ``ROLE_ADMIN``. Limitons la section ``/admin`` aux seules personnes ayant ce rôle en ajoutant une règle à ``access_control`` :
 
 .. code-block:: diff
     :emphasize-lines: 8
@@ -276,23 +244,19 @@ restrict the ``/admin`` section to users having this role by adding a rule to
     +        - { path: ^/admin, roles: ROLE_ADMIN }
              # - { path: ^/profile, roles: ROLE_USER }
 
-The ``access_control`` rules restrict access by regular expressions. When
-trying to access a URL that starts with ``/admin``, the security system will
-check for the ``ROLE_ADMIN`` role on the logged-in user.
+Les règles ``access_control`` limitent l'accès par des expressions régulières. Lorsqu'une personne connectée tente d'accéder à une URL qui commence par ``/admin``, le système de sécurité vérifie qu'elle a bien le rôle ``ROLE_ADMIN``.
 
 S'authentifier avec le formulaire de connexion
 ----------------------------------------------
 
-If you try to access the admin backend, you should now be redirected to the
-login page and prompted to enter a login and a password:
+Si vous essayez d'accéder à l'interface d'administration, vous devriez maintenant être redirigé vers la page de connexion et être invité à entrer un identifiant et un mot de passe :
 
 .. figure:: screenshots/easy-admin-login.png
     :alt: /login/
     :align: center
     :figclass: with-browser
 
-Log in using ``admin`` and whatever plain-text password you encoded earlier. If
-you copied my SQL command exactly, the password is ``admin``.
+Connectez-vous en utilisant ``admin`` et le mot de passe que vous avez encodé précédemment. Si vous avez copié exactement ma requête SQL, le mot de passe est ``admin``.
 
 Notez qu'EasyAdmin s'intègre automatiquement au système d'authentification de Symfony :
 
@@ -301,25 +265,21 @@ Notez qu'EasyAdmin s'intègre automatiquement au système d'authentification de 
     :align: center
     :figclass: with-browser
 
-Try to click on the "Sign out" link. You have it! A fully-secured backend
-admin.
+Essayez de cliquer sur le lien "Sign out". Et voilà ! Nous avons une interface d'administration entièrement sécurisée.
 
 .. index::
     single: Command;make:registration-form
 
 .. note::
 
-    If you want to create a fully-featured form authentication system, have a
-    look at the ``make:registration-form`` command.
+    Si vous voulez créer un système complet d'authentification par formulaire, jetez un coup d’œil à la commande ``make:registration-form``.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * The `Symfony Security docs <https://symfony.com/doc/current/security.html>`_;
+    * La `documentation de la sécurité de Symfony <https://symfony.com/doc/current/security.html>`_ ;
 
-    * `SymfonyCasts Security tutorial <https://symfonycasts.com/screencast/symfony-security>`_;
+    * `Tutoriel SymfonyCasts sur la sécurité <https://symfonycasts.com/screencast/symfony-security>`_ ;
 
-    * `How to Build a Login Form <https://symfony.com/doc/current/security/form_login_setup.html>`_
-      in Symfony applications;
+    * `Comment créer un formulaire de connexion <https://symfony.com/doc/current/security/form_login_setup.html>`_ dans les applications Symfony ;
 
-    * The `Symfony Security Cheat Sheet
-      <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/security_en_44.pdf>`_.
+    * La `cheat sheet de la sécurité dans Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/security_en_44.pdf>`_.

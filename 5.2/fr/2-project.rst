@@ -1,92 +1,61 @@
 Présentation du projet
-=======================
+======================
 
-We need to find a project to work on. It is quite a challenge as we need to
-find a project large enough to cover Symfony thoroughly, but at the same time,
-it should be small enough; I don't want you to get bored implementing similar
-features more than once.
+Nous devons trouver un projet sur lequel travailler. C'est un certain défi car nous devons choisir un projet assez vaste pour couvrir complètement Symfony, mais en même temps, il devrait être assez petit ; je ne veux pas que vous vous ennuyiez à implémenter des fonctionnalités similaires plusieurs fois.
 
 Description du projet
 ---------------------
 
-As the book has to be released during SymfonyCon Amsterdam, it might be nice if
-the project is somehow related to Symfony and conferences. What about a
-`guestbook <https://en.wikipedia.org/wiki/Guestbook>`_? A livre d'or as we say
-in French. I like the old-fashioned and outdated feeling of developing a
-guestbook in 2019!
+Comme le livre doit sortir pendant la SymfonyCon d'Amsterdam, ce serait intéressant si le projet était en quelque sorte relié à Symfony et aux conférences. Et pourquoi pas un `livre d'or <https://en.wikipedia.org/wiki/Guestbook>`_ ? J'aime le côté démodé et désuet de développer un livre d'or en 2019 !
 
-We have it. The project is all about getting feedback on conferences: a list of
-conferences on the homepage, a page for each conference, full of nice comments.
-A comment is composed of some small text and an optional photo taken during the
-conference. I suppose I have just written down all the specifications we need
-to get started.
+Nous tenons notre sujet. Le projet a pour but d'obtenir un retour d'expérience sur les conférences : une liste des conférences sur la page d'accueil ainsi qu'une page pour chacune d'entre elles, pleine de commentaires sympathiques. Un commentaire est composé d'un petit texte et d'une photo, optionnelle, prise pendant la conférence. Je suppose que je viens de rédiger toutes les spécifications dont nous avons besoin pour commencer.
 
-The *project* will contain several *applications*. A traditional web
-application with an HTML frontend, an API, and an SPA for mobile phones. How
-does that sound?
+Le *projet* comprendra plusieurs *applications* : une application web traditionnelle avec une interface HTML, une API et une SPA pour les téléphones mobiles. Qu'en dites-vous ?
 
 La maîtrise s’acquiert par la pratique
------------------------------------------
+--------------------------------------
 
-Learning is doing. Period. Reading a book about Symfony is nice. Coding an
-application on your personal computer while reading a book about Symfony is
-even better. This book is very special as everything has been done to let you
-follow along, code, and be sure to get the same results as I had locally on my
-machine when I coded it initially.
+La maîtrise s’acquiert par la pratique. Point final. Lire un livre sur Symfony, c'est bien. Coder une application sur votre ordinateur tout en lisant un livre sur Symfony, c'est encore mieux. Ce livre est très spécial puisque tout a été fait pour que vous puissiez suivre, coder, et obtenir les mêmes résultats que ceux que j'avais localement sur ma machine lorsque je l'ai fait.
 
-The book contains all the code you need to write and all the commands you need
-to execute to get the final result. No code is missing. All commands are
-written down. This is possible because modern Symfony applications have very
-little boilerplate code. Most of the code we will write together is about the
-project's *business logic*. Everything else is mostly automated or generated
-automatically for us.
+Le livre contient tout le code que vous devez écrire ainsi que toutes les commandes que vous devez exécuter pour arriver au résultat final. Il ne manque aucun code. Toutes les commandes sont présentes. C'est possible parce que les applications développées avec Symfony n'ont besoin que de très peu de code pour démarrer. La plupart du code que nous allons écrire ensemble concerne la *logique métier* du projet. Tout le reste est automatisé ou généré automatiquement pour nous.
 
 À propos du diagramme de l'infrastructure finale
--------------------------------------------------
+------------------------------------------------
 
-Even if the project idea seems simple, we are not going to build an "Hello
-World"-like project. We won't only use PHP and a database.
+Même si l'idée du projet semble simple, nous n'allons pas construire un projet de type "Hello World". Nous n'utiliserons pas seulement PHP et une base de données.
 
-The goal is to create a project with some of the complexities you might find in
-real-life. Want a proof? Have a look at the final infrastructure of the
-project:
+Le but est de créer un projet avec des complexités que vous pourriez retrouver dans la vie réelle. Vous voulez une preuve ? Jetez un coup d'œil à l'infrastructure finale du projet :
 
 .. figure:: images/infrastructure.svg
     :align: center
     :figclass: ad diagram
 
-One of the great benefit of using a framework is the small amount of code
-needed to develop such a project:
+L'un des avantages majeurs d'utiliser un framework est la faible quantité de code nécessaire pour développer un tel projet :
 
-* 20 PHP classes under ``src/`` for the website;
+* 20 classes PHP sous ``src/`` pour le site ;
 
-* 550 PHP Logical Lines of Code (LLOC) as reported by `PHPLOC
-  <https://github.com/sebastianbergmann/phploc>`_;
+* 550 lignes logiques de code (LLOC) de PHP, tel que rapporté par `PHPLOC <https://github.com/sebastianbergmann/phploc>`_ ;
 
-* 40 lines of configuration tweaks in 3 files (via annotations and YAML),
-  mainly to configure the backend design;
+* 40 lignes de configuration personnalisée réparties dans 3 fichiers (via annotations et YAML), principalement pour configurer le design de l'interface d'administration ;
 
-* 20 lines of development infrastructure configuration (Docker);
+* 20 lignes de configuration de l'infrastructure de développement (Docker) ;
 
-* 100 lines of production infrastructure configuration (SymfonyCloud);
+* 100 lignes de configuration de l'infrastructure de production (SymfonyCloud) ;
 
-* 5 explicit environment variables.
+* 5 variables d'environnement explicites.
 
 Envie de relever le défi ?
 
 Récupérer le code source du projet
-------------------------------------
+----------------------------------
 
-To continue on the old-fashioned theme, I could have created a CD containing
-the source code, right? But what about a Git repository companion instead?
+Pour continuer sur le thème à l'ancienne, j'aurais pu créer un CD contenant le code source, non ? Mais que diriez-vous d'un dépôt Git à la place ?
 
 .. index::
     single: Project;Git Repository
     single: Git;clone
 
-Clone the `guestbook repository
-<https://github.com/the-fast-track/book-5.0-1>`_ somewhere on your local
-machine:
+Clonez le `dépôt du livre d'or <https://github.com/the-fast-track/book-5.0-1>`_ quelque part sur votre machine :
 
 .. code-block:: bash
     :class: ignore
@@ -95,53 +64,28 @@ machine:
 
 Ce dépôt contient tout le code source du livre.
 
-Note that we are using ``symfony new`` instead of ``git clone`` as the command
-does more than just cloning the repository (hosted on Github under the
-``the-fast-track`` organization:
-``https://github.com/the-fast-track/book-5.0-1``). It also starts the web
-server, the containers, migrates the database, loads fixtures, ... After
-running the command, the website should be up and running, ready to be used.
+Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-5.0-1``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
 
-The code is 100% guaranteed to be synchronized with the code in the book (use
-the exact repository URL listed above). Trying to manually synchronize changes
-from the book with the source code in the repository is almost impossible. I
-tried in the past. I failed. It is just impossible. Especially for books like
-the ones I write: books that tells you a story about developing a website. As
-each chapter depends on the previous ones, a change might have consequences in
-all following chapters.
+Le code source est synchronisé à 100% avec le code source du livre (utilisez l'URL exacte du dépôt, indiquée ci-dessus). Essayer de synchroniser manuellement les changements du livre avec le code source du dépôt est presque impossible. J'ai tenté de le faire et je n'y suis pas arrivé. C'est tout simplement impossible. Surtout pour des livres comme ceux que j'écris, qui vous racontent l'histoire du développement d'un site web. Comme chaque chapitre dépend des précédents, un changement sur l'un d'eux peut avoir des conséquences sur tous les suivants.
 
-The good news is that the Git repository for this book is *automatically
-generated* from the book content. You read that right. I like to automate
-everything, so there is a script whose job is to read the book and create the
-Git repository. There is a nice side-effect: when updating the book, the script
-will fail if the changes are inconsistent or if I forget to update some
-instructions. That's BDD, Book Driven Development!
+La bonne nouvelle est que le dépôt Git pour ce livre est *généré automatiquement* à partir du contenu du livre. Pas mal, non ? J'aime tout automatiser, par conséquent il y a un script dont le travail est de lire le livre et de créer le dépôt Git. Il y a un effet secondaire sympa : lors de la mise à jour du livre, le script échouera si les changements sont incohérents ou si j'oublie de mettre à jour certaines instructions. C'est du BDD, *Book Driven Development* !
 
 Parcourir le code source
 ------------------------
 
-Even better, the repository is not just about the final version of the code on
-the ``master`` branch. The script executes each action explained in the book
-and it commits its work at the end of each section. It also tags each
-step and substep to ease browsing the code. Nice, isn't it?
+Mieux encore, le dépôt ne contient pas seulement la version finale du code source sur la branche ``master`` : le script exécute chaque action expliquée dans le livre, puis *commit* son travail à la fin de chaque section. Il *tag* également chaque étape et sous-étape pour faciliter la navigation dans le code. Joli, n'est-ce pas ?
 
 .. index::
     single: Git;checkout
 
-If you are lazy, you can get the state of the code at the end of a step by
-checking out the right tag. For instance, if you'd like to read and test the
-code at the end of step 10, execute the following:
+Si vous êtes du genre à prendre des raccourcis, vous pouvez récupérer le code source correspondant à la fin d'une étape du livre grâce à son *tag*. Par exemple, si vous souhaitez lire et tester le code à la fin de l'étape 10, procédez comme suit :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony book:checkout 10
 
-Like for cloning the repository, we are not using ``git checkout`` but
-``symfony book:checkout``. The command ensures that whatever the state you are
-currently in, you end up with a functional website for the step you ask for.
-**Be warned that all data, code, and containers are removed by this
-operation.**
+Comme pour le clonage du dépôt, nous n'utilisons pas ``git checkout`` mais plutôt ``symfony book:checkout``. Cette commande s'assure que, quel que soit l'état dans lequel votre code se trouve actuellement, vous obteniez un site web fonctionnel pour l'étape que vous demandez. **Faites attention : toutes les données, le code source et les conteneurs sont supprimés par cette opération.**
 
 Vous pouvez également récupérer n'importe quelle sous-étape :
 
@@ -150,8 +94,7 @@ Vous pouvez également récupérer n'importe quelle sous-étape :
 
     $ symfony book:checkout 10.2
 
-Again, I highly recommend you code yourself. But if you get stuck, you can
-always compare what you have with the content of the book.
+Encore une fois, je vous recommande fortement de coder par vous-même. Mais si vous avez un problème, vous pouvez toujours comparer ce que vous avez avec le contenu du livre.
 
 .. index::
     single: Git;diff
@@ -176,5 +119,4 @@ Vous voulez savoir quand un fichier a été créé ou modifié ?
 
     $ git log -- src/Controller/ConferenceController.php
 
-You can also browse diffs, tags, and commits directly on GitHub. This is a
-great way to copy/paste code if you are reading a paper book!
+Vous pouvez également parcourir les *diffs*, les *tags* et les *commits* directement sur GitHub. C'est une excellente façon de copier/coller du code si vous lisez un livre papier !

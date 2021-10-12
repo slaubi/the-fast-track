@@ -1,18 +1,16 @@
 Écouter les événements
-=========================
+======================
 
-The current layout is missing a navigation header to go back to the homepage or
-switch from one conference to the next.
+Il manque une barre de navigation au layout actuel pour revenir à la page d'accueil ou pour passer d'une conférence à l'autre.
 
 Ajouter un en-tête au site web
--------------------------------
+------------------------------
 
 .. index::
     single: Twig;for
     single: Twig;path
 
-Anything that should be displayed on all web pages, like a header, should be
-part of the main base layout:
+Tout ce qui doit être affiché sur toutes les pages web, comme un en-tête, doit faire partie du layout de base principal :
 
 .. code-block:: diff
     :caption: patch_file
@@ -36,12 +34,10 @@ part of the main base layout:
          </body>
      </html>
 
-Adding this code to the layout means that all templates extending it must
-define a ``conferences`` variable, which must be created and passed from their
-controllers.
+L'ajout de ce code au layout signifie que tous les templates qui l'étendent doivent définir une variable ``conferences``, créée et 
+transmise par leurs contrôleurs.
 
-As we only have two controllers, you *might* do the following (do not apply the
-change to your code as we will learn a better way very soon):
+Comme nous n'avons que deux contrôleurs, vous *pourriez* procéder comme ceci (ne modifiez pas votre code car nous verrons très vite une meilleure façon de faire) :
 
 .. code-block:: diff
     :class: ignore
@@ -64,50 +60,31 @@ change to your code as we will learn a better way very soon):
                  'comments' => $paginator,
                  'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
 
-Imagine having to update dozens of controllers. And doing the same on all new
-ones. This is not very practical. There must be a better way.
+Imaginez devoir mettre à jour des dizaines de contrôleurs. Et faire la même chose sur tous les nouveaux. Ce n'est pas très pratique. Il doit y avoir un meilleur moyen.
 
-Twig has the notion of global variables. A *global variable* is available in
-all rendered templates. You can define them in a configuration file, but it
-only works for static values. To add all conferences as a Twig global variable,
-we are going to create a listener.
+Twig a la notion de variables globales. Une *variable globale* est disponible dans tous les templates générés. Vous pouvez les définir dans un fichier de configuration, mais cela ne fonctionne que pour les valeurs statiques. Pour ajouter toutes les conférences comme variable globale Twig, nous allons créer un *listener*.
 
 Découvrir les événements Symfony
------------------------------------
+--------------------------------
 
 .. index::
     single: Components;Event Dispatcher
     single: Event
 
-Symfony comes built-in with an Event Dispatcher Component. A dispatcher
-*dispatches* certain *events* at specific times that *listeners* can listen to.
-Listeners are hooks into the framework internals.
+Symfony intègre un composant Event Dispatcher. Un *dispatcher* répartit certains *événements* à des moments précis que les *listeners* peuvent écouter. Les *listeners* sont des *hooks* dans le cœur du framework.
 
-For instance, some events allow you to interact with the lifecycle of HTTP
-requests. During the handling of a request, the dispatcher dispatches events
-when a request has been created, when a controller is about to be executed,
-when a response is ready to be sent, or when an exception has been thrown. A
-*listener* can listen to one or more events and execute some logic based on
-the event context.
+Par exemple, certains événements vous permettent d'interagir avec le cycle de vie des requêtes HTTP. Pendant le traitement d'une requête, le dispatcher répartit les événements lorsqu'une requête a été créée, lorsqu'un contrôleur est sur le point d'être exécuté, lorsqu'une réponse est prête à être envoyée, ou lorsqu'une exception a été levée. Un listener peut écouter un ou plusieurs événements et exécuter une logique basée sur le contexte de l'événement.
 
-Events are well-defined extension points that make the framework more generic
-and extensible. Many Symfony Components like Security, Messenger, Workflow, or
-Mailer use them extensively.
+Les événements sont des points d'extension bien définis qui rendent le framework plus générique et extensible. De nombreux composants Symfony tels que Security, Messenger, Workflow ou Mailer les utilisent largement.
 
-Another built-in example of events and listeners in action is the lifecycle of
-a command: you can create a listener to execute code before *any* command is
-run.
+Un autre exemple intégré d'événements et de listeners en action est le cycle de vie d'une commande : vous pouvez créer un listener pour exécuter du code avant *n'importe quelle* commande.
 
-Any package or bundle can also dispatch their own events to make their code
-extensible.
+Tout paquet ou bundle peut également déclencher ses propres événements pour rendre son code extensible.
 
-To avoid having a configuration file that describes which events a listener
-wants to listen to, create a *subscriber*. A subscriber is a listener with a
-static ``getSubscribedEvents()`` method that returns its configuration. This
-allows subscribers to be registered in the Symfony dispatcher automatically.
+Pour éviter d'avoir un fichier de configuration qui décrit les événements qu'un listener veut écouter, créez un subscriber. Un subscriber est un listener avec une méthode statique ``getSubscribedEvents()`` qui retourne sa configuration. Ceci permet aux subscribers d'être enregistrés automatiquement dans le dispatcher Symfony.
 
 Implémenter un subscriber
---------------------------
+-------------------------
 
 .. index::
     single: Event;Subscriber
@@ -123,11 +100,7 @@ Vous connaissez la chanson par cœur maintenant, utilisez le *Maker Bundle* pour
 
     $ symfony console make:subscriber TwigEventSubscriber
 
-The command asks you about which event you want to listen to. Choose the
-``Symfony\Component\HttpKernel\Event\ControllerEvent`` event, which is
-dispatched just before the controller is called. It is the best time to inject
-the ``conferences`` global variable so that Twig will have access to it when
-the controller will render the template. Update your subscriber as follows:
+La commande vous demande quel événement vous voulez écouter. Choisissez l'événement ``Symfony\Component\HttpKernel\Event\ControllerEvent`` qui est envoyé juste avant l'appel d'un contrôleur. C'est le meilleur moment pour injecter la variable globale ``conferences`` afin que Twig y ait accès lorsque le contrôleur générera le template. Mettez votre subscriber à jour comme suit :
 
 .. code-block:: diff
     :caption: patch_file
@@ -162,21 +135,16 @@ the controller will render the template. Update your subscriber as follows:
 
          public static function getSubscribedEvents()
 
-Now, you can add as many controllers as you want: the ``conferences`` variable
-will always be available in Twig.
+Maintenant, vous pouvez ajouter autant de contrôleurs que vous le souhaitez : la variable ``conferences`` sera toujours disponible dans Twig.
 
 .. note::
 
-    We will talk about a much better alternative performance-wise in a
-    later step.
+    Nous parlerons d'une alternative bien plus performante dans une prochaine étape.
 
 Trier les conférences par année et par ville
-----------------------------------------------
+--------------------------------------------
 
-Ordering the conference list by year may facilitate browsing. We could create a
-custom method to retrieve and sort all conferences, but instead, we are going
-to override the default implementation of the ``findAll()`` method to be sure
-that sorting applies everywhere:
+Le tri de la liste des conférences par année peut faciliter la navigation. Nous pourrions créer notre propre méthode pour récupérer et trier toutes les conférences, mais nous allons plutôt remplacer l'implémentation par défaut de la méthode ``findAll()``, afin que le tri s'applique partout :
 
 .. code-block:: diff
     :caption: patch_file
@@ -203,14 +171,10 @@ that sorting applies everywhere:
     :align: center
     :figclass: with-browser
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * The `Request-Response Flow
-      <https://symfony.com/doc/current/components/http_kernel.html#the-workflow-of-a-request>`_
-      in Symfony applications;
+    * Le `flux Request-Response <https://symfony.com/doc/current/components/http_kernel.html#the-workflow-of-a-request>`_ dans les applications Symfony ;
 
-    * The `built-in Symfony HTTP events
-      <https://symfony.com/doc/current/reference/events.html>`_;
+    * Les `événements HTTP intégrés à Symfony <https://symfony.com/doc/current/reference/events.html>`_ ;
 
-    * The `built-in Symfony Console events
-      <https://symfony.com/doc/current/components/console/events.html>`_.
+    * Les `événements de la console intégrés à Symfony <https://symfony.com/doc/current/components/console/events.html>`_.

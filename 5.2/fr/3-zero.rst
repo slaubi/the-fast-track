@@ -1,14 +1,9 @@
 De zéro à la production
-=========================
+=======================
 
-I like to go fast. I want our little project to be live as fast as possible.
-Like now. In production. As we haven't developed anything yet, we will start by
-deploying a nice and simple "Under construction" page. You will love it!
+J'aime aller vite et je veux que notre petit projet soit réalisé le plus rapidement possible. Du genre en production, dès maintenant. Comme nous n'avons encore rien développé, nous allons commencer par déployer une simple page "En construction". Vous allez adorer !
 
-Spend some time trying to find the ideal, old fashioned, and animated "Under
-construction" GIF on the Internet. Here is `the one
-<http://clipartmag.com/images/website-under-construction-image-6.gif>`_ I'm
-going to use:
+Passez un peu de temps à chercher sur internet un GIF animé "En construction" bien démodé. Voici `celui <http://clipartmag.com/images/website-under-construction-image-6.gif>`_ que je vais utiliser :
 
 .. image:: images/under-construction.gif
     :align: center
@@ -18,34 +13,20 @@ Je vous l'ai dit, nous allons bien nous amuser.
 Initialiser le projet
 ---------------------
 
-Create a new Symfony project with the ``symfony`` CLI tool we have previously
-installed together:
+Créez un nouveau projet Symfony avec la commande ``symfony`` que nous avons installée ensemble auparavant :
 
 .. code-block:: bash
 
     $ symfony new guestbook --version=5.2
     $ cd guestbook
 
-This command is a thin wrapper on top of ``Composer`` that eases the creation
-of Symfony projects. It uses a `project skeleton
-<https://github.com/symfony/skeleton>`_ that includes the bare minimum
-dependencies; the Symfony components that are needed for almost any project: a
-console tool and the HTTP abstraction needed to create Web applications.
+Cette commande est une mince surcouche de ``Composer`` qui facilite la création de projets Symfony. Elle utilise un `squelette de projet <https://github.com/symfony/skeleton>`_ qui inclut uniquement les composants Symfony requis par presque tous les projets : un outil console et l'abstraction HTTP nécessaire pour créer des applications web.
 
-If you have a look at the GitHub repository for the skeleton, you will notice
-that it is almost empty. Just a ``composer.json`` file. But the ``guestbook``
-directory is full of files. How is that even possible? The answer lies in the
-``symfony/flex`` package. Symfony Flex is a Composer plugin that hooks into the
-installation process. When it detects a package for which it has a *recipe*, it
-executes it.
+Si vous regardez le dépôt GitHub pour le squelette, vous remarquerez qu'il est presque vide : il ne contient qu'un fichier ``composer.json``, mais le répertoire ``guestbook`` est lui plein de fichiers. Comment est-ce possible ? La réponse se trouve dans le paquet ``symfony/flex``. Symfony Flex est un plugin Composer qui se greffe au processus d'installation. Lorsqu'il détecte un paquet pour lequel une *recette* existe, il l'exécute.
 
-The main entry point of a Symfony Recipe is a manifest file that describes the
-operations that need to be done to automatically register the package in a
-Symfony application. You never have to read a README file to install a package
-with Symfony. Automation is a key feature of Symfony.
+Le point d'entrée principal d'une recette Symfony est un fichier *manifest* qui décrit les opérations à effectuer pour intégrer automatiquement le paquet dans l'application. Vous n'avez jamais besoin de lire un fichier *README* pour installer un paquet avec Symfony. L'automatisation est au cœur de Symfony.
 
-As Git is installed on our machine, ``symfony new`` also created a Git
-repository for us and it added the very first commit.
+Comme Git est installé sur notre machine, ``symfony new`` nous a également créé un dépôt Git, dans lequel a été ajouté le tout premier commit.
 
 Jetons un coup d'oeil à la structure des répertoires :
 
@@ -62,39 +43,24 @@ Jetons un coup d'oeil à la structure des répertoires :
     ├── var/
     └── vendor/
 
-The ``bin/`` directory contains the main CLI entry point: ``console``. You will
-use it all the time.
+Le répertoire ``bin/`` contient le principal point d'entrée de la ligne de commande : ``console``. Vous l'utiliserez tout le temps.
 
-The ``config/`` directory is made of a set of default and sensible
-configuration files. One file per package. You will barely change them,
-trusting the defaults is almost always a good idea.
+Le répertoire ``config/`` est constitué d'un ensemble de fichiers de configuration sensibles, initialisés avec des valeurs par défaut. Un fichier par paquet. Vous les modifierez rarement : faire confiance aux valeurs par défaut est presque toujours une bonne idée.
 
-The ``public/`` directory is the web root directory, and the ``index.php``
-script is the main entry point for all dynamic HTTP resources.
+Le répertoire ``public/`` est le répertoire racine du site web, et le script ``index.php`` est le point d'entrée principal de toutes les ressources HTTP dynamiques.
 
-The ``src/`` directory hosts all the code you will write; that's where you will
-spend most of your time. By default, all classes under this directory use the
-``App`` PHP namespace. It is your home. Your code. Your domain logic. Symfony
-has very little to say there.
+Le répertoire ``src/`` héberge tout le code que vous allez écrire ; c'est ici que vous passerez la plupart de votre temps. Par défaut, toutes les classes de ce répertoire utilisent le *namespace* PHP ``App``. C'est votre répertoire de travail, votre code, votre logique de domaine. Symfony n'a pas grand-chose à y faire.
 
-The ``var/`` directory contains caches, logs, and files generated at runtime by
-the application. You can leave it alone. It is the only directory that needs to
-be writable in production.
+Le répertoire ``var/`` contient les caches, les logs et les fichiers générés par l'application lors de son exécution. Vous pouvez le laisser tranquille. C'est le seul répertoire qui doit être en écriture en production.
 
-The ``vendor/`` directory contains all packages installed by Composer,
-including Symfony itself. That's our secret weapon to be more productive. Let's
-not reinvent the wheel. You will rely on existing libraries to do the hard
-work. The directory is managed by Composer. Never touch it.
+Le répertoire ``vendor/`` contient tous les paquets installés par Composer, y compris Symfony lui-même. C'est notre arme secrète pour un maximum de productivité. Ne réinventons pas la roue. Vous profiterez des bibliothèques existantes pour vous faciliter le travail. Le répertoire est géré par Composer. N'y touchez jamais.
 
 C'est tout ce que vous avez besoin de savoir pour l'instant.
 
 Créer des ressources publiques
--------------------------------
+------------------------------
 
-Anything under ``public/`` is accessible via a browser. For instance, if you
-move your animated GIF file (name it ``under-construction.gif``) into a new
-``public/images/`` directory, it will be available at a URL like
-``https://localhost/images/under-construction.gif``.
+Tout ce qui se trouve dans le répertoire ``public/`` est accessible par un navigateur. Par exemple, si vous déplacez votre fichier GIF animé (nommez-le ``under-construction.gif``) dans un nouveau répertoire ``public/images/``, il sera alors disponible à une URL comme ``https://localhost/images/under-construction.gif``.
 
 Téléchargez mon image GIF ici :
 
@@ -109,27 +75,22 @@ Lancer un serveur web local
 .. index::
     single: Symfony CLI;server:start
 
-The ``symfony`` CLI comes with a Web Server that is optimized for development
-work. You won't be surprised if I tell you that it works nicely with Symfony.
-Never use it in production though.
+La commande ``symfony`` inclut un serveur web optimisé pour le développement. Comme vous vous en doutez, il marche très bien avec Symfony. Cependant, ne l'utilisez jamais en production.
 
-From the project directory, start the web server in the background (``-d``
-flag):
+À partir du répertoire du projet, démarrez le serveur web en arrière-plan (option ``-d``) :
 
 .. code-block:: bash
 
     $ symfony server:start -d
 
-The server started on the first available port, starting with 8000. As a
-shortcut, open the website in a browser from the CLI:
+Le serveur a démarré sur le premier port disponible (à partir de 8000). Pour gagner du temps, vous pouvez ouvrir le site web dans un navigateur à partir de la ligne de commande :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony open:local
 
-Your favorite browser should take the focus and open a new tab that displays
-something similar to the following:
+Votre navigateur favori devrait recevoir le focus et ouvrir un nouvel onglet affichant une page similaire à celle-ci :
 
 .. figure:: screenshots/symfony-greetings.png
     :alt: /
@@ -138,8 +99,7 @@ something similar to the following:
 
 .. tip::
 
-    To troubleshoot problems, run ``symfony server:log``; it tails the logs
-    from the web server, PHP, and your application.
+    Pour résoudre les problèmes, exécutez ``symfony server:log`` ; cette commande affiche les derniers logs de votre serveur web, de PHP et de votre application.
 
 Naviguez vers ``/images/under-construction.gif``. Est-ce que cela ressemble à ceci ?
 
@@ -163,8 +123,7 @@ Tout est bon ? Commitons notre travail :
 Ajouter une favicon
 -------------------
 
-To avoid being "spammed" by 404 HTTP errors in the logs because of a missing
-favicon requested by browsers, let's add one now:
+Pour éviter que nos logs ne se remplissent de messages d'erreur 404 à cause d'une favicon manquante, ajoutons-en une maintenant :
 
 .. code-block:: bash
 
@@ -173,38 +132,27 @@ favicon requested by browsers, let's add one now:
     $ git commit -m'Add a favicon'
 
 Se préparer pour la production
--------------------------------
+------------------------------
 
 .. index::
     single: SymfonyCloud;Initialization
 
-What about deploying our work to production? I know, we don't even have a
-proper HTML page yet to welcome our users. But being able to see the little
-"under construction" image on a production server would be a great step
-forward. And you know the motto: *deploy early and often*.
+Qu'en est-il du déploiement de notre travail en production ? Je sais, nous n'avons même pas encore de page HTML pour accueillir convenablement nos internautes, mais voir la petite image "en construction" sur un serveur de production serait une grande satisfaction. Et vous connaissez la devise : *déployer tôt, déployez souvent*.
 
-You can host this application on any provider supporting PHP... which means
-almost all hosting providers out there. Check a few things though: we want the
-latest PHP version and the possibility to host services like a database, a
-queue, and some more.
+Vous pouvez héberger cette application chez n'importe quel fournisseur supportant PHP, soit presque tous les hébergeurs. Vérifiez tout de même quelques points : nous voulons la dernière version de PHP et la possibilité d'héberger des services comme une base de données, une file d'attente, etc.
 
-I have made my choice, it's going to be `SymfonyCloud
-<https://symfony.com/cloud>`_. It provides everything we need and it helps fund
-the development of Symfony.
+J'ai fait mon choix, ce sera `SymfonyCloud <https://symfony.com/cloud>`_. Il fournit tout ce dont nous avons besoin et aide à financer le développement de Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-The ``symfony`` CLI has built-in support for SymfonyCloud. Let's initialize a
-SymfonyCloud project:
+La commande ``symfony`` supporte nativement SymfonyCloud. Initialisons un projet SymfonyCloud :
 
 .. code-block:: bash
 
     $ symfony project:init
 
-This command creates a few files needed by SymfonyCloud, namely
-``.symfony/services.yaml``, ``.symfony/routes.yaml``, and
-``.symfony.cloud.yaml``.
+Cette commande crée quelques fichiers requis par SymfonyCloud : ``.symfony/services.yaml``, ``.symfony/routes.yaml`` et ``.symfony.cloud.yaml``.
 
 Ajoutez-les à Git et faites un commit :
 
@@ -215,9 +163,7 @@ Ajoutez-les à Git et faites un commit :
 
 .. note::
 
-    Using the generic and dangerous ``git add .`` works fine as a
-    ``.gitignore`` file has been generated that automatically excludes all
-    files we don't want to commit.
+    Utiliser la commande générique et risquée ``git add .`` fonctionne bien ici car un fichier ``.gitignore`` a déjà été généré. Il exclut automatiquement tous les fichiers que nous ne voulons pas intégrer au commit.
 
 Mise en production
 ------------------
@@ -236,11 +182,9 @@ Créez un nouveau projet SymfonyCloud :
 
 Cette commande fait beaucoup de choses :
 
-* The first time you launch this command, authenticate with your SymfonyConnect
-  credentials if not done already.
+* La première fois que vous lancez cette commande, identifiez-vous avec votre compte SymfonyConnect, si ce n'était pas déjà fait.
 
-* It provisions a new project on SymfonyCloud (you get 7 days *for free* on any
-  new development project).
+* Elle crée un nouveau projet sur SymfonyCloud (vous bénéficiez de 7 jours *gratuits* sur tout nouveau projet de développement).
 
 Puis, déployez :
 
@@ -248,8 +192,7 @@ Puis, déployez :
 
     $ symfony deploy
 
-The code is deployed by pushing the Git repository. At the end of the command,
-the project will have a specific domain name you can use to access it.
+Le code est déployé en pushant le dépôt Git. À la fin de la commande, le projet sera accessible par un nom de domaine précis.
 
 .. index::
     single: Symfony CLI;open:remote
@@ -261,30 +204,23 @@ Vérifiez que tout fonctionne bien :
 
     $ symfony open:remote
 
-You should get a 404, but browsing to ``/images/under-construction.gif`` should
-reveal our work.
+Vous devriez obtenir une 404, mais si vous naviguez vers ``/images/under-construction.gif`` vous devriez pouvoir admirer votre travail.
 
-Note that you don't get the beautiful default Symfony page on SymfonyCloud.
-Why? You will learn soon that Symfony supports several environments and
-SymfonyCloud automatically deployed the code in the production environment.
+Notez que vous n'obtenez pas la belle page par défaut de Symfony sur SymfonyCloud. Pourquoi ? Vous apprendrez bientôt que Symfony supporte plusieurs environnements, et que SymfonyCloud a automatiquement déployé le code en environnement de production.
 
 .. index::
     single: Symfony CLI;project:delete
 
 .. tip::
 
-    If you want to delete the project on SymfonyCloud, use the
-    ``project:delete`` command.
+    Si vous voulez supprimer le projet sur SymfonyCloud, utilisez la commande ``project:delete``.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * The `Symfony Recipes Server <https://flex.symfony.com/>`_, where you can
-      find all the available recipes for your Symfony applications;
+    * Le `serveur de recettes Symfony <https://flex.symfony.com/>`_, où vous trouverez toutes les recettes disponibles pour vos applications Symfony ;
 
-    * The repositories for the `official Symfony recipes <https://github.com/symfony/recipes>`_
-      and for the `recipes contributed by the community <https://github.com/symfony/recipes-contrib>`_,
-      where you can submit your own recipes;
+    * Les dépôts pour les `recettes officielles de Symfony <https://github.com/symfony/recipes>`_ et pour les `recettes créées par la communauté <https://github.com/symfony/recipes-contrib>`_, où vous pouvez soumettre vos propres recettes ;
 
-    * The `Symfony Local Web Server <https://symfony.com/doc/current/setup/symfony_server.html>`_;
+    * Le `serveur web local de Symfony <https://symfony.com/doc/current/setup/symfony_server.html>`_ ;
 
-    * The `SymfonyCloud documentation <https://symfony.com/doc/cloud>`_.
+    * La `documentation de SymfonyCloud <https://symfony.com/doc/cloud>`_.

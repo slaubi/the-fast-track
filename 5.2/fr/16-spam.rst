@@ -1,15 +1,12 @@
 Empêcher le spam avec une API
-==============================
+=============================
 
 .. index::
     single: Spam
 
-Anyone can submit a feedback. Even robots, spammers, and more. We could add
-some "captcha" to the form to somehow be protected from robots, or we can use
-some third-party APIs.
+N'importe qui peut soumettre un commentaire, même des robots ou des spammeurs. Nous pourrions ajouter un "captcha" au formulaire pour nous protéger des robots, ou nous pouvons utiliser des API tierces.
 
-I have decided to use the free `Akismet <https://akismet.com>`_ service to
-demonstrate how to call an API and how to make the call "out of band".
+J'ai décidé d'utiliser le service gratuit `Akismet <https://akismet.com>`_ pour montrer comment appeler une API et comment faire un appel "vers l'extérieur".
 
 S'inscrire sur Akismet
 ----------------------
@@ -17,20 +14,16 @@ S'inscrire sur Akismet
 .. index::
     single: Akismet
 
-Sign-up for a free account on `akismet.com <https://akismet.com>`_ and get the
-Akismet API key.
+Créez un compte gratuit sur `akismet.com <https://akismet.com>`_ et récupérez la clé de l'API Akismet.
 
 Ajouter une dépendance au composant Symfony HTTPClient
--------------------------------------------------------
+------------------------------------------------------
 
 .. index::
     single: Components;HTTP Client
     single: HTTP Client
 
-Instead of using a library that abstracts the Akismet API, we will do all the
-API calls directly. Doing the HTTP calls ourselves is more efficient (and
-allows us to benefit from all the Symfony debugging tools like the integration
-with the Symfony Profiler).
+Au lieu d'utiliser une bibliothèque qui abstrait l'API d'Akismet, nous ferons directement tous les appels API. Faire nous-mêmes les appels HTTP est plus efficace (et nous permet de bénéficier de tous les outils de débogage de Symfony comme l'intégration avec le Symfony Profiler).
 
 Pour effectuer des appels à l'API, utilisez le composant Symfony HttpClient :
 
@@ -39,10 +32,9 @@ Pour effectuer des appels à l'API, utilisez le composant Symfony HttpClient :
     $ symfony composer req http-client
 
 Concevoir une classe de vérification de spam
----------------------------------------------
+--------------------------------------------
 
-Create a new class under ``src/`` named ``SpamChecker`` to wrap the logic of
-calling the Akismet API and interpreting its responses:
+Créez une nouvelle classe dans ``src/`` nommée ``SpamChecker`` pour contenir la logique d'appel à l'API d'Akismet et l'interprétation de ses réponses :
 
 .. code-block:: php
     :emphasize-lines: 14,24
@@ -99,22 +91,19 @@ calling the Akismet API and interpreting its responses:
         }
     }
 
-The HTTP client ``request()`` method submits a POST request to the Akismet URL
-(``$this->endpoint``) and passes an array of parameters.
+La méthode ``request()`` du client HTTP soumet une requête POST à l'URL d'Akismet (``$this->endpoint``) et passe un tableau de paramètres.
 
-The ``getSpamScore()`` method returns 3 values depending on the API call
-response:
+La méthode ``getSpamScore()`` retourne 3 valeurs en fonction de la réponse de l'appel à l'API :
 
-* ``2``: if the comment is a "blatant spam";
+* ``2`` : si le commentaire est un "spam flagrant" ;
 
-* ``1``: if the comment might be spam;
+* ``1`` : si le commentaire pourrait être du spam ;
 
-* ``0``: if the comment is not spam (ham).
+* ``0`` : si le commentaire n'est pas du spam (ham).
 
 .. tip::
 
-    Use the special ``akismet-guaranteed-spam@example.com`` email address to
-    force the result of the call to be spam.
+    Utilisez l'adresse email spéciale ``akismet-guaranteed-spam@example.com`` pour forcer le résultat de l'appel à être du spam.
 
 Utiliser des variables d'environnement
 --------------------------------------
@@ -124,8 +113,7 @@ Utiliser des variables d'environnement
     single: .env
     single: .env.local
 
-The ``SpamChecker`` class relies on an ``$akismetKey`` argument. Like for the
-upload directory, we can inject it via a ``bind`` container setting:
+La classe ``SpamChecker`` utilise un argument ``$akismetKey``. Comme pour le répertoire d'upload, nous pouvons l'injecter grâce au paramètre ``bind`` du conteneur :
 
 .. code-block:: diff
     :caption: patch_file
@@ -141,12 +129,9 @@ upload directory, we can inject it via a ``bind`` container setting:
          # makes classes in src/ available to be used as services
          # this creates a service per class whose id is the fully-qualified class name
 
-We certainly don't want to hard-code the value of the Akismet key in the
-``services.yaml`` configuration file, so we are using an environment variable
-instead (``AKISMET_KEY``).
+Nous ne voulons certainement pas coder en dur la valeur de la clé d'Akismet dans le fichier de configuration ``services.yaml``, nous utilisons donc plutôt une variable d'environnement (``AKISMET_KEY``).
 
-It is then up to each developer to set a "real" environment variable or to
-store the value in a ``.env.local`` file:
+Il appartient alors à chacun de définir une variable d'environnement "réelle" ou d'en stocker la valeur dans un fichier ``.env.local`` :
 
 .. code-block:: text
     :caption: .env.local
@@ -156,20 +141,15 @@ store the value in a ``.env.local`` file:
 
 Pour la production, une variable d'environnement "réelle" doit être définie.
 
-That works well, but managing many environment variables might become
-cumbersome. In such a case, Symfony has a "better" alternative when it comes to
-storing secrets.
+Ça fonctionne bien, mais la gestion de nombreuses variables d'environnement peut devenir lourde. Dans un tel cas, Symfony a une "meilleure" alternative pour le stockage des chaînes secrètes.
 
 Stocker des chaînes secrètes
-------------------------------
+----------------------------
 
 .. index::
     single: Secret
 
-Instead of using many environment variables, Symfony can manage a *vault* where
-you can store many secrets. One key feature is the ability to commit the vault
-in the repository (but without the key to open it). Another great feature is
-that it can manage one vault per environment.
+Au lieu d'utiliser plusieurs variables d'environnement, Symfony peut gérer un *coffre-fort* où vous pouvez stocker plusieurs chaînes secrètes. L'une de ses caractéristiques les plus intéressantes est la possibilité de committer l'espace de stockage dans le dépôt (mais sans la clé pour l'ouvrir). Une autre fonctionnalité intéressante est qu'il peut gérer un coffre-fort par environnement.
 
 .. index:: ! Command;secrets:set
 
@@ -190,21 +170,16 @@ Ajoutez la clé d'Akismet dans le coffre-fort :
 
      [OK] Secret "AKISMET_KEY" encrypted in "config/secrets/dev/"; you can commit it.
 
-Because this is the first time we have run this command, it generated two keys
-into the ``config/secret/dev/`` directory. It then stored the ``AKISMET_KEY``
-secret in that same directory.
+Comme c'est la première fois que nous exécutons cette commande, elle a généré deux clés dans le répertoire ``config/secret/dev/``. Elle a ensuite stocké la chaîne secrète ``AKISMET_KEY`` dans ce même répertoire.
 
-For development secrets, you can decide to commit the vault and the keys that
-have been generated in the ``config/secret/dev/`` directory.
+Pour les chaînes secrètes de développement, vous pouvez décider de committer l'espace de stockage et les clés qui ont été générées dans le répertoire ``config/secret/dev/``.
 
-Secrets can also be overridden by setting an environment variable of the same
-name.
+Les chaînes secrètes peuvent également être écrasées en définissant une variable d'environnement du même nom.
 
 Identifier le spam dans les commentaires
 ----------------------------------------
 
-One simple way to check for spam when a new comment is submitted is to call the
-spam checker before storing the data into the database:
+Une façon simple de vérifier la présence de spam lorsqu'un nouveau commentaire est soumis est d'appeler le vérificateur de spam avant de stocker les données dans la base de données :
 
 .. code-block:: diff
     :caption: patch_file
@@ -250,7 +225,7 @@ spam checker before storing the data into the database:
 Vérifiez qu'il fonctionne bien.
 
 Gérer les chaînes secrètes en production
--------------------------------------------
+----------------------------------------
 
 .. index::
     single: SymfonyCloud;Secret
@@ -258,20 +233,14 @@ Gérer les chaînes secrètes en production
     single: Secret
     single: Symfony CLI;var:set
 
-For production, SymfonyCloud supports setting *sensitive environment
-variables*:
+En production, SymfonyCloud prend en charge le paramétrage des *variables d'environnement sensibles* :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony var:set --sensitive AKISMET_KEY=abcdef
 
-But as discussed above, using Symfony secrets might be better. Not in terms of
-security, but in terms of secret management for the project's team. All secrets
-are stored in the repository and the only environment variable you need to
-manage for production is the decryption key. That makes it possible for anyone
-in the team to add production secrets even if they don't have access to
-production servers. The setup is a bit more involved though.
+Mais comme nous l'avons vu plus haut, l'utilisation des chaînes secrètes de Symfony pourrait être une meilleure manière de procéder. Pas en termes de sécurité, mais en termes de gestion des chaînes secrètes pour l'équipe du projet. Toutes les chaînes secrètes sont stockées dans le dépôt et la seule variable d'environnement que vous devez gérer pour la production est la clé de déchiffrement. Cela permet à tous les membres de l'équipe d'ajouter des chaînes secrètes en production même s'ils n'ont pas accès aux serveurs de production. L'installation est un peu plus compliquée cependant.
 
 .. index::
     single: Command;secrets:generate-keys
@@ -284,43 +253,34 @@ Tout d'abord, créez une paire de clés pour l'utilisation en production :
 
 .. note:
 
-    The ``APP_ENV=prod`` part before the command allows setting the ``APP_ENV``
-    environment variable only for this command. On Windows, use ``--env=prod``
-    instead: ``symfony console secrets:generate-keys --env=prod``
+    The ``APP_ENV=prod`` part before the command allows setting the ``APP_ENV`` environment variable only for this command. On Windows, use ``--env=prod`` instead: ``symfony console secrets:generate-keys --env=prod``
 
 .. index::
     single: Command;secrets:set
 
-Re-add the Akismet secret in the production vault but with its production
-value:
+Rajoutez la chaîne secrète d'Akismet dans le coffre-fort en production, mais avec sa valeur de production :
 
 .. code-block:: bash
     :class: answers(abcdef)
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
-The last step is to send the decryption key to SymfonyCloud by setting a
-sensitive variable:
+La dernière étape consiste à envoyer la clé de déchiffrement à SymfonyCloud en définissant une variable sensible :
 
 .. code-block:: bash
 
     $ symfony var:set --sensitive SYMFONY_DECRYPTION_SECRET=`php -r 'echo base64_encode(include("config/secrets/prod/prod.decrypt.private.php"));'`
 
-You can add and commit all files; the decryption key has been added in
-``.gitignore`` automatically, so it will never be committed. For more safety,
-you can remove it from your local machine as it has been deployed now:
+Vous pouvez ajouter et commiter tous les fichiers ; la clé de déchiffrement a été ajoutée dans le ``.gitignore`` automatiquement, donc elle ne sera jamais enregistrée. Pour plus de sécurité, vous pouvez la retirer de votre machine locale puisqu'elle a été déployée :
 
 .. code-block:: bash
 
     $ rm -f config/secrets/prod/prod.decrypt.private.php
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * The `HttpClient component docs
-      <https://symfony.com/doc/current/components/http_client.html>`_;
+    * La `documentation du composant HttpClient <https://symfony.com/doc/current/components/http_client.html>`_ ;
 
-    * The `Environment Variable Processors
-      <https://symfony.com/doc/current/configuration/env_var_processors.html>`_;
+    * Les `processeurs de variables d'environnement <https://symfony.com/doc/current/configuration/env_var_processors.html>`_ ;
 
-    * The `Symfony HttpClient Cheat Sheet
-      <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/httpclient_en_43.pdf>`_.
+    * La `cheat sheet du HttpClient de Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/httpclient_en_43.pdf>`_.

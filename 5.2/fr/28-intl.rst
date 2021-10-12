@@ -1,10 +1,7 @@
 Localiser une application
 =========================
 
-With an international audience, Symfony has been able to handle
-internationalization (i18n) and localization (l10n) out of the box since like
-ever. Localizing an application is not just about translating the interface,
-it is also about plurals, date and currency formatting, URLs, and more.
+Avec son public international, Symfony gère nativement l'internationalisation (i18n) et la localisation (l10n) depuis toujours. Localiser une application ne consiste pas seulement à traduire l'interface, mais aussi à traduire les pluriels, le formatage des dates et des devises, les URLs, et plus encore.
 
 Internationaliser des URLs
 --------------------------
@@ -15,10 +12,7 @@ Internationaliser des URLs
     single: Routing;Requirements
     single: Annotations;Route
 
-The first step to internationalize the website is to internationalize the URLs.
-When translating a website interface, the URL should be different per locale to
-play nice with HTTP caches (never use the same URL and store the locale in the
-session).
+La première étape pour localiser le site web est d'internationaliser les URLs. Quand on traduit un site web, l'URL devrait être différente pour chaque locale afin de tirer pleinement parti des caches HTTP (n'utilisez jamais la même URL en stockant la locale dans la session).
 
 Utilisez le paramètre de routage spécial ``_locale`` pour référencer la locale dans les routes :
 
@@ -38,11 +32,9 @@ Utilisez le paramètre de routage spécial ``_locale`` pour référencer la loca
          {
              $response = new Response($this->twig->render('conference/index.html.twig', [
 
-On the homepage, the locale is now set internally depending on the URL; for
-instance, if you hit ``/fr/``, ``$request->getLocale()`` returns ``fr``.
+Sur la page d'accueil, la locale est maintenant définie en interne en fonction de l'URL ; par exemple, si vous naviguez sur ``/fr/``, ``$request->getLocale()`` retourne ``fr``.
 
-As you will probably not be able to translate the content in all valid locales,
-restrict to the ones you want to support:
+Comme vous ne serez probablement pas en mesure de traduire le contenu dans toutes les locales disponibles, limitez-vous à celles que vous souhaitez prendre en charge :
 
 .. code-block:: diff
     :caption: patch_file
@@ -60,13 +52,9 @@ restrict to the ones you want to support:
          {
              $response = new Response($this->twig->render('conference/index.html.twig', [
 
-Each route parameter can be restricted by a regular expression inside ``<``
-``>``. The ``homepage`` route now only matches when the ``_locale`` parameter
-is ``en`` or ``fr``. Try hitting ``/es/``, you should have a 404 as no route
-matches.
+Chaque paramètre de route peut être limité par une expression régulière à l'intérieur de ``<`` ``>``. La route ``homepage`` n'est maintenant disponible que si le paramètre ``_locale`` vaut ``en`` ou ``fr``. Essayez d'atteindre l'URL ``/es/`` avec votre navigateur : vous devriez avoir une erreur 404, car aucune route ne correspond.
 
-As we will use the same requirement in almost all routes, let's move it to a
-container parameter:
+Comme nous utiliserons la même condition dans presque toutes les routes, déplaçons-la dans un paramètre du conteneur :
 
 .. code-block:: diff
     :caption: patch_file
@@ -93,8 +81,7 @@ container parameter:
          {
              $response = new Response($this->twig->render('conference/index.html.twig', [
 
-Adding a language can be done by updating the ``app.supported_languages``
-parameter.
+L'ajout d'une langue peut se faire en mettant à jour le paramètre ``app.supported_languages``.
 
 Ajoutez le même préfixe de route locale aux autres URLs :
 
@@ -122,8 +109,7 @@ Ajoutez le même préfixe de route locale aux autres URLs :
          {
              $comment = new Comment();
 
-We are almost done. We don't have a route that matches ``/`` anymore. Let's add
-it back and make it redirect to ``/en/``:
+Nous avons presque fini. Cependant, nous n'avons plus de route correspondant à ``/``. Recréons-la et faisons en sorte qu'elle redirige vers ``/en/`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -144,18 +130,16 @@ it back and make it redirect to ``/en/``:
          public function index(ConferenceRepository $conferenceRepository): Response
          {
 
-Now that all main routes are locale aware, notice that generated URLs on the
-pages take the current locale into account automatically.
+Maintenant que toutes les routes principales bénéficient de la locale, remarquez que les URLs générées sur les pages prennent automatiquement en compte la locale courante.
 
 Ajouter un sélecteur de locale
--------------------------------
+------------------------------
 
 .. index::
     single: Twig;path
     single: Twig;Locale
 
-To allow users to switch from the default ``en`` locale to another one, let's
-add a switcher in the header:
+Pour permettre aux internautes de passer de la locale par défaut ``en`` à une autre, ajoutons un sélecteur dans l'en-tête :
 
 .. code-block:: diff
     :caption: patch_file
@@ -180,15 +164,13 @@ add a switcher in the header:
                          </div>
                      </div>
 
-To switch to another locale, we explicitly pass the ``_locale`` route parameter
-to the ``path()`` function.
+Pour changer de locale, nous passons explicitement le paramètre de routage ``_locale`` à la fonction ``path()``.
 
 .. index::
     single: Twig;app.request
     single: Twig;locale_name
 
-Update the template to display the current locale name instead of the
-hard-coded "English":
+Modifiez le template pour afficher le nom de la locale actuelle au lieu du nom "English" codé en dur :
 
 .. code-block:: diff
     :caption: patch_file
@@ -205,16 +187,12 @@ hard-coded "English":
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
              <a class="dropdown-item" href="{{ path('homepage', {_locale: 'en'}) }}">English</a>
 
-``app`` is a global Twig variable that gives access to the current request. To
-convert the locale to a human readable string, we are using the ``locale_name``
-Twig filter.
+``app`` est une variable Twig globale qui donne accès à la requête courante. Pour convertir la locale en une chaîne humainement compréhensible, nous utilisons le filtre Twig ``locale_name``.
 
 .. index::
     single: Components;String
 
-Depending on the locale, the locale name is not always capitalized. To
-capitalize sentences properly, we need a filter that is Unicode aware, as
-provided by the Symfony String component and its Twig implementation:
+Selon la locale, le nom de la locale n'est pas toujours en majuscule. Pour gérer correctement les majuscules dans les phrases, nous avons besoin d'un filtre compatible Unicode, comme celui fourni par le composant Symfony String et son implémentation Twig :
 
 .. code-block:: bash
 
@@ -238,8 +216,7 @@ provided by the Symfony String component and its Twig implementation:
          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-language">
              <a class="dropdown-item" href="{{ path('homepage', {_locale: 'en'}) }}">English</a>
 
-You can now switch from French to English via the switcher and the whole
-interface adapts itself quite nicely:
+Vous pouvez dorénavant passer du français à l'anglais grâce au sélecteur, et toute l'interface s'adapte à merveille :
 
 .. figure:: screenshots/intl-switcher.png
     :alt: /fr/conference/amsterdam-2019
@@ -254,16 +231,13 @@ Traduire l'interface
     single: Translation
     single: Twig;trans
 
-To start translating the website, we need to install the Symfony Translation
-component:
+Pour commencer à traduire le site, nous avons besoin d'installer le composant Translation de Symfony :
 
 .. code-block:: bash
 
     $ symfony composer req translation
 
-Translating every single sentence on a large website can be tedious, but
-fortunately, we only have a handful of messages on our website. Let's start
-with all the sentences on the homepage:
+Traduire chaque phrase d'un gros site web peut être fastidieux, mais heureusement, nous n'avons que quelques messages sur notre site web. Commençons par toutes les phrases de la page d'accueil :
 
 .. code-block:: diff
     :caption: patch_file
@@ -300,9 +274,7 @@ with all the sentences on the homepage:
                              </div>
                          </div>
 
-The ``trans`` Twig filter looks for a translation of the given input to the
-current locale. If not found, it falls back to the *default locale* as
-configured in ``config/packages/translation.yaml``:
+Le filtre Twig ``trans`` recherche une traduction pour la valeur donnée dans la locale courante. Si celle-ci n'est pas trouvée, il utilise la *locale par défaut*, telle que configurée dans ``config/packages/translation.yaml`` :
 
 .. code-block:: yaml
     :class: ignore
@@ -324,8 +296,7 @@ Notez que l'"onglet" de traduction de la web debug toolbar est devenu rouge :
 
 Il nous dit que 3 messages ne sont pas encore traduits.
 
-Click on the "tab" to list all messages for which Symfony did not find a
-translation:
+Cliquez sur l'"onglet" pour lister tous les messages pour lesquels Symfony n'a pas trouvé de traduction :
 
 .. figure:: screenshots/intl-profiler.png
     :alt: /_profiler/64282d?panel=translation
@@ -335,24 +306,17 @@ translation:
 Fournir des traductions
 -----------------------
 
-As you might have seen in ``config/packages/translation.yaml``, translations
-are stored under a ``translations/`` root directory, which has been created
-automatically for us.
+Comme vous avez pu le constater dans le fichier ``config/packages/translation.yaml``, les traductions sont stockées dans le répertoire racine ``translations/``, qui a été créé automatiquement pour nous.
 
-Instead of creating the translation files by hand, use the
-``translation:update`` command:
+Au lieu de créer les fichiers de traduction à la main, utilisez la commande ``translation:update`` :
 
 .. code-block:: bash
 
     $ symfony console translation:update fr --force --domain=messages --sort=asc
 
-This command generates a translation file (``--force`` flag) for the ``fr``
-locale and the ``messages`` domain. The ``messages`` domain contains all
-**application** messages excluding the ones coming from Symfony itself like
-validation or security errors.
+Cette commande génère un fichier de traduction (option ``--force``) pour la locale ``fr`` et le domaine ``messages``. Le domaine ``messages`` contient tous les messages de notre **application**, en excluant ceux de Symfony tels que les erreurs de validation ou de sécurité.
 
-Edit the ``translations/messages+intl-icu.fr.xlf`` file and translate the
-messages in French. Don't speak French? Let me help you:
+Éditez le fichier ``translations/messages+intl-icu.fr.xlf`` et traduisez les messages en français :
 
 .. code-block:: diff
     :caption: patch_file
@@ -393,9 +357,7 @@ Traduire des formulaires
     single: Translation;Form
     single: Form;Translation
 
-Form labels are automatically displayed by Symfony via the translation system.
-Go to a conference page and click on the "Translation" tab of the web debug
-toolbar; you should see all labels ready for translation:
+Les labels des formulaires sont automatiquement affichés par Symfony via le système de traduction. Allez sur une page de conférence et cliquez sur l'onglet "Translation" de la web debug toolbar ; vous devriez voir tous les libellés prêts à être traduits :
 
 .. figure:: screenshots/intl-form-profiler.png
     :alt: /_profiler/64282d?panel=translation
@@ -413,14 +375,9 @@ Localiser des dates
     single: Twig;format_currency
     single: Twig;format_number
 
-If you switch to French and go to a conference webpage that has some comments,
-you will notice that the comment dates are automatically localized. This works
-because we used the ``format_datetime`` Twig filter, which is locale-aware
-(``{{ comment.createdAt|format_datetime('medium', 'short') }}``).
+Si vous changez de langue pour le français et que vous vous rendez sur la page d'une conférence ayant des commentaires, vous remarquerez que les dates des commentaires ont été automatiquement localisées. Cela fonctionne parce que nous avons utilisé le filtre Twig ``format_datetime``, qui tient compte de la locale (``{{ comment.createdAt|format_datetime('medium', 'short') }}``).
 
-The localization works for dates, times (``format_time``), currencies
-(``format_currency``), and numbers (``format_number``) in general (percents,
-durations, spell out, ...).
+La localisation fonctionne pour les dates, les heures (``format_time``), les devises (``format_currency``) et les nombres (``format_number``) en général (pourcentages, durées, écriture, etc.).
 
 Traduire des pluriels
 ---------------------
@@ -429,12 +386,9 @@ Traduire des pluriels
     single: Translation;Plurals
     single: Translation;Conditions
 
-Managing plurals in translations is one usage of the more general problem of
-selecting a translation based on a condition.
+La gestion des pluriels dans les traductions est l'une des principales sources de problèmes lorsqu'on sélectionne une traduction en se basant sur une condition.
 
-On a conference page, we display the number of comments: ``There are 2
-comments``. For 1 comment, we display ``There are 1 comments``, which is wrong.
-Modify the template to convert the sentence to a translatable message:
+Sur la page d'une conférence, nous affichons le nombre de commentaires : ``There are 2 comments``. Pour 1 commentaire, nous affichons ``There are 1 comments``, ce qui est faux. Modifiez le template pour convertir la phrase en un message traduisible :
 
 .. code-block:: diff
     :caption: patch_file
@@ -451,9 +405,7 @@ Modify the template to convert the sentence to a translatable message:
                          <a href="{{ path('conference', { slug: conference.slug, offset: previous }) }}">Previous</a>
                      {% endif %}
 
-For this message, we have used another translation strategy. Instead of keeping
-the English version in the template, we have replaced it with a unique
-identifier. That strategy works better for complex and large amount of text.
+Pour ce message, nous avons utilisé une autre stratégie de traduction. Au lieu de conserver la version anglaise dans le modèle, nous l'avons remplacée par un identifiant unique. Cette stratégie fonctionne mieux pour les textes complexes et volumineux.
 
 Mettez à jour le fichier de traduction en ajoutant le nouveau message :
 
@@ -474,8 +426,7 @@ Mettez à jour le fichier de traduction en ajoutant le nouveau message :
        </file>
      </xliff>
 
-We have not finished yet as we now need to provide the English translation.
-Create the ``translations/messages+intl-icu.en.xlf`` file:
+Nous n'avons pas encore terminé car nous devons maintenant fournir la traduction anglaise. Créez le fichier ``translations/messages+intl-icu.en.xlf`` :
 
 .. code-block:: xml
     :caption: translations/messages+intl-icu.en.xlf
@@ -497,10 +448,9 @@ Create the ``translations/messages+intl-icu.en.xlf`` file:
     </xliff>
 
 Mettre à jour les tests fonctionnels
--------------------------------------
+------------------------------------
 
-Don't forget to update the functional tests to take URLs and content changes
-into account:
+N'oubliez pas de mettre à jour les tests fonctionnels pour prendre en compte les URLs et les changements de contenu :
 
 .. code-block:: diff
     :caption: patch_file
@@ -543,10 +493,8 @@ into account:
          }
      }
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `Translating Messages using the ICU formatter
-      <https://symfony.com/doc/current/translation/message_format.html>`_;
+    * `Traduire des messages à l'aide du formateur ICU <https://symfony.com/doc/current/translation/message_format.html>`_ ;
 
-    * `Using Twig translation filters
-      <https://symfony.com/doc/current/translation/templates.html#translation-filters>`_.
+    * `Utiliser les filtres de traduction Twig <https://symfony.com/doc/current/translation/templates.html#translation-filters>`_.

@@ -1,15 +1,12 @@
 Gérer le cycle de vie des objets Doctrine
-==========================================
+=========================================
 
-When creating a new comment, it would be great if the ``createdAt`` date would
-be set automatically to the current date and time.
+Lors de la création d'un nouveau commentaire, ce serait bien si la date ``createdAt`` était automatiquement définie à la date et à l'heure courantes.
 
-Doctrine has different ways to manipulate objects and their properties
-during their lifecycle (before the row in the database is created, after the
-row is updated, ...).
+Doctrine a différentes façons de manipuler les objets et leurs propriétés pendant leur cycle de vie (avant la création de la ligne dans la base de données, après la mise à jour de la ligne, etc.).
 
 Définir des *lifecycle callbacks*
-----------------------------------
+---------------------------------
 
 .. index::
     single: Doctrine;Lifecycle
@@ -17,8 +14,7 @@ Définir des *lifecycle callbacks*
     single: Annotations;@ORM\\HasLifecycleCallbacks
     single: Annotations;@ORM\\PrePersist
 
-When the behavior does not need any service and should be applied to only one
-kind of entity, define a callback in the entity class:
+Lorsque le comportement n'a besoin d'aucun service et ne doit être appliqué qu'à un seul type d'entité, définissez un callback dans la classe entité :
 
 .. code-block:: diff
     :caption: patch_file
@@ -49,26 +45,19 @@ kind of entity, define a callback in the entity class:
          {
              return $this->conference;
 
-The ``@ORM\PrePersist`` *event* is triggered when the object is stored in the
-database for the very first time. When that happens, the
-``setCreatedAtValue()`` method is called and the current date and time is used
-for the value of the ``createdAt`` property.
+L'*événement* ``@ORM\PrePersist`` est déclenché lorsque l'objet est enregistré dans la base de données pour la toute première fois. Lorsque cela se produit, la méthode ``setCreatedAtValue()`` est appelée et la date et l'heure courantes sont utilisées pour la valeur de la propriété ``createdAt``.
 
 Ajouter des *slugs* aux conférences
-------------------------------------
+-----------------------------------
 
-The URLs for conferences are not meaningful: ``/conference/1``. More
-importantly, they depend on an implementation detail (the primary key in the
-database is leaked).
+Les URLs des conférences n'ont pas de sens : ``/conference/1``. Plus important encore, ils dépendent d'un détail d'implémentation (la clé primaire de la base de données est révélée).
 
-What about using URLs like ``/conference/paris-2020`` instead? That would look
-much better. ``paris-2020`` is what we call the conference *slug*.
+Pourquoi ne pas plutôt utiliser des URLs telles que ``/conference/paris-2020`` ? Ce serait plus joli. ``paris-2020``, c'est ce que l'on appelle le *slug* de la conférence.
 
 .. index::
     single: Command;make:entity
 
-Add a new ``slug`` property for conferences (a not nullable string of 255
-characters):
+Ajoutez une nouvelle propriété ``slug`` pour les conférences (une chaîne non nulle de 255 caractères) :
 
 .. code-block:: bash
     :class: answers(slug||string||255||no)
@@ -94,9 +83,7 @@ Et exécutez cette nouvelle migration :
 
     $ symfony console doctrine:migrations:migrate
 
-Got an error? This is expected. Why? Because we asked for the slug to be not
-``null`` but existing entries in the conference database will get a ``null``
-value when the migration is ran. Let's fix that by tweaking the migration:
+Vous avez une erreur ? C'était prévu. Pourquoi ? Parce que nous avons demandé que le slug ne soit pas ``null``, et que les entrées existantes dans la base de données de la conférence obtiendront une valeur ``null`` lorsque la migration sera exécutée. Corrigeons cela en ajustant la migration :
 
 .. code-block:: diff
     :caption: patch_file
@@ -115,14 +102,11 @@ value when the migration is ran. Let's fix that by tweaking the migration:
 
          public function down(Schema $schema): void
 
-The trick here is to add the column and allow it to be ``null``, then set the
-slug to a not ``null`` value, and finally, change the slug column to not allow
-``null``.
+L'astuce ici est d'ajouter la colonne et de lui permettre d'être ``null``, puis de définir une valeur non ``null`` pour le slug, et enfin, de changer la colonne de slug pour ne plus permettre ``null``.
 
 .. note::
 
-    For a real project, using ``CONCAT(LOWER(city), '-', year)`` might not be
-    enough. In that case, we would need to use the "real" Slugger.
+    Pour un projet réel, l'utilisation de ``CONCAT(LOWER(city), '-', year)`` peut ne pas suffire. Nous aurions alors besoin d'utiliser le "vrai" Slugger.
 
 .. index::
     single: Command;doctrine:migrations:migrate
@@ -138,8 +122,7 @@ La migration devrait fonctionner maintenant :
     single: Annotations;@ORM\\UniqueEntity
     single: Annotations;@ORM\\Column
 
-Because the application will soon use slugs to find each conference, let's tweak the
-Conference entity to ensure that slug values are unique in the database:
+Étant donné que l'application utilisera bientôt les slugs pour trouver chaque conférence, ajustons l'entité Conference pour s'assurer que les valeurs des slugs soient uniques dans la base de données :
 
 .. code-block:: diff
     :caption: patch_file
@@ -170,8 +153,7 @@ Conference entity to ensure that slug values are unique in the database:
 .. index::
     single: Components;Validator
 
-As we are using a validator to ensure the unique-ness of slugs, we need to add
-the Symfony Validator component:
+Comme nous utilisons une contrainte de validation pour nous assurer de l'unicité des slugs, nous devons installer le composant Symfony Validator :
 
 .. code-block:: bash
 
@@ -195,25 +177,21 @@ Comme vous l'aurez deviné, nous devons exécuter la danse de la migration :
     $ symfony console doctrine:migrations:migrate
 
 Générer des slugs
--------------------
+-----------------
 
 .. index::
     single: Components;String
     single: Slug
 
-Generating a slug that reads well in a URL (where anything besides ASCII
-characters should be encoded) is a challenging task, especially for languages
-other than English. How do you convert ``é`` to ``e`` for instance?
+Générer un slug qui se lit bien dans une URL (où tout ce qui n'est pas des caractères ASCII doit être encodé) est une tâche difficile, surtout pour les langues autres que l'anglais. Comment convertir ``é`` en ``e`` par exemple ?
 
-Instead of reinventing the wheel, let's use the Symfony ``String`` component,
-which eases the manipulation of strings and provides a *slugger*:
+Au lieu de réinventer la roue, utilisons le composant Symfony ``String``, qui facilite la manipulation des chaînes et fournit un slugger :
 
 .. code-block:: bash
 
     $ symfony composer req string
 
-Add a ``computeSlug()`` method to the ``Conference`` class that computes the
-slug based on the conference data:
+Dans la classe ``Conference``, ajoutez une méthode ``computeSlug()``, qui calcule le slug en fonction des données de la conférence :
 
 .. code-block:: diff
     :caption: patch_file
@@ -243,24 +221,17 @@ slug based on the conference data:
          {
              return $this->city;
 
-The ``computeSlug()`` method only computes a slug when the current slug is
-empty or set to the special ``-`` value. Why do we need the ``-`` special
-value? Because when adding a conference in the backend, the slug is required.
-So, we need a non-empty value that tells the application that we want the slug
-to be automatically generated.
+La méthode ``computeSlug()`` ne calcule un slug que lorsque le slug courant est vide ou défini à la valeur spéciale ``-``. Pourquoi avons-nous besoin de cette valeur particulière ``-`` ? Parce que lors de l'ajout d'une conférence dans l'interface d'administration, le slug est nécessaire. Nous avons donc besoin d'une valeur non vide qui indique à l'application que nous voulons que le slug soit généré automatiquement.
 
 Définir un *lifecycle callback* complexe
------------------------------------------
+----------------------------------------
 
 .. index::
     single: Doctrine;Entity Listener
 
-As for the ``createdAt`` property, the ``slug`` one should be set automatically
-whenever the conference is updated by calling the ``computeSlug()`` method.
+Comme pour la propriété ``createdAt``, la propriété ``slug`` doit être définie automatiquement à chaque fois que la conférence est mise à jour en appelant la méthode ``computeSlug()``.
 
-But as this method depends on a ``SluggerInterface`` implementation, we cannot
-add a ``prePersist`` event as before (we don't have a way to inject the
-slugger).
+Mais comme cette méthode dépend d'une implémentation de ``SluggerInterface``, nous ne pouvons pas ajouter un événement ``prePersist`` comme avant (nous n'avons pas la possibilité d'injecter le slugger).
 
 Créez plutôt un listener d'entité Doctrine :
 
@@ -293,8 +264,7 @@ Créez plutôt un listener d'entité Doctrine :
         }
     }
 
-Note that the slug is updated when a new conference is created
-(``prePersist()``) and whenever it is updated (``preUpdate()``).
+Notez que le slug est modifié lorsqu'une nouvelle conférence est créée (``prePersist()``) et lorsqu'elle est mise à jour (``preUpdate()``).
 
 Configurer un service dans le conteneur
 ---------------------------------------
@@ -303,32 +273,17 @@ Configurer un service dans le conteneur
     single: Components;Dependency Injection
     single: Dependency Injection
 
-Up until now, we have not talked about one key component of Symfony, the
-*dependency injection container*. The container is responsible for managing
-*services*: creating them and injecting them whenever needed.
+Jusqu'à présent, nous n'avons pas parlé d'un élément clé de Symfony, le *conteneur d'injection de dépendance*. Le conteneur est responsable de la gestion des *services* : leur création, et leur injection en cas de besoin.
 
-A *service* is a "global" object that provides features (e.g. a mailer, a
-logger, a slugger, etc.) unlike *data objects* (e.g. Doctrine entity
-instances).
+Un *service* est un objet "global" qui fournit des fonctionnalités (par exemple un *mailer*, un *logger*, un *slugger*, etc.) contrairement aux *objets de données* (par exemple les instances d'entités Doctrine).
 
-You rarely interact with the container directly as it automatically injects
-service objects whenever you need them: the container injects the controller
-argument objects when you type-hint them for instance.
+Vous interagissez rarement directement avec le conteneur car il injecte automatiquement des objets de service quand vous en avez besoin : par exemple, le conteneur injecte les objets en arguments du contrôleur lorsque vous les typez.
 
-If you wondered how the event listener was registered in the previous step, you
-now have the answer: the container. When a class implements some specific
-interfaces, the container knows that the class needs to be registered in a
-certain way.
+Si vous vous demandez comment le listener d'événement a été initialisé à l'étape précédente, vous avez maintenant la réponse : le conteneur. Lorsqu'une classe implémente des interfaces spécifiques, le conteneur sait que la classe doit être initialisée d'une certaine manière.
 
-Unfortunately, automation is not provided for everything, especially for
-third-party packages. The entity listener that we just wrote is one such
-example; it cannot be managed by the Symfony service container automatically as
-it does not implement any interface and it does not extend a "well-know class".
+Malheureusement, l'automatisation n'est pas prévue pour tout, en particulier pour les paquets tiers. Le listener d'entité que nous venons d'écrire en est un exemple ; il ne peut pas être géré automatiquement par le conteneur de service Symfony car il n'implémente aucune interface et n'étend pas une "classe connue".
 
-We need to partially declare the listener in the container. The dependency
-wiring can be omitted as it can still be guessed by the container, but we need
-to manually add some *tags* to register the listener with the Doctrine event
-dispatcher:
+Nous devons déclarer partiellement le listener dans le conteneur. L'injection des dépendances peut être omise car elle peut être devinée par le conteneur, mais nous avons besoin d'ajouter manuellement quelques tags pour lier le listener avec le dispatcher d'événements Doctrine :
 
 .. code-block:: diff
     :caption: patch_file
@@ -346,15 +301,12 @@ dispatcher:
 
 .. note::
 
-    Don't confuse Doctrine event listeners and Symfony ones. Even if they look
-    very similar, they are not using the same infrastructure under the hood.
+    Ne confondez pas les listeners d'événements Doctrine et ceux de Symfony. Même s'ils se ressemblent beaucoup, ils n'utilisent pas la même infrastructure en interne.
 
 Utiliser des slugs dans l'application
 -------------------------------------
 
-Try adding more conferences in the backend and change the city or the year of
-an existing one; the slug won't be updated except if you use the special ``-``
-value.
+Essayez d'ajouter d'autres conférences dans l'interface d'administration et changez la ville ou l'année d'une conférence existante ; le slug ne sera pas mis à jour sauf si vous utilisez la valeur spéciale ``-``.
 
 .. index::
     single: Twig;for
@@ -362,8 +314,7 @@ value.
     single: Twig;path
     single: Annotations;Route
 
-The last change is to update the controllers and the templates to use the
-conference ``slug`` instead of the conference ``id`` for routes:
+La dernière modification consiste à mettre à jour les contrôleurs et les modèles pour utiliser le ``slug`` de la conférence pour les routes, au lieu de son ``id`` :
 
 .. code-block:: diff
     :caption: patch_file
@@ -424,14 +375,12 @@ L'accès à la page d'une conférence devrait maintenant se faire grâce à son 
     :align: center
     :figclass: with-browser
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * The `Doctrine event system <https://symfony.com/doc/current/doctrine/events.html>`_
-      (lifecycle callbacks and listeners, entity listeners and lifecycle subscribers);
+    * Le `système d'événements Doctrine <https://symfony.com/doc/current/doctrine/events.html>`_ (*lifecycle callbacks* et *listeners*, *entity listeners* et *lifecycle subscribers*) ;
 
-    * The `String component docs <https://symfony.com/doc/current/components/string.html>`_;
+    * La `documentation du composant String <https://symfony.com/doc/current/components/string.html>`_ ;
 
-    * The `Service container <https://symfony.com/doc/current/service_container.html>`_;
+    * Le `conteneur de services <https://symfony.com/doc/current/service_container.html>`_ ;
 
-    * The `Symfony Services Cheat Sheet
-      <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/services_en_42.pdf>`_.
+    * La `cheat sheet des services de Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/services_en_42.pdf>`_.

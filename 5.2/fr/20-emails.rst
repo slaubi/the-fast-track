@@ -6,10 +6,7 @@ Envoyer des emails aux admins
     single: Mailer
     single: Emails
 
-To ensure high quality feedback, the admin must moderate all comments. When a
-comment is in the ``ham`` or ``potential_spam`` state, an *email* should be
-sent to the admin with two links: one to accept the comment and one to reject
-it.
+Pour s'assurer que les commentaires soient de bonne qualité, l'admin doit tous les modérer. Lorsqu'un commentaire est dans l'état ``ham`` ou ``potential_spam``, un *email* doit lui être envoyé avec deux liens : un pour l'accepter et un autre pour le rejeter.
 
 Tout d'abord, installez le composant Symfony Mailer :
 
@@ -18,12 +15,9 @@ Tout d'abord, installez le composant Symfony Mailer :
     $ symfony composer req mailer
 
 Définir un email pour l'admin
-------------------------------
+-----------------------------
 
-To store the admin email, use a container parameter. For demonstration purpose,
-we also allow it to be set via an environment variable (should not be needed in
-"real life"). To ease injection in services that need the admin email, define a
-container ``bind`` setting:
+Pour stocker l'email de l'admin, utilisez un paramètre de conteneur. Pour l'exemple, nous autorisons également son paramétrage grâce à une variable d'environnement (ce qui ne devrait pas être nécessaire dans la "vraie vie"). Pour faciliter l'injection de cette variable dans les services ayant besoin de l'email de l'admin, définissez un paramètre de conteneur (``bind``) :
 
 .. code-block:: diff
     :caption: patch_file
@@ -47,18 +41,12 @@ container ``bind`` setting:
          # makes classes in src/ available to be used as services
          # this creates a service per class whose id is the fully-qualified class name
 
-An environment variable might be "processed" before being used. Here, we are
-using the ``default`` processor to fall back to the value of the
-``default_admin_email`` parameter if the ``ADMIN_EMAIL`` environment variable
-does not exist.
+Une variable d'environnement peut être "traitée" avant d'être utilisée. Ici, nous utilisons le processeur ``default`` afin d'utiliser la valeur du paramètre ``default_admin_email`` si la variable d'environnement ``ADMIN_EMAIL`` n'existe pas.
 
 Envoyer une notification par email
 ----------------------------------
 
-To send an email, you can choose between several ``Email`` class abstractions;
-from ``Message``, the lowest level, to ``NotificationEmail``, the highest one.
-You will probably use the ``Email`` class the most, but ``NotificationEmail``
-is the perfect choice for internal emails.
+Pour envoyer un email, vous pouvez choisir entre plusieurs abstractions de classes d'``Email`` : depuis ``Message``, celle de plus bas niveau, à ``NotificationEmail``, celle de niveau le plus élevé. Vous utiliserez probablement la classe ``Email`` le plus souvent, mais ``NotificationEmail`` est le choix parfait pour les emails internes.
 
 Dans le gestionnaire de messages, remplaçons la logique d'auto-validation :
 
@@ -114,11 +102,9 @@ Dans le gestionnaire de messages, remplaçons la logique d'auto-validation :
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
              }
 
-The ``MailerInterface`` is the main entry point and allows to ``send()``
-emails.
+L'interface ``MailerInterface`` est le point d'entrée principal et permet d'envoyer des emails avec ``send()``.
 
-To send an email, we need a sender (the ``From``/``Sender`` header). Instead of
-setting it explicitly on the Email instance, define it globally:
+Pour envoyer un email, nous avons besoin d'un expéditeur (l'en-tête   ``From``/``Sender``). Au lieu de le définir explicitement sur l'instance Email, définissez-le globalement :
 
 .. code-block:: diff
     :caption: patch_file
@@ -133,15 +119,14 @@ setting it explicitly on the Email instance, define it globally:
     +            sender: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
 
 Hériter du template d'email de notification
---------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Twig;extends
     single: Twig;block
     single: Twig;url
 
-The notification email template inherits from the default notification email
-template that comes with Symfony:
+Le template d'email de notification hérite du template d'email de notification par défaut fourni avec Symfony :
 
 .. code-block:: twig
     :caption: templates/emails/comment_notification.html.twig
@@ -164,39 +149,28 @@ template that comes with Symfony:
         <button href="{{ url('review_comment', { id: comment.id, reject: true }) }}">Reject</button>
     {% endblock %}
 
-The template overrides a few blocks to customize the message of the email and
-to add some links that allow the admin to accept or reject a comment. Any
-route argument that is not a valid route parameter is added as a query string
-item (the reject URL looks like ``/admin/comment/review/42?reject=true``).
+Le template remplace quelques blocs pour personnaliser le message de l'email et pour ajouter des liens permettant à l'admin d'accepter ou de rejeter un commentaire. Tout argument de routage qui n'est pas un paramètre de routage valide est ajouté comme paramètre de l'URL (l'URL de rejet ressemble à ``/admin/comment/review/42?reject=true``).
 
-The default ``NotificationEmail`` template uses `Inky
-<https://get.foundation/emails/docs/inky.html>`_ instead of HTML to design
-emails. It helps create responsive emails that are compatible with all popular
-email clients.
+Le template par défaut ``NotificationEmail`` utilise `Inky <https://get.foundation/emails/docs/inky.html>`_ au lieu de HTML pour générer les emails. Il permet de créer des emails responsives compatibles avec tous les clients de messagerie courants.
 
-For maximum compatibility with email readers, the notification base layout
-inlines all stylesheets (via the CSS inliner package) by default.
+Pour une compatibilité maximale avec les clients de messagerie, la mise en page de base de la notification convertit les feuilles de style externes en CSS en ligne (via le package CSS inliner).
 
-These two features are part of optional Twig extensions that need to be
-installed:
+Ces deux fonctions font partie d'extensions Twig optionnelles qui doivent être installées :
 
 .. code-block:: bash
 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
 Générer des URLs absolues dans une commande
----------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Twig;Link
     single: Link
 
-In emails, generate URLs with ``url()`` instead of ``path()`` as you need
-absolute ones (with scheme and host).
+Dans les emails, générez les URLs avec ``url()`` au lieu de ``path()`` puisque vous avez besoin qu'elles soient absolues (avec le schéma et l'hôte).
 
-The email is sent from the message handler, in a console context. Generating
-absolute URLs in a Web context is easier as we know the scheme and domain of
-the current page. This is not the case in a console context.
+L'email est envoyé par le gestionnaire de message, dans un contexte console. Générer des URLs absolues dans un contexte web est plus facile car nous connaissons le schéma et le domaine de la page courante. Ce n'est pas le cas dans un contexte console.
 
 Définissez le nom de domaine et le schéma à utiliser explicitement :
 
@@ -218,15 +192,12 @@ Définissez le nom de domaine et le schéma à utiliser explicitement :
      services:
          # default configuration for services in *this* file
 
-The ``SYMFONY_DEFAULT_ROUTE_HOST`` and ``SYMFONY_DEFAULT_ROUTE_PORT``
-environment variables are automatically set locally when using the ``symfony``
-CLI and determined based on the configuration on SymfonyCloud.
+Les variables d'environnement ``SYMFONY_DEFAULT_ROUTE_HOST`` et ``SYMFONY_DEFAULT_ROUTE_PORT`` sont automatiquement définies localement lors de l'utilisation de la commande ``symfony`` et déterminées en fonction de la configuration sur SymfonyCloud.
 
 Lier une route à un contrôleur
---------------------------------
+------------------------------
 
-The ``review_comment`` route does not exist yet, let's create an admin
-controller to handle it:
+La route ``review_comment`` n'existe pas encore. Créons un contrôleur admin pour la gérer :
 
 .. code-block:: php
     :caption: src/Controller/AdminController.php
@@ -285,12 +256,9 @@ controller to handle it:
         }
     }
 
-The review comment URL starts with ``/admin/`` to protect it with the firewall
-defined in a previous step. The admin needs to be authenticated to access this
-resource.
+L'URL permettant la validation du commentaire commence par ``/admin/``, afin qu'elle soit protégée par le pare-feu défini lors d'une étape précédente. L'admin doit se connecter pour accéder à cette ressource.
 
-Instead of creating a ``Response`` instance, we have used ``render()``, a
-shortcut method provided by the ``AbstractController`` controller base class.
+Au lieu de créer une instance de ``Response``, nous avons utilisé une méthode plus courte, fournie par la classe de base ``AbstractController``.
 
 .. index::
     single: Twig;extends
@@ -316,9 +284,7 @@ Utiliser un *mail catcher*
 .. index::
     single: Docker;Mail Catcher
 
-Instead of using a "real" SMTP server or a third-party provider to send emails,
-let's use a mail catcher. A mail catcher provides a SMTP server that does not
-deliver the emails, but makes them available through a Web interface instead:
+Au lieu d'utiliser un "vrai" serveur SMTP ou un fournisseur tiers pour envoyer des emails, utilisons un mail catcher. Un mail catcher fournit un serveur SMTP qui n'envoie pas vraiment les emails, mais les rend disponibles via une interface web :
 
 .. code-block:: diff
 
@@ -359,7 +325,7 @@ Et redémarrez-le. ``MAILER_DSN`` est maintenant automatiquement défini :
     $ sleep 10
 
 Accéder au webmail
--------------------
+------------------
 
 .. index::
     single: Symfony CLI;open:local:webmail
@@ -385,8 +351,7 @@ Soumettez un commentaire, vous devriez recevoir un email dans l'interface du web
     :align: center
     :figclass: with-browser
 
-Click on the email title on the interface and accept or reject the comment as
-you see fit:
+Cliquez sur le titre de l'email dans l'interface, puis acceptez ou rejetez le commentaire comme bon vous semble :
 
 .. figure:: screenshots/webmail-rejected.png
     :alt: /
@@ -396,33 +361,20 @@ you see fit:
 Vérifiez les logs avec ``server:log`` si cela ne fonctionne pas comme prévu.
 
 Gérer des scripts de longue durée
------------------------------------
+---------------------------------
 
-Having long-running scripts comes with behaviors that you should be aware of.
-Unlike the PHP model used for HTTP where each request starts with a clean
-state, the message consumer is running continuously in the background. Each
-handling of a message inherits the current state, including the memory cache.
-To avoid any issues with Doctrine, its entity managers are automatically
-cleared after the handling of a message. You should check if your own services
-need to do the same or not.
+Le fait d'avoir des scripts de longue durée s'accompagne de comportements dont vous devez être conscient. Contrairement au modèle PHP utilisé pour les requêtes HTTP où chaque requête commence avec un nouvel état, le consumer du message s'exécute continuellement en arrière-plan. Chaque traitement d'un message hérite de l'état actuel, y compris le cache mémoire. Pour éviter tout problème avec Doctrine, ses entity managers sont automatiquement nettoyés après le traitement d'un message. Vous devriez vérifier si vos propres services doivent faire de même ou non.
 
 Envoyer des emails en mode asynchrone
 -------------------------------------
 
-The email sent in the message handler might take some time to be sent. It might
-even throw an exception. In case of an exception being thrown during the
-handling of a message, it will be retried. But instead of retrying to consume
-the comment message, it would be better to actually just retry sending the
-email.
+L'email envoyé dans le gestionnaire de message peut prendre un certain temps avant d'être envoyé. Il pourrait même générer une exception. Dans le cas où une exception serait levée lors du traitement d'un message, celui-ci sera réessayé. Mais au lieu d'essayer à nouveau de consommer le message de commentaire, il serait préférable de renvoyer l'email.
 
 Nous savons déjà comment faire : envoyer l'email dans le bus.
 
-A ``MailerInterface`` instance does the hard work: when a bus is defined, it
-dispatches the email messages on it instead of sending them. No changes are
-needed in your code.
+Une instance de ``MailerInterface`` fait le gros du travail : lorsqu'un bus est défini, elle lui passe les emails au lieu de les envoyer directement. Aucun changement n'est nécessaire dans votre code.
 
-But right now, the bus is sending the email synchronously as we have not
-configured the queue we want to use for emails. Let's use RabbitMQ again:
+Mais pour l'instant, le bus envoie l'email de manière synchrone car nous n'avons pas configuré la file d'attente que nous voulons utiliser pour les emails. Utilisons à nouveau RabbitMQ :
 
 .. code-block:: diff
     :caption: patch_file
@@ -435,26 +387,18 @@ configured the queue we want to use for emails. Let's use RabbitMQ again:
                  App\Message\CommentMessage: async
     +            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
 
-Even if we are using the same transport (RabbitMQ) for comment messages and
-email messages, it does not have to be the case. You could decide to use
-another transport to manage different message priorities for instance. Using
-different transports also gives you the opportunity to have different worker
-machines handling different kind of messages. It is flexible and up to you.
+Même si nous utilisons le même transport (RabbitMQ) pour les commentaires et les emails, cela n'est pas obligatoirement le cas. Vous pouvez décider d'utiliser un autre transport pour gérer différentes priorités de messages par exemple. L'utilisation de différents transports vous donne également la possibilité d'avoir différents serveurs pour gérer les différents types de messages. C'est flexible, et cela vous donne la liberté de choisir.
 
 Tester les emails
 -----------------
 
 Il y a plusieurs façons de tester les emails.
 
-You can write unit tests if you write a class per email (by extending ``Email``
-or ``TemplatedEmail`` for instance).
+Vous pouvez écrire des tests unitaires si vous écrivez une classe par email (en héritant d'``Email`` ou de ``TemplatedEmail`` par exemple).
 
-The most common tests you will write though are functional tests that check
-that some actions trigger an email, and probably tests about the content of the
-emails if they are dynamic.
+Cependant, les tests les plus courants que vous allez écrire sont des tests fonctionnels qui vérifient que certaines actions déclenchent un email, et probablement des tests sur le contenu des emails s'ils sont dynamiques.
 
-Symfony comes with assertions that ease such tests, here is a test example that
-demonstrates some possibilities:
+Symfony est fourni avec des assertions qui facilitent de tels tests. Voici un exemple démontrant ses possibilités :
 
 .. code-block:: php
     :class: ignore
@@ -485,11 +429,9 @@ Envoyer des emails sur SymfonyCloud
     single: SymfonyCloud;SMTP
     single: Emails
 
-There is no specific configuration for SymfonyCloud. All accounts come with a
-SendGrid account that is automatically used to send emails.
+Il n'y a pas de configuration spécifique pour SymfonyCloud. Tous les comptes sont fournis avec un compte SendGrid qui est automatiquement utilisé pour envoyer les emails.
 
-You still need to update the SymfonyCloud configuration to include the ``xsl``
-PHP extension needed by Inky:
+Vous devez cependant mettre à jour la configuration de SymfonyCloud pour inclure l'extension PHP ``xsl`` nécessaire à Inky :
 
 .. code-block:: diff
     :caption: patch_file
@@ -510,26 +452,20 @@ PHP extension needed by Inky:
 
 .. note::
 
-    To be on the safe side, emails are *only* sent on the ``master`` branch by
-    default. Enable SMTP explicitly on non-``master`` branches if you know what
-    you are doing:
+    Par mesure de sécurité, les emails sont *uniquement* envoyés depuis la branche ``master`` par défaut. Activez SMTP explicitement sur les branches non-``master`` si vous êtes surs ce que vous faites :
 
     .. code-block:: bash
 
         $ symfony env:setting:set email on
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCasts Mailer tutorial <https://symfonycasts.com/screencast/mailer>`_;
+    * `Tutoriel SymfonyCasts sur Mailer <https://symfonycasts.com/screencast/mailer>`_ ;
 
-    * The `Inky templating language docs
-      <https://get.foundation/emails/docs/inky.html>`_;
+    * La `documentation sur le langage de templating Inky <https://get.foundation/emails/docs/inky.html>`_ ;
 
-    * The `Environment Variable Processors
-      <https://symfony.com/doc/current/configuration/env_var_processors.html>`_;
+    * Les `processeurs de variables d'environnement <https://symfony.com/doc/current/configuration/env_var_processors.html>`_ ;
 
-    * The `Symfony Framework Mailer documentation
-      <https://symfony.com/doc/current/mailer.html>`_;
+    * La `documentation du Mailer de Symfony <https://symfony.com/doc/current/mailer.html>`_ ;
 
-    * The `SymfonyCloud documentation about Emails
-      <https://symfony.com/doc/current/cloud/services/emails.html>`_.
+    * La `documentation de SymfonyCloud sur les emails <https://symfony.com/doc/master/cloud/services/emails.html>`_.

@@ -1,10 +1,6 @@
 Quelle est la prochaine étape ?
-================================
+===============================
 
-I hope you enjoyed the ride. I have tried to give you enough information to
-help you get started faster with your Symfony projects. We have barely
-scratched the surface of the Symfony world. Now, dive into the rest of the
-Symfony documentation to learn more about each feature we have discovered
-together.
+J'espère que vous avez aimé la balade. J'ai essayé de vous donner suffisamment d'informations pour vous aider à démarrer plus rapidement vos projets Symfony. Nous avons à peine effleuré la surface du monde de Symfony. Maintenant, plongez dans le reste de la documentation de Symfony pour en savoir plus sur chaque fonctionnalité que nous avons découverte ensemble.
 
 Bon développement avec Symfony !

@@ -1,26 +1,18 @@
 Diagnostiquer les problèmes
-============================
+===========================
 
 Mettre en place un projet, c'est aussi avoir les bons outils pour déboguer les problèmes.
 
 Installer des dépendances supplémentaires
--------------------------------------------
+-----------------------------------------
 
-Remember that the project was created with very few dependencies. No template
-engine. No debug tools. No logging system. The idea is that you can add more
-dependencies whenever you need them. Why would you depend on a template engine
-if you develop an HTTP API or a CLI tool?
+Rappelez-vous que le projet a été créé avec très peu de dépendances. Pas de moteur de template. Aucun outil de débogage. Pas de système de log. L'idée est que vous pouvez ajouter d'autres dépendances dès que vous en avez besoin. Pourquoi dépendre d'un moteur de template si vous développez une API HTTP ou un outil CLI ?
 
-How can we add more dependencies? Via Composer. Besides "regular" Composer
-packages, we will work with two "special" kinds of packages:
+Comment ajouter d'autres dépendances ? Avec Composer. En plus des paquets "standards" de Composer, nous travaillerons avec deux types de paquets "spéciaux" :
 
-* *Symfony Components*: Packages that implement core features and low level
-  abstractions that most applications need (routing, console, HTTP client,
-  mailer, cache, ...);
+* *Composants Symfony* : Paquets qui implémentent les fonctionnalités de base et les abstractions de bas niveau dont la plupart des applications ont besoin (routage, console, client HTTP, mailer, cache, etc.) ;
 
-* *Symfony Bundles*: Packages that add high-level features or provide
-  integrations with third-party libraries (bundles are mostly contributed by
-  the community).
+* *Bundles Symfony* : Paquets qui ajoutent des fonctionnalités de haut niveau ou fournissent des intégrations avec des bibliothèques tierces (les bundles sont principalement créés par la communauté).
 
 .. index::
     single: Components;Profiler
@@ -28,8 +20,7 @@ packages, we will work with two "special" kinds of packages:
     single: Web Profiler
     single: Web Debug Toolbar
 
-To begin with, let's add the Symfony Profiler, a time saver when you need to
-find the root cause of a problem:
+Pour commencer, ajoutons le Symfony Profiler. Il vous fait gagner un temps fou lorsque vous avez besoin de trouver l'origine d'un problème :
 
 .. code-block:: bash
 
@@ -37,19 +28,13 @@ find the root cause of a problem:
 
 ``profiler`` est un alias pour le paquet ``symfony/profiler-pack``.
 
-*Aliases* are not a Composer feature, but a concept provided by Symfony to make
-your life easier. Aliases are shortcuts for popular Composer packages. Want an
-ORM for your application? Require ``orm``. Want to develop an API? Require
-``api``. These aliases are automatically resolved to one or more regular
-Composer packages. They are opinionated choices made by the Symfony core team.
+Les *alias* ne sont pas une fonctionnalité interne à Composer, mais un concept fourni par Symfony pour vous faciliter la vie. Les alias sont des raccourcis pour les paquets populaires de Composer. Vous voulez un ORM pour votre application ? Demandez ``orm``. Vous voulez développer une API ? Demandez ``api``. Ces alias font référence à un ou plusieurs paquets normaux de Composer. Ce sont des choix arbitraires faits par l'équipe principale de Symfony.
 
-Another neat feature is that you can always omit the ``symfony`` vendor.
-Require ``cache`` instead of ``symfony/cache``.
+Un autre détail intéressant est que vous pouvez toujours omettre le ``symfony`` du nom des paquets. Demandez ``cache`` au lieu de ``symfony/cache``.
 
 .. tip::
 
-    Do you remember that we mentioned a Composer plugin named ``symfony/flex``
-    before? Aliases are one of its features.
+    Vous souvenez-vous que nous avons mentionné un plugin Composer nommé ``symfony/flex`` ? Les alias sont l'une de ses fonctionnalités.
 
 Comprendre les environnements Symfony
 -------------------------------------
@@ -57,26 +42,18 @@ Comprendre les environnements Symfony
 .. index::
     single: Symfony Environments
 
-Did you notice the ``--dev`` flag on the ``composer req`` command? As the
-Symfony Profiler is only useful during development, we want to avoid it being
-installed in production.
+Avez-vous remarqué l'option ``--dev`` sur la commande ``composer req`` ? Comme le Symfony Profiler n'est utile que pendant le développement, nous voulons éviter qu'il soit installé en production.
 
-Symfony supports the notion of *environments*. By default, it has built-in
-support for three, but you can add as many as you like: ``dev``, ``prod``, and
-``test``. All environments share the same code, but they represent different
-*configurations*.
+Symfony intègre une notion d'*environnement*. Par défaut, il y en a trois, mais vous pouvez en ajouter autant que vous le souhaitez : ``dev``, ``prod`` et ``test``. Tous les environnements partagent le même code, mais ils représentent des *configurations* différentes.
 
-For instance, all debugging tools are enabled in the ``dev`` environment. In
-the ``prod`` one, the application is optimized for performance.
+Par exemple, tous les outils de débogage sont activés en environnement de ``dev``. Dans celui de ``prod``, l'application est optimisée pour la performance.
 
-Switching from one environment to another can be done by changing the
-``APP_ENV`` environment variable.
+Basculer d'un environnement à l'autre peut se faire en changeant la variable d'environnement ``APP_ENV``.
 
-When you deployed to SymfonyCloud, the environment (stored in ``APP_ENV``) was
-automatically switched to ``prod``.
+Lorsque vous avez déployé vers SymfonyCloud, l'environnement (stocké dans ``APP_ENV``) a été automatiquement modifié en ``prod``.
 
 Gérer la configuration des environnements
-------------------------------------------
+-----------------------------------------
 
 .. index::
     single: Environment Variables
@@ -90,13 +67,9 @@ Gérer la configuration des environnements
 
     $ export APP_ENV=dev
 
-Using real environment variables is the preferred way to set values like
-``APP_ENV`` on production servers. But on development machines, having to
-define many environment variables can be cumbersome. Instead, define them in a
-``.env`` file.
+L'utilisation de variables d'environnement réelles est la meilleure façon de définir des valeurs comme ``APP_ENV`` en production. Mais sur les machines de développement, avoir à définir beaucoup de variables d'environnement peut s'avérer fastidieux. Définissez-les plutôt dans un fichier ``.env``.
 
-A sensible ``.env`` file was generated automatically for you when the
-project was created:
+Un fichier sensible ``.env`` a été généré automatiquement pour vous lorsque le projet a été créé :
 
 .. code-block:: text
     :caption: .env
@@ -111,16 +84,11 @@ project was created:
 
 .. tip::
 
-    Any package can add more environment variables to this file thanks to their
-    recipe used by Symfony Flex.
+    N'importe quel paquet peut ajouter plus de variables d'environnement à ce fichier grâce à leur recette utilisée par Symfony Flex.
 
-The ``.env`` file is committed to the repository and describes the *default*
-values from production. You can override these values by creating a
-``.env.local`` file. This file should not be committed and that's why the
-``.gitignore`` file is already ignoring it.
+Le fichier ``.env`` est commité sur le dépôt Git et liste les valeurs *par défaut* de la production. Vous pouvez surcharger ces valeurs en créant un fichier ``.env.local``. Ce fichier ne doit pas être commité : c'est pourquoi le fichier ``.gitignore`` l'ignore déjà.
 
-Never store secret or sensitive values in these files. We will see how to
-manage secrets in another step.
+Ne stockez jamais des données secrètes ou sensibles dans ces fichiers. Nous verrons comment gérer ces données sensibles dans une autre étape.
 
 Enregistrer tout dans les logs
 ------------------------------
@@ -128,13 +96,11 @@ Enregistrer tout dans les logs
 .. index::
     single: Logger
 
-Out of the box, logging and debugging capabilities are limited on new projects.
-Let's add more tools to help us investigate issues in development, but also in
-production:
+Par défaut, les capacités de logging et de débogage sont limitées sur les nouveaux projets. Ajoutons d'autres outils pour nous aider à comprendre les problèmes en développement, mais aussi en production :
 
 .. code-block:: bash
 
-    $ symfony composer req logger -W
+    $ symfony composer req logger
 
 .. index::
     single: Components;Debug
@@ -147,52 +113,39 @@ Pour les outils de débogage, ne les installons que pour le développement :
     $ symfony composer req debug --dev
 
 Découvrir les outils de débogage de Symfony
----------------------------------------------
+-------------------------------------------
 
-If you refresh the homepage, you should now see a toolbar at the bottom of the
-screen:
+Si vous rafraîchissez la page d'accueil, vous devriez maintenant voir une barre d'outils en bas de l'écran :
 
 .. figure:: screenshots/wdt.png
     :alt: /
     :align: center
     :figclass: with-browser
 
-The first thing you might notice is the **404** in red. Remember that this page
-is a placeholder as we have not defined a homepage yet. Even if the default
-page that welcomes you is beautiful, it is still an error page. So the correct
-HTTP status code is 404, not 200. Thanks to the web debug toolbar, you have the
-information right away.
+La première chose que vous remarquerez, c'est le **404** en rouge. Rappelez-vous que ce n'est qu'une page de remplissage, car nous n'avons toujours pas défini de page d'accueil. Même si la page par défaut qui vous accueille est belle, c'est quand même une page d'erreur. Le code d'état HTTP correct est donc 404, pas 200. Grâce à la *web debug toolbar*, vous avez l'information tout de suite.
 
-If you click on the small exclamation point, you get the "real" exception
-message as part of the logs in the Symfony profiler. If you want to see the
-stack trace, click on the "Exception" link on the left menu.
+Si vous cliquez sur le petit point d'exclamation, vous obtenez le "vrai" message d'exception dans les logs du *Symfony Profiler*. Si vous voulez voir la *stack trace*, cliquez sur le lien "Exception" dans le menu de gauche.
 
-Whenever there is an issue with your code, you will see an exception page like
-the following that gives you everything you need to understand the issue and
-where it comes from:
+Chaque fois qu'il y a un problème avec votre code, vous verrez une page d'exception comme celle-ci qui vous donnera tout ce dont vous aurez besoin pour comprendre le problème et d'où il vient :
 
 .. figure:: screenshots/exception.png
     :alt: //
     :align: center
     :figclass: with-browser
 
-Take some time to explore the information inside the Symfony profiler by
-clicking around.
+Prenez le temps d'explorer les informations à l'intérieur du profileur Symfony en cliquant partout.
 
 .. index::
     single: Symfony CLI;server:log
 
-Logs are also quite useful in debugging sessions. Symfony has a convenient
-command to tail all the logs (from the web server, PHP, and your application):
+Les logs sont également très utiles dans les sessions de débogage. Symfony a une commande pratique pour consulter tous les logs (du serveur web, de PHP et de votre application) :
 
 .. code-block:: bash
     :class: ignore
 
     $ symfony server:log
 
-Let's do a small experiment. Open ``public/index.php`` and break the PHP code
-there (add foobar in the middle of the code for instance). Refresh the page in
-the browser and observe the log stream:
+Réalisons une petite expérience. Ouvrez ``public/index.php`` et cassez le code PHP (ajoutez foobar au milieu du code par exemple). Rafraîchissez la page dans le navigateur et observez le contenu des logs :
 
 .. code-block:: text
     :class: ignore
@@ -207,9 +160,7 @@ Le résultat est joliment coloré pour attirer votre attention sur les erreurs.
     single: VarDumper
     single: dump
 
-Another great debug helper is the Symfony ``dump()`` function. It is always
-available and allows you to dump complex variables in a nice and interactive
-format.
+Une autre grande aide au débogage est la fonction Symfony ``dump()``. Elle est toujours disponible et vous permet d'afficher des variables complexes dans un format agréable et interactif.
 
 Modifiez temporairement ``public/index.php`` pour afficher l'objet Request :
 
@@ -228,9 +179,7 @@ Modifiez temporairement ``public/index.php`` pour afficher l'objet Request :
      $response->send();
      $kernel->terminate($request, $response);
 
-When refreshing the page, notice the new "target" icon in the toolbar; it lets
-you inspect the dump. Click on it to access a full page where navigating is
-made simpler:
+Lors du rafraîchissement de la page, remarquez la nouvelle icône "cible" dans la barre d'outils ; elle vous permet d'inspecter le *dump*. Cliquez dessus pour accéder à une page dédiée où la navigation est simplifiée :
 
 .. figure:: screenshots/dumper.png
     :alt: /
@@ -249,12 +198,7 @@ Annulez les modifications avant de commiter les autres modifications effectuées
 Configurer votre IDE
 --------------------
 
-In the development environment, when an exception is thrown, Symfony displays a
-page with the exception message and its stack trace. When displaying a file
-path, it adds a link that opens the file at the right line in your favorite
-IDE. To benefit from this feature, you need to configure your IDE. Symfony
-supports many IDEs out of the box; I'm using Visual Studio Code for this
-project:
+En environnement de développement, lorsqu'une exception est levée, Symfony affiche une page avec le message de l'exception et sa *stack trace*. Lors de l'affichage d'un chemin de fichier, un lien, qui ouvre le fichier à la bonne ligne dans votre IDE favori, est ajouté. Pour bénéficier de cette fonctionnalité, vous devez configurer votre IDE. Symfony supporte de nombreux IDE par défaut ; j'utilise Visual Studio Code pour ce projet :
 
 .. code-block:: diff
     :caption: patch_file
@@ -267,11 +211,10 @@ project:
      zend.detect_unicode=Off
     +xdebug.file_link_format=vscode://file/%f:%l
 
-Linked files are not limited to exceptions. For instance, the controller in the
-web debug toolbar becomes clickable after configuring the IDE.
+Les fichiers liés ne sont pas limités à des exceptions. Par exemple, le contrôleur dans la *web debug toolbar* devient cliquable après avoir configuré l'IDE.
 
 Déboguer en production
------------------------
+----------------------
 
 .. index::
     single: SymfonyCloud;Remote Logs
@@ -279,9 +222,7 @@ Déboguer en production
     single: Symfony CLI;logs
     single: Symfony CLI;ssh
 
-Debugging production servers is always trickier. You don't have access to the
-Symfony profiler for instance. Logs are less verbose. But tailing the logs is
-possible:
+Le débogage des serveurs de production est toujours plus délicat. Vous n'avez pas accès au Symfony Profiler par exemple. Les logs sont moins détaillés. Mais il est possible de consulter les logs :
 
 .. code-block:: bash
     :class: ignore
@@ -295,21 +236,14 @@ Vous pouvez même vous connecter en SSH sur le conteneur web :
 
     $ symfony ssh
 
-Don't worry, you cannot break anything easily. Most of the filesystem is
-read-only. You won't be able to do a hot fix in production. But you will learn
-a much better way later in the book.
+Ne vous inquiétez pas, vous ne pouvez rien casser facilement. Une grande partie du système de fichiers est en lecture seule. Vous ne serez pas en mesure de faire un correctif urgent en production, mais vous apprendrez une manière bien plus adaptée de le faire plus loin dans le livre.
 
-.. sidebar:: Going Further
+.. sidebar:: Aller plus loin
 
-    * `SymfonyCasts Environments and Config Files tutorial
-      <https://symfonycasts.com/screencast/symfony-fundamentals/environment-config-files>`_;
+    * `SymfonyCasts : tutoriel sur les environnements et les fichiers de configuration <https://symfonycasts.com/screencast/symfony-fundamentals/environment-config-files>`_ ;
 
-    * `SymfonyCasts Environment Variables tutorial
-      <https://symfonycasts.com/screencast/symfony-fundamentals/environment-variables>`_;
+    * `SymfonyCasts : tutoriel sur les variables d'environnement <https://symfonycasts.com/screencast/symfony-fundamentals/environment-variables>`_ ;
 
-    * `SymfonyCasts Web Debug Toolbar and Profiler tutorial
-      <https://symfonycasts.com/screencast/symfony/debug-toolbar-profiler>`_;
+    * `SymfonyCasts : tutoriel sur la Web Debug Toolbar et le Profiler <https://symfonycasts.com/screencast/symfony/debug-toolbar-profiler>`_ ;
 
-    * `Managing multiple .env files
-      <https://symfony.com/doc/current/configuration.html#managing-multiple-env-files>`_
-      in Symfony applications.
+    * `Gérer plusieurs fichiers .env <https://symfony.com/doc/current/configuration.html#managing-multiple-env-files>`_ dans les applications Symfony.
