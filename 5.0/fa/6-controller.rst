@@ -1,0 +1,255 @@
+ساخت یک کنترلر
+==========================
+
+.. index::
+    single: Controller
+    single: Routing;Route
+
+پروژه‌ی guestbook در حال حاضر بر روی سرور عمل‌آوری در حال اجرا است، اما ما کمی تقلب کردیم. این پروژه هنوز هیچ صفحه‌ی وبی ندارد و صفحه‌ی اصلی، خطای کسل‌کننده‌ی 404 را نشان می‌دهد. بیایید درستش کنیم.
+
+زمانی که یک درخواست HTTP می‌آید، همانند صفحه‌ی اصلی (``http://localhost:8000/``) ، سیمفونی تلاش می‌کند تا *راهی (route)* را که با *مسیر درخواستی (request path)* (دراینجا ``/``) تطابق دارد، پیدا کند. *راه (route)*، یک اتصال بین مسیر درخواستی و *PHP callable* است، یک تابع که *پاسخ* HTTP را برای آن درخواست می‌سازد.
+
+این توابعِ قابل فراخوانی، «کنترلرها» نامیده می‌شوند.در سیمفونی، اکثر کنترلرها به صورت کلاس‌های PHP پیاده‌سازی می‌شوند. شما می‌توانید چنین کلاسی را به صورت دستی بسازید اما چون ما علاقه داریم که به سرعت پیش برویم، بیایید ببینیم که سمفونی چگونه می‌تواند به ما کمک کند.
+
+تنبلی با باندلِ Maker
+----------------------------------
+
+.. index::
+    single: Components;Maker Bundle
+    single: Maker Bundle
+
+برای تولید بدون زحمت کنترلرها، می‌توانیم از بسته‌ی ``symfony/maker-bundle`` استفاده کنیم.
+
+.. code-block:: bash
+
+    $ symfony composer req maker --dev
+
+از آنجایی که باندل maker فقط در محیط توسعه مفید است، برای جلوگیری از فعال‌شدن آن در محیط عمل‌آوری، اضافه‌کردن پرچم ``--dev`` را فراموش نکنید.
+
+باندل maker در تولید کلاس‌های مختلف زیادی به شما کمک می‌کند. ما در این کتاب، تمام مدت از آن استفاده خواهیم کرد. هر "generator" در یک فرمان (command) تعریف می‌شود و تمام فرامین، بخشی از فضای نام (namespace) فرمانِ``make`` هستند.
+
+.. index::
+    single: Command;list
+
+فرمان توکار ``list`` در کنسول سیمفونی، تمام فرامین موجود در یک  فضای نام را نمایش می‌دهد. از این فرمان برای کشف تمام generator‌های ارائه‌شده توسط باندل maker استفاده کنید:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony console list make
+
+انتخاب یک قالب پیکربندی
+-------------------------------------------
+
+قبل از ایجاد اولین کنترلر پروژه، لازم است در مورد قالب‌های پیکربندی‌ای (configuration formats) که می‌خواهیم استفاده کنیم، تصمیم بگیریم. سیمفونی به صورت آماده از YAML، XML، PHP و حاشیه‌نویسی (annotations) پشتیبانی می‌کند.
+
+برای *پیکربندی‌های مربوط به بسته‌ها*، *YAML* بهترین گزینه است. این قالب در پوشه‌ی ``config/`` استفاده شده است. اغلب هنگامی که یک بسته‌ی جدید نصب می‌کنید، recipe مربوط به آن بسته یک فایل جدید با پسوند ``.yaml`` به آن پوشه اضافه می‌کند.
+
+برای *پیکربندی مربوط به کدهای PHP*، *حاشیه‌نویسی‌ها (annotations)* بهتر هستند زیرا در کنار کد تعریف می‌شوند. بگذارید با یک مثال توضیح دهم. وقتی یک درخواست می‌آید، تعدای پیکربندی لازم است تا به سیمفونی بگوید که مسیر درخواستی باید توسط یک کنترلر مشخص (یک کلاس PHP) رسیدگی شود. هنگامی که از قالب‌های YAML، XML یا PHP استفاده می‌کنید، دو فایل درگیر می‌شوند (فایل پیکربندی و فایل کنترلر PHP). زمانی که از حاشیه‌نویسی استفاده می‌کنید، پیکربندی مستقیماً درون کلاس کنترلر انجام می‌شود.
+
+برای مدیریت حاشیه‌نویسی‌ها، نیاز داریم که یک وابستگی دیگر بیافزاییم:
+
+.. code-block:: bash
+
+    $ symfony composer req annotations
+
+شما ممکن است متعجب شوید که چگونه می‌توانید نام بسته‌ای که برای یک ویژگی لازم دارید را حدس بزنید؟ در اکثر اوقات لازم نیست که بدانید. در موارد زیادی، بسته‌ای که باید نصب شود، در پیغام‌های خطای سیمفونی وجود دارد. برای نمونه اجرای ``symfony make:controller`` بدون بسته‌ی ``annotations`` منجر به پیغام استثنایی شامل یک راهنمایی برای نصب بسته‌ی صحیح می‌گردد.
+
+تولید یک کنترلر
+----------------------------
+
+.. index::
+    single: Command;make:controller
+
+اولین *کنترلر* خود را از طریق فرمان ``make:controller`` ایجاد کنید:
+
+.. code-block:: bash
+
+    $ symfony console make:controller ConferenceController
+
+.. index::
+    single: Components;Routing
+    single: Annotations;@Route
+
+این فرمان یک کلاس ``ConferenceController`` در داخل پوشه‌ی ``src/Controller/`` ایجاد می‌کند. کلاس تولید‌شده شامل مقداری کد الگو است که آماده‌اند تا با اصلاحات جزئی کارکرد مورد نظر را فراهم کنند:
+
+.. code-block:: php
+    :caption: src/Controller/ConferenceController.php
+    :class: ignore
+    :emphasize-lines: 10
+
+    namespace App\Controller;
+
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\Response;
+    use Symfony\Component\Routing\Annotation\Route;
+
+    class ConferenceController extends AbstractController
+    {
+        /**
+         * @Route("/conference", name="conference")
+         */
+        public function index(): Response
+        {
+            return $this->render('conference/index.html.twig', [
+                'controller_name' => 'ConferenceController',
+            ]);
+        }
+    }
+
+حاشیه‌نویسیِ ``@Route("/conference", name="conference")`` چیزی است که باعث می‌شود متد ``index()`` یک کنترلر باشد (پیکربندی در کنار کدی است که پیکره‌بندی می‌شود).
+
+زمانی که ``/conference`` را در مرورگر وارد کنید، کنترلر اجرا شده و پاسخ (response) بازگردانده می‌شود.
+
+راه را تغییر دهید تا با صفحه‌ی اصلی مطابقت پیدا کند:
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 8
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
+     class ConferenceController extends AbstractController
+     {
+         /**
+    -     * @Route("/conference", name="conference")
+    +     * @Route("/", name="homepage")
+          */
+         public function index(): Response
+         {
+
+زمانی که می‌خواهیم به صفحه‌ی اصلی ارجاع دهیم، نامِ راه (route ``name``) می‌تواند مفید باشد. به جای هاردکد کردن مسیرِ ``/``، قصد داریم از نامِ راه استفاده کنیم.
+
+بیایید به جای صفحه‌ی renderشده‌ی پیشفرض، یک HTML ساده بازگردانیم:
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 18
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -13,8 +13,13 @@ class ConferenceController extends AbstractController
+          */
+         public function index(): Response
+         {
+    -        return $this->render('conference/index.html.twig', [
+    -            'controller_name' => 'ConferenceController',
+    -        ]);
+    +        return new Response(<<<EOF
+    +<html>
+    +    <body>
+    +        <img src="/images/under-construction.gif" />
+    +    </body>
+    +</html>
+    +EOF
+    +        );
+         }
+     }
+
+مرورگر را تازه‌سازی کنید:
+
+.. figure:: screenshots/under-construction-homepage.png
+    :alt: /
+    :align: center
+    :figclass: with-browser
+
+وظیفه‌ی اصلی یک کنترلر، بازگرداندن یک پاسخ (HTTP ``Response``) برای درخواست است.
+
+.. _easter-egg:
+
+اضافه کردن یک تخم‌مرغ عید پاک
+------------------------------------------------------
+
+برای اینکه نشان دهیم چگونه یک پاسخ می‌تواند از اطلاعات درخواست بهره بگیرد،  بیایید یک `Easter egg`_ کوچک اضافه کنیم. بیایید هر زمان که صفحه‌ی اصلی شامل یک رشته‌ی پرس‌وجو (query string) به صورت ``?hello=Fabien`` بود،  برای خوش‌آمدگویی به آن فرد، یک متن اضافه کنیم:
+
+.. code-block:: diff
+    :emphasize-lines: 16
+    :class: ignore
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -3,6 +3,7 @@
+     namespace App\Controller;
+
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    +use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\Routing\Annotation\Route;
+
+    @@ -11,11 +12,17 @@ class ConferenceController extends AbstractController
+         /**
+          * @Route("/", name="homepage")
+          */
+    -    public function index(): Response
+    +    public function index(Request $request): Response
+         {
+    +        $greet = '';
+    +        if ($name = $request->query->get('hello')) {
+    +            $greet = sprintf('<h1>Hello %s!</h1>', htmlspecialchars($name));
+    +        }
+    +
+             return new Response(<<<EOF
+     <html>
+         <body>
+    +        $greet
+             <img src="/images/under-construction.gif" />
+         </body>
+     </html>
+
+سیمفونی داده‌های درخواست را به صورت شیءِ ``Request`` ارائه می‌کند. هر زمان که سیمفونی یک آرگمانِ کنترلر (controller argument) با این type-hint ببیند، به صورت خودکار متوجه می‌شود که باید شیء درخواست را به آن بدهد. ما می‌توانیم از آن استفاده کنیم تا مقدار ``name`` را از رشته‌ی پرس‌وجو بگیریم و یک عنوان ``<h1>`` اضافه کنیم.
+
+سعی کنید ابتدا ``/`` و سپس ``/?hello=Fabien`` را در مرورگر وارد کنید تا تفاوت را ببینید.
+
+.. note::
+
+    به فراخوانی ``htmlspecialchars()`` برای جلوگیری از مشکلات XSS دقت کنید. این چیزی است که وقتی از یک موتور قالب‌گیری مناسب استفاده کنیم (در بخش‌های آتی)، به صورت خودکار  برای ما انجام می‌شود.
+
+ما همچنین می‌توانستیم نام را بخشی از URL قرار دهیم:
+
+.. code-block:: diff
+    :emphasize-lines: 8,11
+    :class: ignore
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -9,13 +9,19 @@ use Symfony\Component\Routing\Annotation\Route;
+     class ConferenceController extends AbstractController
+     {
+         /**
+    -     * @Route("/", name="homepage")
+    +     * @Route("/hello/{name}", name="homepage")
+          */
+    -    public function index(): Response
+    +    public function index(string $name = ''): Response
+         {
+    +        $greet = '';
+    +        if ($name) {
+    +            $greet = sprintf('<h1>Hello %s!</h1>', htmlspecialchars($name));
+    +        }
+    +
+             return new Response(<<<EOF
+     <html>
+         <body>
+    +        $greet
+             <img src="/images/under-construction.gif" />
+         </body>
+     </html>
+
+بخش ``{name}`` از راه، یک *پارامتر راه (route parameter)* پویا (dynamic) است که مشابه wildcard عمل می‌کند. حالا می‌توانید ابتدا ``/hello`` و سپس ``/hello/Fabien`` را در مرورگر وارد کنید تا همان نتایج قبلی را دریافت کنید. می‌توانید *مقدار* پارامتر ``{name}`` را با اضافه کردن یک آرگمان با نام یکسان *name* بگیرید. بنابراین، ``$name``.
+
+.. sidebar:: بیشتر بدانید
+
+    * سیستم `مسیریابی <https://symfony.com/doc/current/routing.html>`_ سیمفونی؛
+
+    * `آموزش تصویری راه‌ها، کنترلرها و صفحات در SymfonyCasts <https://symfonycasts.com/screencast/symfony/route-controller>`_؛
+
+    * `حاشیه‌نویسی‌ها <https://www.doctrine-project.org/projects/doctrine-annotations/en/1.6/annotations.html>`_ در PHP؛
+
+    * `کامپوننتِ HttpFoundation <https://symfony.com/doc/current/components/http_foundation.html>`_؛
+
+    * حمله‌های امنیتیِ `XSS (Cross-Site Scripting) <https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)>`؛
+
+    * `برگه‌های تقلب مسیریابی سیمفونی <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/routing_en_part1.pdf>`_.
+
+.. _`Easter egg`: https://en.wikipedia.org/wiki/Easter_egg_(media)#In_computing
