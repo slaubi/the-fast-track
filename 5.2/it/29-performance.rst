@@ -102,8 +102,7 @@ L'ultimo passo è quello di aggiungere il servizio agent di Blackfire allo stack
     +        env_file: .env.local
     +        ports: [8707]
 
-Per comunicare con il server, è necessario ottenere le credenziali del **server** (queste credenziali indicano dove si desidera memorizzare i profili e possono essere personalizzate per singolo progetto); si trovano in fondo alla pagina ``Settings/Credentials``
-`<https://blackfire.io/my/settings/credentials>`_. Memorizzarle in un file locale ``.env.local``:
+Per comunicare con il server, è necessario ottenere le credenziali del **server** (queste credenziali indicano dove si desidera memorizzare i profili e possono essere personalizzate per singolo progetto); si trovano in fondo alla pagina ``Settings/Credentials`` `<https://blackfire.io/my/settings/credentials>`_. Memorizzarle in un file locale ``.env.local``:
 
 .. code-block:: text
     :class: ignore

@@ -53,8 +53,7 @@ Per gestire le annotazioni dobbiamo aggiungere un'altra dipendenza:
 
     $ symfony composer req annotations
 
-Come fare a sapere il nome del pacchetto che ci serve installare per una determinata funzionalità? Il più delle volte non c'è bisogno di saperlo, infatti Symfony ci dirà il nome del pacchetto da installare attraverso dei messaggi d'errore.
-Lanciare il comando ``symfony make:controller`` senza aver installato il pacchetto ``annotations``, per esempio, avrebbe sollevato un'eccezione contenente un suggerimento riguardo a cosa installare.
+Come fare a sapere il nome del pacchetto che ci serve installare per una determinata funzionalità? Il più delle volte non c'è bisogno di saperlo, infatti Symfony ci dirà il nome del pacchetto da installare attraverso dei messaggi d'errore. Lanciare il comando ``symfony make:controller`` senza aver installato il pacchetto ``annotations``, per esempio, avrebbe sollevato un'eccezione contenente un suggerimento riguardo a cosa installare.
 
 Generare un controller
 ----------------------

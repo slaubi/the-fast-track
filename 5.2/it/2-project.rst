@@ -13,7 +13,7 @@ Ci siamo: il progetto serve per poter ricevere un feedback alle conferenze. In h
 Il *progetto* conterrà diverse *applicazioni* . Un'applicazione web tradizionale con un frontend HTML, una _API_ e una _SPA_ per cellulari. Può andare bene?
 
 Imparare è fare
----------------
+----------------
 
 Per imparare davvero qualcosa, bisogna farla. Leggere un libro su Symfony può essere bello, ma scrivere il codice al computer mentre si legge il libro è ancora meglio. Nello scrivere questo libro mi sono assicurato di fare tutto il necessario per permettere di seguire e ottenere gli stessi risultati che ho avuto quando ho creato l'applicazione inizialmente.
 
@@ -55,16 +55,16 @@ Per continuare con un approccio retrò, avrei potuto creare un CD contenente il 
     single: Project;Git Repository
     single: Git;clone
 
-Cloniamo il `repository del libro degli ospiti <https://github.com/the-fast-track/book-5.0-1>`_ da qualche parte nella nostra macchina locale:
+Cloniamo il `repository del libro degli ospiti <https://github.com/the-fast-track/book-5.2-2>`_ da qualche parte nella nostra macchina locale:
 
 .. code-block:: bash
     :class: ignore
 
-    $ symfony new --version=5.0-1 --book guestbook
+    $ symfony new --version=5.2-2 --book guestbook
 
 Questo repository contiene tutto il codice del libro.
 
-Si noti che stiamo usando ``symfony new`` invece di ``git clone``, in quanto questo non si limita a clonare il repository (ospitato su Github sotto l'organizzazione ``the-fast-track``: ``https://github.com/the-fast-track/book-5.0-1``), ma avvia anche il server web, i container, migra il database, carica le fixture... Dopo aver eseguito il comando, l'applicazione dovrebbe essere attiva e funzionante, pronta per essere utilizzata.
+Si noti che stiamo usando ``symfony new`` invece di ``git clone``, in quanto questo non si limita a clonare il repository (ospitato su Github sotto l'organizzazione ``the-fast-track``: ``https://github.com/the-fast-track/book-5.2-2``), ma avvia anche il server web, i container, migra il database, carica le fixture... Dopo aver eseguito il comando, l'applicazione dovrebbe essere attiva e funzionante, pronta per essere utilizzata.
 
 Posso garantire che il codice nel libro sia al 100% sincronizzato con quello nel repository (utilizzando l'URL esatto fornito precedentemente). Sincronizzare manualmente le modifiche fra libro e codice sorgente nel repository è quasi impossibile. Parlo per esperienza, in passato ci ho provato e ho fallito: è semplicemente impossibile, in particolar modo per la tipologia di libri che scrivo io, quelli in cui si parla di sviluppo di applicazioni web. Poiché ogni capitolo dipende da quelli precedenti, ogni modifica potrebbe avere conseguenze su tutti i capitoli successivi.
 

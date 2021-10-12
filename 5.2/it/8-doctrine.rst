@@ -440,7 +440,7 @@ Date un'occhiata al diff completo per le classi entity dopo aver aggiunto la rel
 Tutto ciò di cui si ha bisogno per gestire la relazione è stato generato. Una volta generato, il codice diventa dello sviluppatore, che è libero di personalizzarlo come preferisce.
 
 Aggiungere altre proprietà
---------------------------
+---------------------------
 
 .. index::
     single: Command;make:entity

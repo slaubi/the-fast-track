@@ -314,8 +314,7 @@ Invece di creare manualmente i file di traduzione, possiamo utilizzare il comand
 
     $ symfony console translation:update fr --force --domain=messages --sort=asc
 
-Questo comando genera un file di traduzione (col parametro ``--force``) per la lingua ``fr`` e il contesto ``messages``. Il contesto ``messages`` contiene tutti i messaggi dell'applicazione
-escludendo quelli provenienti da Symfony stesso come gli errori di validazione o di sicurezza.
+Questo comando genera un file di traduzione (col parametro ``--force``) per la lingua ``fr`` e il contesto ``messages``. Il contesto ``messages`` contiene tutti i messaggi dell'applicazione escludendo quelli provenienti da Symfony stesso come gli errori di validazione o di sicurezza.
 
 Modificare il file ``translations/messages+intl-icu.fr.xlf`` e tradurre i messaggi in francese. Non parli francese? Lascia che ti aiuti:
 

@@ -36,7 +36,17 @@ Ma perché mai dovremmo desiderare una documentazione non inglese in un mondo te
 
 Come potete immaginare, tradurre più di 300 pagine è un lavoro enorme e voglio ringraziare tutte le persone che hanno contribuito a tradurre questo libro:
 
-TRANSLATOR_LIST
+* Massimiliano Arione
+* Samuele Lilli
+* Raffaele Carelle
+* Andrea Giannantonio
+* Emanuele Panzeri
+* Giovanni Lenoci
+* Nicola Saliu
+* Mark "debo" De Bortoli
+* Andrea Giuseppe
+* Davide Borsatto
+* Patrick Luca Fazzi
 
 Aziende sostenitrici
 --------------------

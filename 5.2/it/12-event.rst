@@ -141,7 +141,7 @@ Ora, è possibile aggiungere tutti i controller che si desidera: la variabile ``
     Parleremo di un'alternativa molto migliore dal punto di vista delle prestazioni in uno dei prossimi passi.
 
 Ordinamento delle conferenze per anno e città
----------------------------------------------
+----------------------------------------------
 
 Ordinare l'elenco delle conferenze per anno può facilitare la navigazione. Potremmo creare un metodo personalizzato per recuperare e ordinare tutte le conferenze. Optiamo invece per ridefinire l'implementazione predefinita del metodo ``findAll()``,  per assicurarci che l'ordinamento si applichi ovunque:
 

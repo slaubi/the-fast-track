@@ -4,10 +4,9 @@ Risoluzione dei problemi
 Impostare un progetto significa, tra le altre cose, avere gli strumenti corretti per il debug dei problemi.
 
 Installare più dipendenze
--------------------------
+--------------------------
 
-Ricordiamoci che il progetto è stato creato con pochissime dipendenze. Nessuno strumento di templating. Nessuno strumento per il debug. Nessun sistema di log. L'idea è quella di aggiungere più dipendenze ogni qualvolta ne avremo bisogno.
-Perché dovremmo avere come dipendenza uno strumento di templating se stessimo sviluppando delle API HTTP oppure degli strumenti utilizzabili via CLI?
+Ricordiamoci che il progetto è stato creato con pochissime dipendenze. Nessuno strumento di templating. Nessuno strumento per il debug. Nessun sistema di log. L'idea è quella di aggiungere più dipendenze ogni qualvolta ne avremo bisogno. Perché dovremmo avere come dipendenza uno strumento di templating se stessimo sviluppando delle API HTTP oppure degli strumenti utilizzabili via CLI?
 
 Come possiamo aggiungere più dipendenze? Grazie a Composer. Oltre ai "canonici" pacchetti di Composer, lavoreremo con due tipi di pacchetti "speciali":
 
@@ -43,12 +42,9 @@ Comprendere gli ambienti di Symfony
 .. index::
     single: Symfony Environments
 
-Notato il parametro ``--dev`` sul comando ``composer req``?
-Poiché il Profiler di Symfony è utile solo durante la fase di sviluppo, vogliamo evitare che questo venga installato in produzione.
+Notato il parametro ``--dev`` sul comando ``composer req``? Poiché il Profiler di Symfony è utile solo durante la fase di sviluppo, vogliamo evitare che questo venga installato in produzione.
 
-Symfony supporta il concetto di *ambienti*. Per impostazione predefinita il supporto integrato ne prevede tre: ``dev``, ``prod`` e ``test``.
-È comunque possibile aggiungerne quanti ne vogliamo.
-Tutti gli ambienti condividono lo stesso codice, ma rappresentano *configurazioni* differenti.
+Symfony supporta il concetto di *ambienti*. Per impostazione predefinita il supporto integrato ne prevede tre: ``dev``, ``prod`` e ``test``. È comunque possibile aggiungerne quanti ne vogliamo. Tutti gli ambienti condividono lo stesso codice, ma rappresentano *configurazioni* differenti.
 
 Per esempio, tutti gli strumenti di debug sono abilitati nell'ambiente ``dev``. Nell'ambiente ``prod``, l'applicazione è ottimizzata per le prestazioni.
 
@@ -71,9 +67,7 @@ Gestire le configurazioni d'ambiente
 
     $ export APP_ENV=dev
 
-Utilizzare variabili di ambiente reali è il modo migliore per impostare i valori come ``APP_ENV`` sui server di produzione.
-Dover definire molte variabili d'ambiente sulla macchina di sviluppo, però, può essere poco pratico.
-Le possiamo dunque definire in un file ``.env``.
+Utilizzare variabili di ambiente reali è il modo migliore per impostare i valori come ``APP_ENV`` sui server di produzione. Dover definire molte variabili d'ambiente sulla macchina di sviluppo, però, può essere poco pratico. Le possiamo dunque definire in un file ``.env``.
 
 Un file ``.env`` è stato generato automaticamente per noi quando il progetto è stato creato:
 
@@ -128,11 +122,9 @@ Se aggiorniamo la homepage, ora dovremmo vedere una barra degli strumenti nella 
     :align: center
     :figclass: with-browser
 
-La prima cosa che possiamo notare è il **404** in rosso. Ricordiamoci che questa pagina è una pagina di cortesia poiché non abbiamo ancora definito una homepage. Anche se la pagina di default che vi da il benvenuto è bella, rimane sempre una pagina di errore, quindi il codice di status HTTP è 404 e non 200.
-Grazie alla barra degli strumenti di debug abbiamo immediatamente questa informazione.
+La prima cosa che possiamo notare è il **404** in rosso. Ricordiamoci che questa pagina è una pagina di cortesia poiché non abbiamo ancora definito una homepage. Anche se la pagina di default che vi da il benvenuto è bella, rimane sempre una pagina di errore, quindi il codice di status HTTP è 404 e non 200. Grazie alla barra degli strumenti di debug abbiamo immediatamente questa informazione.
 
-Cliccando sul piccolo punto esclamativo, si potrà leggere il "vero" messaggio d'eccezione facente parte dei log nel Profiler di Symfony.
-Se volessimo vedere lo stack trace, potremmo cliccare sul link "Exception" nel menù di sinistra.
+Cliccando sul piccolo punto esclamativo, si potrà leggere il "vero" messaggio d'eccezione facente parte dei log nel Profiler di Symfony. Se volessimo vedere lo stack trace, potremmo cliccare sul link "Exception" nel menù di sinistra.
 
 Ogni volta che ci sarà un problema con il codice, vedremo una pagina d'eccezione come la seguente. Ci darà tutto il necessario per capire il problema e da dove provenga:
 
