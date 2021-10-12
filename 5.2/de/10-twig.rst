@@ -1,5 +1,5 @@
 Die Benutzeroberfläche erstellen
-================================
+=================================
 
 .. index::
     single: Twig
@@ -37,7 +37,7 @@ Twig ist nun Teil der Dependencies unseres Hauptprojektes in der ``composer.json
          "require-dev": {
 
 Twig für Templates verwenden
-----------------------------
+-----------------------------
 
 .. index::
     single: Twig;Layout
@@ -145,7 +145,7 @@ Im Controller-Code rendert die ``render()``-Methode das Template und übergibt e
 Ein Controller ist eine Standard-PHP-Klasse. Wir müssen die ``AbstractController``-Klasse nicht einmal erweitern, wenn wir unsere Dependencies explizit verwenden möchten. Du könntest daher die Vererbung von ``AbstractController`` entfernen (aber tu es nicht, da wir die schönen Abkürzungen, die der ``AbstractController`` bietet, in zukünftigen Schritten verwenden werden).
 
 Die Seite für eine Konferenz erstellen
---------------------------------------
+---------------------------------------
 
 Jede Konferenz sollte eine eigene Seite haben, auf der die Kommentare angezeigt werden. Das Hinzufügen einer neuen Seite besteht aus der Erstellung eines Controllers, der Definition einer Route für diesen und der Erstellung des zugehörigen Templates.
 

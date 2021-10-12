@@ -4,7 +4,7 @@ Vorstellung des Projekts
 Wir müssen ein Projekt finden, an dem wir arbeiten können. Es ist eine ziemliche Herausforderung, da wir ein Projekt finden müssen, das groß genug ist, um Symfony vollständig abzudecken, aber gleichzeitig auch klein genug sein sollte; ich möchte nicht, dass du dich langweilst während du ähnliche Funktionen mehrfach implementierst.
 
 Enthüllung des Projekts
------------------------
+------------------------
 
 Da das Buch während der SymfonyCon Amsterdam veröffentlicht werden muss, wäre es schön, wenn das Projekt irgendwie mit Symfony und Konferenzen zu tun hat. Wie wäre es mit einem `Gästebuch <https://en.wikipedia.org/wiki/Guestbook>`_? Ein `Livre d'or <https://fr.wikipedia.org/wiki/Livre_d%27or>`_, wie wir auf Französisch sagen. Ich mag das altmodische und veraltete Gefühl, ein Gästebuch im Jahr 2019 zu entwickeln!
 
@@ -20,7 +20,7 @@ Lernen durch Handeln. Punkt. Ein Buch über Symfony zu lesen ist schön. Noch be
 Das Buch enthält allen Code, den Du schreiben, und alle Befehle, die Du ausführen musst, um das Endergebnis zu erhalten. Es fehlt kein Code. Alle Befehle stehen in diesem Buch. Dies ist möglich, da moderne Symfony-Anwendungen nur sehr wenig Boilerplate-Code haben. Der größte Teil des Codes, den wir zusammen schreiben werden betrifft die *Geschäftslogik* des Projekts. Alles andere ist weitgehend automatisiert oder wird für uns automatisch generiert.
 
 Blick auf das endgültige Infrastrukturdiagramm
-----------------------------------------------
+-----------------------------------------------
 
 Auch wenn die Projektidee einfach erscheint, werden wir kein "Hello World"-ähnliches Projekt bauen. Außerdem werden wir nicht nur PHP und eine Datenbank verwenden.
 
@@ -55,16 +55,16 @@ Um auf altmodische Art und Weise fortzufahren, hätte ich einfach eine CD mit de
     single: Project;Git Repository
     single: Git;clone
 
-Klone das `Gästebuch-Repository <https://github.com/the-fast-track/book-5.0-1>`_ irgendwo auf Deinem lokalen Rechner:
+Klone das `Gästebuch-Repository <https://github.com/the-fast-track/book-5.2-2>`_ irgendwo auf Deinem lokalen Rechner:
 
 .. code-block:: bash
     :class: ignore
 
-    $ symfony new --version=5.0-1 --book guestbook
+    $ symfony new --version=5.2-2 --book guestbook
 
 Dieses Repository enthält den gesamten Code aus diesem Buch.
 
-Beachte, dass wir anstelle von ``git clone`` den Befehl ``symfony new`` verwenden, weil der Befehl mehr macht als einfach nur das Repository zu klonen (gehostet auf Github unter der ``the-fast-track`` Organisation: ``https://github.com/the-fast-track/book-5.0-1``). Er startet auch den Webserver, die Container, migriert die Datenbank und lädt die Fixtures. Nach dem Ausführen des Befehls sollte die Website betriebs- und einsatzbereit sein.
+Beachte, dass wir anstelle von ``git clone`` den Befehl ``symfony new`` verwenden, weil der Befehl mehr macht als einfach nur das Repository zu klonen (gehostet auf Github unter der ``the-fast-track`` Organisation: ``https://github.com/the-fast-track/book-5.2-2``). Er startet auch den Webserver, die Container, migriert die Datenbank und lädt die Fixtures. Nach dem Ausführen des Befehls sollte die Website betriebs- und einsatzbereit sein.
 
 Der Code ist zu 100% mit dem Code im Buch synchronisiert (verwende dafür die genaue Repository-URL, die oben aufgeführt ist). Der Versuch, Änderungen aus dem Buch manuell mit dem Quellcode im Repository zu synchronisieren, ist fast unmöglich. Ich habe es in der Vergangenheit versucht und dabei versagt. Es ist einfach unmöglich. Besonders für Bücher wie die, die ich schreibe: Solche, die Dir eine Geschichte über die Entwicklung einer Website erzählen. Da jedes Kapitel von den vorherigen abhängt, kann eine Änderung in allen folgenden Kapiteln Konsequenzen haben.
 

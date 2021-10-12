@@ -1,5 +1,5 @@
 Prüfe Deine Arbeitsumgebung
-===========================
+============================
 
 Bevor wir mit der Arbeit an dem Projekt beginnen, müssen wir sicherstellen, dass jede*r eine gute Arbeitsumgebung hat – das ist sehr wichtig. Die Entwicklungswerkzeuge, die uns heute zur Verfügung stehen, unterscheiden sich stark von denen, die wir vor 10 Jahren hatten. Sie haben sich sehr weiterentwickelt, zum Besseren. Es wäre eine Schande, sie nicht zu nutzen. Gute Werkzeuge können Dich weit bringen.
 

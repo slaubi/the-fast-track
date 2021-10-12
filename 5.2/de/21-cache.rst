@@ -9,7 +9,7 @@ Performance durch Caching
 Mit wachsender Popularität können Performance-Probleme einhergehen. Einige typische Beispiele: fehlende Datenbankindizes oder tonnenweise SQL-Abfragen pro Seite. Mit einer leeren Datenbank wirst du wirst keine Probleme haben, aber bei mehr Traffic und wachsenden Datenmengen könnten irgendwann Performance-Probleme auftreten.
 
 HTTP-Cache-Header hinzufügen
-----------------------------
+-----------------------------
 
 .. index::
     single: HTTP Cache;HTTP Cache Headers
@@ -388,7 +388,7 @@ Der ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL``-Unterbefehl gibt di
     Der Controller hat keinen Routennamen, da er im Code nie referenziert werden wird.
 
 Ähnliche Routen mit einem Präfix gruppieren
--------------------------------------------
+---------------------------------------------
 
 .. index::
     single: Annotations;Route
@@ -600,7 +600,7 @@ Erstelle zum Abschluss eine ``config.vcl``-Datei zur Konfiguration von Varnish:
     }
 
 ESI-Unterstützung für Varnish aktivieren
-----------------------------------------
+------------------------------------------
 
 Die ESI-Unterstützung für Varnish sollte für jeden Request explizit aktiviert werden. Um es universell zu machen verwendet Symfony die standardisierten ``Surrogate-Capability``- und ``Surrogate-Control``-Header, um die ESI-Unterstützung auszuhandeln:
 

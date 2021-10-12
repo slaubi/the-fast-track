@@ -8,7 +8,7 @@ Beim Testen geht es nicht nur um Unit- oder Funktionale Tests, sondern auch um d
 Wir werden der Einfachheit halber (und zur Vermeidung von Wiederholungen) die nächsten Schritte auf dem Git Master-Branch fortführen, aber mal sehen, wie das besser funktionieren könnte.
 
 Einen Git-Workflow einführen
-----------------------------
+-----------------------------
 
 Ein möglicher Workflow ist die Erstellung eines Branches pro neuem Feature oder Bugfix. Das ist einfach und effizient.
 
@@ -266,7 +266,7 @@ Und deploye:
 Beim Deployment werden nur die Code- und Infrastrukturänderungen in die SymfonyCloud übertragen; die Daten werden in keiner Weise beeinträchtigt.
 
 Aufräumen
----------
+----------
 
 .. index::
     single: Symfony CLI;env:delete

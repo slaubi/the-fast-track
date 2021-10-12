@@ -1,5 +1,5 @@
 RabbitMQ als Message-Händler nutzen
-===================================
+====================================
 
 .. index::
     single: RabbitMQ
@@ -27,7 +27,7 @@ Um RabbitMQ anstelle von PostgreSQL als Message-Händler zu nutzen:
                          use_notify: true
 
 Füge RabbitMQ zum Docker-Stack hinzu
-------------------------------------
+-------------------------------------
 
 .. index::
     single: Docker;RabbitMQ
@@ -64,7 +64,7 @@ Um Docker Compose zu zwingen den RabbitMQ-Container zu berücksichtigen, stoppe 
     $ sleep 10
 
 Die RabbitMQ Web-Verwaltungs-Oberfläche erkunden
-------------------------------------------------
+-------------------------------------------------
 
 .. index::
     single: Symfony CLI;open:local:rabbitmq

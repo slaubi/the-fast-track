@@ -1,5 +1,5 @@
 Einführung einer Methodik
-=========================
+==========================
 
 Beim Unterrichten geht es darum, das Gleiche immer wieder zu wiederholen. Das werde ich nicht tun, versprochen! Am Ende jedes Schrittes solltest Du ein Tänzchen hinlegen und Deine Arbeit speichern. Das ist wie ``Ctrl+S``, jedoch für eine Website.
 

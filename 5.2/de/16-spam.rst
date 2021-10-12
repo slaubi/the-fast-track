@@ -177,7 +177,7 @@ Für die Secrets in der Dev-Environment kannst Du selber entscheiden, ob Du den 
 Secrets können auch überschrieben werden, indem eine gleichnamige Einvironment-Variable gesetzt wird.
 
 Kommentare auf Spam überprüfen
-------------------------------
+--------------------------------
 
 Eine einfache Möglichkeit, nach Spam zu suchen, sobald ein neuer Kommentar abgegeben wird, besteht darin, den Spam-Checker aufzurufen, bevor die Daten in der Datenbank gespeichert werden:
 

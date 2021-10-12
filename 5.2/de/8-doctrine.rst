@@ -24,7 +24,7 @@ Woher kennt Doctrine die Datenbankverbindung? Das Doctrine-Recipe hat eine Konfi
 Fast alle installierten Pakete haben eine Konfigurationsdatei im ``config/packages/``-Verzeichnis. Normalerweise sind die Standardeinstellungen so gewählt, dass sie für die meisten Anwendungen funktionieren.
 
 Konventionen für Symfony-Environment-Variablen verstehen
---------------------------------------------------------
+---------------------------------------------------------
 
 .. index::
     single: Environment Variables
@@ -59,7 +59,7 @@ Erinnerst Du dich an den ``database``-*Servicenamen*, der in den Konfigurationen
     Datenbanken sind nicht der einzige Service, der von den Symfony-Konventionen profitiert. Das Gleiche gilt z. B. für Mailer (über die Environment-Variable ``MAILER_DSN``).
 
 Den Standardwert DATABASE_URL in .env ändern
---------------------------------------------
+---------------------------------------------
 
 Wir werden die ``.env``-Datei dennoch ändern, um die Standard-``DATABASE_URL`` für die Verwendung von PostgreSQL festzulegen:
 
@@ -241,7 +241,7 @@ Gebe die folgenden Antworten ein:
 * ``createdAt``, ``datetime``, ``no``.
 
 Entities miteinander verknüpfen
--------------------------------
+--------------------------------
 
 .. index::
     single: Command;make:entity
@@ -440,7 +440,7 @@ Wirf einen Blick auf das vollständige Diff für die Entity-Klassen, nachdem Du 
 Alles, was Du für die Verwaltung von relations benötigst, wurde für Dich generiert. Sobald der Code generiert ist, gehört er Dir; zöger nicht, ihn nach Deinen Wünschen anzupassen.
 
 Weitere Properties (Spalten) hinzufügen
----------------------------------------
+----------------------------------------
 
 .. index::
     single: Command;make:entity

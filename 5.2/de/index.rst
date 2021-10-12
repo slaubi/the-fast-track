@@ -1,5 +1,5 @@
 Symfony 5: Auf der Überholspur
-==============================
+===============================
 
 .. toctree::
     :maxdepth: 1

@@ -93,7 +93,7 @@ Zeit, eine Migration zu generieren und die Datenbank zu migrieren:
     $ symfony console doctrine:migrations:migrate -n
 
 Ein Passwort für die*en Admin-Benutzer*in generieren
-----------------------------------------------------
+-----------------------------------------------------
 
 .. index::
     single: Security;Encoding Passwords
@@ -223,7 +223,7 @@ Wie von der Befehlsausgabe angedeutet, müssen wir die Route in der ``onAuthenti
         $ symfony console debug:router
 
 Berechtigungsregeln für die Zugriffskontrolle hinzufügen
---------------------------------------------------------
+----------------------------------------------------------
 
 .. index::
     single: Security;Authorization
@@ -247,7 +247,7 @@ Ein Sicherheitssystem besteht aus zwei Teilen: *Authentifizierung* und *Autorisi
 Die ``access_control``-Regeln schränken den Zugriff durch reguläre Ausdrücke ein. Beim Versuch, auf eine URL zuzugreifen, die mit ``/admin`` beginnt, überprüft das Sicherheitssystem, dass die angemeldeten Benutzer*innen die ``ROLE_ADMIN``-Rolle besitzen.
 
 Über das Login-Formular authentifizieren
-----------------------------------------
+-----------------------------------------
 
 Wenn Du versuchst, auf das Admin-Backend zuzugreifen, solltest Du nun auf die Login-Seite weitergeleitet und aufgefordert werden, einen Usernamen und ein Passwort einzugeben:
 

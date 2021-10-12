@@ -341,7 +341,7 @@ Anstatt vom Spam Checker abhängig zu sein, senden wir nun eine Message zum Bus.
 Wir haben etwas Unerwartetes erreicht. Wir haben unseren Controller vom Spam Checker entkoppelt und die Logik in eine neue Klasse, den Handler, verschoben. Es ist ein perfekter Anwendungsfall für den Bus. Teste den Code, er funktioniert. Alles wird noch synchron gemacht, aber der Code ist wahrscheinlich schon "besser".
 
 Die angezeigten Kommentare einschränken
----------------------------------------
+----------------------------------------
 
 Aktualisiere die Anzeigelogik, um zu vermeiden, dass unveröffentlichte Kommentare im Frontend erscheinen:
 
@@ -457,7 +457,7 @@ Die Aktivität des Message Consumers wird geloggt, aber Du erhältst sofortiges 
 Drücke ``Ctrl+C``, um den Consumer zu stoppen.
 
 Worker im Hintergrund ausführen
--------------------------------
+--------------------------------
 
 Anstatt den Consumer jedes Mal zu starten, wenn wir einen Kommentar posten und ihn sofort danach stoppen, wollen wir ihn kontinuierlich ausführen, ohne zu viele Terminalfenster oder -tabs geöffnet zu haben.
 
@@ -562,7 +562,7 @@ Wenn beim Verarbeiten einer Message ein Problem auftritt, wird der Consumer es d
     $ symfony console messenger:failed:retry
 
 Worker in der SymfonyCloud ausführen
-------------------------------------
+-------------------------------------
 
 .. index::
     single: SymfonyCloud;Workers

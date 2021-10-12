@@ -121,7 +121,7 @@ Die letzte Zeile registriert die ``App()``-Funktion auf dem ``#app``-Element der
 Jetzt ist alles bereit!
 
 Eine SPA im Browser ausführen
------------------------------
+------------------------------
 
 .. index::
     single: Symfony CLI;server:start
@@ -161,7 +161,7 @@ Und schau Dir unsere Hallo-Welt SPA an:
     :figclass: with-browser spa
 
 Einen Router zur Behandlung von Zuständen hinzufügen
-----------------------------------------------------
+------------------------------------------------------
 
 Die SPA ist derzeit nicht in der Lage, verschiedene Seiten zu verarbeiten. Um mehrere Seiten zu implementieren, benötigen wir einen Router, wie bei Symfony. Wir werden den **preact-router** verwenden. Er nimmt eine URL als Input und ordnet sie einer Preact-Komponente zu, die angezeigt werden soll.
 
@@ -611,7 +611,7 @@ Bearbeite die ``.symfony/routes.yaml``-Datei, um die ``spa.``-Subdomain an die i
      "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 CORS für die SPA konfigurieren
-------------------------------
+-------------------------------
 
 .. index::
     single: CORS

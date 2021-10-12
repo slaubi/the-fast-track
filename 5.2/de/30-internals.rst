@@ -138,7 +138,7 @@ Wo kommt sie her? SymfonyCloud führt einige Optimierungen bei der Bereitstellun
 Blackfire ist ein sehr mächtiges Tool, das zu verstehen hilft, wie Code von PHP ausgeführt wird. Die Verbesserung der Performance ist nur eine Möglichkeit, einen Profiler zu nutzen.
 
 Einen Schritt-für-Schritt Debugger (Step Debugger) mit Xdebug nutzen
---------------------------------------------------------------------
+---------------------------------------------------------------------
 
 .. index::
     single: Xdebug

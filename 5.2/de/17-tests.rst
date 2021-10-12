@@ -129,7 +129,7 @@ Lasst uns Tests für den happy path hinzufügen:
 Der PHPUnit Data Provider ermöglicht es uns, die gleiche Testlogik für mehrere Testfälle wiederzuverwenden.
 
 Funktionale Tests für Controller schreiben
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Test;Functional Tests
@@ -544,7 +544,7 @@ Wann immer Du die Tests ausführen möchtest, verwende ``make tests``:
     $ make tests
 
 Die Datenbank nach jedem Test zurücksetzen
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: PHPUnit;Performance
@@ -662,7 +662,7 @@ Die Tests sollten wieder grün sein:
     $ make tests
 
 Einen echten Browser für Funktionale Tests verwenden
-----------------------------------------------------
+-----------------------------------------------------
 
 .. index::
     single: Test;Panther
@@ -702,7 +702,7 @@ Du kannst dann Tests schreiben, die einen echten Google Chrome-Browser verwenden
 Die Environment-Variable ``SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` enthält die URL des lokalen Webservers.
 
 Funktionale "Black Box"-Tests mit Blackfire durchführen
--------------------------------------------------------
+--------------------------------------------------------
 
 Eine weitere Möglichkeit, Funktionale Tests durchzuführen, ist die Verwendung des `Blackfire-Players <https://blackfire.io/player>`_. Zusätzlich zu dem, was Du mit Funktionalen Tests machen kannst, kann der Blackfire-Player auch Performance Tests durchführen.
 

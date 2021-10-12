@@ -21,8 +21,7 @@ Das Buch beschreibt die Erstellung einer Anwendung, von der Idee bis zum Produkt
 
 Als ich anfing, an diesem Buch zu arbeiten, war das allererste, was ich tat, die endgültige Anwendung zu programmieren. Ich war beeindruckt von dem Ergebnis und der Schnelligkeit, die ich beim Hinzufügen von Features mit sehr wenig Aufwand beibehalten konnte. Das liegt an der Dokumentation und der Tatsache, dass Symfony 5 weiß, wie man den Weg frei macht. Ich bin sicher, dass Symfony noch in vielerlei Hinsicht verbessert werden kann (und ich habe mir einige Notizen für mögliche Verbesserungen gemacht), aber die Developer Experience ist viel besser als noch vor einigen Jahren. Ich möchte der Welt davon erzählen.
 
-Das Buch ist in Schritte unterteilt und jeder dieser Schritte in weitere Teilschritte. Insgesamt sollten sie schnell zu lesen sein.
-Was aber noch wichtiger ist, ich möchte Dich einladen, beim Lesen mitzuprogrammieren. Schreibe den Code, teste, committe und optimiere ihn.
+Das Buch ist in Schritte unterteilt und jeder dieser Schritte in weitere Teilschritte. Insgesamt sollten sie schnell zu lesen sein. Was aber noch wichtiger ist, ich möchte Dich einladen, beim Lesen mitzuprogrammieren. Schreibe den Code, teste, committe und optimiere ihn.
 
 Zu guter Letzt, zögere nicht um Hilfe zu bitten, wenn Du nicht weiterkommst. Es kann passieren, dass Du einen Sonderfall antriffst oder einen schwer zu findenden und behebenden Tippfehler in Deinem Code hast. Stelle Fragen – Wir haben eine wunderbare Community auf `Slack`_ und `Stack Overflow`_.
 

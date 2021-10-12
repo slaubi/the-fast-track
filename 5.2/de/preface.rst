@@ -24,7 +24,7 @@ Ich möchte all den großartigen Leuten aufrichtig danken, die viel Zeit damit v
 * Alexandre Salomé
 
 Übersetzer*innen
-----------------
+-----------------
 
 Die offizielle Symfony-Dokumentation ist nur auf Englisch verfügbar. Wir hatten in der Vergangenheit einige Übersetzungen, aber wir haben beschlossen, sie nicht mehr zur Verfügung zu stellen, da sie immer veraltet waren. Und veraltete Dokumentation ist wahrscheinlich schlechter als gar keine Dokumentation.
 
@@ -36,10 +36,19 @@ Aber warum sollten wir jemals nicht-englische Dokumentation in einer technischen
 
 Wie Du Dir vorstellen kannst, ist das Übersetzen von mehr als 300 Seiten eine enorme Arbeit, und ich möchte allen danken, die bei der Übersetzung dieses Buches geholfen haben:
 
-TRANSLATOR_LIST
+* slaubi
+* Nick Steinwand
+* Nabil Saleh
+* Pablo Schläpfer
+* Christopher Hertel
+* Daniel Sentker
+* Eduard Morcinek
+* Justus Klein
+* Sebastian Neubert
+* Maxim Maslov
 
 Unterstützer-Firmen
--------------------
+--------------------
 
 .. index::
     Backers;Companies

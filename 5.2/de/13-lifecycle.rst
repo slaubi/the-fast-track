@@ -48,7 +48,7 @@ Wenn das Verhalten nicht von einem Service abhängt und nur auf eine bestimmte E
 Das ``@ORM\PrePersist``-*Event* wird ausgelöst, wenn das Objekt zum ersten Mal in der Datenbank gespeichert wird. In diesem Fall wird die ``setCreatedAtValue()``-Methode aufgerufen und das aktuelle Datum und die aktuelle Uhrzeit für den Wert der ``createdAt``-Property/Spalte verwendet.
 
 Slugs zu Konferenzen hinzufügen
--------------------------------
+--------------------------------
 
 Die URLs für Konferenzen sind nicht aussagekräftig: ``/conference/1``. Noch wichtiger ist, dass sie von einem Implementierungsdetail abhängen (der Primärschlüssel der Datenbank wird veröffentlicht).
 

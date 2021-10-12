@@ -12,7 +12,7 @@ Wenn ein HTTP-Request (HTTP-Anfrage) eintrifft, wie z. B. für die Homepage (``h
 Diese Callables werden als "Controller" bezeichnet. In Symfony sind die meisten Controller als PHP-Klassen implementiert. Du kannst eine solche Klasse manuell erstellen, aber da wir gerne schnell sind, wollen wir sehen, wie Symfony uns helfen kann.
 
 Faul sein – mit dem Maker Bundle
---------------------------------
+----------------------------------
 
 .. index::
     single: Components;Maker Bundle
@@ -39,7 +39,7 @@ Der in der Symfony-Console eingebaute ``list``-Befehl listet alle Befehle auf, d
     $ symfony console list make
 
 Ein Konfigurationsformat auswählen
-----------------------------------
+-----------------------------------
 
 Bevor wir den ersten Controller des Projekts erstellen, müssen wir uns entscheiden, welches Konfigurationsformat wir verwenden wollen. Symfony unterstützt YAML, XML, PHP und Annotations nativ.
 
@@ -157,7 +157,7 @@ Die Hauptaufgabe eines Controllers besteht darin, eine HTTP-``Response`` für de
 .. _easter-egg:
 
 Ein Easter egg hinzufügen
--------------------------
+--------------------------
 
 Um zu zeigen, wie eine Response Informationen aus dem Request nutzen kann, fügen wir ein kleines `Easter egg`_ hinzu. Wann immer die Homepage einen Query String wie ``?hello=Fabien`` enthält, fügen wir einen Text hinzu, um die Person zu begrüßen:
 
@@ -193,8 +193,7 @@ Um zu zeigen, wie eine Response Informationen aus dem Request nutzen kann, füge
          </body>
      </html>
 
-Symfony stellt die Requestdaten über ein ``Request``-Objekt zur Verfügung. Wenn Symfony ein Controller-Argument mit diesem Type-Hint sieht, weiß es automatisch, dass es das ``Request``-Objekt
- übergeben soll. Wir können es verwenden, um das ``name``-Element aus dem Query-String zu holen und zu einem ``<h1>``-Titel hinzu zufügen.
+Symfony stellt die Requestdaten über ein ``Request``-Objekt zur Verfügung. Wenn Symfony ein Controller-Argument mit diesem Type-Hint sieht, weiß es automatisch, dass es das ``Request``-Objekt  übergeben soll. Wir können es verwenden, um das ``name``-Element aus dem Query-String zu holen und zu einem ``<h1>``-Titel hinzu zufügen.
 
 Versuche in einem Browser erst ``/`` und dann ``/?hello=Fabien`` aufzurufen, um den Unterschied zu sehen.
 

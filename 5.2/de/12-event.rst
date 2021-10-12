@@ -4,7 +4,7 @@ Mit Events arbeiten
 Dem aktuellen Layout fehlt eine Navigation, um zur Homepage zurückzukehren oder von einer Konferenz zur nächsten zu wechseln.
 
 Einen Website-Header hinzufügen
--------------------------------
+--------------------------------
 
 .. index::
     single: Twig;for

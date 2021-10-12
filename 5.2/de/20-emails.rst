@@ -15,7 +15,7 @@ Installiere zunächst die Symfony-Mailer-Komponente:
     $ symfony composer req mailer
 
 Eine E-Mail-Adresse für die Administrator*innen einrichten
-----------------------------------------------------------
+-----------------------------------------------------------
 
 Verwende einen Container-Parameter, um die Admin-E-Mail-Adresse zu speichern. Zu Demonstrationszwecken ermöglichen wir den Parameter über eine Environment-Variable zu setzen (dies sollte im "echten Leben" nicht benötigt werden). Ergänze in der Container-Konfiguration um eine ``bind``-Einstellung, um das Injizieren der E-Mail-Adresse für Services, welche die Admin-E-Mail-Adresse benötigen, zu erleichtern:
 
@@ -119,7 +119,7 @@ Um eine E-Mail zu senden, benötigen wir einen Absender (den ``From``/``Sender``
     +            sender: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
 
 Das E-Mail-Template für Benachrichtigungen erweitern
-----------------------------------------------------
+-----------------------------------------------------
 
 .. index::
     single: Twig;extends
@@ -195,7 +195,7 @@ Definiere explizit die zu verwendende Domain und das zu verwendende Schema:
 Die Environment-Variablen ``SYMFONY_DEFAULT_ROUTE_PORT`` und  ``SYMFONY_DEFAULT_ROUTE_HOST`` werden bei Verwendung der ``symfony``-CLI automatisch lokal gesetzt. In der SymfonyCloud werden sie anhand der Konfiguration bestimmt.
 
 Eine Route mit einem Controller verknüpfen
-------------------------------------------
+-------------------------------------------
 
 Die ``review_comment``-Route existiert noch nicht, lass uns dafür einen Admin-Controller erstellen:
 

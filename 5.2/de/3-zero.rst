@@ -58,7 +58,7 @@ Das ``vendor/`` Verzeichnis enthält alle von Composer installierten Pakete, ein
 Das ist alles, was Du im Moment wissen musst.
 
 Öffentliche Ressourcen erstellen
---------------------------------
+---------------------------------
 
 Alles, was unter ``public/`` liegt, ist über einen Browser zugänglich. Wenn Du beispielsweise Deine animierte GIF-Datei (Name ``under-construction.gif``) in ein neues ``public/images/`` Verzeichnis verschiebst, ist sie unter einer URL wie ``https://localhost/images/under-construction.gif`` erreichbar.
 
@@ -121,7 +121,7 @@ Zufrieden? Lasst uns unsere Arbeit committen:
     $ git commit -m'Add the under construction image'
 
 Ein Favicon hinzufügen
-----------------------
+-----------------------
 
 Um zu vermeiden, dass 404 HTTP-Fehler die Logs "zuspammen" wegen eines fehlenden Favicon, das von Browsern angefordert wird, fügen wir jetzt eins hinzu:
 

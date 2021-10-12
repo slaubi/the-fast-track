@@ -4,7 +4,7 @@ Fehlerbehebung
 Bei der Einrichtung eines Projekts geht es auch darum, die richtigen Werkzeuge zu haben, um Probleme zu beheben.
 
 Weitere Abhängigkeiten installieren
------------------------------------
+------------------------------------
 
 Denke daran, dass das Projekt mit sehr wenigen Abhängigkeiten (Dependencies) erstellt wurde. Keine Template-Engine, keine Debug-Tools, kein Log-System. Die Idee dahinter ist, dass Du weitere Dependencies immer dann hinzufügen kannst, sobald Du diese benötigst. Warum solltest Du auf eine Template-Engine angewiesen sein, wenn Du eine HTTP-API oder ein CLI-Tool entwickelst?
 

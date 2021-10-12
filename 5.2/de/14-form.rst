@@ -472,7 +472,7 @@ Das Admin-Backend zeigt derzeit den Dateinamen des Fotos an, aber wir wollen das
              ;
 
 Hochgeladene Fotos von Git ausschließen
----------------------------------------
+----------------------------------------
 
 Noch nicht committen! Wir wollen keine hochgeladenen Bilder im Git-Repository speichern. Füge das Verzeichnis ``/public/uploads`` zur ``.gitignore``-Datei hinzu:
 
@@ -518,8 +518,7 @@ Du kannst den Code jetzt deployen und Fotos werden wie unsere lokale Version im 
 
     * `SymfonyCasts Tutorial für Formulare <https://symfonycasts.com/screencast/symfony-forms>`_;
 
-    * Wie man die `Darstellung von Symfony-Formularen in HTML anpasst 
-<https://symfony.com/doc/current/form/form_customization.html>`_;
+    * Wie man die `Darstellung von Symfony-Formularen in HTML anpasst  <https://symfony.com/doc/current/form/form_customization.html>`_;
 
     * `Validierung von Symfony-Formularen <https://symfony.com/doc/current/forms.html#validating-forms>`_;
 

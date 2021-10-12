@@ -133,7 +133,7 @@ Wir sind fast fertig. Wir haben keine Route mehr, die zu ``/`` passt. Fügen wir
 Da nun alle Hauptrouten einen `_locale``-Parameter haben, sieht man, dass die generierten URLs auf den Seiten automatisch die aktuelle Sprache berücksichtigen.
 
 Einen Sprachwechsler hinzufügen
--------------------------------
+--------------------------------
 
 .. index::
     single: Twig;path
@@ -224,7 +224,7 @@ Du kannst nun über den Sprachwechsler von Französisch auf Englisch umschalten 
     :figclass: with-browser
 
 Das Interface übersetzen
-------------------------
+-------------------------
 
 .. index::
     single: Components;Translation
@@ -304,7 +304,7 @@ Klicke auf den "Tab", um alle Nachrichten aufzulisten, für die Symfony keine Ü
     :figclass: with-browser
 
 Übersetzungen erstellen
------------------------
+------------------------
 
 Wie Du vielleicht schon in ``config/packages/translation.yaml`` gesehen hast, werden Übersetzungen in einem ``translations/``-Stammverzeichnis gespeichert, das automatisch für uns erstellt wurde.
 
@@ -351,7 +351,7 @@ Beachte, dass wir nicht alle Vorlagen übersetzen werden, aber zögere nicht, di
     :figclass: with-browser
 
 Formulare übersetzen
---------------------
+---------------------
 
 .. index::
     single: Translation;Form
@@ -365,7 +365,7 @@ Form-Labels werden von Symfony automatisch über das Übersetzungssystem angezei
     :figclass: with-browser
 
 Das Datum übersetzen
---------------------
+---------------------
 
 .. index::
     single: Localization
@@ -380,7 +380,7 @@ Wenn Du zu Französisch wechselst und zu einer Konferenz Website gehst, die ein 
 Die Lokalisierung funktioniert für Datum, Zeiten (``format_time``), Währungen (``format_currency``) und Zahlen (``format_number``) im Allgemeinen (Prozent, Dauer, Buchstabieren, ...).
 
 Mehrzahlformen übersetzen
--------------------------
+--------------------------
 
 .. index::
     single: Translation;Plurals

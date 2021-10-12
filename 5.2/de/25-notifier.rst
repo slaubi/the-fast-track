@@ -1,5 +1,5 @@
 Benachrichtigungen auf allen Kanälen
-====================================
+=====================================
 
 Die Gästebuchanwendung sammelt Feedback zu den Konferenzen. Wir sind jedoch nicht gut darin, unseren Nutzer*innen Feedback zu geben.
 

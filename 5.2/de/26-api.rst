@@ -20,7 +20,7 @@ Eine API durch Schreiben von Code anzulegen ist möglich, aber wenn wir Standard
     $ symfony composer req api
 
 Eine API für Konferenzen bereitstellen
---------------------------------------
+---------------------------------------
 
 .. index::
     single: Annotations;@ApiResource
@@ -115,7 +115,7 @@ Benutze es, um die verschiedenen Möglichkeiten zu testen:
 Stell Dir vor, wie lange es dauern würde, all dies von Grund auf neu zu implementieren!
 
 Eine API für Kommentare bereitstellen
--------------------------------------
+--------------------------------------
 
 .. index::
     single: Annotations;@ApiResource
@@ -209,7 +209,7 @@ Mach das Gleiche für Kommentare:
 Die gleiche Art von Annotations werden verwendet, um die Klasse zu konfigurieren.
 
 Einschränkung der Kommentare, die über die API zugänglich sind
---------------------------------------------------------------
+-----------------------------------------------------------------
 
 Standardmäßig stellt die API Platform alle Einträge aus der Datenbank zur Verfügung. Aber für Kommentare sollten nur die veröffentlichten Teil der API sein.
 

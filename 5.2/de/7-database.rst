@@ -11,7 +11,7 @@ Ein Kommentar lässt sich am besten durch eine feste Datenstruktur beschreiben: 
 PostgreSQL ist das Datenbanksystem unserer Wahl.
 
 PostgreSQL zu Docker Compose hinzufügen
----------------------------------------
+----------------------------------------
 
 .. index::
     single: Docker;PostgreSQL
@@ -123,7 +123,7 @@ Und importiere die Daten mit:
     Führe nie ``docker-compose down`` aus, wenn Du Deine Daten nicht verlieren möchtest. Oder mach erst ein Backup.
 
 PostgreSQL zur SymfonyCloud hinzufügen
---------------------------------------
+---------------------------------------
 
 .. index::
     single: SymfonyCloud;PostgreSQL

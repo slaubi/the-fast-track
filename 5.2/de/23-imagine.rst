@@ -107,7 +107,7 @@ Die Skalierung eines Bildes kann über die folgende Service-Klasse erfolgen:
 Nach der Optimierung des Fotos speichern wir die neue Datei anstelle der ursprünglichen. Das Originalbild solltest du jedoch eventuell behalten.
 
 Einen neuen Schritt zum Workflow hinzufügen
--------------------------------------------
+--------------------------------------------
 
 Ändere den Workflow, um den neuen Zustand abzubilden und anzuwenden:
 

@@ -186,7 +186,7 @@ Und aktiviere die PHP-Probe wie jede andere PHP-Erweiterung:
              - apcu
 
 Varnish für Blackfire konfigurieren
------------------------------------
+------------------------------------
 
 .. index::
     single: SymfonyCloud;Varnish
