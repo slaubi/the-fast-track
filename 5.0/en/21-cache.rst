@@ -1,0 +1,691 @@
+Caching for Performance
+=======================
+
+.. index::
+    single: Components;HTTP Kernel
+    single: HTTP Cache
+    single: Cache
+
+Performance problems might come with popularity. Some typical examples: missing database indexes or tons of SQL requests per page. You won't have any problems with an empty database, but with more traffic and growing data, it might arise at some point.
+
+Adding HTTP Cache Headers
+-------------------------
+
+.. index::
+    single: HTTP Cache;HTTP Cache Headers
+
+Using HTTP caching strategies is a great way to maximize the performance for end users with little effort. Add a reverse proxy cache in production to enable caching, and use a `CDN`_ to cache on the edge for even better performance.
+
+Let's cache the homepage for an hour:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -35,9 +35,12 @@ class ConferenceController extends AbstractController
+          */
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
+    -        return new Response($this->twig->render('conference/index.html.twig', [
+    +        $response = new Response($this->twig->render('conference/index.html.twig', [
+                 'conferences' => $conferenceRepository->findAll(),
+             ]));
+    +        $response->setSharedMaxAge(3600);
+    +
+    +        return $response;
+         }
+
+         /**
+
+The ``setSharedMaxAge()`` method configures the cache expiration for reverse proxies. Use ``setMaxAge()`` to control the browser cache. Time is expressed in seconds (1 hour = 60 minutes = 3600 seconds).
+
+Caching the conference page is more challenging as it is more dynamic. Anyone can add a comment anytime, and nobody wants to wait for an hour to see it online. In such cases, use the *HTTP validation* strategy.
+
+Activating the Symfony HTTP Cache Kernel
+----------------------------------------
+
+.. index::
+    single: HTTP Cache;Symfony Reverse Proxy
+
+To test the HTTP cache strategy, use the Symfony HTTP reverse proxy:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/public/index.php
+    +++ b/public/index.php
+    @@ -1,6 +1,7 @@
+     <?php
+
+     use App\Kernel;
+    +use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
+     use Symfony\Component\ErrorHandler\Debug;
+     use Symfony\Component\HttpFoundation\Request;
+
+    @@ -21,6 +22,11 @@ if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
+     }
+
+     $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+    +
+    +if ('dev' === $kernel->getEnvironment()) {
+    +    $kernel = new HttpCache($kernel);
+    +}
+    +
+     $request = Request::createFromGlobals();
+     $response = $kernel->handle($request);
+
+Besides being a full-fledged HTTP reverse proxy, the Symfony HTTP reverse proxy (via the ``HttpCache`` class) adds some nice debug info as HTTP headers. That helps greatly in validating the cache headers we have set.
+
+Check it on the homepage:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ curl -s -I -X GET https://127.0.0.1:8000/
+
+.. code-block:: text
+    :class: ignore
+    :emphasize-lines: 2,3,10
+
+    HTTP/2 200
+    age: 0
+    cache-control: public, s-maxage=3600
+    content-type: text/html; charset=UTF-8
+    date: Mon, 28 Oct 2019 08:11:57 GMT
+    x-content-digest: en63cef7045fe418859d73668c2703fb1324fcc0d35b21d95369a9ed1aca48e73e
+    x-debug-token: 9eb25a
+    x-debug-token-link: https://127.0.0.1:8000/_profiler/9eb25a
+    x-robots-tag: noindex
+    x-symfony-cache: GET /: miss, store
+    content-length: 50978
+
+For the very first request, the cache server tells you that it was a ``miss`` and that it performed a ``store`` to cache the response. Check the ``cache-control`` header to see the configured cache strategy.
+
+For subsequent requests, the response is cached (the ``age`` has also been updated):
+
+.. code-block:: text
+    :class: ignore
+    :emphasize-lines: 2,3,10
+
+    HTTP/2 200
+    age: 143
+    cache-control: public, s-maxage=3600
+    content-type: text/html; charset=UTF-8
+    date: Mon, 28 Oct 2019 08:11:57 GMT
+    x-content-digest: en63cef7045fe418859d73668c2703fb1324fcc0d35b21d95369a9ed1aca48e73e
+    x-debug-token: 9eb25a
+    x-debug-token-link: https://127.0.0.1:8000/_profiler/9eb25a
+    x-robots-tag: noindex
+    x-symfony-cache: GET /: fresh
+    content-length: 50978
+
+Avoiding SQL Requests with ESI
+------------------------------
+
+.. index::
+    single: HTTP Cache;ESI
+    single: ESI
+
+The ``TwigEventSubscriber`` listener injects a global variable in Twig with all conference objects. It does so for every single page of the website. It is probably a great target for optimization.
+
+You won't add new conferences every day, so the code is querying the exact same data from the database over and over again.
+
+We might want to cache the conference names and slugs with the Symfony Cache, but whenever possible I like to rely on the HTTP caching infrastructure.
+
+When you want to cache a fragment of a page, move it outside of the current HTTP request by creating a *sub-request*. *ESI* is a perfect match for this use case. An ESI is a way to embed the result of an HTTP request into another.
+
+Create a controller that only returns the HTML fragment that displays the conferences:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -45,6 +45,16 @@ class ConferenceController extends AbstractController
+             return $response;
+         }
+
+    +    /**
+    +     * @Route("/conference_header", name="conference_header")
+    +     */
+    +    public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+    +    {
+    +        return new Response($this->twig->render('conference/header.html.twig', [
+    +            'conferences' => $conferenceRepository->findAll(),
+    +        ]));
+    +    }
+    +
+         /**
+          * @Route("/conference/{slug}", name="conference")
+          */
+
+Create the corresponding template:
+
+.. code-block:: twig
+    :caption: templates/conference/header.html.twig
+
+    <ul>
+        {% for conference in conferences %}
+            <li><a href="{{ path('conference', { slug: conference.slug }) }}">{{ conference }}</a></li>
+        {% endfor %}
+    </ul>
+
+Hit ``/conference_header`` to check that everything works fine.
+
+.. index::
+    single: Twig;render
+    single: Twig;path
+
+Time to reveal the trick! Update the Twig layout to call the controller we have just created:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/templates/base.html.twig
+    +++ b/templates/base.html.twig
+    @@ -8,11 +8,7 @@
+         <body>
+             <header>
+                 <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
+    -            <ul>
+    -            {% for conference in conferences %}
+    -                <li><a href="{{ path('conference', { slug: conference.slug }) }}">{{ conference }}</a></li>
+    -            {% endfor %}
+    -            </ul>
+    +            {{ render(path('conference_header')) }}
+                 <hr />
+             </header>
+             {% block body %}{% endblock %}
+
+And *voilà*. Refresh the page and the website is still displaying the same.
+
+.. tip::
+
+    Use the "Request / Response" Symfony profiler panel to learn more about the main request and its sub-requests.
+
+Now, every time you hit a page in the browser, two HTTP requests are executed, one for the header and one for the main page. You have made performance worse. Congratulations!
+
+The conference header HTTP call is currently done internally by Symfony, so no HTTP round-trip is involved. This also means that there is no way to benefit from HTTP cache headers.
+
+Convert the call to a "real" HTTP one by using an ESI.
+
+First, enable ESI support:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/config/packages/framework.yaml
+    +++ b/config/packages/framework.yaml
+    @@ -11,7 +11,7 @@ framework:
+             cookie_secure: auto
+             cookie_samesite: lax
+
+    -    #esi: true
+    +    esi: true
+         #fragments: true
+         php_errors:
+             log: true
+
+.. index::
+    single: Twig;render_esi
+    single: Twig;path
+
+Then, use ``render_esi`` instead of ``render``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/templates/base.html.twig
+    +++ b/templates/base.html.twig
+    @@ -8,7 +8,7 @@
+         <body>
+             <header>
+                 <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
+    -            {{ render(path('conference_header')) }}
+    +            {{ render_esi(path('conference_header')) }}
+                 <hr />
+             </header>
+             {% block body %}{% endblock %}
+
+If Symfony detects a reverse proxy that knows how to deal with ESIs, it enables support automatically (if not, it falls back to render the sub-request synchronously).
+
+As the Symfony reverse proxy does support ESIs, let's check its logs (remove the cache first - see "Purging" below):
+
+.. code-block:: bash
+    :class: ignore
+
+    $ curl -s -I -X GET https://127.0.0.1:8000/
+
+.. code-block:: text
+    :class: ignore
+    :emphasize-lines: 2,3,10
+
+    HTTP/2 200
+    age: 0
+    cache-control: must-revalidate, no-cache, private
+    content-type: text/html; charset=UTF-8
+    date: Mon, 28 Oct 2019 08:20:05 GMT
+    expires: Mon, 28 Oct 2019 08:20:05 GMT
+    x-content-digest: en4dd846a34dcd757eb9fd277f43220effd28c00e4117bed41af7f85700eb07f2c
+    x-debug-token: 719a83
+    x-debug-token-link: https://127.0.0.1:8000/_profiler/719a83
+    x-robots-tag: noindex
+    x-symfony-cache: GET /: miss, store; GET /conference_header: miss
+    content-length: 50978
+
+Refresh a few times: the ``/`` response is cached and the ``/conference_header`` one is not. We have achieved something great: having the whole page in the cache but still having one part dynamic.
+
+This is not what we want though. Cache the header page for an hour, independently of everything else:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/ConferenceController.php
+    +++ b/src/Controller/ConferenceController.php
+    @@ -48,9 +48,12 @@ class ConferenceController extends AbstractController
+          */
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
+    -        return new Response($this->twig->render('conference/header.html.twig', [
+    +        $response = new Response($this->twig->render('conference/header.html.twig', [
+                 'conferences' => $conferenceRepository->findAll(),
+             ]));
+    +        $response->setSharedMaxAge(3600);
+    +
+    +        return $response;
+         }
+
+         /**
+
+Cache is now enabled for both requests:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ curl -s -I -X GET https://127.0.0.1:8000/
+
+.. code-block:: text
+    :class: ignore
+    :emphasize-lines: 2,3,10
+
+    HTTP/2 200
+    age: 613
+    cache-control: public, s-maxage=3600
+    content-type: text/html; charset=UTF-8
+    date: Mon, 28 Oct 2019 07:31:24 GMT
+    x-content-digest: en15216b0803c7851d3d07071473c9f6a3a3360c6a83ccb0e550b35d5bc484bbd2
+    x-debug-token: cfb0e9
+    x-debug-token-link: https://127.0.0.1:8000/_profiler/cfb0e9
+    x-robots-tag: noindex
+    x-symfony-cache: GET /: fresh; GET /conference_header: fresh
+    content-length: 50978
+
+The ``x-symfony-cache`` header contains two elements: the main ``/`` request and a sub-request (the ``conference_header`` ESI). Both are in the cache (``fresh``).
+
+The cache strategy can be different from the main page and its ESIs. If we have an "about" page, we might want to store it for a week in the cache, and still have the header be updated every hour.
+
+Remove the listener as we don't need it anymore:
+
+.. code-block:: bash
+
+    $ rm src/EventSubscriber/TwigEventSubscriber.php
+
+Purging the HTTP Cache for Testing
+----------------------------------
+
+Testing the website in a browser or via automated tests becomes a little bit more difficult with a caching layer.
+
+You can manually remove all the HTTP cache by removing the
+``var/cache/dev/http_cache/`` directory:
+
+.. code-block:: bash
+
+    $ rm -rf var/cache/dev/http_cache/
+
+.. index::
+    single: Annotations;@Route
+
+This strategy does not work well if you only want to invalidate some URLs or if you want to integrate cache invalidation in your functional tests. Let's add a small, admin only, HTTP endpoint to invalidate some URLs:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/AdminController.php
+    +++ b/src/Controller/AdminController.php
+    @@ -6,8 +6,10 @@ use App\Entity\Comment;
+     use App\Message\CommentMessage;
+     use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    +use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\KernelInterface;
+     use Symfony\Component\Messenger\MessageBusInterface;
+     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Workflow\Registry;
+    @@ -54,4 +56,19 @@ class AdminController extends AbstractController
+                 'comment' => $comment,
+             ]);
+         }
+    +
+    +    /**
+    +     * @Route("/admin/http-cache/{uri<.*>}", methods={"PURGE"})
+    +     */
+    +    public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri): Response
+    +    {
+    +        if ('prod' === $kernel->getEnvironment()) {
+    +            return new Response('KO', 400);
+    +        }
+    +
+    +        $store = (new class($kernel) extends HttpCache {})->getStore();
+    +        $store->purge($request->getSchemeAndHttpHost().'/'.$uri);
+    +
+    +        return new Response('Done');
+    +    }
+     }
+
+The new controller has been restricted to the ``PURGE`` HTTP method. This method is not in the HTTP standard, but it is widely used to invalidate caches.
+
+By default, route parameters cannot contain ``/`` as it separates URL segments. You can override this restriction for the last route parameter, like ``uri``, by setting your own requirement pattern (``.*``).
+
+The way we get the ``HttpCache`` instance can also look a bit strange; we are using an anonymous class as accessing the "real" one is not possible. The ``HttpCache`` instance wraps the real kernel, which is unaware of the cache layer as it should be.
+
+Invalidate the homepage and the conference header via the following cURL calls:
+
+.. code-block:: bash
+
+    $ curl -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
+    $ curl -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
+
+The ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` sub-command returns the current URL of the local web server.
+
+.. note::
+
+    The controller does not have a route name as it will never be referenced in the code.
+
+Grouping similar Routes with a Prefix
+-------------------------------------
+
+.. index::
+    single: Annotations;@Route
+
+The two routes in the admin controller have the same ``/admin`` prefix. Instead of repeating it on all routes, refactor the routes to configure the prefix on the class itself:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Controller/AdminController.php
+    +++ b/src/Controller/AdminController.php
+    @@ -15,6 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Workflow\Registry;
+     use Twig\Environment;
+
+    +/**
+    + * @Route("/admin")
+    + */
+     class AdminController extends AbstractController
+     {
+         private $twig;
+    @@ -29,7 +32,7 @@ class AdminController extends AbstractController
+         }
+
+         /**
+    -     * @Route("/admin/comment/review/{id}", name="review_comment")
+    +     * @Route("/comment/review/{id}", name="review_comment")
+          */
+         public function reviewComment(Request $request, Comment $comment, Registry $registry): Response
+         {
+    @@ -58,7 +61,7 @@ class AdminController extends AbstractController
+         }
+
+         /**
+    -     * @Route("/admin/http-cache/{uri<.*>}", methods={"PURGE"})
+    +     * @Route("/http-cache/{uri<.*>}", methods={"PURGE"})
+          */
+         public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri): Response
+         {
+
+Caching CPU/Memory Intensive Operations
+---------------------------------------
+
+.. index::
+    single: Process
+    single: Components;Process
+
+We don't have CPU or memory-intensive algorithms on the website. To talk about *local caches*, let's create a command that displays the current step we are working on (to be more precise, the Git tag name attached to the current Git commit).
+
+The Symfony Process component allows you to run a command and get the result back (standard and error output); install it:
+
+.. code-block:: bash
+
+    $ symfony composer req process
+
+Implement the command:
+
+.. code-block:: php
+    :caption: src/Command/StepInfoCommand.php
+
+    namespace App\Command;
+
+    use Symfony\Component\Console\Command\Command;
+    use Symfony\Component\Console\Input\InputInterface;
+    use Symfony\Component\Console\Output\OutputInterface;
+    use Symfony\Component\Process\Process;
+
+    class StepInfoCommand extends Command
+    {
+        protected static $defaultName = 'app:step:info';
+
+        protected function execute(InputInterface $input, OutputInterface $output): int
+        {
+            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
+            $process->mustRun();
+            $output->write($process->getOutput());
+
+            return 0;
+        }
+    }
+
+.. index::
+    single: Command;make:command
+
+.. note::
+
+    You could have used ``make:command`` to create the command:
+
+    .. code-block:: bash
+        :class: ignore
+
+        $ symfony console make:command app:step:info
+
+.. index::
+    single: Cache
+    single: Components;Cache
+
+What if we want to cache the output for a few minutes? Use the Symfony Cache:
+
+.. code-block:: bash
+
+    $ symfony composer req cache
+
+And wrap the code with the cache logic:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/Command/StepInfoCommand.php
+    +++ b/src/Command/StepInfoCommand.php
+    @@ -6,16 +6,31 @@ use Symfony\Component\Console\Command\Command;
+     use Symfony\Component\Console\Input\InputInterface;
+     use Symfony\Component\Console\Output\OutputInterface;
+     use Symfony\Component\Process\Process;
+    +use Symfony\Contracts\Cache\CacheInterface;
+
+     class StepInfoCommand extends Command
+     {
+         protected static $defaultName = 'app:step:info';
+
+    +    private $cache;
+    +
+    +    public function __construct(CacheInterface $cache)
+    +    {
+    +        $this->cache = $cache;
+    +
+    +        parent::__construct();
+    +    }
+    +
+         protected function execute(InputInterface $input, OutputInterface $output): int
+         {
+    -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
+    -        $process->mustRun();
+    -        $output->write($process->getOutput());
+    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
+    +            $process->mustRun();
+    +            $item->expiresAfter(30);
+    +
+    +            return $process->getOutput();
+    +        });
+    +        $output->writeln($step);
+
+             return 0;
+         }
+
+The process is now only called if the ``app.current_step`` item is not in the cache.
+
+Profiling and Comparing Performance
+-----------------------------------
+
+Never add cache blindly. Keep in mind that adding some cache adds a layer of complexity. And as we are all very bad at guessing what will be fast and what is slow, you might end up in a situation where the cache makes your application slower.
+
+Always measure the impact of adding a cache with a profiler tool like `Blackfire <https://blackfire.io/>`_.
+
+Refer to the step about "Performance" to learn more about how you can use Blackfire to test your code before deploying.
+
+Configuring a Reverse Proxy Cache on Production
+-----------------------------------------------
+
+.. index::
+    single: HTTP Cache;Varnish
+    single: SymfonyCloud;Varnish
+    single: Varnish
+
+Don't use the Symfony reverse proxy in production. Always prefer a reverse proxy like Varnish on your infrastructure or a commercial CDN.
+
+Add Varnish to the SymfonyCloud services:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony/services.yaml
+    +++ b/.symfony/services.yaml
+    @@ -10,3 +10,12 @@ queue:
+         type: rabbitmq:3.7
+         disk: 1024
+         size: S
+    +
+    +varnish:
+    +    type: varnish:6.0
+    +    relationships:
+    +        application: 'app:http'
+    +    configuration:
+    +        vcl: !include
+    +            type: string
+    +            path: config.vcl
+
+.. index::
+    single: SymfonyCloud;Routes
+
+Use Varnish as the main entry point in the routes:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony/routes.yaml
+    +++ b/.symfony/routes.yaml
+    @@ -1,2 +1,2 @@
+    -"https://{all}/": { type: upstream, upstream: "app:http" }
+    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+     "http://{all}/": { type: redirect, to: "https://{all}/" }
+
+Finally, create a ``config.vcl`` file to configure Varnish:
+
+.. code-block:: vcl
+    :caption: .symfony/config.vcl
+
+    sub vcl_recv {
+        set req.backend_hint = application.backend();
+    }
+
+Enabling ESI Support on Varnish
+-------------------------------
+
+ESI support on Varnish should be enabled explicitly for each request. To make it universal, Symfony uses the standard ``Surrogate-Capability`` and ``Surrogate-Control`` headers to negotiate ESI support:
+
+.. code-block:: vcl
+    :caption: .symfony/config.vcl
+
+    sub vcl_recv {
+        set req.backend_hint = application.backend();
+        set req.http.Surrogate-Capability = "abc=ESI/1.0";
+    }
+
+    sub vcl_backend_response {
+        if (beresp.http.Surrogate-Control ~ "ESI/1.0") {
+            unset beresp.http.Surrogate-Control;
+            set beresp.do_esi = true;
+        }
+    }
+
+Purging the Varnish Cache
+-------------------------
+
+Invalidating the cache in production should probably never be needed, except for emergency purposes and maybe on non-``master`` branches. If you need to purge the cache often, it probably means that the caching strategy should be tweaked (by lowering the TTL or by using a validation strategy instead of an expiration one).
+
+Anyway, let's see how to configure Varnish for cache invalidation:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony/config.vcl
+    +++ b/.symfony/config.vcl
+    @@ -1,6 +1,13 @@
+     sub vcl_recv {
+         set req.backend_hint = application.backend();
+         set req.http.Surrogate-Capability = "abc=ESI/1.0";
+    +
+    +    if (req.method == "PURGE") {
+    +        if (req.http.x-purge-token != "PURGE_NOW") {
+    +            return(synth(405));
+    +        }
+    +        return (purge);
+    +    }
+     }
+
+     sub vcl_backend_response {
+
+In real life, you would probably restrict by IPs instead like described in the `Varnish docs <https://varnish-cache.org/docs/trunk/users-guide/purging.html>`_.
+
+Purge some URLs now:
+
+.. code-block:: bash
+
+    $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
+    $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header
+
+The URLs looks a bit strange because the URLs returned by ``env:urls`` already ends with ``/``.
+
+.. sidebar:: Going Further
+
+    * `Cloudflare <https://www.cloudflare.com>`_, the global cloud platform;
+
+    * `Varnish HTTP Cache docs <https://varnish-cache.org/docs/index.html>`_;
+
+    * `ESI specification <https://www.w3.org/TR/esi-lang>`_ and `ESI developer resources <https://www.akamai.com/us/en/support/esi.jsp>`_;
+
+    * `HTTP cache validation model <https://symfony.com/doc/current/http_cache/validation.html>`_;
+
+    * `HTTP Cache in SymfonyCloud <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_.
+
+.. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network
