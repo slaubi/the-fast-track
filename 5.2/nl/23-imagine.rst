@@ -174,7 +174,7 @@ Merk op dat ``$photoDir`` automatisch wordt geïnjecteerd omdat we in een vorige
                 $photoDir: "%kernel.project_dir%/public/uploads/photos"
 
 Opslaan van geüploade gegevens in productie
--------------------------------------------
+--------------------------------------------
 
 .. index::
     single: SymfonyCloud;File Service

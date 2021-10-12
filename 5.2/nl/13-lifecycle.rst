@@ -6,7 +6,7 @@ Bij het maken van een nieuwe reactie zou het geweldig zijn als de ``createdAt``-
 Doctrine heeft verschillende manieren om objecten en hun properties te manipuleren tijdens hun lifecycle (voordat de rij in de database wordt aangemaakt, nadat de rij is bijgewerkt, ....).
 
 Definiëren van lifecycle callbacks
-----------------------------------
+-----------------------------------
 
 .. index::
     single: Doctrine;Lifecycle
@@ -224,7 +224,7 @@ Voeg een ``computeSlug()`` methode toe aan de ``Conference``-class die de slug b
 De ``computeSlug()``-methode bouwt alleen een slug op wanneer de huidige slug leeg is of gelijk is aan de speciale waarde ``-``. Waarom hebben we de speciale waarde ``-`` nodig? Omdat bij het toevoegen van een conferentie in de backend, de slug noodzakelijk is. We hebben dus een niet-lege waarde nodig die de applicatie vertelt dat we willen dat de slug automatisch gegenereerd wordt.
 
 Een complexe lifecycle callback definiëren
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Doctrine;Entity Listener

@@ -14,7 +14,7 @@ Net als bij Twig is het beveiligingscomponent al geïnstalleerd via transitieve 
     $ symfony composer req security
 
 Een User-entity definiëren
---------------------------
+---------------------------
 
 Ook al zullen de deelnemers niet in staat zijn om hun eigen accounts aan te maken op de website, we gaan een volledig functioneel authenticatiesysteem voor de admin creëren. We hebben dus maar één gebruiker, de websitebeheerder.
 

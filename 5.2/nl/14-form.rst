@@ -443,7 +443,7 @@ Klik erop om toegang te krijgen tot het POST-requestprofile en ga dan naar het "
     :figclass: with-browser
 
 Geüploade foto's weergeven in de admin backend
-----------------------------------------------
+-----------------------------------------------
 
 De admin backend toont op dit moment de bestandsnaam van de foto, maar we willen de daadwerkelijke foto zien:
 
@@ -472,7 +472,7 @@ De admin backend toont op dit moment de bestandsnaam van de foto, maar we willen
              ;
 
 Geüploade foto's niet in Git opnemen
-------------------------------------
+-------------------------------------
 
 Commit dit nog niet! We willen namelijk geen geüploade afbeeldingen opslaan in de Git repository. Voeg de ``/public/uploads`` map toe aan het ``.gitignore`` bestand:
 
@@ -488,7 +488,7 @@ Commit dit nog niet! We willen namelijk geen geüploade afbeeldingen opslaan in 
      /.env.local
 
 Het opslaan van geüploade bestanden op productieservers
--------------------------------------------------------
+--------------------------------------------------------
 
 De laatste stap is het opslaan van de geüploade bestanden op productieservers. Maar waarom moeten we hier iets speciaals doen? Moderne cloud-platforms maken vaak gebruik van alleen-lezen containers en SymfonyCloud is geen uitzondering op deze regel.
 

@@ -246,7 +246,7 @@ Let op dat we ``APP_ENV`` expliciet instellen, zelfs wanneer we PHPUnit draaien,
     Als een test mislukt, kan het nuttig zijn om het Response-object nader te onderzoeken. Je kan het object benaderen via ``$client->getResponse()`` en middels ``echo`` bekijken hoe het eruitziet.
 
 Fixtures definiëren
--------------------
+--------------------
 
 .. index::
     single: Doctrine;Fixtures

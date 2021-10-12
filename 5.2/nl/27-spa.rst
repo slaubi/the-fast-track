@@ -10,7 +10,7 @@ De meeste reacties zullen tijdens de conferentie worden gepost. Sommige mensen z
 Een manier om zo'n mobiele applicatie te maken is het bouwen van een Javascript Single Page Application (SPA). Een SPA draait lokaal, kan lokale opslag gebruiken, kan een externe HTTP-API aanroepen en kan service workers gebruiken om een bijna native ervaring te creëren.
 
 De applicatie creëren
----------------------
+----------------------
 
 Om de mobiele applicatie te creëren, gaan we `Preact`_ en **Symfony Encore** gebruiken. **Preact** is een kleine en efficiënte basis die zeer geschikt is voor de Gastenboek-SPA.
 

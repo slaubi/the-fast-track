@@ -36,7 +36,14 @@ Maar waarom zouden we niet-Engelse documentatie willen in een wereld waar Engels
 
 Zoals je je kunt voorstellen, is het vertalen van meer dan 300 pagina's een enorme hoeveelheid werk, en ik wil alle mensen bedanken die hebben geholpen bij het vertalen van dit boek:
 
-TRANSLATOR_LIST
+* Tom Van Looy
+* Mike de Vrind
+* Ivo van Beek
+* Evert Harmeling
+* Timo Bakx
+* Pauline Vos
+* Jos Elstgeest
+* Ricardo de Vries
 
 Bedrijven die steun hebben gegeven
 ----------------------------------

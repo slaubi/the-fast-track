@@ -209,7 +209,7 @@ Je kan zelfs de gegevens van de master terug naar de ``sessions-in-db`` omgeving
     $ symfony env:sync
 
 Het debuggen van productie-deployment vóór de ingebruikname
------------------------------------------------------------
+-------------------------------------------------------------
 
 .. index::
     single: SymfonyCloud;Debugging
