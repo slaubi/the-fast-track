@@ -22,7 +22,7 @@ Incluso pequeñas mejoras en el rendimiento pueden marcar la diferencia, especia
 La mejor manera de encontrar optimizaciones de rendimiento es usar un analizador de rendimiento o *perfilador* (*profiler*). La opción más popular hoy en día es `Blackfire <https://blackfire.io>`_ (*aviso a navegantes*: también soy el fundador del proyecto Blackfire).
 
 Introducción a Blackfire
-------------------------
+-------------------------
 
 Blackfire se compone de varias partes:
 
@@ -79,7 +79,7 @@ La herramienta de línea de comandos de Blackfire necesita estar configurada con
     Para obtener instrucciones completas de instalación, sigue la `guía oficial de instalación detallada <https://blackfire.io/docs/up-and-running/installation>`_. Son muy útiles cuando se instala Blackfire en un servidor.
 
 Configuración del agente Blackfire en Docker
---------------------------------------------
+---------------------------------------------
 
 .. index::
     single: Docker;Blackfire
@@ -119,7 +119,7 @@ Ahora puedes lanzar el nuevo contenedor:
     $ docker-compose up -d
 
 Arreglando una instalación de Blackfire que no funciona
--------------------------------------------------------
+--------------------------------------------------------
 
 Si obtienes un error durante el análisis de rendimiento, aumenta el nivel de registro de Blackfire para obtener más información:
 
@@ -154,7 +154,7 @@ Analiza la aplicación de nuevo y comprueba la salida del *log*.
 
 
 Configurando Blackfire en producción
-------------------------------------
+-------------------------------------
 
 .. index::
     single: SymfonyCloud;Blackfire
@@ -240,7 +240,7 @@ y úsala para configurar Varnish:
 Ahora puedes realizar el despliegue.
 
 Analizando el rendimiento de páginas web
-----------------------------------------
+-----------------------------------------
 
 .. index::
     single: Profiling;Web Pages
@@ -304,7 +304,7 @@ El análisis de rendimiento de la API o la SPA se realiza mejor en la línea de 
 El comando ``blackfire curl`` acepta exactamente los mismos argumentos y opciones que `cURL <https://curl.haxx.se/docs/manpage.html>`_.
 
 Comparación del rendimiento
----------------------------
+----------------------------
 
 En el paso acerca de la "Caché" añadimos una capa de caché para mejorar el rendimiento de nuestro código, pero no hemos comprobado ni medido el impacto en el rendimiento que ha tenido el cambio. Como las personas somos poco efectivas adivinando qué será rápido y qué será lento, podrías terminar en una situación en la que añadir un poco de optimización hiciera que tu aplicación fuera, realmente, más lenta.
 
@@ -398,7 +398,7 @@ O en producción:
 Los escenarios de Blackfire también pueden desencadenar perfiles para cada solicitud y ejecutar pruebas de rendimiento añadiendo la opción ``--blackfire``.
 
 Automatizando los análisis de rendimiento
------------------------------------------
+------------------------------------------
 
 La gestión del rendimiento no sólo consiste en mejorar el rendimiento del código existente, sino también en comprobar que no se introducen regresiones de rendimiento.
 
@@ -408,7 +408,6 @@ En SymfonyCloud, también se permite `ejecutar los escenarios <https://blackfire
 
 .. sidebar:: Yendo más allá
 
-    * `El libro de Blackfire: Rendimiento del código PHP a fondo
-<https://blackfire.io/book>`_;
+    * `El libro de Blackfire: Rendimiento del código PHP a fondo <https://blackfire.io/book>`_;
 
     * `Tutorial de Blackfire en SymfonyCasts <https://symfonycasts.com/screencast/blackfire>`_.

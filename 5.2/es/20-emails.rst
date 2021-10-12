@@ -1,5 +1,5 @@
 Envío de correos electrónicos a los administradores
-===================================================
+=====================================================
 
 .. index::
     single: Components;Mailer
@@ -15,7 +15,7 @@ Primero, instala el componente Symfony Mailer:
     $ symfony composer req mailer
 
 Configurando una dirección de correo electrónico para el administrador
-----------------------------------------------------------------------
+------------------------------------------------------------------------
 
 Para almacenar el correo electrónico del administrador, utiliza un parámetro de contenedor. A efectos de demostración, también permitimos que se establezca a través de una variable de entorno (aunque no debería ser necesario en la "vida real"). Para facilitar la inyección en servicios que necesitan el correo electrónico del administrador, define un ajuste de contenedor ``bind``:
 
@@ -44,7 +44,7 @@ Para almacenar el correo electrónico del administrador, utiliza un parámetro d
 Una variable de entorno puede ser "procesada" antes de ser utilizada. Aquí, estamos usando el procesador ``default`` para devolver el valor del parámetro ``default_admin_email`` si la variable de entorno ``ADMIN_EMAIL`` no existe.
 
 Enviando un correo electrónico de notificación
-----------------------------------------------
+------------------------------------------------
 
 Para enviar un correo electrónico, puedes elegir entre varias abstracciones de la clase ``Email``; desde ``Message``, el nivel más bajo, hasta ``NotificationEmail``, el más alto. Probablemente usarás la clase ``Email`` la mayoría de las veces, pero ``NotificationEmail`` es la opción perfecta para los correos electrónicos internos.
 
@@ -119,7 +119,7 @@ Para enviar un correo electrónico, necesitamos un remitente (el encabezado ``Fr
     +            sender: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
 
 Extendiendo la plantilla del correo electrónico de notificación
----------------------------------------------------------------
+-----------------------------------------------------------------
 
 .. index::
     single: Twig;extends
@@ -279,7 +279,7 @@ Una vez terminada la revisión, una pequeña plantilla agradece al administrador
     {% endblock %}
 
 Usando un receptor de correos electrónicos
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Docker;Mail Catcher
@@ -361,12 +361,12 @@ Haz clic en el título del correo electrónico en la interfaz y acepta o rechaza
 Comprueba los registros del *log* con ``server:log`` para ver si funciona como se espera.
 
 Gestionando secuencias de comandos de larga duración
-----------------------------------------------------
+-----------------------------------------------------
 
 Tener scripts de larga duración conlleva algunos efectos que debes conocer. A diferencia del modelo PHP usado para HTTP, donde cada petición comienza con un estado limpio, el receptor de mensajes se ejecuta continuamente en segundo plano. Para cada gestión de un mensaje se hereda el estado actual, incluyendo la memoria caché. Para evitar cualquier problema con Doctrine, los administradores de sus entidades se borran automáticamente después de gestionar un mensaje. Debes verificar si tus propios servicios necesitan hacer lo mismo o no.
 
 Enviando correos electrónicos de manera asíncrona
--------------------------------------------------
+---------------------------------------------------
 
 El correo electrónico enviado con el gestor de mensajes puede tardar algún tiempo en enviarse. Incluso podría generar una excepción. En caso de que se produzca una excepción durante la gestión de un mensaje, se volverá a intentar. Pero en lugar de volver a intentar utilizar el mensaje del comentario, sería mejor intentar enviar sólo el correo electrónico.
 
@@ -390,7 +390,7 @@ Pero justo ahora, el bus está enviando el correo electrónico de forma síncron
 Estamos utilizando el mismo transporte (RabbitMQ) para los mensajes de los comentarios y los correos electrónicos, pero esto no tiene por qué ser necesariamente así. Puedes decidir utilizar otro transporte para gestionar diferentes prioridades de mensajes, por ejemplo. El uso de diferentes transportes también te da la oportunidad de tener diferentes máquinas de trabajo manejando diferentes tipos de mensajes. Es flexible y depende de ti.
 
 Comprobando los correos electrónicos
-------------------------------------
+-------------------------------------
 
 Hay muchas maneras de probar los correos electrónicos.
 
@@ -421,7 +421,7 @@ Symfony incluye comprobaciones (*assertions*) que facilitan estas pruebas, aquí
 Estas comprobaciones funcionan tanto cuando los correos electrónicos se envían de forma síncrona como de forma asíncrona.
 
 Enviando correos electrónicos en SymfonyCloud
----------------------------------------------
+----------------------------------------------
 
 .. index::
     single: SymfonyCloud;Emails

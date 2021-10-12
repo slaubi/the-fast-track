@@ -72,7 +72,7 @@ Y habilita el cargador Sass (*Sass loader*) en webpack:
 ¿Cómo sabía qué paquetes hay que instalar? Si hubiésemos intentado procesar nuestros recursos sin instalar esos paquetes, Encore nos habría dado un precioso mensaje de error sugiriéndonos la ejecución del comando ``yarn add`` necesario para instalar las dependencias que permiten cargar los tipos de archivos``.scss``.
 
 Añadiendo Bootstrap
--------------------
+--------------------
 
 .. index::
     single: Bootstrap

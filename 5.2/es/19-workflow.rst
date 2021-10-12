@@ -193,7 +193,7 @@ Vamos a implementar una auto-validación que modificaremos en el próximo capít
 Ejecuta ``symfony server:log`` y añade un comentario en el *frontend* para ver todas las transiciones que van sucediendo, una tras otra.
 
 Búsqueda de servicios en el Contenedor de Inyección de Dependencias
--------------------------------------------------------------------
+---------------------------------------------------------------------
 
 .. index::
     single: Command;debug:container

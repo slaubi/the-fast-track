@@ -1,5 +1,5 @@
 ¿De qué trata este libro?
-=========================
+===========================
 
 Symfony es uno de los proyectos PHP más exitosos. Se trata tanto de un framework full-stack (cliente y servidor), sólido y completo, como de un conjunto de componentes reutilizables.
 

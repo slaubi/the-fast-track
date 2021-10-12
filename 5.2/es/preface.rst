@@ -36,10 +36,21 @@ Pero, ¿por qué querríamos documentación en idiomas distintos al inglés en u
 
 Como puedes imaginar, traducir más de 300 páginas es una gran cantidad de trabajo, y quiero agradecer a todas las personas que ayudaron a traducir este libro:
 
-TRANSLATOR_LIST
+* Lisandro Delia
+* Luis Ramón López
+* jamaro
+* Carlos Ufano
+* Pana
+* Anderson Holguin
+* Carlos Revillo
+* Carlos Mayo
+* Muc
+* Jose Fanjul
+* Jose R. Prieto
+* Félix Gómez
 
 Empresas que han apoyado la creación de este libro
---------------------------------------------------
+---------------------------------------------------
 
 .. index::
     Backers;Companies

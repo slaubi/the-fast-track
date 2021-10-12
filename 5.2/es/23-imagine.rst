@@ -1,5 +1,5 @@
 Redimensionando imágenes
-========================
+=========================
 
 En el diseño de la página de la conferencia, las fotos están limitadas a un tamaño máximo de 200 por 150 píxeles. ¿No sería una buena idea optimizar las imágenes y reducir su tamaño si el original enviado supera estos límites?
 
@@ -54,7 +54,7 @@ Genera una representación visual de la nueva configuración del workflow para v
     :align: center
 
 Optimizando imágenes con Imagine
---------------------------------
+---------------------------------
 
 .. index::
     single: Imagine
@@ -107,7 +107,7 @@ El redimensionamiento de una imagen se puede realizar a través de la siguiente 
 Después de optimizar la foto, almacenaremos el nuevo archivo en lugar del original. Sin embargo, es posible que deseemos conservar la imagen original.
 
 Añadiendo un nuevo paso en el workflow
---------------------------------------
+---------------------------------------
 
 Modifica el workflow para gestionar el nuevo estado:
 
@@ -174,7 +174,7 @@ Ten en cuenta que ``$photoDir`` se inyecta automáticamente ya que en un paso an
                 $photoDir: "%kernel.project_dir%/public/uploads/photos"
 
 Almacenando los datos subidos en producción
--------------------------------------------
+--------------------------------------------
 
 .. index::
     single: SymfonyCloud;File Service

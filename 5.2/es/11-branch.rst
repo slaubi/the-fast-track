@@ -1,5 +1,5 @@
 Ramificando el código
-=====================
+======================
 
 Hay muchas maneras de organizar el flujo de trabajo de los cambios en el código de un proyecto. Pero trabajar directamente en la rama maestra de Git y desplegar directamente a la de producción sin realizar pruebas probablemente no sea la mejor.
 
@@ -209,7 +209,7 @@ Incluso puedes sincronizar los datos desde la rama *master* con el entorno ``ses
     $ symfony env:sync
 
 Depurando las implementaciones de producción antes del despliegue
------------------------------------------------------------------
+------------------------------------------------------------------
 
 .. index::
     single: SymfonyCloud;Debugging
@@ -236,14 +236,14 @@ Cuando hayas terminado, vuelve a los ajustes de producción:
     **Nunca** habilites el entorno ``dev`` y nunca habilites el *Symfony Profiler* en la rama ``master``; esto haría tu aplicación realmente lenta y abriría muchas vulnerabilidades serias de seguridad.
 
 Probando las implementaciones de producción antes del despliegue
-----------------------------------------------------------------
+-----------------------------------------------------------------
 
 Tener acceso a la próxima versión del sitio web con datos de producción te abre un abanico de oportunidades: desde pruebas visuales de regresión hasta pruebas de rendimiento. `Blackfire <https://blackfire.io>`_ es la herramienta perfecta para este trabajo.
 
 Consulta el paso "Rendimiento" para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes del despliegue.
 
 Fusionando en producción
-------------------------
+-------------------------
 
 .. index::
     single: Symfony CLI;deploy

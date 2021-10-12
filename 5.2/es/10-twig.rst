@@ -145,7 +145,7 @@ En el código del controlador, el método ``render()`` construye y pasa un *arra
 Un controlador es una clase estándar de PHP. Ni siquiera necesitamos extender la clase ``AbstractController`` si queremos ser explícitos sobre nuestras dependencias. Puedes omitir esa extensión (pero no lo hagas, ya que usaremos los útiles atajos que proporciona en los próximos pasos).
 
 Creando la página para una conferencia
---------------------------------------
+---------------------------------------
 
 Cada conferencia debe tener una página donde se listen sus comentarios. Añadir una nueva página es cuestión de agregar un controlador, asignarle una ruta y crear la plantilla relacionada.
 
@@ -242,7 +242,7 @@ El error viene del filtro ``format_datetime`` ya que no es parte del núcleo de 
 Ahora la página funciona correctamente.
 
 Vinculando las páginas
-----------------------
+-----------------------
 
 .. index::
     single: Twig;Link

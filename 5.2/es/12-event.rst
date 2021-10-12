@@ -4,7 +4,7 @@ Escuchando eventos
 Al diseño actual le falta un encabezado de navegación para poder volver a la página principal o cambiar de una conferencia a la siguiente.
 
 Añadiendo un encabezado al sitio web
-------------------------------------
+-------------------------------------
 
 .. index::
     single: Twig;for
@@ -141,7 +141,7 @@ Ahora, puedes añadir tantos controladores como quieras: la variable ``conferenc
     Hablaremos de una alternativa mucho mejor en cuanto a rendimiento en un paso posterior.
 
 Ordenando conferencias por año y ciudad
----------------------------------------
+----------------------------------------
 
 Ordenar la lista de conferencias por año puede facilitar la navegación. Podríamos crear un método personalizado para recuperar y clasificar todas las conferencias, pero en su lugar, vamos a anular la implementación predeterminada del método ``findAll()`` para asegurarnos de que la clasificación se aplica en todas partes:
 

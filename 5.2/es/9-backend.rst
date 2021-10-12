@@ -1,5 +1,5 @@
 Configurando un panel de administración
-=======================================
+========================================
 
 .. index::
     single: EasyAdmin

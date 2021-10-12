@@ -47,7 +47,7 @@ Uno de los grandes beneficios de usar un framework es la pequeña cantidad de c�
 ¿Listo para el desafío?
 
 Obteniendo el código fuente del proyecto
-----------------------------------------
+-----------------------------------------
 
 Para seguir pareciendo anticuado, podría haber creado un CD con el código fuente, ¿verdad? ¿Pero qué tal usar un repositorio Git en su lugar?
 
@@ -55,23 +55,23 @@ Para seguir pareciendo anticuado, podría haber creado un CD con el código fuen
     single: Project;Git Repository
     single: Git;clone
 
-Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-5.0-1>`_ en algún lugar de tu equipo local:
+Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-5.2-2>`_ en algún lugar de tu equipo local:
 
 .. code-block:: bash
     :class: ignore
 
-    $ symfony new --version=5.0-1 --book guestbook
+    $ symfony new --version=5.2-2 --book guestbook
 
 Este repositorio contiene todo el código que aparece en el libro.
 
-Fíjate en que estamos usando ``symfony new`` en lugar de ``git clone`` ya que este comando hace algo más que simplemente clonar el repositorio (alojado en Github bajo la organización ``the-fast-track``: ``https://github.com/the-fast-track/book-5.0-1``). También inicia el servidor web, los contenedores, migra la base de datos, carga los fixtures de datos... Tras ejecutar el comando, el sitio web debería estar en activo y funcionando, listo para ser utilizado.
+Fíjate en que estamos usando ``symfony new`` en lugar de ``git clone`` ya que este comando hace algo más que simplemente clonar el repositorio (alojado en Github bajo la organización ``the-fast-track``: ``https://github.com/the-fast-track/book-5.2-2``). También inicia el servidor web, los contenedores, migra la base de datos, carga los fixtures de datos... Tras ejecutar el comando, el sitio web debería estar en activo y funcionando, listo para ser utilizado.
 
 El código está 100%  sincronizado con el código que verás en el libro (usa la URL exacta del repositorio que aparece arriba). Intentar sincronizar manualmente los cambios del libro con el código fuente del repositorio es casi imposible. Lo intenté en el pasado. Fracasé. Es simplemente imposible. Especialmente para libros como los que escribo: libros que cuentan una historia sobre el desarrollo de un sitio web. Como cada capítulo depende de los anteriores, un cambio puede tener consecuencias en todos los capítulos siguientes.
 
 La buena noticia es que el repositorio Git para este libro se *genera automáticamente* a partir del contenido del libro. Sí, lo has leído bien. Me gusta automatizar todo, así que hay un *script* cuyo trabajo es leer el libro y crear el repositorio Git. Existe un efecto colateral: cuando se actualice el libro, el *script* fallará si los cambios son inconsistentes o si me olvido de actualizar algunas instrucciones. Esto es BDD, ¡Book Driven Development!
 
 Navegando por el código fuente
-------------------------------
+-------------------------------
 
 Mejor aún, el repositorio no es sólo la versión final del código en la rama ``master``. El *script* ejecuta cada acción explicada en el libro y hace un *commit* con el resultado al final de cada sección. También marca cada paso y subpaso para facilitar la navegación por el código. Bonito, ¿verdad?
 

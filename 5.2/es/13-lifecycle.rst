@@ -304,7 +304,7 @@ Necesitamos declarar parcialmente al oyente en el contenedor. El cableado de dep
     No confundas a los oyentes de los eventos de Doctrine con los de Symfony. Aunque parezcan muy similares, no están utilizando la misma infraestructura realmente.
 
 Usando *slugs* en la aplicación
--------------------------------
+--------------------------------
 
 Intenta añadir más conferencias en el módulo de servicio y cambia la ciudad o el año de una existente; el *slug* no se actualizará excepto si utilizas el valor especial ``-``.
 

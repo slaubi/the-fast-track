@@ -20,7 +20,7 @@ El componente Symfony Notifier implementa muchas estrategias de notificación:
     $ symfony composer req notifier
 
 Enviando notificaciones de aplicación web en el navegador
----------------------------------------------------------
+----------------------------------------------------------
 
 .. index::
     single: Flash Messages
@@ -120,7 +120,7 @@ Como bonus adicional, tenemos una notificación en la parte superior del sitio w
     Esta es la razón por la que hemos añadido el fragmento de los mensajes flash en la plantilla ``show.html.twig`` y no en la base, ya que habríamos perdido la caché HTTP de la página de inicio.
 
 Notificando a los administradores por correo electrónico
---------------------------------------------------------
+---------------------------------------------------------
 
 En lugar de enviar un correo electrónico a través de ``MailerInterface`` para notificar al administrador que se acaba de publicar un comentario, modifica el código para utilizar el componente Notifier en el manejador de mensajes:
 
@@ -554,7 +554,7 @@ Inténtalo de nuevo, el mensaje debe estar bien ahora:
     :align: center
 
 Volviéndonos asíncronos en todos los ámbitos
---------------------------------------------
+-----------------------------------------------
 
 Permíteme explicarte un pequeño problema que debemos resolver. Por cada comentario, recibimos un correo electrónico y un mensaje de Slack. Si se produce un error en el mensaje de Slack (id de canal incorrecto, token incorrecto...), el mensaje se volverá a intentar enviar tres veces antes de ser descartado. Pero como el correo electrónico se envía primero, recibiremos 3 correos electrónicos y ningún mensaje de Slack. Una forma de arreglarlo es enviar mensajes de Slack de forma asíncrona como si fueran correos electrónicos:
 
@@ -573,7 +573,7 @@ Permíteme explicarte un pequeño problema que debemos resolver. Por cada coment
 Tan pronto como todo sea asíncrono, los mensajes se vuelven independientes. También hemos habilitado los mensajes SMS asíncronos en caso de que también quieras ser notificado en tu teléfono.
 
 Notificando a los usuarios por correo electrónico
--------------------------------------------------
+--------------------------------------------------
 
 La última tarea es notificar a los usuarios cuando se apruebe su envío. ¿Qué te parece si dejamos que lo implementes tú mismo?
 

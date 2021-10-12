@@ -1,5 +1,5 @@
 Obteniendo realimentación con formularios
-=========================================
+==========================================
 
 .. index::
     single: Components;Form
@@ -208,7 +208,7 @@ La restricción de la imagen funciona comprobando el tipo mime; se requiere el c
     :figclass: with-browser
 
 Validación de modelos
----------------------
+----------------------
 
 El tipo de formulario configura cómo se muestra en el navegador (a través de alguna validación HTML5). Aquí está el formulario HTML generado:
 
@@ -443,7 +443,7 @@ Haz clic en él para acceder al perfil de la petición POST, y ve al panel "Form
     :figclass: with-browser
 
 Visualizando las fotos cargadas en el panel de administración
--------------------------------------------------------------
+--------------------------------------------------------------
 
 El panel de administración está mostrando el nombre del archivo de la foto, pero queremos ver la foto actual:
 
@@ -488,7 +488,7 @@ Excluyendo las fotos subidas de Git
      /.env.local
 
 Almacenando archivos enviados en servidores de producción
----------------------------------------------------------
+----------------------------------------------------------
 
 El último paso es almacenar los archivos cargados en servidores de producción. ¿Por qué tenemos que tenerlo en cuenta? Porque la mayoría de las plataformas de nube modernas utilizan contenedores de sólo lectura por varias razones. SymfonyCloud no es una excepción.
 

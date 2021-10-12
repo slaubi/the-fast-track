@@ -11,7 +11,7 @@ Un comentario se describe mejor con una estructura de datos fija: un autor, su c
 PostgreSQL es el motor de base de datos que usaremos.
 
 Añadiendo PostgreSQL a Docker Compose
--------------------------------------
+--------------------------------------
 
 .. index::
     single: Docker;PostgreSQL
@@ -97,7 +97,7 @@ Gracias a estas convenciones, es mucho más fácil acceder a la base de datos a 
         $ docker-compose exec database psql main
 
 Volcado y restauración de la base de datos
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Database;Dump
@@ -123,7 +123,7 @@ Y restaura los datos:
     Nunca ejecutes ``docker-compose down`` si no quieres perder tus datos. O crea primero una copia de seguridad.
 
 Añadiendo PostgreSQL a SymfonyCloud
------------------------------------
+------------------------------------
 
 .. index::
     single: SymfonyCloud;PostgreSQL

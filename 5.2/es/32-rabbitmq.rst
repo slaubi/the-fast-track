@@ -64,7 +64,7 @@ Para forzar a Docker Compose a que tenga en cuenta el contenedor RabbitMQ, para 
     $ sleep 10
 
 Explorando la interfaz web de administración de RabbitMQ
---------------------------------------------------------
+---------------------------------------------------------
 
 .. index::
     single: Symfony CLI;open:local:rabbitmq

@@ -1,5 +1,5 @@
 Adoptando una metodología
-=========================
+==========================
 
 Enseñar consiste en repetir lo mismo una y otra vez. No voy a hacer eso. Te lo prometo. Al final de cada paso, deberías marcarte un baile y guardar tu trabajo. Es como ``Ctrl+S`` pero para un sitio web.
 
@@ -41,7 +41,7 @@ Podría ser bueno hacer *push* de tu repositorio a algún servidor externo. GitH
 Si estás desplegando en SymfonyCloud, ya tienes una copia del repositorio Git, pero no deberías depender exclusivamente de él. Se usa solamente para el despliegue. No es una copia de seguridad.
 
 Despliegue continuo a producción
---------------------------------
+---------------------------------
 
 .. index::
     single: Symfony CLI;deploy

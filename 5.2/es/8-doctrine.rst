@@ -440,7 +440,7 @@ Echa un vistazo a los cambios que se aplican en las clases de entidad después d
 Se ha generado por ti todo lo que necesitas para gestionar la relación. A partir de ahora, el código es tuyo; no dudes en personalizarlo como quieras.
 
 Añadiendo más propiedades
--------------------------
+---------------------------
 
 .. index::
     single: Command;make:entity
@@ -518,7 +518,7 @@ Ahora puedes ejecutar la migración generada para actualizar el esquema de la ba
 El esquema de la base de datos local ya está actualizado y listo para almacenar algunos datos.
 
 Actualizando la base de datos de producción
--------------------------------------------
+--------------------------------------------
 
 Los pasos necesarios para migrar la base de datos de producción son los mismos con los que ya estás familiarizado: confirmar los cambios y desplegar.
 

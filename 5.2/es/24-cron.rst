@@ -71,7 +71,7 @@ Crea algunos métodos útiles en el repositorio de comentarios para encontrar lo
     Para consultas más complejas, a veces es útil echar un vistazo a las sentencias SQL generadas (se pueden encontrar en los registros y en el perfilador de solicitudes Web).
 
 Usando constantes de clase, parámetros de contenedor y variables de entorno
----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 .. index::
     single: Container;Parameters
@@ -89,7 +89,7 @@ Aquí hay algunas reglas generales para decidir qué abstracción usar:
 * Para todo lo demás, almacena el valor en el código, como una *constante de clase*.
 
 Creando un comando de línea de comandos
----------------------------------------
+----------------------------------------
 
 Eliminar los comentarios antiguos es la tarea perfecta para una trabajo cron. Debería hacerse de forma regular, y un pequeño retraso no tiene un impacto importante.
 

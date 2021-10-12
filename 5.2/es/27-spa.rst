@@ -10,7 +10,7 @@ La mayoría de los comentarios se enviarán durante la conferencia, donde alguna
 Una forma de crear una aplicación móvil de este tipo es crear una aplicación de una sola página (SPA) en Javascript. Una SPA se ejecuta localmente, puede usar almacenamiento local, puede llamar a una API HTTP remota y puede aprovechar a los *service workers* para crear una experiencia casi nativa.
 
 Creando la aplicación
----------------------
+----------------------
 
 Para crear la aplicación móvil, vamos a utilizar `Preact`_ y **Symfony Encore**. **Preact** proporciona unos cimientos ligeros pero eficaces sobre los que trabajar, muy adecuados para nuestro libro de visitas SPA.
 
@@ -542,7 +542,7 @@ Y la aplicación debería funcionar correctamente en el navegador:
 ¡Impresionante! Ahora tenemos un SPA totalmente funcional, con router y datos reales. Podríamos organizar mejor la aplicación Preact más adelante si queremos, pero ya está funcionando muy bien.
 
 Desplegando la SPA en producción
---------------------------------
+---------------------------------
 
 .. index::
     single: SymfonyCloud;Multi-Applications
@@ -654,7 +654,7 @@ Accede a la SPA en un navegador especificando que es una aplicación:
     $ symfony open:remote --app=spa
 
 Usando Cordova para construir una aplicación de Smartphone
-----------------------------------------------------------
+-----------------------------------------------------------
 
 .. index::
     single: SPA;Cordova

@@ -1,5 +1,5 @@
 Internacionalizando una aplicación
-==================================
+===================================
 
 Debido a su carácter internacional, desde el principio Symfony ha sido capaz de manejar la internacionalización (i18n) y la regionalización (l10n). La regionalización de una aplicación, proceso al que llamaremos localización a partir de ahora, no consiste sólo en traducir la interfaz, sino también las formas plurales, el formato de fecha y de moneda, las URLs y mucho más.
 
@@ -133,7 +133,7 @@ Ya casi hemos terminado. Ahora ya no tenemos una ruta que coincida con ``/``. Va
 Ahora que todas las rutas principales recogen el parámetro de la regionalización, observa que las URLs generadas en las páginas tienen en cuenta automáticamente la región actual.
 
 Añadiendo un selector de localizaciones
----------------------------------------
+----------------------------------------
 
 .. index::
     single: Twig;path
@@ -448,7 +448,7 @@ Aún no hemos terminado, ya que ahora tenemos que proporcionar la traducción al
     </xliff>
 
 Actualización de las pruebas funcionales
-----------------------------------------
+-----------------------------------------
 
 No olvides actualizar las pruebas funcionales para tener en cuenta los cambios en las URLs y en el contenido:
 

@@ -1,5 +1,5 @@
 Almacenando en caché para mejorar el rendimiento
-================================================
+=================================================
 
 .. index::
     single: Components;HTTP Kernel
@@ -9,7 +9,7 @@ Almacenando en caché para mejorar el rendimiento
 Pueden aparecer problemas de rendimiento aparejados a la popularidad. Algunos ejemplos típicos: índices de base de datos que faltan o cientos de peticiones SQL por página. No tendrás ningún problema con una base de datos vacía, pero con más tráfico y datos que no hagan más que crecer, podrían surgir en algún momento.
 
 Agregando cabeceras de caché HTTP
----------------------------------
+----------------------------------
 
 .. index::
     single: HTTP Cache;HTTP Cache Headers
@@ -317,7 +317,7 @@ Quita al oyente ya que no lo necesitamos más:
     $ rm src/EventSubscriber/TwigEventSubscriber.php
 
 Purgando la caché HTTP para pruebas
------------------------------------
+------------------------------------
 
 Probar el sitio web en un navegador o mediante pruebas automatizadas se hace un poco más difícil con una capa de caché.
 
@@ -428,7 +428,7 @@ Las dos rutas en el controlador de administración tienen el mismo prefijo ``/ad
              if ('prod' === $kernel->getEnvironment()) {
 
 Almacenando en la caché operaciones intensivas de CPU/memoria
--------------------------------------------------------------
+--------------------------------------------------------------
 
 .. index::
     single: Process
@@ -545,7 +545,7 @@ Siempre mide el impacto de añadir una caché con una herramienta de análisis c
 Consulta el paso "Rendimiento" para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes de la implementación.
 
 Configurando una caché de proxy inverso en producción
------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: HTTP Cache;Varnish
@@ -620,7 +620,7 @@ El soporte de ESI en Varnish debe estar habilitado explícitamente para cada sol
     }
 
 Purgando la caché de Varnish
-----------------------------
+-----------------------------
 
 Invalidar la caché en producción probablemente nunca deba ser necesario, excepto con fines de emergencia y tal vez en las ramas no ``master``. Si necesitas purgar la caché con frecuencia, probablemente significa que la estrategia de almacenamiento en caché debe ser modificada (bajando el TTL o usando una estrategia de validación en lugar de una de caducidad).
 

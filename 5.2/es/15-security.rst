@@ -1,5 +1,5 @@
 Asegurando el panel de administración
-=====================================
+======================================
 
 La interfaz del panel de administración sólo debe ser accesible para personas de confianza. El control de acceso a este área del sitio web se puede realizar utilizando el componente Symfony Security.
 
@@ -93,7 +93,7 @@ Hora de generar una migración y migrar la base de datos:
     $ symfony console doctrine:migrations:migrate -n
 
 Generando una contraseña para el usuario administrador
-------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: Security;Encoding Passwords
@@ -149,7 +149,7 @@ Inserta el usuario administrador a través de una sentencia SQL:
 Observa el carácter de escape en el signo ``$`` que hay en la columna de contraseña; ¡usa secuencias de escape en todos!
 
 Configurando la autenticación de seguridad
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: Command;make:auth
@@ -223,7 +223,7 @@ Como indica la salida del comando, necesitamos personalizar la ruta en el métod
         $ symfony console debug:router
 
 Añadiendo reglas de autorización de control de acceso
------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: Security;Authorization
@@ -247,7 +247,7 @@ Un sistema de seguridad consta de dos partes: *autenticación* y *autorización*
 Las reglas ``access_control`` restringen el acceso mediante expresiones regulares. Cuando se intenta acceder a una URL que comienza con ``/admin``, el sistema de seguridad comprobará que el usuario que ha iniciado sesión tenga asignado el rol ``ROLE_ADMIN``.
 
 Autenticación a través del formulario de inicio de sesión
----------------------------------------------------------
+------------------------------------------------------------
 
 Si intentas acceder al módulo de administración, serás redirigido a la página de inicio de sesión y se te pedirá que introduzcas un nombre de usuario y una contraseña:
 

@@ -4,7 +4,7 @@ Solucionando problemas
 La creación de un proyecto también consiste en disponer de las herramientas adecuadas para depurar los problemas.
 
 Instalando más dependencias
----------------------------
+----------------------------
 
 Recuerda que el proyecto se creó con muy pocas dependencias. Sin motor de plantillas. Sin herramientas de depuración. Sin sistema de *logs* (registros). La idea es que puedas añadir más dependencias cuando las necesites. ¿Para qué necesitarías añadir un motor de plantillas si desarrollas una API HTTP o una herramienta de línea de comandos?
 
@@ -53,7 +53,7 @@ El cambio de un entorno a otro puede realizarse modificando la variable de entor
 Cuando desplegaste el proyecto en SymfonyCloud, el entorno (almacenado en ``APP_ENV``) se cambió automáticamente a ``prod``.
 
 Gestionando la configuración de los entornos
---------------------------------------------
+---------------------------------------------
 
 .. index::
     single: Environment Variables
@@ -113,7 +113,7 @@ Para usar las herramientas de depuración, vamos a instalarlas sólo en desarrol
     $ symfony composer req debug --dev
 
 Descubriendo las herramientas de depuración de Symfony
-------------------------------------------------------
+-------------------------------------------------------
 
 Si actualizas la página de inicio, ahora deberías ver una barra de herramientas en la parte inferior de la pantalla:
 
@@ -214,7 +214,7 @@ En el entorno de desarrollo, cuando se lanza una excepción, Symfony muestra una
 Los archivos vinculados no están libres de excepciones. Por ejemplo, el controlador en la barra de herramientas de depuración web permite hacer clic después de configurar el IDE.
 
 Depurando en entorno de producción
-----------------------------------
+-----------------------------------
 
 .. index::
     single: SymfonyCloud;Remote Logs

@@ -1,5 +1,5 @@
 Desde cero hasta producción
-===========================
+============================
 
 Me gusta ir rápido. Quiero que nuestro pequeño proyecto vea la luz lo más rápido posible. Así como... ¡ahora mismo! En producción. Como aún no hemos desarrollado nada, empezaremos por desplegar una página "En construcción" agradable y sencilla. ¡Te encantará!
 
@@ -45,8 +45,7 @@ Echa un vistazo a la estructura de directorio:
 
 El directorio ``bin/`` contiene el punto de entrada principal a los comandos que se introducen desde la línea de comandos: ``console``. Lo vas a usar todo el tiempo.
 
-El directorio ``config/`` está formado por un conjunto de archivos 
-de configuración con valores predeterminados cuidadosamente elegidos. Un archivo por cada paquete. Apenas tendrás que cambiarlos, ya que confiar en los valores predeterminados es, casi siempre, una buena idea.
+El directorio ``config/`` está formado por un conjunto de archivos  de configuración con valores predeterminados cuidadosamente elegidos. Un archivo por cada paquete. Apenas tendrás que cambiarlos, ya que confiar en los valores predeterminados es, casi siempre, una buena idea.
 
 El directorio ``public/`` es el directorio raíz de la web, y el script ``index.php`` es el principal punto de entrada para todos los recursos HTTP dinámicos.
 
@@ -59,7 +58,7 @@ El directorio ``vendor/`` contiene todos los paquetes instalados por Composer, i
 Esto es todo lo que necesitas saber por ahora.
 
 Creando algunos Recursos Públicos
----------------------------------
+----------------------------------
 
 Todo lo que está bajo ``public/`` es accesible a través de un navegador. Por ejemplo, si mueves tu archivo GIF animado (nómbralo ``under-construction.gif``) a un nuevo directorio ``public/images/``, éste estará disponible en la URL ``https://localhost/images/under-construction.gif``.
 
@@ -122,7 +121,7 @@ Navega hacia ``/images/under-construction.gif``.  ¿Se parece a esto?
     $ git commit -m'Add the under construction image'
 
 Añadiendo un favicon
---------------------
+---------------------
 
 Para evitar ser "spameados" con errores HTTP 404 en los logs debido a la falta de un favicon solicitado por los navegadores, agreguemos uno ahora:
 
@@ -133,7 +132,7 @@ Para evitar ser "spameados" con errores HTTP 404 en los logs debido a la falta d
     $ git commit -m'Add a favicon'
 
 Preparando para producción
---------------------------
+---------------------------
 
 .. index::
     single: SymfonyCloud;Initialization
@@ -167,7 +166,7 @@ Añádelos a Git e inclúyelos en un *commit*:
     Usar el genérico y peligroso ``git add .`` funciona correctamente ya que se ha generado un archivo ``.gitignore`` que excluye automáticamente todos los archivos a los que no queremos hacer *commit*.
 
 Pasando a producción
---------------------
+---------------------
 
 .. index::
     single: Symfony CLI;project:create

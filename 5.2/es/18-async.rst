@@ -1,5 +1,5 @@
 Volviéndonos asíncronos
-=======================
+=========================
 
 .. index::
     single: Async
@@ -362,7 +362,7 @@ Actualiza la lógica de visualización para evitar que aparezcan comentarios no 
                  ->setFirstResult($offset)
 
 Volviéndonos asíncronos de verdad
----------------------------------
+-----------------------------------
 
 Por defecto, los manejadores son llamados sincrónicamente. Para ser asíncronos, es necesario configurar explícitamente qué cola utilizar para cada manejador en el fichero de configuración ``config/packages/messenger.yaml``:
 

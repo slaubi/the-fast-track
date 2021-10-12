@@ -39,7 +39,7 @@ El comando ``list`` incorporado en la consola de Symfony muestra un listado con 
     $ symfony console list make
 
 Seleccionando un formato de configuración
------------------------------------------
+------------------------------------------
 
 Antes de crear el primer controlador del proyecto, tenemos que decidir los formatos de configuración que queremos utilizar. Symfony soporta YAML, XML, PHP y anotaciones desde el primer momento.
 

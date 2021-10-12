@@ -544,7 +544,7 @@ Siempre que desees ejecutar las pruebas, utiliza ``make tests``:
     $ make tests
 
 Restableciendo la base de datos después de cada prueba
-------------------------------------------------------
+-------------------------------------------------------
 
 .. index::
     single: PHPUnit;Performance

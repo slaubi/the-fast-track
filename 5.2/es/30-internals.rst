@@ -1,5 +1,5 @@
 Descubriendo el corazón de Symfony
-==================================
+===================================
 
 .. index::
     single: Blackfire
@@ -13,7 +13,7 @@ Me gusta entender cómo funcionan las cosas detrás de bastidores. Y siempre me 
 ¿Te gustaría entender mejor cómo funciona Symfony? Es hora de indagar en cómo Symfony hace funcionar tu aplicación. En lugar de describir cómo Symfony maneja una petición HTTP desde una perspectiva teórica, lo que sería bastante aburrido, vamos a utilizar Blackfire para obtener algunas representaciones visuales y utilizarlo para descubrir algunos temas más avanzados.
 
 Entendiendo el corazón de Symfony con Blackfire
------------------------------------------------
+------------------------------------------------
 
 Ya sabes que todas las peticiones HTTP se sirven por un único punto de entrada: el archivo ``public/index.php``. Pero ¿qué pasa después? ¿cómo se llama a los controladores?
 
@@ -98,7 +98,7 @@ Como acabamos de descubrir, el código ejecutado en desarrollo y producción es 
 Algunos experimentos interesantes: analizar una página de error, analizar la página ``/`` (que es un redireccionamiento), o un recurso de la API. Cada perfil te dirá un poco más sobre cómo funciona Symfony, qué clase/métodos se llaman, qué es caro de ejecutar y qué es barato.
 
 Usando el complemento de depuración de Blackfire
-------------------------------------------------
+-------------------------------------------------
 
 .. index::
     single: Blackfire;Debug Addon

@@ -9,7 +9,7 @@ Cualquiera puede enviar sus comentarios. Incluso robots, spammers y otros. Podr�
 He decidido utilizar el servicio gratuito de `Akismet <https://akismet.com>`_ para demostrar cómo llamar a una API y realizar la comunicación sobre la marcha.
 
 Registrándonos en Akismet
--------------------------
+--------------------------
 
 .. index::
     single: Akismet
@@ -32,7 +32,7 @@ Para hacer llamadas a la API, utiliza el componente HttpClient de Symfony:
     $ symfony composer req http-client
 
 Diseñando una clase verificadora de spam
-----------------------------------------
+-----------------------------------------
 
 Crea una nueva clase bajo ``src/`` llamada ``SpamChecker`` para envolver la lógica de llamar a la API de Akismet e interpretar sus respuestas:
 
@@ -225,7 +225,7 @@ Una forma sencilla de comprobar si hay spam cuando se envía un nuevo comentario
 Comprueba que funciona bien.
 
 Manejando los datos secretos en producción
-------------------------------------------
+-------------------------------------------
 
 .. index::
     single: SymfonyCloud;Secret
