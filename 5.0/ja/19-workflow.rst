@@ -1,0 +1,201 @@
+ワークフローを使って判定する
+==========================================
+
+.. index::
+    single: Components;Workflow
+    single: Workflow
+
+モデルが状態を持つことはよくあります。今はコメントの状態はスパムチェッカーからしか変わりませんが、他の状態の追加を検討してみましょう。
+
+スパムチェックの後に、Webサイトの管理者が全てのコメントをモデレートしたいとしましょう。このプロセスは次の行のようなものです:
+
+* ユーザーがコメントを追加した際の ``submitted`` 状態から始めましょう;
+
+* スパムチェッカーにコメントを分析させ、 ``potential_spam``, ``ham`` (スパムでないメール), ``rejected`` のいずれかの状態にスイッチさせるようにしましょう;
+
+* リジェクトされなければ、Webサイトの管理者がコメントを ``published`` もしくは ``rejected`` の状態に変更するのを待ちましょう。
+
+ロジックを実装するのはそれほど複雑ではありませんが、さらにルールを追加することで複雑になることもあります。ロジックを自分でコーディングするのではなく、Symfony ワークフローコンポーネントを使用してみます:
+
+.. code-block:: bash
+
+    $ symfony composer req workflow
+
+ワークフローを記述する
+---------------------------------
+
+コメントワークフローは、``config/packages/workflow.yaml``  ファイルに記述されます:
+
+.. code-block:: yaml
+    :caption: config/packages/workflow.yaml
+    :emphasize-lines: 3,4,9,11
+
+    framework:
+        workflows:
+            comment:
+                type: state_machine
+                audit_trail:
+                    enabled: "%kernel.debug%"
+                marking_store:
+                    type: 'method'
+                    property: 'state'
+                supports:
+                    - App\Entity\Comment
+                initial_marking: submitted
+                places:
+                    - submitted
+                    - ham
+                    - potential_spam
+                    - spam
+                    - rejected
+                    - published
+                transitions:
+                    accept:
+                        from: submitted
+                        to:   ham
+                    might_be_spam:
+                        from: submitted
+                        to:   potential_spam
+                    reject_spam:
+                        from: submitted
+                        to:   spam
+                    publish:
+                        from: potential_spam
+                        to:   published
+                    reject:
+                        from: potential_spam
+                        to:   rejected
+                    publish_ham:
+                        from: ham
+                        to:   published
+                    reject_ham:
+                        from: ham
+                        to:   rejected
+
+.. index::
+    single: Command;workflow:dump
+
+ワークフローをバリデートするために、視覚的な表現を生成します:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
+
+.. image:: images/workflow.png
+    :align: center
+
+.. note::
+
+    ``dot`` コマンドは、 `Graphviz`_ ユーティリティの一部です。
+
+ワークフローを使用する
+---------------------------------
+
+現在のメッセージハンドラーのロジックをワークフローに置き換えます:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/MessageHandler/CommentMessageHandler.php
+    +++ b/src/MessageHandler/CommentMessageHandler.php
+    @@ -6,19 +6,28 @@ use App\Message\CommentMessage;
+     use App\Repository\CommentRepository;
+     use App\SpamChecker;
+     use Doctrine\ORM\EntityManagerInterface;
+    +use Psr\Log\LoggerInterface;
+     use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+    +use Symfony\Component\Messenger\MessageBusInterface;
+    +use Symfony\Component\Workflow\WorkflowInterface;
+
+     class CommentMessageHandler implements MessageHandlerInterface
+     {
+         private $spamChecker;
+         private $entityManager;
+         private $commentRepository;
+    +    private $bus;
+    +    private $workflow;
+    +    private $logger;
+
+    -    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository)
+    +    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, LoggerInterface $logger = null)
+         {
+             $this->entityManager = $entityManager;
+             $this->spamChecker = $spamChecker;
+             $this->commentRepository = $commentRepository;
+    +        $this->bus = $bus;
+    +        $this->workflow = $commentStateMachine;
+    +        $this->logger = $logger;
+         }
+
+         public function __invoke(CommentMessage $message)
+    @@ -28,12 +37,21 @@ class CommentMessageHandler implements MessageHandlerInterface
+                 return;
+             }
+
+    -        if (2 === $this->spamChecker->getSpamScore($comment, $message->getContext())) {
+    -            $comment->setState('spam');
+    -        } else {
+    -            $comment->setState('published');
+    -        }
+
+    -        $this->entityManager->flush();
+    +        if ($this->workflow->can($comment, 'accept')) {
+    +            $score = $this->spamChecker->getSpamScore($comment, $message->getContext());
+    +            $transition = 'accept';
+    +            if (2 === $score) {
+    +                $transition = 'reject_spam';
+    +            } elseif (1 === $score) {
+    +                $transition = 'might_be_spam';
+    +            }
+    +            $this->workflow->apply($comment, $transition);
+    +            $this->entityManager->flush();
+    +
+    +            $this->bus->dispatch($message);
+    +        } elseif ($this->logger) {
+    +            $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
+    +        }
+         }
+     }
+
+新しいロジックは以下のようになります:
+
+* メッセージ内のコメントにおいて、``accept`` 遷移が可能であれば、スパムチェックを行います;
+
+* 結果に応じた正しい状態遷移を選んでください;
+
+* ``setState()`` メソッドを介して、コメントを更新するための ``apply()`` を呼んでください;
+
+* ``flush()`` を呼び、データベースに変更をコミットしてください;
+
+* ワークフローの再遷移を許容させるため、メッセージを再ディスパッチしてください。
+
+管理者のバリデーションはまだ実装していないので、メッセージの取得実行をすると "コメントメッセージを削除します" とログが吐かれます。
+
+次の章までに自動バリデーションを実装しましょう:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/src/MessageHandler/CommentMessageHandler.php
+    +++ b/src/MessageHandler/CommentMessageHandler.php
+    @@ -50,6 +50,9 @@ class CommentMessageHandler implements MessageHandlerInterface
+                 $this->entityManager->flush();
+
+                 $this->bus->dispatch($message);
+    +        } elseif ($this->workflow->can($comment, 'publish') || $this->workflow->can($comment, 'publish_ham')) {
+    +            $this->workflow->apply($comment, $this->workflow->can($comment, 'publish') ? 'publish' : 'publish_ham');
+    +            $this->entityManager->flush();
+             } elseif ($this->logger) {
+                 $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
+             }
+
+``symfony server:log`` を実行し、フロントエンドでコメントが追加し、順々に状態が遷移することを確認してください。
+
+.. sidebar:: より深く学ぶために
+
+    * `ワークフローとステートマシーン <https://symfony.com/doc/current/workflow/workflow-and-state-machine.html>`_ に関しての説明と、どちらを使うかについて;
+
+    * `Symfony ワークフローのドキュメント <https://symfony.com/doc/current/workflow.html>`_.
+
+.. _`Graphviz`: https://www.graphviz.org/

@@ -1,0 +1,256 @@
+データベースをセットアップする
+=============================================
+
+.. index::
+    single: Database
+
+カンファレンスゲストブックの Webサイトでは、カンファレンス中のフィードバックを集めるようにします。カンファレンスの参加者からのコメントを永続的に格納できるようにする必要があります。
+
+コメントは、次のデータ構造を持っています: author(著者), email(メールアドレス), text(フィードバックのテキスト), photo(オプショナルの写真)。これらのデータは、リレーショナルデータベースに格納するのに向いています。
+
+今回は、 PostgreSQLをデータベースエンジンとして使います。
+
+Docker Compose へ PostgreSQL を追加
+---------------------------------------
+
+.. index::
+    single: Docker;PostgreSQL
+
+私たちのローカル開発環境には、Docker を用いてサービスを運用するようにしています。 ``docker-compose.yaml`` ファイルを作成し、 PostgreSQL をサービスとして追加してください:
+
+.. code-block:: yaml
+    :caption: docker-compose.yaml
+    :emphasize-lines: 4,5,10
+
+    version: '3'
+
+    services:
+        database:
+            image: postgres:13-alpine
+            environment:
+                POSTGRES_USER: main
+                POSTGRES_PASSWORD: main
+                POSTGRES_DB: main
+            ports: [5432]
+
+PostgreSQL サーバのバージョン11 をインストールし、データベース名やクレデンシャルを制御するための環境変数を設定します。値にこだわりはありません。
+
+また、ローカルホストへ PostgreSQL のポート(``5432``)を公開します。これで自分の開発環境からデータベースへ接続できるようになります。
+
+.. note::
+
+    ``pdo_pgsql`` 拡張は、PHP をセットアップした前のステップでインストールされているはずです。
+
+Docker Compose を起動しましょう
+---------------------------------------
+
+Docker Compose をバックグラウンドで起動します (``-d``):
+
+.. code-block:: bash
+
+    $ docker-compose up -d
+
+データベースが起動するのを待って、すべて正しく動いているかチェックしましょう:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ docker-compose ps
+
+            Name                      Command              State            Ports
+    ---------------------------------------------------------------------------------------
+    guestbook_database_1   docker-entrypoint.sh postgres   Up      0.0.0.0:32780->5432/tcp
+
+もしコンテナが起動していなかったり、 ``State`` カラムが ``Up`` になっていなければ、 Docker Compose のログをチェックしましょう:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ docker-compose logs
+
+ローカルのデータベースへのアクセス
+---------------------------------------------------
+
+``psql`` コマンドラインを使用することが便利なときもあります。しかし、データベース名やクレデンシャルを覚えておく必要があります。また、ホスト上で動いているデータベースのローカルポートも知る必要があります。Docker は、同時に PostgreSQL を使用するプロジェクトが一つ以上あったときでも動くようにランダムなポートを選択します(ローカルポートは ``docker-compose ps`` コマンドで出力できます)。
+
+Symfony CLI で ``psql`` を実行する際は、何も覚えておく必要はありません。
+
+Symfony CLI は自動的にプロジェクトで実行されている Docker サービスを検知し、 ``psql`` コマンドで必要になるデータベース接続に関する環境変数を公開します。
+
+.. index::
+    single: Symfony CLI;run psql
+
+この規約があるので、 ``symfony run`` を使ってデータベースに接続することがより簡単になるのです:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony run psql
+
+.. note::
+
+    If you don't have the ``psql`` binary on your local host, you can also run it via ``docker-compose``:
+
+    .. code-block:: bash
+        :class: ignore
+
+        $ docker-compose exec database psql main
+
+PostgreSQL を SymfonyCloud へ追加
+-------------------------------------
+
+.. index::
+    single: SymfonyCloud;PostgreSQL
+
+SymfonyCloud の本番インフラでは、PostgreSQL のようなサービスを追加する際に、現在何も書かかれていない ``.symfony/services.yaml`` ファイルを使用します:
+
+.. code-block:: yaml
+    :caption: .symfony/services.yaml
+
+    db:
+        type: postgresql:13
+        disk: 1024
+        size: S
+
+（Docker のような） ``db`` サービスは PostgreSQL データベースのバージョン 11 です。ディスク 1GB の小さなコンテナにプロビジョニングする必要があります。
+
+また、アプリケーションコンテナと DB を "リンク" する必要があります。これは、 ``.symfony.cloud.yaml`` に記述されます:
+
+.. code-block:: yaml
+    :caption: .symfony.cloud.yaml
+    :class: ignore
+
+    relationships:
+        database: "db:postgresql"
+
+``postgresql`` の ``db`` サービスは、アプリケーションコンテナでは、 ``database`` と参照されます。
+
+最後に、``pdo_pgsql`` 拡張を PHP ランタイムに追加しましょう:
+
+.. code-block:: yaml
+    :caption: .symfony.cloud.yaml
+    :class: ignore
+
+    runtime:
+        extensions:
+            - pdo_pgsql
+            # other extensions here
+
+これが ``.symfony.cloud.yaml`` に行った変更の完全な diff です:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- a/.symfony.cloud.yaml
+    +++ b/.symfony.cloud.yaml
+    @@ -4,6 +4,7 @@ type: php:7.4
+
+     runtime:
+         extensions:
+    +        - pdo_pgsql
+             - apcu
+             - mbstring
+             - sodium
+    @@ -21,6 +22,9 @@ build:
+
+     disk: 512
+
+    +relationships:
+    +    database: "db:postgresql"
+    +
+     web:
+         locations:
+             "/":
+
+これらの変更をコミットして、 SymfonyCloud へもう一度デプロイしましょう:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ git add .
+    $ git commit -m'Configuring the database'
+    $ symfony deploy
+
+SymfonyCloud のデータベースへのアクセス
+----------------------------------------------------
+
+PostgreSQL が Docker 経由のローカルと、 SymfonyCloud の本番で動いています。
+
+ここで見たように、 ``symfony run`` コマンドで環境変数が公開されているので、 ``symfony run psql`` を実行すると Docker によってホストされているデータベースに自動的に接続することができます。
+
+.. index::
+    single: SymfonyCloud;Tunnel
+    single: Symfony CLI;tunnel:open
+    single: Symfony CLI;tunnel:close
+    single: Symfony CLI;run psql
+
+本番のコンテナ上の PostgreSQL に接続したければ、ローカル環境と SymfonyCloud の間で SSH トンネルを開く事が可能です:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony tunnel:open --expose-env-vars
+
+デフォルトでは、 SymfonyCloud のサービスは、ローカル環境に環境変数を公開していません。 ``--expose-env-vars`` フラグを使用して明示する必要があります。本番のデータベースに接続するのは、危険な運用だからです。*本当の* データを壊してしまうかもしれません。フラグを必須とすることで、あなたがしようとしていることの確認をしているのです。
+
+今度は、前のように ``symfony run psql`` 経由でリモートの PostgreSQL データベースへ接続しましょう:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony run psql
+
+接続が終わったら、トンネルをクローズするのを忘れないでください:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony tunnel:close
+
+.. tip::
+
+    Shell の代わりに本番のデータベース上で SQL を実行するのに ``symfony sql`` コマンドも使用することができます。
+
+環境変数を公開する
+---------------------------
+
+.. index::
+    single: SymfonyCloud;Environment Variables
+    single: Symfony CLI;var:export
+
+環境変数を使うことで、Docker Compose と SymfonyCloud はシームレスに Symfony と連携することができます。
+
+``symfony var:export`` を実行して ``symfony`` が公開している全ての環境変数をチェックしてみましょう:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony var:export
+
+    PGHOST=127.0.0.1
+    PGPORT=32781
+    PGDATABASE=main
+    PGUSER=main
+    PGPASSWORD=main
+    # ...
+
+``PG*`` 環境変数は ``psql`` ユーティリティで使われます。他はどうでしょうか？
+
+``-expose-env-vars`` フラグをセットして、 SymfonyCloud へのトンネルをオープンすると、 ``var:export`` コマンドは、リモートの環境変数を返します:
+
+.. code-block:: bash
+    :class: ignore
+
+    $ symfony tunnel:open --expose-env-vars
+    $ symfony var:export
+    $ symfony tunnel:close
+
+.. sidebar:: より深く学ぶために
+
+    * `SymfonyCloud services <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_;
+
+    * `SymfonyCloud tunnel <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_;
+
+    * `PostgreSQL のドキュメント <https://www.postgresql.org/docs/>`_;
+
+    * `docker-compose コマンド <https://docs.docker.com/compose/reference/>`_.
