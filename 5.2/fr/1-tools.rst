@@ -130,13 +130,13 @@ De plus, la commande ``symfony`` sélectionne automatiquement la "meilleure" ver
 .. _`Composer`: https://getcomposer.org/
 .. _`NodeJS`: https://nodejs.org/
 .. _`Yarn`: https://classic.yarnpkg.com/en/docs/install/
-.. _`Install them`: https://docs.docker.com/install/
-.. _`Symfony CLI`: https://symfony.com/download
+.. _`Installez-les`: https://docs.docker.com/install/
+.. _`commande symfony`: https://symfony.com/download
 .. _`SymfonyConnect`: https://symfony.com/connect/login
-.. _`install a certificate authority (CA)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
+.. _`installer une autorité de certification`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
 .. _`Symfony Support Plugin`: https://plugins.jetbrains.com/plugin/7219-symfony-support
 .. _`iTerm2`: https://iterm2.com/
 .. _`Hyper`: https://hyper.is/
 .. _`Git`: https://git-scm.com/
 .. _`Git bash`: https://gitforwindows.org/
-.. _`Symfony proxy`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy
+.. _`proxy Symfony`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy

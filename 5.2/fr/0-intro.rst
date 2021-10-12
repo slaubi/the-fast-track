@@ -29,7 +29,7 @@ Allez, on code ? Amusez-vous bien !
 
 .. _`APIs`: https://en.wikipedia.org/wiki/Application_programming_interface
 .. _`SPAs`: https://en.wikipedia.org/wiki/Single-page_application
-.. _`containerization`: https://en.wikipedia.org/wiki/OS-level_virtualization
-.. _`Continuous Deployment`: https://en.wikipedia.org/wiki/Continuous_deployment
+.. _`conteneurisation`: https://en.wikipedia.org/wiki/OS-level_virtualization
+.. _`déploiement continu`: https://en.wikipedia.org/wiki/Continuous_deployment
 .. _`Slack`: https://symfony.com/slack
 .. _`Stack Overflow`: https://stackoverflow.com/questions/tagged/symfony

@@ -283,4 +283,4 @@ Enfin, faites le ménage en supprimant la branche Git et l'environnement Symfony
 
     * `Les branches Git <https://www.git-scm.com/book/fr/v2/Les-branches-avec-Git-Les-branches-en-bref>`_ ;
 
-.. _`stakeholders`: https://en.wikipedia.org/wiki/Project_stakeholder
+.. _`collègues`: https://en.wikipedia.org/wiki/Project_stakeholder

@@ -246,4 +246,4 @@ La partie de la route ``{name}`` est un *paramètre de route* dynamique - il fon
 
     * La `cheat sheet du système de routage Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/routing_en_part1.pdf>`_.
 
-.. _`Easter egg`: https://en.wikipedia.org/wiki/Easter_egg_(media)#In_computing
+.. _`easter egg`: https://en.wikipedia.org/wiki/Easter_egg_(media)#In_computing
