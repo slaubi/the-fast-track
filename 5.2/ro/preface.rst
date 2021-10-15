@@ -149,7 +149,9 @@ Susținători individuali
 .. index::
     Backers;Individuals
 
-=========================== =
+=========================== ===
+Backer                      Link
+=========================== ===
              Javier Eguiluz github%%javiereguiluz
             Tugdual Saunier github%%tucksaun
            Alexandre Salomé link%%https://alexandre.salome.fr
@@ -247,7 +249,7 @@ Guys & Gals at SymfonyCasts link%%https://symfonycasts.com
          Alexander M. Turek github%%derrabus
                 Zan Baldwin twitter%%ZanBaldwin
          Ben Marks, Magento link%%http://bhmarks.com
-=========================== =
+=========================== ===
 
 Dragostea familiei
 ------------------
