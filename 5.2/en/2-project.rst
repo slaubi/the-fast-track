@@ -55,16 +55,16 @@ To continue on the old-fashioned theme, I could have created a CD containing the
     single: Project;Git Repository
     single: Git;clone
 
-Clone the `guestbook repository <https://github.com/the-fast-track/book-5.2-2>`_ somewhere on your local machine:
+Clone the `guestbook repository <https://github.com/the-fast-track/book-5.0-1>`_ somewhere on your local machine:
 
 .. code-block:: bash
     :class: ignore
 
-    $ symfony new --version=5.2-2 --book guestbook
+    $ symfony new --version=5.0-1 --book guestbook
 
 This repository contains all the code of the book.
 
-Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-5.2-2``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
+Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-5.0-1``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
 
 The code is 100% guaranteed to be synchronized with the code in the book (use the exact repository URL listed above). Trying to manually synchronize changes from the book with the source code in the repository is almost impossible. I tried in the past. I failed. It is just impossible. Especially for books like the ones I write: books that tells you a story about developing a website. As each chapter depends on the previous ones, a change might have consequences in all following chapters.
 

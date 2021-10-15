@@ -36,6 +36,7 @@ But why would we ever want non-English documentation in a tech world where Engli
 
 As you can imagine, translating more than 300 pages is a huge amount of work, and I want to thank all the people who helped translating this book:
 
+TRANSLATOR_LIST
 
 Company Backers
 ---------------
@@ -141,7 +142,9 @@ Individual Backers
 .. index::
     Backers;Individuals
 
-=========================== =
+=========================== ===
+Backer                      Link
+=========================== ===
              Javier Eguiluz github%%javiereguiluz
             Tugdual Saunier github%%tucksaun
            Alexandre Salomé link%%https://alexandre.salome.fr
@@ -239,7 +242,7 @@ Guys & Gals at SymfonyCasts link%%https://symfonycasts.com
          Alexander M. Turek github%%derrabus
                 Zan Baldwin twitter%%ZanBaldwin
          Ben Marks, Magento link%%http://bhmarks.com
-=========================== =
+=========================== ===
 
 Family Love
 -----------
