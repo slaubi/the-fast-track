@@ -155,103 +155,103 @@ Singoli sostenitori
 =========================== ===
 Backer                      Link
 =========================== ===
-             Javier Eguiluz github%%javiereguiluz
-            Tugdual Saunier github%%tucksaun
-           Alexandre Salomé link%%https://alexandre.salome.fr
-                  Timo Bakx twitter%%TimoBakx
-         Arkadius Stefanski link%%https://ar.kadi.us
-                Oskar Stark github%%OskarStark
+             Javier Eguiluz `@javiereguiluz <https://github.com/javiereguiluz>`_
+            Tugdual Saunier `@tucksaun <https://github.com/tucksaun>`_
+           Alexandre Salomé `https://alexandre.salome.fr <https://alexandre.salome.fr>`_
+                  Timo Bakx `@TimoBakx <https://twitter.com/TimoBakx>`_
+         Arkadius Stefanski `https://ar.kadi.us <https://ar.kadi.us>`_
+                Oskar Stark `@OskarStark <https://github.com/OskarStark>`_
                      slaubi 
-               Jérémy Romey twitter%%jeremyFreeAgent
+               Jérémy Romey `@jeremyFreeAgent <https://twitter.com/jeremyFreeAgent>`_
             Nicolas Scolari 
-Guys & Gals at SymfonyCasts link%%https://symfonycasts.com
-            Roberto santana twitter%%robertosanval
-             Ismael Ambrosi twitter%%iambrosi
-           Mathias STRASSER link%%https://roukmoute.github.io/
-           Platform.sh team link%%http://www.platform.sh
-                    ongoing link%%https://www.ongoing.ch
-          Magnus Nordlander github%%magnusnordlander
-            Nicolas Séverin github%%nico-incubiq
-                   Centarro link%%https://www.centarro.io
-                Lior Chamla link%%https://learn.web-develop.me
-                Art Hundiak github%%ahundiak
-           Manuel de Ruiter link%%https://www.optiwise.nl/
+Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>`_
+            Roberto santana `@robertosanval <https://twitter.com/robertosanval>`_
+             Ismael Ambrosi `@iambrosi <https://twitter.com/iambrosi>`_
+           Mathias STRASSER `https://roukmoute.github.io/ <https://roukmoute.github.io/>`_
+           Platform.sh team `http://www.platform.sh <http://www.platform.sh>`_
+                    ongoing `https://www.ongoing.ch <https://www.ongoing.ch>`_
+          Magnus Nordlander `@magnusnordlander <https://github.com/magnusnordlander>`_
+            Nicolas Séverin `@nico-incubiq <https://github.com/nico-incubiq>`_
+                   Centarro `https://www.centarro.io <https://www.centarro.io>`_
+                Lior Chamla `https://learn.web-develop.me <https://learn.web-develop.me>`_
+                Art Hundiak `@ahundiak <https://github.com/ahundiak>`_
+           Manuel de Ruiter `https://www.optiwise.nl/ <https://www.optiwise.nl/>`_
                Vincent Huck 
-              Jérôme Nadaud link%%https://nadaud.io
-             Michael Piecko github%%mpiecko
-           Tobias Schilling link%%https://tschilling.dev
-                      ACSEO link%%https://www.acseo.fr
-      Omines Internetbureau link%%https://www.omines.nl/
-               Seamus Byrne link%%http://seamusbyrne.com
-              Pavel Dubinin github%%geekdevs
-       Jean-Jacques PERUZZI link%%https://linkedin.com/in/jjperuzzi
-           Alexandre Jardin github%%ajardin
-           Christian Ducrot link%%http://ducrot.de
-             Alexandre HUON github%%Aleksanthaar
-          François Pluchino github%%francoispluchino
-            We Are Builders link%%https://we.are.builders
-                     Rector github%%rectorphp
-             Ilyas Salikhov twitter%%salikhov
-             Romaric Drigon twitter%%romaricdrigon
-              Lukáš Moravec github%%morki
-          Malik Meyer-Heder github%%mehlichmeyer
-             Amrouche Hamza twitter%%cDaed
-              Russell Flynn link%%https://custard.no
-            Shrihari Pandit twitter%%shriharipandit
-                  Salma NK. twitter%%os_rescue
+              Jérôme Nadaud `https://nadaud.io <https://nadaud.io>`_
+             Michael Piecko `@mpiecko <https://github.com/mpiecko>`_
+           Tobias Schilling `https://tschilling.dev <https://tschilling.dev>`_
+                      ACSEO `https://www.acseo.fr <https://www.acseo.fr>`_
+      Omines Internetbureau `https://www.omines.nl/ <https://www.omines.nl/>`_
+               Seamus Byrne `http://seamusbyrne.com <http://seamusbyrne.com>`_
+              Pavel Dubinin `@geekdevs <https://github.com/geekdevs>`_
+       Jean-Jacques PERUZZI `https://linkedin.com/in/jjperuzzi <https://linkedin.com/in/jjperuzzi>`_
+           Alexandre Jardin `@ajardin <https://github.com/ajardin>`_
+           Christian Ducrot `http://ducrot.de <http://ducrot.de>`_
+             Alexandre HUON `@Aleksanthaar <https://github.com/Aleksanthaar>`_
+          François Pluchino `@francoispluchino <https://github.com/francoispluchino>`_
+            We Are Builders `https://we.are.builders <https://we.are.builders>`_
+                     Rector `@rectorphp <https://github.com/rectorphp>`_
+             Ilyas Salikhov `@salikhov <https://twitter.com/salikhov>`_
+             Romaric Drigon `@romaricdrigon <https://twitter.com/romaricdrigon>`_
+              Lukáš Moravec `@morki <https://github.com/morki>`_
+          Malik Meyer-Heder `@mehlichmeyer <https://github.com/mehlichmeyer>`_
+             Amrouche Hamza `@cDaed <https://twitter.com/cDaed>`_
+              Russell Flynn `https://custard.no <https://custard.no>`_
+            Shrihari Pandit `@shriharipandit <https://twitter.com/shriharipandit>`_
+                  Salma NK. `@os_rescue <https://twitter.com/os_rescue>`_
              Nicolas Grekas 
-              Roman Ihoshyn link%%https://ihoshyn.com
-                Radu Topala link%%https://www.trisoft.ro
-            Andrey Reinwald link%%https://www.facebook.com/andreinwald
-                   JoliCode github%%JoliCode
+              Roman Ihoshyn `https://ihoshyn.com <https://ihoshyn.com>`_
+                Radu Topala `https://www.trisoft.ro <https://www.trisoft.ro>`_
+            Andrey Reinwald `https://www.facebook.com/andreinwald <https://www.facebook.com/andreinwald>`_
+                   JoliCode `@JoliCode <https://github.com/JoliCode>`_
            Rokas Mikalkėnas 
-               Zeljko Mitic github%%strictify
-             Wojciech Kania github%%wkania
-           Andrea Cristaudo link%%https://andrea.cristaudo.eu/
-       Adrien BRAULT-LESAGE github%%AdrienBrault
-  Cristoforo Stevio Cervino link%%http://www.steviostudio.it
+               Zeljko Mitic `@strictify <https://github.com/strictify>`_
+             Wojciech Kania `@wkania <https://github.com/wkania>`_
+           Andrea Cristaudo `https://andrea.cristaudo.eu/ <https://andrea.cristaudo.eu/>`_
+       Adrien BRAULT-LESAGE `@AdrienBrault <https://github.com/AdrienBrault>`_
+  Cristoforo Stevio Cervino `http://www.steviostudio.it <http://www.steviostudio.it>`_
            Michele Sangalli 
-             Florian Reiner link%%http://florianreiner.com
-                  Ion Bazan github%%IonBazan
-              Marisa Clardy twitter%%MarisaCodes
-          Donatas Lomsargis link%%http://donatas.dev
-             Johnny Lattouf twitter%%johnnylattouf
-            Duilio Palacios link%%https://styde.net
-             Pierre Grimaud github%%pgrimaud
-          Marcos Labad Díaz twitter%%esmiz
-              Stephan Huber link%%https://www.factorial.io
-                Loïc Vernet link%%https://www.strangebuzz.com
-               Daniel Knoch link%%http://www.cariba.de
-                     Emagma link%%http://www.emagma.fr
+             Florian Reiner `http://florianreiner.com <http://florianreiner.com>`_
+                  Ion Bazan `@IonBazan <https://github.com/IonBazan>`_
+              Marisa Clardy `@MarisaCodes <https://twitter.com/MarisaCodes>`_
+          Donatas Lomsargis `http://donatas.dev <http://donatas.dev>`_
+             Johnny Lattouf `@johnnylattouf <https://twitter.com/johnnylattouf>`_
+            Duilio Palacios `https://styde.net <https://styde.net>`_
+             Pierre Grimaud `@pgrimaud <https://github.com/pgrimaud>`_
+          Marcos Labad Díaz `@esmiz <https://twitter.com/esmiz>`_
+              Stephan Huber `https://www.factorial.io <https://www.factorial.io>`_
+                Loïc Vernet `https://www.strangebuzz.com <https://www.strangebuzz.com>`_
+               Daniel Knoch `http://www.cariba.de <http://www.cariba.de>`_
+                     Emagma `http://www.emagma.fr <http://www.emagma.fr>`_
                 Gilles Doge 
-               Malte Wunsch github%%MalteWunsch
-   Jose Maria Valera Reales github%%Chemaclass
-                  Cleverway link%%https://cleverway.eu/
-                     Nathan github%%nutama
-       Abdellah EL GHAILANI link%%https://connect.symfony.com/profile/aelghailani
-                 Solucionex link%%https://www.solucionex.com
-               Elnéris Dang link%%https://linkedin.com/in/elneris-dang/
-              Class Central link%%https://www.classcentral.com/
-                  Ike Borup link%%https://idaho.dev/
-             Christoph Lühr link%%https://www.christoph-luehr.com/
-            Zig Websoftware link%%http://www.zig.nl
-                Dénes Fakan twitter%%DenesFakan
-           Danny van Kooten link%%http://dvk.co
-               Denis Azarov link%%http://azarov.de
-          Martin Poirier T. link%%https://linkedin.com/in/mpoiriert/
-          Dmytro Feshchenko github%%dmytrof
-               Carl Casbolt link%%https://www.platinumtechsolutions.co.uk/
-                    Irontec link%%https://www.irontec.com
-              Lukas Plümper link%%https://lukaspluemper.de/
-                  Neil Nand link%%https://neilnand.co.uk
-             Andreas Möller link%%https://localheinz.com
-              Alexey Buldyk link%%https://buldyk.pw
-              Page Carbajal link%%https://pagecarbajal.com
-               Florian Voit link%%https://rootsh3ll.de
-            Webmozarts GmbH link%%https://webmozarts.com
-         Alexander M. Turek github%%derrabus
-                Zan Baldwin twitter%%ZanBaldwin
-         Ben Marks, Magento link%%http://bhmarks.com
+               Malte Wunsch `@MalteWunsch <https://github.com/MalteWunsch>`_
+   Jose Maria Valera Reales `@Chemaclass <https://github.com/Chemaclass>`_
+                  Cleverway `https://cleverway.eu/ <https://cleverway.eu/>`_
+                     Nathan `@nutama <https://github.com/nutama>`_
+       Abdellah EL GHAILANI `https://connect.symfony.com/profile/aelghailani <https://connect.symfony.com/profile/aelghailani>`_
+                 Solucionex `https://www.solucionex.com <https://www.solucionex.com>`_
+               Elnéris Dang `https://linkedin.com/in/elneris-dang/ <https://linkedin.com/in/elneris-dang/>`_
+              Class Central `https://www.classcentral.com/ <https://www.classcentral.com/>`_
+                  Ike Borup `https://idaho.dev/ <https://idaho.dev/>`_
+             Christoph Lühr `https://www.christoph-luehr.com/ <https://www.christoph-luehr.com/>`_
+            Zig Websoftware `http://www.zig.nl <http://www.zig.nl>`_
+                Dénes Fakan `@DenesFakan <https://twitter.com/DenesFakan>`_
+           Danny van Kooten `http://dvk.co <http://dvk.co>`_
+               Denis Azarov `http://azarov.de <http://azarov.de>`_
+          Martin Poirier T. `https://linkedin.com/in/mpoiriert/ <https://linkedin.com/in/mpoiriert/>`_
+          Dmytro Feshchenko `@dmytrof <https://github.com/dmytrof>`_
+               Carl Casbolt `https://www.platinumtechsolutions.co.uk/ <https://www.platinumtechsolutions.co.uk/>`_
+                    Irontec `https://www.irontec.com <https://www.irontec.com>`_
+              Lukas Plümper `https://lukaspluemper.de/ <https://lukaspluemper.de/>`_
+                  Neil Nand `https://neilnand.co.uk <https://neilnand.co.uk>`_
+             Andreas Möller `https://localheinz.com <https://localheinz.com>`_
+              Alexey Buldyk `https://buldyk.pw <https://buldyk.pw>`_
+              Page Carbajal `https://pagecarbajal.com <https://pagecarbajal.com>`_
+               Florian Voit `https://rootsh3ll.de <https://rootsh3ll.de>`_
+            Webmozarts GmbH `https://webmozarts.com <https://webmozarts.com>`_
+         Alexander M. Turek `@derrabus <https://github.com/derrabus>`_
+                Zan Baldwin `@ZanBaldwin <https://twitter.com/ZanBaldwin>`_
+         Ben Marks, Magento `http://bhmarks.com <http://bhmarks.com>`_
 =========================== ===
 
 Amore della famiglia
