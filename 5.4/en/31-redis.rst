@@ -75,7 +75,7 @@ Isn't it *beautiful*?
 
 "Reboot" Docker to start the Redis service:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
@@ -84,7 +84,7 @@ Test locally by browsing the website; everything should still work as before.
 
 Commit and deploy as usual:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:deploy

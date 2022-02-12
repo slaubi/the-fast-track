@@ -18,7 +18,7 @@ We need to introduce a ``state`` for comments: ``submitted``, ``spam``, and ``pu
 
 Add the ``state`` property to the ``Comment`` class:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(state||string||255||no)
 
     $ symfony console make:entity Comment
@@ -50,7 +50,7 @@ We should also make sure that, by default, the ``state`` is set to ``submitted``
 
 Create a database migration:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -75,7 +75,7 @@ Modify the migration to update all existing comments to be ``published`` by defa
 
 Migrate the database:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -189,7 +189,7 @@ Understanding Messenger
 
 Managing asynchronous code with Symfony is the job of the Messenger Component:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req doctrine-messenger
 
@@ -375,13 +375,13 @@ The configuration tells the bus to send instances of ``App\Message\CommentMessag
 
 Setup PostgreSQL tables and triggers:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 And migrate the database:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -400,7 +400,7 @@ If you try to submit a new comment, the spam checker won't be called anymore. Ad
 
 As you might imagine, Symfony comes with a consumer command. Run it now:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:consume async -vv
@@ -439,7 +439,7 @@ The Symfony CLI can manage such background commands or workers by using the daem
 
 Run the message consumer again, but send it in the background:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async -vv
 
@@ -456,7 +456,7 @@ If the consumer stops working for some reason (memory limit, bug, ...), it will 
 
 Logs are streamed via ``symfony server:log`` with all the other logs coming from PHP, the web server, and the application:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -467,7 +467,7 @@ Logs are streamed via ``symfony server:log`` with all the other logs coming from
 
 Use the ``server:status`` command to list all background workers managed for the current project:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:status
@@ -477,7 +477,7 @@ Use the ``server:status`` command to list all background workers managed for the
 
 To stop a worker, stop the web server or kill the PID given by the ``server:status`` command:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ kill 15774
@@ -519,7 +519,7 @@ If a problem occurs while handling a message, the consumer will retry 3 times be
 
 Inspect failed messages and retry them via the following commands:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:failed:show
@@ -553,7 +553,7 @@ Like for the Symfony CLI, Platform.sh manages restarts and logs.
 
 To get logs for a worker, use:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:logs --worker=messages all

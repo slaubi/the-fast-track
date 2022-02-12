@@ -27,7 +27,7 @@ The maker bundle helps you generate a lot of different classes. We will use it a
 
 The Symfony Console built-in ``list`` command lists all commands available under a given namespace; use it to discover all generators provided by the maker bundle:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console list make
@@ -51,7 +51,7 @@ Generating a Controller
 
 Create your first *Controller* via the ``make:controller`` command:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:controller ConferenceController
 
@@ -144,7 +144,7 @@ The main responsibility of a controller is to return an HTTP ``Response`` for th
 
 As the end of the chapter will about code that we will revert, let's commit our changes now:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -222,11 +222,11 @@ The ``{name}`` part of the route is a dynamic *route parameter* - it works like 
 
 Revert the changes we have just made:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout src/Controller/ConferenceController.php
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git reset HEAD src/Controller/ConferenceController.php
@@ -281,11 +281,11 @@ When refreshing the page, notice the new "target" icon in the toolbar; it lets y
 
 Revert the changes we have just made:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout src/Controller/ConferenceController.php
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git reset HEAD src/Controller/ConferenceController.php

@@ -17,7 +17,7 @@ We might want to let the website admin moderate all comments after the spam chec
 
 Implementing this logic is not too complex, but you can imagine that adding more rules would greatly increase the complexity. Instead of coding the logic ourselves, we can use the Symfony Workflow Component:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req workflow
 
@@ -77,7 +77,7 @@ The comment workflow can be described in the ``config/packages/workflow.yaml`` f
 
 To validate the workflow, generate a visual representation:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
@@ -208,7 +208,7 @@ As we inject any instance of the generic ``WorkflowInterface`` interface in the 
 
 If you don't remember the convention, use the ``debug:container`` command. Search for all services containing "workflow":
 
-.. code-block:: bash
+.. code-block:: terminal
     :emphasize-lines: 12
     :class: ignore
 
@@ -233,7 +233,7 @@ Notice choice ``8``, ``Symfony\Component\Workflow\WorkflowInterface $commentStat
 
     We could have used the ``debug:autowiring`` command as seen in a previous chapter:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring workflow
 

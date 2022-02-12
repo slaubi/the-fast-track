@@ -271,7 +271,7 @@ For such messages, we want to be alerted on an instant messaging system like Sla
 
 Install Slack support for Symfony Notifier:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req slack-notifier
 
@@ -282,14 +282,14 @@ To get started, compose the Slack DSN with a Slack access token and the Slack ch
 
 As the access token is sensitive, store the Slack DSN in the secret store:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ symfony console secrets:set SLACK_DSN
 
 Do the same for production:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ symfony console secrets:set SLACK_DSN --env=prod

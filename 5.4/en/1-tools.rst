@@ -102,14 +102,14 @@ To use HTTPS locally, we also need to `install a certificate authority (CA)`_ to
 .. index::
     single: Symfony CLI;server:ca:install
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:ca:install
 
 Check that your computer has all needed requirements by running the following command:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:check-requirements

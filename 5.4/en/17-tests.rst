@@ -10,7 +10,7 @@ As we start to add more and more functionality to the application, it is probabl
 
 Symfony relies on PHPUnit for unit tests. Let's install it:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req phpunit --dev
 
@@ -24,7 +24,7 @@ Writing Unit Tests
 
 ``SpamChecker`` is the first class we are going to write tests for. Generate a unit test:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:test TestCase SpamCheckerTest
 
@@ -76,7 +76,7 @@ Then, we call the ``getSpamScore()`` method and check that an exception is throw
 
 Run the tests to check that they pass:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit
 
@@ -199,7 +199,7 @@ By default, PHPUnit tests are run in the ``test`` Symfony environment as defined
 
 To make tests work, we must set the ``AKISMET_KEY`` secret for this ``test`` environment:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ symfony console secrets:set AKISMET_KEY --env=test
@@ -215,7 +215,7 @@ As we have already seen, the Symfony CLI automatically exposes the ``DATABASE_UR
 
 Before being able to run the test, we need to "initialize" the ``test`` database (create the database and migrate it):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console doctrine:database:create --env=test
     $ symfony console doctrine:migrations:migrate -n --env=test
@@ -225,14 +225,14 @@ Before being able to run the test, we need to "initialize" the ``test`` database
     On Linux and similiar OSes, you can use ``APP_ENV=prod`` instead of
     ``--env=prod``:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ APP_ENV=prod symfony console doctrine:database:create
 
 If you now run the tests, PHPUnit won't interact with your development database anymore. To only run the new tests, pass the path to their class path:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -251,7 +251,7 @@ To be able to test the comment list, the pagination, and the form submission, we
 
 Install the Doctrine Fixtures bundle:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req orm-fixtures --dev
 
@@ -351,7 +351,7 @@ When we will load the fixtures, all data will be removed; including the admin us
 
     If you don't remember which service you need to use for a given task, use the ``debug:autowiring`` with some keyword:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring encoder
 
@@ -362,7 +362,7 @@ Loading Fixtures
 
 Load the fixtures for the ``test`` environment/database:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:fixtures:load --env=test
@@ -429,7 +429,7 @@ Instead of clicking on text (i.e. ``View``), we could have selected the link via
 
 Check that the new test is green:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -468,13 +468,13 @@ To submit a form via ``submitForm()``, find the input names thanks to the browse
 
 Run the tests again to check that everything is green:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
 If you want to check the result in a browser, stop the Web server and re-run it for the ``test`` environment:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -493,7 +493,7 @@ Reloading the Fixtures
 
 If you run the tests a second time, they should fail. As there are now more comments in the database, the assertion that checks the number of comments is broken. We need to reset the state of the database between each run by reloading the fixtures before each run:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:fixtures:load --env=test
@@ -533,7 +533,7 @@ Note the ``-n`` flag on the Doctrine command; it is a global flag on Symfony com
 
 Whenever you want to run the tests, use ``make tests``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -602,12 +602,12 @@ Tests now fail.
 
 To reset the database between tests, install DoctrineTestBundle:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony composer config extra.symfony.allow-contrib true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
 
@@ -651,7 +651,7 @@ And done. Any changes done in tests are now automatically rolled-back at the end
 
 Tests should be green again:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -664,7 +664,7 @@ Using a real Browser for Functional Tests
 
 Functional tests use a special browser that calls the Symfony layer directly. But you can also use a real browser and the real HTTP layer thanks to Symfony Panther:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req panther --dev
 
@@ -703,7 +703,7 @@ Choosing the Right Test Type
 
 We have created three different type of tests so far. While we have only used the maker bundle to generate the unit test class, we could have used it to generate the other test classes as well:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console make:test WebTestCase Controller\\ConferenceController

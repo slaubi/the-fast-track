@@ -36,7 +36,7 @@ To work with Blackfire, you first need to `sign up`_.
 
 Install Blackfire on your local machine by running the following quick installation script:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://installer.blackfire.io/installer.sh | bash
@@ -45,7 +45,7 @@ This installer downloads and installs the Blackfire CLI Tool.
 
 When done, installs the PHP probe on all available PHP versions:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ sudo blackfire php:install
@@ -68,7 +68,7 @@ And enable the PHP probe for our project:
 
 Restart the web server so that PHP can load Blackfire:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -76,7 +76,7 @@ Restart the web server so that PHP can load Blackfire:
 
 The Blackfire CLI Tool needs to be configured with your personal **client** credentials (to store your project profiles under your personal account). Find them at the top of the ``Settings/Credentials`` `page`_ and execute the following command by replacing the placeholders:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire client:config --client-id=xxx --client-token=xxx
@@ -106,7 +106,7 @@ The Blackfire agent service has already been configured in the Docker Compose st
 
 To communicate with the server, you need to get your personal **server** credentials (these credentials identify where you want to store the profiles -- you can create one per project); they can be found at the bottom of the ``Settings/Credentials`` `page`_. Store them as secrets:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console secrets:set BLACKFIRE_SERVER_ID
@@ -116,7 +116,7 @@ To communicate with the server, you need to get your personal **server** credent
 
 You can now launch the new container:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose stop
@@ -141,7 +141,7 @@ If you get an error while profiling, increase the Blackfire log level to get mor
 
 Restart the web server:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -149,7 +149,7 @@ Restart the web server:
 
 And tail the logs:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -166,10 +166,7 @@ Blackfire is included by default in all Platform.sh projects.
 
 Set up the *server* credentials as **production** secrets:
 
-.. code-block:: bash
-    :class: ignore
-
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console secrets:set BLACKFIRE_SERVER_ID --env=prod
@@ -205,7 +202,7 @@ Before you can deploy to start profiling, you need a way to bypass the Varnish H
 
 Find your current IP address:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://ifconfig.me/
@@ -277,14 +274,14 @@ Switching your local machine to the production environment can be done by changi
 
 Or you can use the ``server:prod`` command:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod
 
 Don't forget to switch it back to dev when your profiling session ends:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod --off
@@ -297,7 +294,7 @@ Profiling API Resources
 
 Profiling the API or the SPA is better done on the CLI via the Blackfire CLI Tool that you have installed previously:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`api
@@ -381,25 +378,25 @@ Create a ``.blackfire.yaml`` file with the following content:
 
 Download the Blackfire player to be able to run the scenario locally:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -OLsS https://get.blackfire.io/blackfire-player.phar
     $ chmod +x blackfire-player.phar
 
 Run this scenario in development:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ ./blackfire-player.phar run --endpoint=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL` .blackfire.yaml --variable "webmail_url=`symfony var:export MAILER_WEB_URL 2>/dev/null`" --variable="env=dev" -vv
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ rm blackfire-player.phar
 
 Or in production:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ ./blackfire-player.phar run --endpoint=`symfony cloud:env:url --pipe --primary` .blackfire.yaml --variable "webmail_url=NONE" --variable="env=prod" -vv

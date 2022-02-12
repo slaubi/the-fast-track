@@ -152,7 +152,7 @@ A command gets the *input* (arguments and options passed to the command) and you
 
 Clean up the database by running the command:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console app:comment:cleanup
 
@@ -196,7 +196,7 @@ The ``croncape`` utility monitors the execution of the command and sends an emai
 
 Configure the ``MAILTO`` environment variable:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 

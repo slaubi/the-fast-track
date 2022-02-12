@@ -151,7 +151,7 @@ For maximum compatibility with email readers, the notification base layout inlin
 
 These two features are part of optional Twig extensions that need to be installed:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
@@ -299,7 +299,7 @@ Accessing the Webmail
 
 You can open the webmail from a terminal:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:webmail
@@ -409,7 +409,7 @@ There is no specific configuration for Platform.sh. All accounts come with a Sen
 
     To be on the safe side, emails are *only* sent on the ``master`` branch by default. Enable SMTP explicitly on non-``master`` branches if you know what you are doing:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony cloud:env:info enable_smtp on
 

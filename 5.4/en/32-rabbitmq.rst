@@ -31,7 +31,7 @@ To use RabbitMQ instead of PostgreSQL as a message broker:
 
 We also need to add RabbitMQ support for Messenger:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req amqp-messenger
 
@@ -65,12 +65,12 @@ Restarting Docker Services
 
 To force Docker Compose to take the RabbitMQ container into account, stop the containers and restart them:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -83,7 +83,7 @@ Exploring the RabbitMQ Web Management Interface
 
 If you want to see queues and messages flowing through RabbitMQ, open its web management interface:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:rabbitmq
@@ -158,7 +158,7 @@ Reference it in the web container configuration as well and enable the ``amqp`` 
 
 When the RabbitMQ service is installed on a project, you can access its web management interface by opening the tunnel first:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:tunnel:open

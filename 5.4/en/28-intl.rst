@@ -194,7 +194,7 @@ Update the template to display the current locale name instead of the hard-coded
 
 Depending on the locale, the locale name is not always capitalized. To capitalize sentences properly, we need a filter that is Unicode aware, as provided by the Symfony String component and its Twig implementation:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig/string-extra
 
@@ -304,7 +304,7 @@ As you might have seen in ``config/packages/translation.yaml``, translations are
 
 Instead of creating the translation files by hand, use the ``translation:extract`` command:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console translation:extract fr --force --domain=messages
 

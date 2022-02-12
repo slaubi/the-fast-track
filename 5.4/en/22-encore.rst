@@ -23,7 +23,7 @@ Using Sass
 
 Instead of using plain CSS, let's switch to `Sass`_:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mv assets/styles/app.css assets/styles/app.scss
 
@@ -44,7 +44,7 @@ Instead of using plain CSS, let's switch to `Sass`_:
 
 Install the Sass loader:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add node-sass sass-loader --dev
 
@@ -75,7 +75,7 @@ Leveraging Bootstrap
 
 To start with good defaults and build a responsive website, a CSS framework like `Bootstrap`_ can go a long way. Install it as a package:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add bootstrap @popperjs/core bs-custom-file-input --dev
 
@@ -124,7 +124,7 @@ Styling the HTML
 
 We are now ready to style the application. Download and expand the archive at the root of the project:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ php -r "copy('https://symfony.com/uploads/assets/guestbook-5.4.zip', 'guestbook-5.4.zip');"
     $ unzip -o guestbook-5.4.zip
@@ -142,13 +142,13 @@ One major change when using Webpack is that CSS and JS files are not usable dire
 
 In development, compiling the assets can be done via the ``encore dev`` command:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run yarn dev
 
 Instead of executing the command each time there is a change, send it to the background and let it watch JS and CSS changes:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run -d yarn dev --watch

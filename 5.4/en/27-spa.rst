@@ -18,7 +18,7 @@ To make both the website and the SPA consistent, we are going to reuse the Sass 
 
 Create the SPA application under the ``spa`` directory and copy the website stylesheets:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir -p spa/src spa/public spa/assets/styles
     $ cp assets/styles/*.scss spa/assets/styles/
@@ -42,13 +42,13 @@ For good measure, add a ``.gitignore`` file:
 
 Initialize the ``package.json`` file (equivalent of the ``composer.json`` file for JavaScript):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn init -y
 
 Now, add some required dependencies:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add @symfony/webpack-encore @babel/core @babel/preset-env babel-preset-preact preact html-webpack-plugin bootstrap
 
@@ -128,12 +128,12 @@ Running an SPA in the Browser
 
 As this application is independent of the main website, we need to run another web server:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony server:stop
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony server:start -d --passthru=index.html
 
@@ -141,13 +141,13 @@ The ``--passthru`` flag tells the web server to pass all HTTP requests to the ``
 
 To compile the CSS **and the JavaScript** files, run ``yarn``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn encore dev
 
 Open the SPA in a browser:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local
@@ -166,7 +166,7 @@ The SPA is currently not able to handle different pages. To implement several pa
 
 Install preact-router:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add preact-router
 
@@ -231,7 +231,7 @@ Replace the "Hello World" ``div`` with the ``Router`` component:
 
 Rebuild the application:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn encore dev
 
@@ -242,7 +242,7 @@ Styling the SPA
 
 As for the website, let's add the Sass loader:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add node-sass sass-loader
 
@@ -305,7 +305,7 @@ We can now update the application to use the stylesheets:
 
 Rebuild the application once more:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn encore dev
 
@@ -516,13 +516,13 @@ Finally, Preact Router is passing the "slug" placeholder to the Conference compo
 
 The SPA now needs to know the URL to our API, via the ``API_ENDPOINT`` environment variable. Set it to the API web server URL (running in the ``..`` directory):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` yarn encore dev
 
 You could also run in the background now:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` symfony run -d --watch=webpack.config.js yarn encore dev --watch
 
@@ -587,7 +587,7 @@ Platform.sh allows to deploy multiple applications per project. Adding another a
 
 Edit the ``.platform/routes.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application stored in the project root directory:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ cd ../
 
@@ -613,13 +613,13 @@ Configuring CORS for the SPA
 
 If you deploy the code now, it won't work as a browser would block the API request. We need to explicitly allow the SPA to access the API. Get the current domain name attached to your application:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:env:url --pipe --primary
 
 Define the ``CORS_ALLOW_ORIGIN`` environment variable accordingly:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:CORS_ALLOW_ORIGIN --value="^`symfony cloud:env:url --pipe --primary | sed 's#/$##' | sed 's#https://#https://spa.#'`$"
 
@@ -627,13 +627,13 @@ If your domain is ``https://master-5szvwec-hzhac461b3a6o.eu-5.platformsh.site/``
 
 We also need to set the ``API_ENDPOINT`` environment variable:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:API_ENDPOINT --value=`symfony cloud:env:url --pipe --primary`
 
 Commit and deploy:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -642,7 +642,7 @@ Commit and deploy:
 
 Access the SPA in a browser by specifying the application as a flag:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:url -1 --app=spa
@@ -659,7 +659,7 @@ Using Cordova to build a Smartphone Application
 
 Let's install it:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ cd spa
     $ yarn global add cordova
@@ -670,14 +670,14 @@ Let's install it:
 
 Create the application directory structure:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(n)
 
     $ ~/.yarn/bin/cordova create app
 
 And generate the Android application:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ cd app
@@ -686,7 +686,7 @@ And generate the Android application:
 
 That's all you need. You can now build the production files and move them to Cordova:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` yarn encore production
     $ rm -rf app/www
@@ -695,7 +695,7 @@ That's all you need. You can now build the production files and move them to Cor
 
 Run the application on a smartphone or an emulator:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ ~/.yarn/bin/cordova run android

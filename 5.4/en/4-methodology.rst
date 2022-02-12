@@ -12,7 +12,7 @@ Implementing a Git Strategy
 
 At the end of each step, don't forget to commit your changes:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -51,7 +51,7 @@ Deploying to Production Continuously
 
 Another good habit is to deploy frequently. Deploying at the end of each step is a good pace:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:deploy

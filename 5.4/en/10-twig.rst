@@ -208,7 +208,7 @@ Try to reach the "first" conference via ``/conference/1``, and notice the follow
 
 The error comes from the ``format_datetime`` filter as it is not part of Twig core. The error message gives you a hint about which package should be installed to fix the problem:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/intl-extra:^3"
 

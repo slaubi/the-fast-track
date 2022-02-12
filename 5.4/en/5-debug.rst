@@ -39,7 +39,7 @@ Take some time to explore the information inside the Symfony profiler by clickin
 
 Logs are also quite useful in debugging sessions. Symfony has a convenient command to tail all the logs (from the web server, PHP, and your application):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -80,7 +80,7 @@ Managing Environment Configurations
 
 ``APP_ENV`` can be set by using "real" environment variables in your terminal:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ export APP_ENV=dev
@@ -137,14 +137,14 @@ Debugging Production
 
 Debugging production servers is always trickier. You don't have access to the Symfony profiler for instance. Logs are less verbose. But tailing the logs is possible:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:logs --tail
 
 You can even connect via SSH on the web container:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:ssh

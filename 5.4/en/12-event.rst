@@ -94,7 +94,7 @@ Implementing a Subscriber
 
 You know the song by heart now, use the maker bundle to generate a subscriber:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:subscriber TwigEventSubscriber

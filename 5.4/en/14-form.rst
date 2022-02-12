@@ -15,7 +15,7 @@ Generating a Form Type
 
 Use the Maker bundle to generate a form class:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:form CommentFormType Comment
 
@@ -422,7 +422,7 @@ But how can you access the profiler for a successful submit request? Because the
 
 Click on it to access the POST request profile, and go to the "Form" panel:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ rm -rf var/cache

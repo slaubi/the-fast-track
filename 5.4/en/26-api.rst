@@ -15,7 +15,7 @@ Installing API Platform
 
 Exposing an API by writing some code is possible, but if we want to use standards, we'd better use a solution that already takes care of the heavy lifting. A solution like API Platform:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req api
 

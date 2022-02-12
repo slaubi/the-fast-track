@@ -31,7 +31,7 @@ On our local machine, we have decided to use Docker to manage services. The gene
         # You should definitely change the password in production
         POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
         POSTGRES_USER: ${POSTGRES_USER:-symfony}
-        volumes:
+    volumes:
         - db-data:/var/lib/postgresql/data:rw
         # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
         # - ./docker/db/data:/var/lib/postgresql/data:rw
@@ -61,13 +61,13 @@ Starting Docker Compose
 
 Start Docker Compose in the background (``-d``):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose up -d
 
 Wait a bit to let the database start up and check that everything is running fine:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose ps
@@ -78,7 +78,7 @@ Wait a bit to let the database start up and check that everything is running fin
 
 If there are no running containers or if the ``State`` column does not read ``Up``, check the Docker Compose logs:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose logs
@@ -97,7 +97,7 @@ The Symfony CLI automatically detects the Docker services running for the projec
 
 Thanks to these conventions, accessing the database via ``symfony run`` is much easier:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
@@ -106,7 +106,7 @@ Thanks to these conventions, accessing the database via ``symfony run`` is much 
 
     If you don't have the ``psql`` binary on your local host, you can also run it via ``docker-compose``:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ docker-compose exec database psql main main
@@ -121,14 +121,14 @@ Dumping and Restoring Database Data
 
 Use ``pg_dump`` to dump the database data:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run pg_dump --data-only > dump.sql
 
 And restore the data:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql < dump.sql
@@ -190,7 +190,7 @@ As we have just seen, running ``symfony run psql`` automatically connects to the
 
 If you want to connect to PostgreSQL hosted on the production containers, you can open an SSH tunnel between the local machine and the Platform.sh infrastructure:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:tunnel:open
@@ -200,14 +200,14 @@ By default, Platform.sh services are not exposed as environment variables on the
 
 Now, connect to the remote PostgreSQL database via ``symfony run psql`` as before:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
 
 When done, don't forget to close the tunnel:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:tunnel:close
@@ -227,7 +227,7 @@ Docker Compose and Platform.sh work seamlessly with Symfony thanks to environmen
 
 Check all environment variables exposed by ``symfony`` by executing ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:export
@@ -243,7 +243,7 @@ The ``PG*`` environment variables are read by the ``psql`` utility. What about t
 
 When a tunnel is open to Platform.sh with ``var:expose-from-tunnel``, the ``var:export`` command returns remote environment variables:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:tunnel:open

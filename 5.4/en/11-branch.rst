@@ -21,12 +21,12 @@ Creating Branches
 
 The workflow starts with the creation of a Git branch:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git branch -D sessions-in-db || true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout -b sessions-in-db
 
@@ -82,7 +82,7 @@ To store sessions in the database, change the ``session.handler_id`` configurati
 
 To store sessions in the database, we need to create the ``sessions`` table. Do so with a Doctrine migration:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -111,7 +111,7 @@ Edit the file to add the table creation in the ``up()`` method:
 
 Migrate the database:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -141,7 +141,7 @@ As the new table is not "managed" by Doctrine, we must configure Doctrine to not
 
 Commit your changes to the new branch:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -161,12 +161,12 @@ Before deploying to production, we should test the branch on the same infrastruc
 
 Now, let's create a *Platform.sh environment* based on the *Git branch*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony cloud:env:delete sessions-in-db
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:deploy
 
@@ -187,7 +187,7 @@ The non-``master`` environments are very similar to the ``master`` one except fo
 
 Once the deployment is finished, open the new branch in a browser:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:url -1
@@ -205,7 +205,7 @@ If the code evolves on master, you can always rebase the Git branch and deploy t
 
 You can even synchronize the data from master back to the ``sessions-in-db`` environment:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony cloud:env:sync
@@ -223,13 +223,13 @@ By default, all Platform.sh environments use the same settings as the ``master``
 
 In case of a problem, you might want to switch to the ``dev`` Symfony environment:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:env:debug
 
 When done, move back to production settings:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:env:debug --off
 
@@ -254,14 +254,14 @@ Merging to Production
 
 When you are satisfied with the branch changes, merge the code and the infrastructure back to the Git master branch:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout master
     $ git merge sessions-in-db
 
 And deploy:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:deploy
 
@@ -276,7 +276,7 @@ Cleaning up
 
 Finally, clean up by removing the Git branch and the Platform.sh environment:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git branch -d sessions-in-db
     $ symfony cloud:env:delete -e sessions-in-db

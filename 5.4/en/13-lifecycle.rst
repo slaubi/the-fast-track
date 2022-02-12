@@ -57,7 +57,7 @@ What about using URLs like ``/conference/paris-2020`` instead? That would look m
 
 Add a new ``slug`` property for conferences (a not nullable string of 255 characters):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slug||string||255||no)
 
     $ symfony console make:entity Conference
@@ -67,7 +67,7 @@ Add a new ``slug`` property for conferences (a not nullable string of 255 charac
 
 Create a migration file to add the new column:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -76,7 +76,7 @@ Create a migration file to add the new column:
 
 And execute that new migration:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console doctrine:migrations:migrate
@@ -111,7 +111,7 @@ The trick here is to add the column and allow it to be ``null``, then set the sl
 
 Migration should run fine now:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -154,14 +154,14 @@ Because the application will soon use slugs to find each conference, let's tweak
 
 As you might have guessed, we need to perform the migration dance:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 .. index::
     single: Command;doctrine:migrations:migrate
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate

@@ -45,7 +45,7 @@ Let's add a new ``ready`` state and an ``optimize`` transition:
 
 Generate a visual representation of the new workflow configuration to validate that it describes what we want:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
@@ -61,7 +61,7 @@ Optimizing Images with Imagine
 
 Image optimizations will be done thanks to `GD`_ (check that your local PHP installation has the GD extension enabled) and `Imagine`_:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "imagine/imagine:^1.2"
 

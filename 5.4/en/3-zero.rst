@@ -15,7 +15,7 @@ Initializing the Project
 
 Create a new Symfony project with the ``symfony`` CLI tool we have previously installed together:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
@@ -72,7 +72,7 @@ Anything under ``public/`` is accessible via a browser. For instance, if you mov
 
 Download my GIF image here:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir public/images/
     $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
@@ -87,13 +87,13 @@ The ``symfony`` CLI comes with a Web Server that is optimized for development wo
 
 From the project directory, start the web server in the background (``-d`` flag):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony server:start -d
 
 The server started on the first available port, starting with 8000. As a shortcut, open the website in a browser from the CLI:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local
@@ -122,7 +122,7 @@ Browse to ``/images/under-construction.gif``. Does it look like this?
 
 Satisfied? Let's commit our work:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add public/images
@@ -133,7 +133,7 @@ Adding a Favicon
 
 To avoid being "spammed" by 404 HTTP errors in the logs because of a missing favicon requested by browsers, let's add one now:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ php -r "copy('https://symfony.com/favicon.ico', 'public/favicon.ico');"
     $ git add public/
@@ -167,7 +167,7 @@ Deploy time?
 
 Create a new remote Platform.sh project:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:project:create --title="Guestbook" --plan=development
 
@@ -179,7 +179,7 @@ This command does a lot:
 
 Then, deploy:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:deploy
 
@@ -190,7 +190,7 @@ The code is deployed by pushing the Git repository. At the end of the command, t
 
 Check that everything worked fine:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:url -1

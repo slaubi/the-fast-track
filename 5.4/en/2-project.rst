@@ -57,7 +57,7 @@ To continue on the old-fashioned theme, I could have created a CD containing the
 
 Clone the `guestbook repository`_ somewhere on your local machine:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony new --version=5.4-1 --book guestbook
@@ -80,7 +80,7 @@ Even better, the repository is not just about the final version of the code on t
 
 If you are lazy, you can get the state of the code at the end of a step by checking out the right tag. For instance, if you'd like to read and test the code at the end of step 10, execute the following:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10
@@ -89,7 +89,7 @@ Like for cloning the repository, we are not using ``git checkout`` but ``symfony
 
 You can also check out any substep:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10.2
@@ -101,7 +101,7 @@ Again, I highly recommend you code yourself. But if you get stuck, you can alway
 
 Not sure that you got everything right in substep 10.2? Get the diff:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git diff step-10-1...step-10-2
@@ -114,7 +114,7 @@ Not sure that you got everything right in substep 10.2? Get the diff:
 
 Want to know when a file has been created or modified?
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git log -- src/Controller/ConferenceController.php

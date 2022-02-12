@@ -68,7 +68,7 @@ Besides being a full-fledged HTTP reverse proxy, the Symfony HTTP reverse proxy 
 
 Check it on the homepage:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -239,7 +239,7 @@ If Symfony detects a reverse proxy that knows how to deal with ESIs, it enables 
 
 As the Symfony reverse proxy does support ESIs, let's check its logs (remove the cache first - see "Purging" below):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -287,7 +287,7 @@ This is not what we want though. Cache the header page for an hour, independentl
 
 Cache is now enabled for both requests:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -314,7 +314,7 @@ The cache strategy can be different from the main page and its ESIs. If we have 
 
 Remove the listener as we don't need it anymore:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm src/EventSubscriber/TwigEventSubscriber.php
 
@@ -325,7 +325,7 @@ Testing the website in a browser or via automated tests becomes a little bit mor
 
 You can manually remove all the HTTP cache by removing the ``var/cache/dev/http_cache/`` directory:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -rf var/cache/dev/http_cache/
 
@@ -382,7 +382,7 @@ The way we get the ``HttpCache`` instance can also look a bit strange; we are us
 
 Invalidate the homepage and the conference header via the following cURL calls:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
@@ -477,7 +477,7 @@ Implement the command:
 
     You could have used ``make:command`` to create the command:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ symfony console make:command app:step:info
@@ -648,7 +648,7 @@ In real life, you would probably restrict by IPs instead like described in the `
 
 Purge some URLs now:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -X PURGE -H 'x-purge-token: PURGE_NOW' `symfony cloud:env:url --pipe --primary`
     $ curl -X PURGE -H 'x-purge-token: PURGE_NOW' `symfony cloud:env:url --pipe --primary`conference_header

@@ -21,7 +21,7 @@ Even if the ``webapp`` package automatically added many nice packages, for some 
 
 Let's add EasyAdmin as a project dependency:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "admin:^4"
 
@@ -42,7 +42,7 @@ EasyAdmin automatically generates an admin area for your application based on sp
 
 To get started with EasyAdmin, let's generate a "web admin dashboard" which will be the main entry point to manage the website data:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(DashboardController||src/Controller/Admin/)
 
     $ symfony console make:admin:dashboard
@@ -104,7 +104,7 @@ In the dashboard controller, you might have noticed the ``configureMenuItems()``
 
 Let's generate a CRUD for conferences:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -141,7 +141,7 @@ Select ``1`` to create an admin interface for conferences and use the defaults f
 
 Do the same for comments:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(0||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -352,7 +352,7 @@ These customizations are just a small introduction of the possibilities given by
 
 Play with the admin, filter the comments by conference, or search comments by email for instance. The only issue is that anybody can access the backend. Don't worry, we will secure it in a future step.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"

@@ -36,7 +36,7 @@ Docker Compose and Platform.sh work seamlessly with Symfony thanks to these envi
 
 Check all exposed environment variables by executing ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:export
 
@@ -90,7 +90,7 @@ The Maker bundle can help us generate a class (an *Entity* class) that represent
 
 It is now time to generate the ``Conference`` entity:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
 
     $ symfony console make:entity Conference
@@ -219,7 +219,7 @@ Doctrine added an ``id`` property to store the primary key of the row in the dat
 
 Now, generate an Entity class for conference comments:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime_immutable||no)
 
     $ symfony console make:entity Comment
@@ -241,7 +241,7 @@ The two entities, Conference and Comment, should be linked together. A Conferenc
 
 Use the ``make:entity`` command again to add this relationship to the ``Conference`` class:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(comments||OneToMany||Comment||conference||no||yes)
 
     $ symfony console make:entity Conference
@@ -436,7 +436,7 @@ I just realized that we have forgotten to add one property on the Comment entity
 
 Run ``make:entity`` once more and add a ``photoFilename`` property/column of type ``string``, but allow it to be ``null`` as uploading a photo is optional:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(photoFilename||string||255||yes)
 
     $ symfony console make:entity Comment
@@ -456,7 +456,7 @@ A *migration* is a class that describes the changes needed to update a database 
 
 Let's see what Doctrine generates:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -497,7 +497,7 @@ Updating the Local Database
 
 You can now run the generated migration to update the local database schema:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate

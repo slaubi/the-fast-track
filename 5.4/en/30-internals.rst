@@ -19,14 +19,14 @@ You already know that all HTTP requests are served by a single entry point: the 
 
 Let's profile the English homepage in production with Blackfire via the Blackfire browser extension:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony remote:open
 
 Or directly via the command line:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony cloud:env:url --pipe --primary`en/
@@ -64,7 +64,7 @@ The timeline is a great way to understand how some code works; which is very use
 
 Now, profile the same page from the local machine in the development environment:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`en/
@@ -107,7 +107,7 @@ By default, Blackfire removes all method calls that are not significant enough t
 
 From the command line, use the ``--debug`` flag:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire --debug curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`en/
@@ -130,7 +130,7 @@ In production, you would see for instance the loading of a file named ``.env.loc
 
 Where does it come from? Platform.sh does some optimizations when deploying a Symfony application like optimizing the Composer autoloader (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). It also optimizes environment variables defined in the ``.env`` file (to avoid parsing the file for every request) by generating the ``.env.local.php`` file:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run composer dump-env prod
@@ -150,7 +150,7 @@ Another way to follow code execution is to use a **step debugger** like `Xdebug`
 
 First, install the ``xdebug`` PHP extension. Check that it is installed by running the following command:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php -v
 

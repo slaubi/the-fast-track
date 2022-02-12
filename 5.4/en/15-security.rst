@@ -21,7 +21,7 @@ To integrate the ``Admin`` entity with the Symfony Security authentication syste
 
 Use the dedicated ``make:user`` command to create the ``Admin`` entity instead of the traditional ``make:entity`` one:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(yes||username||yes)
 
     $ symfony console make:user Admin
@@ -81,7 +81,7 @@ We let Symfony select the best possible algorithm for hashing passwords (which w
 
 Time to generate a migration and migrate the database:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
     $ symfony console doctrine:migrations:migrate -n
@@ -99,7 +99,7 @@ We won't develop a dedicated system to create admin accounts. Again, we will onl
 
 Select ``App\Entity\Admin`` and then choose whatever you like as a password and run the following command to generate the password hash:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(0||admin)
 
     $ symfony console security:hash-password
@@ -134,7 +134,7 @@ Creating an Admin
 
 Insert the admin user via an SQL statement:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run psql -c "INSERT INTO admin (id, username, roles, password) \
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
@@ -156,7 +156,7 @@ Now that we have an admin user, we can secure the admin backend. Symfony support
 
 Run the ``make:auth`` command to update the security configuration, generate a login template, and create an *authenticator*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||AppAuthenticator||SecurityController||yes)
 
     $ symfony console make:auth
@@ -213,7 +213,7 @@ As hinted by the command output, we need to customize the route in the ``onAuthe
 
     How do I remember that the EasyAdmin route is ``admin`` (as configured in ``App\Controller\Admin\DashboardController``)? I don't. You can have a look at the file, but you can also run the following command that shows the association between route names and paths:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:router
 

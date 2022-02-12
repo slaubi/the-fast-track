@@ -151,7 +151,7 @@ Secrets are environment variables in disguise.
 
 Add the Akismet key in the vault:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ symfony console secrets:set AKISMET_KEY
@@ -229,7 +229,7 @@ Managing Secrets in Production
 
 For production, Platform.sh supports setting *sensitive environment variables*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:AKISMET_KEY --value=abcdef
@@ -241,7 +241,7 @@ But as discussed above, using Symfony secrets might be better. Not in terms of s
 
 First, generate a pair of keys for production use:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console secrets:generate-keys --env=prod
 
@@ -249,7 +249,7 @@ First, generate a pair of keys for production use:
 
     On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ APP_RUNTIME_ENV=prod symfony console secrets:generate-keys
@@ -259,20 +259,20 @@ First, generate a pair of keys for production use:
 
 Re-add the Akismet secret in the production vault but with its production value:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(abcdef)
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
 The last step is to send the decryption key to Platform.sh by setting a sensitive variable:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:SYMFONY_DECRYPTION_SECRET --value=`php -r 'echo base64_encode(include("config/secrets/prod/prod.decrypt.private.php"));'`
 
 You can add and commit all files; the decryption key has been added in ``.gitignore`` automatically, so it will never be committed. For more safety, you can remove it from your local machine as it has been deployed now:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -f config/secrets/prod/prod.decrypt.private.php
 
