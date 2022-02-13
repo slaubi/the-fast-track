@@ -196,7 +196,7 @@ If you want to connect to PostgreSQL hosted on the production containers, you ca
     $ symfony cloud:tunnel:open
     $ symfony var:expose-from-tunnel
 
-By default, Platform.sh services are not exposed as environment variables on the local machine. You must explicitly do so by running the ``var:expose-from-tunnel`` command. Why? Connecting to the production database is a dangerous operation. You can mess with *real* data. Requiring the flag is how you confirm that this *is* what you want to do.
+By default, Platform.sh services are not exposed as environment variables on the local machine. You must explicitly do so by running the ``var:expose-from-tunnel`` command. Why? Connecting to the production database is a dangerous operation. You can mess with *real* data.
 
 Now, connect to the remote PostgreSQL database via ``symfony run psql`` as before:
 

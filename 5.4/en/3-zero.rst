@@ -28,7 +28,7 @@ As we are creating a fully-featured web application, we have added a few options
 
 * ``--docker``: On your local machine, we will use Docker to manage services like PostgreSQL. This option enables Docker so that Symfony will automatically add Docker services based on the required packages (a PostgreSQL service when adding the ORM or a mail catcher when adding Symfony Mailer for instance).
 
-* ``--cloud``: If you want to deploy your project on Platform.sh, this option automatically generates a sensible Platform.sh configuration. Platformm.sh is the preferred and simplest way to deploy testing, staging, and production Symfony environments in the cloud.
+* ``--cloud``: If you want to deploy your project on Platform.sh, this option automatically generates a sensible Platform.sh configuration. Platform.sh is the preferred and simplest way to deploy testing, staging, and production Symfony environments in the cloud.
 
 If you have a look at the GitHub repository for the skeleton, you will notice that it is almost empty. Just a ``composer.json`` file. But the ``guestbook`` directory is full of files. How is that even possible? The answer lies in the ``symfony/flex`` package. Symfony Flex is a Composer plugin that hooks into the installation process. When it detects a package for which it has a *recipe*, it executes it.
 

@@ -142,7 +142,7 @@ Refresh the browser:
 
 The main responsibility of a controller is to return an HTTP ``Response`` for the request.
 
-As the end of the chapter will about code that we will revert, let's commit our changes now:
+As the rest of the chapter is about code that we won't keep, let's commit our changes now:
 
 .. code-block:: terminal
     :class: ignore

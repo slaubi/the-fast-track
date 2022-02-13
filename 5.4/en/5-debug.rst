@@ -1,7 +1,7 @@
 Troubleshooting Problems
 ========================
 
-Setting up a project is also about having the right tools to debug problems. Fortunately, many nice helpers are already included as part t=of the ``webapp`` package.
+Setting up a project is also about having the right tools to debug problems. Fortunately, many nice helpers are already included as part of the ``webapp`` package.
 
 Discovering the Symfony Debugging Tools
 ---------------------------------------
