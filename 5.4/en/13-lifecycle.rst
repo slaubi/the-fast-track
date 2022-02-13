@@ -276,7 +276,7 @@ We need to partially declare the listener in the container. The dependency wirin
 
     --- a/config/services.yaml
     +++ b/config/services.yaml
-    @@ -23,3 +23,7 @@ services:
+    @@ -22,3 +22,7 @@ services:
 
          # add more service definitions when explicit configuration is needed
          # please note that last definitions always *replace* previous ones

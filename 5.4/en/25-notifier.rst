@@ -521,7 +521,7 @@ Finally, update the controllers to generate the review URL and pass it in the co
     +            $this->bus->dispatch(new CommentMessage($comment->getId(), $reviewUrl));
              }
 
-             return $this->twig->render('admin/review.html.twig', [
+             return new Response($this->twig->render('admin/review.html.twig', [
     --- a/src/Controller/ConferenceController.php
     +++ b/src/Controller/ConferenceController.php
     @@ -17,6 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;

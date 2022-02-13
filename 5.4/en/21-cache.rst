@@ -339,7 +339,7 @@ This strategy does not work well if you only want to invalidate some URLs or if 
 
     --- a/config/services.yaml
     +++ b/config/services.yaml
-    @@ -37,3 +37,5 @@ services:
+    @@ -36,3 +36,5 @@ services:
              tags:
                  - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Conference'}
                  - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\Conference'}
@@ -358,7 +358,7 @@ This strategy does not work well if you only want to invalidate some URLs or if 
      use Symfony\Component\Workflow\Registry;
     @@ -52,4 +54,16 @@ class AdminController extends AbstractController
                  'comment' => $comment,
-             ]);
+             ]));
          }
     +
     +    #[Route('/admin/http-cache/{uri<.*>}', methods: ['PURGE'])]
@@ -424,7 +424,7 @@ The two routes in the admin controller have the same ``/admin`` prefix. Instead 
          {
              $accepted = !$request->query->get('reject');
     @@ -55,7 +56,7 @@ class AdminController extends AbstractController
-             ]);
+             ]));
          }
 
     -    #[Route('/admin/http-cache/{uri<.*>}', methods: ['PURGE'])]
