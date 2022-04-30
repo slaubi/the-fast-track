@@ -53,11 +53,13 @@ Git
 PHP
 ---
 
-.. index:: PHP
+.. index::
+    single: PHP
+    single: PHP extensions
 
 Ми будемо використовувати Docker для сервісів, але мені подобається, щоб PHP був встановлений на моєму локальному комп'ютері з причин продуктивності, стабільності та простоти. Називайте мене старомодним, якщо хочете, але поєднання локального PHP та Docker сервісів — ідеально для мене.
 
-Використовуйте PHP 8.1 і перевірте чи встановлено :index:`наступні розширення PHP <розширення PHP>`, або встановіть їх зараз: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. За бажанням також встановіть ``redis``, ``curl`` і ``zip``.
+Використовуйте PHP 8.1 і перевірте чи встановлено наступні розширення PHP, або встановіть їх зараз: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. За бажанням також встановіть ``redis``, ``curl`` і ``zip``.
 
 Ви можете перевірити поточні розширення за допомогою ``php -m``.
 
@@ -114,7 +116,7 @@ Symfony CLI
 
     $ symfony book:check-requirements
 
-Якщо ви хочете пофантазувати, ви також можете виконати `Symfony proxy`_. Це необов'язково, але дозволяє отримати локальне доменне ім'я, що закінчується на ``.wip`` для вашого проекту.
+Якщо ви хочете пофантазувати, ви також можете запустити `Проксі-сервер Symfony`_. Це необов'язково, але дозволяє отримати локальне доменне ім'я, що закінчується на ``.wip``, для вашого проекту.
 
 Під час виконування команди в терміналі ми майже завжди будемо ставити перед нею префікс ``symfony``, як-от ``symfony composer`` замість просто ``composer`` чи ``symfony console`` замість ``./bin/console``.
 
@@ -138,4 +140,4 @@ Symfony CLI
 .. _`Hyper`: https://hyper.is/
 .. _`Git`: https://git-scm.com/
 .. _`Git bash`: https://gitforwindows.org/
-.. _`Symfony proxy`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy
+.. _`Проксі-сервер Symfony`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy
