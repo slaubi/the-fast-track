@@ -206,7 +206,7 @@ Le tableau de bord principal est vide pour le moment. C'est ici que vous pouvez 
              // Option 1. You can make your dashboard redirect to some common page of your backend
              //
 
-Quand nous affichons les relations entre les entités (la conférence liée à un commentaire), EasyAdmin essaie d'utiliser la représentation textuelle de la conférence. Par défaut, il s'appuie sur une convention qui utilise le nom de l'entité et la clé primaire (par exemple ``Conference #1`) si l'entité ne définit pas la méthode "magique" ``__toString()``. Pour rendre l'affichage plus parlant, ajoutez cette méthode sur la classe ``Conference`` :
+Quand nous affichons les relations entre les entités (la conférence liée à un commentaire), EasyAdmin essaie d'utiliser la représentation textuelle de la conférence. Par défaut, il s'appuie sur une convention qui utilise le nom de l'entité et la clé primaire (par exemple ``Conference #1``) si l'entité ne définit pas la méthode "magique" ``__toString()``. Pour rendre l'affichage plus parlant, ajoutez cette méthode sur la classe ``Conference`` :
 
 .. code-block:: diff
     :caption: patch_file
