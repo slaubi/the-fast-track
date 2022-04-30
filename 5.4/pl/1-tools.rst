@@ -53,11 +53,13 @@ Upewnij się, że wiesz, jak wykonywać podstawowe operacje, takie jak: ``git cl
 PHP
 ---
 
-.. index:: PHP
+.. index::
+    single: PHP
+    single: PHP extensions
 
 Będziemy używać Dockera dla usług, lecz PHP lubię mieć zainstalowany na lokalnym komputerze dla wydajności, stabilności i prostoty. Nazywaj mnie staromodnym, jeśli chcesz, ale połączenie lokalnego PHP i Dockera jest dla mnie idealne.
 
-Użyj PHP 8.1 i sprawdź, czy :index:`następujące rozszerzenia PHP <PHP extensions>` są zainstalowane. Jeżeli nie, zainstaluj je teraz: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Opcjonalnie możesz zainstalować również  ``redis``, ``curl`` i ``zip``.
+Użyj PHP 8.1 i sprawdź, czy następujące rozszerzenia PHP są zainstalowane. Jeżeli nie, zainstaluj je teraz: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Opcjonalnie możesz zainstalować również  ``redis``, ``curl`` i ``zip``.
 
 Możesz sprawdzić aktualnie włączone rozszerzenia poprzez ``php -m``.
 
@@ -97,7 +99,7 @@ Wreszcie, co nie mniej ważne, wykorzystamy ``symfony`` CLI, aby zwiększyć nas
 
 Zainstaluj `Symfony CLI`_.
 
-Aby korzystać z HTTPS lokalnie, musimy również `zainstalować urząd certyfikacji (ang. Certificate Authority )`_, aby włączyć obsługę TLS. Wykonaj następujące polecenie:
+Aby korzystać z HTTPS lokalnie, musimy również `zainstalować urząd certyfikacji (ang. Certificate Authority)`_, aby włączyć obsługę TLS. Wykonaj następujące polecenie:
 
 .. index::
     single: Symfony CLI;server:ca:install
@@ -132,7 +134,7 @@ Ponadto, Symfony CLI automatycznie wybiera "najlepszą" możliwą wersję PHP dl
 .. _`Yarn`: https://classic.yarnpkg.com/en/docs/install/
 .. _`Zainstaluj je`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
-.. _`zainstalować urząd certyfikacji (ang. Certificate Authority )`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
+.. _`zainstalować urząd certyfikacji (ang. Certificate Authority)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
 .. _`Symfony Support Plugin`: https://plugins.jetbrains.com/plugin/7219-symfony-support
 .. _`iTerm2`: https://iterm2.com/
 .. _`Hyper`: https://hyper.is/

@@ -5,17 +5,13 @@ Zarządzanie wydajnością
     single: Blackfire
     single: Profiler
 
-.. epigraph::
-
-    Przedwczesna optymalizacja jest źródłem wszelkiego zła.
+Przedwczesna optymalizacja jest źródłem wszelkiego zła.
 
 Ten cytat może już być Ci znany, ale lubię go w całości:
 
-.. epigraph::
+Powinniśmy zapomnieć o małych usprawnieniach, powiedzmy w około 97% przypadków: przedwczesna optymalizacja jest źródłem wszelkiego zła. Nie powinniśmy jednak rezygnować z możliwości zwiększenia wydajności w tych krytycznych trzech procentach.
 
-    Powinniśmy zapomnieć o małych usprawnieniach, powiedzmy w około 97% przypadków: przedwczesna optymalizacja jest źródłem wszelkiego zła. Nie powinniśmy jednak rezygnować z możliwości zwiększenia wydajności w tych krytycznych trzech procentach.
-
-    --   Donald Knuth
+--   Donald Knuth
 
 Nawet niewielka poprawa wydajności może mieć znaczenie, zwłaszcza w przypadku sklepów internetowych. Teraz, gdy aplikacja księgi gości jest gotowa, zobaczmy, jak możemy sprawdzić jej wydajność.
 

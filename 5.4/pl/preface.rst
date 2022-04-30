@@ -36,9 +36,9 @@ Ale dlaczego mielibyśmy kiedykolwiek chcieć dokumentacji nieangielskiej w świ
 
 Jak możesz sobie wyobrazić, tłumaczenie ponad trzystu stron to ogromna praca i chcę podziękować wszystkim osobom, które pomogły przetłumaczyć tę książkę:
 
+* Krystian Marcisz
 * Piotr Grabski-Gradziński
 * Paweł Balicki
-* Krystian Marcisz
 * Paweł Farys
 * Paweł Wiaderny
 * Adrian Górny
