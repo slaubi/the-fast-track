@@ -5,17 +5,13 @@ Gestire le prestazioni
     single: Blackfire
     single: Profiler
 
-.. epigraph::
-
-    L'ottimizzazione prematura è la radice di tutti i mali.
+L'ottimizzazione prematura è la radice di tutti i mali.
 
 Forse avrete già letto questa citazione in precedenza, ma vorrei riportarla per intero:
 
-.. epigraph::
+Si dovrebbero tralasciare le micro-ottimizzazioni, diciamo circa il 97% delle volte: l'ottimizzazione prematura è la radice di tutti i mali. Tuttavia, non dovremmo tralasciare l'opportunità di quel 3% critico.
 
-    Si dovrebbero tralasciare le micro-ottimizzazioni, diciamo circa il 97% delle volte: l'ottimizzazione prematura è la radice di tutti i mali. Tuttavia, non dovremmo tralasciare l'opportunità di quel 3% critico.
-
-    --   Donald Knuth
+--   Donald Knuth
 
 Anche piccoli miglioramenti delle prestazioni possono fare la differenza, specialmente per i siti di e-commerce. Ora che l'applicazione guestbook è pronta per il debutto, vediamo come possiamo verficarne le prestazioni.
 
