@@ -12,7 +12,7 @@ Odkrywanie narzędzi Symfony do debugowania
     single: Web Profiler
     single: Web Debug Toolbar
 
-Na początek, Symfony Profiler, który oszczędza czas podczas szukania przyczyny problemu:
+Na początek, Symfony Profiler, który oszczędza czas podczas szukania źródła problemu.
 
 Jeśli spojrzysz na stronę główną, u dołu ekranu powinieneś/aś zobaczyć pasek narzędzi:
 
