@@ -53,11 +53,13 @@ Assurez-vous de connaître les commandes de base comme ``git clone``, ``git log`
 PHP
 ---
 
-.. index:: PHP
+.. index::
+    single: PHP
+    single: PHP extensions
 
 Nous utiliserons Docker pour les services, mais j'aime avoir PHP installé sur mon ordinateur local pour des raisons de performance, de stabilité et de simplicité. C'est peut-être vieux jeu, mais la combinaison d'un PHP local et des services Docker est parfaite pour moi.
 
-Utilisez PHP 8.1 et vérifiez que les extensions PHP suivantes soient installées, ou installez-les maintenant : `intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Éventuellement, vous pouvez également installer ``redis``, ``curl`` et ``zip``.
+Utilisez PHP 8.1 et vérifiez que les extensions PHP suivantes soient installées, ou installez-les maintenant : ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Éventuellement, vous pouvez également installer ``redis``, ``curl`` et ``zip``.
 
 Vous pouvez vérifier les extensions actuellement activées avec ``php -m``.
 

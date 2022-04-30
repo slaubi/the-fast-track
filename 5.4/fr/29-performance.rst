@@ -5,17 +5,13 @@ Gérer les performances
     single: Blackfire
     single: Profiler
 
-.. epigraph::
-
-    L'optimisation prématurée est la racine de tous les maux.
+L'optimisation prématurée est la racine de tous les maux.
 
 Peut-être avez-vous déjà lu cette citation auparavant, mais j’aimerais la citer en entier :
 
-.. epigraph::
+Nous devrions éviter les économies de bout de chandelles, disons dans environ 97 % des cas : l'optimisation prématurée est la racine de tous les maux. Pour autant, nous ne devrions pas ignorer ces occasions dans ces 3% cruciaux.
 
-    Nous devrions éviter les économies de bout de chandelles, disons dans environ 97 % des cas : l'optimisation prématurée est la racine de tous les maux. Pour autant, nous ne devrions pas ignorer ces occasions dans ces 3% cruciaux.
-
-    --   Donald Knuth
+--   Donald Knuth
 
 Même de petites améliorations de performance peuvent faire la différence, en particulier pour les sites e-commerce. Maintenant que l'application du livre d'or est prête pour les heures de pointe, voyons comment nous pouvons analyser ses performances.
 

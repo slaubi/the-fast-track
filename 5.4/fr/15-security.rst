@@ -97,7 +97,7 @@ Nous ne développerons pas de système dédié pour créer des comptes d'adminis
 .. index::
     single: Command;security:hash-password
 
-Sélectionnerez ``App\Entity\Admin`` et choisissez ce que vous voulez comme mot de passe et exécutez la commande suivante pour générer le hash du mot de passe :
+Sélectionnez ``App\Entity\Admin`` et choisissez ce que vous voulez comme mot de passe et exécutez la commande suivante pour générer le hash du mot de passe :
 
 .. code-block:: terminal
     :class: answers(0||admin)
