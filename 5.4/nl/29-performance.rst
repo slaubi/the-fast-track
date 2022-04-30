@@ -5,17 +5,13 @@ Prestaties beheren
     single: Blackfire
     single: Profiler
 
-.. epigraph::
-
-    Vroegtijdige optimalisaties zijn de wortel van het kwaad.
+Vroegtijdige optimalisaties zijn de wortel van het kwaad.
 
 Misschien heb je dit citaat al eerder gelezen. Maar ik citeer het graag volledig:
 
-.. epigraph::
+We moeten kleine efficiëntieverbeteringen vergeten, zeg maar 97% van de tijd: voortijdige optimalisatie is de wortel van alle kwaad. Toch mogen we onze kansen in die kritische 3 procent niet voorbij laten gaan.
 
-    We moeten kleine efficiëntieverbeteringen vergeten, zeg maar 97% van de tijd: voortijdige optimalisatie is de wortel van alle kwaad. Toch mogen we onze kansen in die kritische 3 procent niet voorbij laten gaan.
-
-    --   Donald Knuth
+--   Donald Knuth
 
 Zelfs kleine prestatieverbeteringen kunnen een verschil maken, vooral voor e-commerce websites. Nu de gastenboekapplicatie klaar is voor prime time, laten we eens kijken hoe we de prestaties ervan kunnen controleren.
 
