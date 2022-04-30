@@ -5,17 +5,13 @@ Managing Performance
     single: Blackfire
     single: Profiler
 
-.. epigraph::
-
-    Premature optimization is the root of all evil.
+Premature optimization is the root of all evil.
 
 Maybe you have already read this quotation before. But I like to cite it in full:
 
-.. epigraph::
+We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
 
-    We should forget about small efficiencies, say about 97% of the time: premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%.
-
-    --   Donald Knuth
+--   Donald Knuth
 
 Even small performance improvements can make a difference, especially for e-commerce websites. Now that the guestbook application is ready for prime time, let's see how we can check its performance.
 

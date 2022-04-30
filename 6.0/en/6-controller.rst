@@ -35,7 +35,7 @@ The Symfony Console built-in ``list`` command lists all commands available under
 Choosing a Configuration Format
 -------------------------------
 
-Before creating the first controller of the project, we need to decide on the configuration formats we want to use. Symfony supports YAML, XML, PHP, and `PHP attributes`_ out of the box.
+Before creating the first controller of the project, we need to decide on the configuration formats we want to use. Symfony supports YAML, XML, PHP, and PHP attributes out of the box.
 
 For *configuration related to packages*, *YAML* is the best choice. This is the format used in the ``config/`` directory. Often, when you install a new package, that package's recipe will add a new file ending in ``.yaml`` to that directory.
 

@@ -43,8 +43,6 @@ Company Backers
 .. index::
     Backers;Companies
 
-This book is sponsored by the following companies:
-
 .. figure:: images/logos/sensiolabs.svg
     :align: center
     :figclass: backer
@@ -57,11 +55,18 @@ This book is sponsored by the following companies:
 
     https://platform.sh/
 
-.. figure:: images/logos/blackfire.svg
+.. figure:: images/logos/qossmic.svg
     :align: center
     :figclass: backer
 
-    https://blackfire.io/
+    https://qossmic.com/
+
+*
+    .. figure:: images/logos/blackfire.svg
+        :align: center
+        :figclass: backer
+
+        https://blackfire.io/
 
 *
     .. figure:: images/logos/tilleuls.svg
@@ -69,13 +74,6 @@ This book is sponsored by the following companies:
         :figclass: backer
 
         https://les-tilleuls.coop/
-
-*
-    .. figure:: images/logos/qossmic.svg
-        :align: center
-        :figclass: backer
-
-        https://qossmic.com/
 
 Family Love
 -----------
