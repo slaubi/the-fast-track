@@ -17,13 +17,13 @@ Utilisez le *Maker Bundle* pour générer une classe de formulaire :
 
 .. code-block:: terminal
 
-    $ symfony console make:form CommentFormType Comment
+    $ symfony console make:form CommentType Comment
 
 .. code-block:: text
     :class: ignore
     :emphasize-lines: 1
 
-     created: src/Form/CommentFormType.php
+     created: src/Form/CommentType.php
 
 
       Success!
@@ -32,10 +32,10 @@ Utilisez le *Maker Bundle* pour générer une classe de formulaire :
      Next: Add fields to your form and start using it.
      Find the documentation at https://symfony.com/doc/current/forms.html
 
-La classe ``App\Form\CommentFormType`` définit un formulaire pour l'entité ``App\Entity\Comment`` :
+La classe ``App\Form\CommentType`` définit un formulaire pour l'entité ``App\Entity\Comment`` :
 
 .. code-block:: php
-    :caption: src/Form/CommentFormType.php
+    :caption: src/Form/CommentType.php
     :class: ignore
 
     namespace App\Form;
@@ -45,7 +45,7 @@ La classe ``App\Form\CommentFormType`` définit un formulaire pour l'entité ``A
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
-    class CommentFormType extends AbstractType
+    class CommentType extends AbstractType
     {
         public function buildForm(FormBuilderInterface $builder, array $options)
         {
@@ -86,7 +86,7 @@ Pour afficher le formulaire, créez-le dans le contrôleur et transmettez-le au 
 
     +use App\Entity\Comment;
      use App\Entity\Conference;
-    +use App\Form\CommentFormType;
+    +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -95,7 +95,7 @@ Pour afficher le formulaire, créez-le dans le contrôleur et transmettez-le au 
          public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
          {
     +        $comment = new Comment();
-    +        $form = $this->createForm(CommentFormType::class, $comment);
+    +        $form = $this->createForm(CommentType::class, $comment);
     +
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
@@ -113,8 +113,6 @@ Vous ne devriez jamais instancier directement le form type. Utilisez plutôt la 
 
 .. index::
     single: Twig;form
-
-Lorsque vous transmettez un formulaire à un template, utilisez ``createView()`` pour convertir les données dans un format adapté aux templates.
 
 L'affichage du formulaire dans le template peut se faire via la fonction Twig ``form`` :
 
@@ -151,8 +149,8 @@ Même si les champs de formulaire sont configurés en fonction de leur modèle a
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Form/CommentFormType.php
-    +++ b/src/Form/CommentFormType.php
+    --- a/src/Form/CommentType.php
+    +++ b/src/Form/CommentType.php
     @@ -4,20 +4,31 @@ namespace App\Form;
 
      use App\Entity\Comment;
@@ -164,7 +162,7 @@ Même si les champs de formulaire sont configurés en fonction de leur modèle a
      use Symfony\Component\OptionsResolver\OptionsResolver;
     +use Symfony\Component\Validator\Constraints\Image;
 
-     class CommentFormType extends AbstractType
+     class CommentType extends AbstractType
      {
          public function buildForm(FormBuilderInterface $builder, array $options): void
          {
@@ -284,7 +282,7 @@ Nous devrions maintenant nous occuper de la soumission du formulaire et de la pe
     --- a/src/Controller/ConferenceController.php
     +++ b/src/Controller/ConferenceController.php
     @@ -7,6 +7,7 @@ use App\Entity\Conference;
-     use App\Form\CommentFormType;
+     use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
@@ -306,7 +304,7 @@ Nous devrions maintenant nous occuper de la soumission du formulaire et de la pe
     @@ -27,6 +33,15 @@ class ConferenceController extends AbstractController
          {
              $comment = new Comment();
-             $form = $this->createForm(CommentFormType::class, $comment);
+             $form = $this->createForm(CommentType::class, $comment);
     +        $form->handleRequest($request);
     +        if ($form->isSubmitted() && $form->isValid()) {
     +            $comment->setConference($conference);
@@ -362,16 +360,15 @@ Maintenant, nous avons tout ce qu'il nous faut pour implémenter la logique néc
 
     --- a/src/Controller/ConferenceController.php
     +++ b/src/Controller/ConferenceController.php
-    @@ -9,6 +9,8 @@ use App\Repository\CommentRepository;
+    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    +use Symfony\Component\HttpFoundation\File\Exception\FileException;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Annotation\Route;
-    @@ -29,13 +31,26 @@ class ConferenceController extends AbstractController
+    @@ -29,13 +30,22 @@ class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
@@ -384,17 +381,13 @@ Maintenant, nous avons tout ce qu'il nous faut pour implémenter la logique néc
     +        #[Autowire('%photo_dir%')] string $photoDir,
     +    ): Response {
              $comment = new Comment();
-             $form = $this->createForm(CommentFormType::class, $comment);
+             $form = $this->createForm(CommentType::class, $comment);
              $form->handleRequest($request);
              if ($form->isSubmitted() && $form->isValid()) {
                  $comment->setConference($conference);
     +            if ($photo = $form['photo']->getData()) {
     +                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
-    +                try {
-    +                    $photo->move($photoDir, $filename);
-    +                } catch (FileException $e) {
-    +                    // unable to upload the photo, give up
-    +                }
+    +                $photo->move($photoDir, $filename);
     +                $comment->setPhotoFilename($filename);
     +            }
 

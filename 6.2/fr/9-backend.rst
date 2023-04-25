@@ -326,7 +326,6 @@ L'interface d'administration par défaut fonctionne bien, mais elle peut être p
     +        ;
     +
     +        $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
-    +            'html5' => true,
     +            'years' => range(date('Y'), date('Y') + 5),
     +            'widget' => 'single_text',
     +        ]);

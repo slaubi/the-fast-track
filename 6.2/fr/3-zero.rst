@@ -17,7 +17,7 @@ Créez un nouveau projet Symfony avec la commande ``symfony`` que nous avons ins
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Cette commande est une mince surcouche de ``Composer`` qui facilite la création de projets Symfony. Elle utilise un `squelette de projet`_ qui inclut uniquement les composants Symfony requis par presque tous les projets : un outil console et l'abstraction HTTP nécessaire pour créer des applications web.
@@ -205,8 +205,8 @@ Notez que vous n'obtenez pas la belle page par défaut de Symfony sur Platform.s
 
 .. _`celui`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`squelette de projet`: https://github.com/symfony/skeleton
-.. _`Platform.sh`: https://platform.sh
+.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`recettes officielles de Symfony`: https://github.com/symfony/recipes
 .. _`recettes créées par la communauté`: https://github.com/symfony/recipes-contrib
 .. _`serveur web local de Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`documentation de Platform.sh`: https://symfony.com/doc/cloud
+.. _`documentation de Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

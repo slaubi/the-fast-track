@@ -64,7 +64,7 @@ Entreprises sponsors
     :align: center
     :figclass: backer
 
-    https://platform.sh/
+    https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 
 .. figure:: images/logos/qossmic.svg
     :align: center

@@ -211,7 +211,7 @@ Utiliser une base de données de test
     single: Test;Database
     single: Functional Tests,Database
 
-Comme nous l'avons déjà vu, la commande Symfony définit automatiquement la variable d'environnement ``DATABASE_URL`` . Quand ``APP_ENV`` vaut ``test``, comme c'est le cas lors de l'exécution de PHPUnit, cela change le nom de la base de données de ``main`` en ``main_test`` pour que les tests utilisent leur propre base de données :
+Comme nous l'avons déjà vu, la commande Symfony définit automatiquement la variable d'environnement ``DATABASE_URL`` . Quand ``APP_ENV`` vaut ``test``, comme c'est le cas lors de l'exécution de PHPUnit, cela change le nom de la base de données de ``app`` en ``app_test`` pour que les tests utilisent leur propre base de données :
 
 .. code-block:: yaml
     :class: ignore

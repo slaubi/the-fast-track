@@ -53,7 +53,7 @@ Comme vous l'avez sûrement deviné, nous avons aussi besoin d'ajouter RabbitMQ 
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3.7-management
+    +    image: rabbitmq:3-management
     +    ports: [5672, 15672]
     +
      volumes:
