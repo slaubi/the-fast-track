@@ -43,7 +43,7 @@ Check all exposed environment variables by executing ``symfony var:export``:
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Remember the ``database`` *service name* used in the Docker and Platform.sh configurations? The service names are used as prefixes to define environment variables like ``DATABASE_URL``. If your services are named according to the Symfony conventions, no other configuration is needed.

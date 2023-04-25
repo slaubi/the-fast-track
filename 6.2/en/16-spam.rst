@@ -190,7 +190,7 @@ One simple way to check for spam when a new comment is submitted is to call the 
     --- a/src/Controller/ConferenceController.php
     +++ b/src/Controller/ConferenceController.php
     @@ -7,6 +7,7 @@ use App\Entity\Conference;
-     use App\Form\CommentFormType;
+     use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use App\SpamChecker;

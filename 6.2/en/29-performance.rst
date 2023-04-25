@@ -39,7 +39,7 @@ Install Blackfire on your local machine by running the following quick installat
 
 This installer downloads and installs the Blackfire CLI Tool.
 
-When done, installs the PHP probe on all available PHP versions:
+When done, install the PHP probe on all available PHP versions:
 
 .. code-block:: terminal
     :class: ignore

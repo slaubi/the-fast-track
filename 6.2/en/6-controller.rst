@@ -74,7 +74,7 @@ The command creates a ``ConferenceController`` class under the ``src/Controller/
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@ The command creates a ``ConferenceController`` class under the ``src/Controller/
         }
     }
 
-The ``#[Route('/conference', name: 'conference')]`` attribute is what makes the ``index()`` method a controller (the configuration is next to the code that it configures).
+The ``#[Route('/conference', name: 'app_conference')]`` attribute is what makes the ``index()`` method a controller (the configuration is next to the code that it configures).
 
 When you hit ``/conference`` in a browser, the controller is executed and a response is returned.
 

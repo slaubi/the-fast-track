@@ -326,7 +326,6 @@ The default admin backend works well, but it can be customized in many ways to i
     +        ;
     +
     +        $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
-    +            'html5' => true,
     +            'years' => range(date('Y'), date('Y') + 5),
     +            'widget' => 'single_text',
     +        ]);

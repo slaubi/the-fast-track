@@ -227,7 +227,7 @@ From Visual Studio Code and while being in your project directory, go to the deb
 
 If you go to the browser and refresh, the IDE should automatically take the focus, meaning that the debugging session is ready. By default, everything is a breakpoint, so execution stops at the first instruction. It's then up to you to inspect the current variables, step over the code, step into the code, ...
 
-When debugging, you can uncheck the "Everything" breakpoint and explicitely set breakpoints in your code.
+When debugging, you can uncheck the "Everything" breakpoint and explicitly set breakpoints in your code.
 
 If you are new to step debuggers, read the `excellent tutorial for Visual Studio Code`_, which explains everything visually.
 

@@ -43,6 +43,18 @@ When the behavior does not need any service and should be applied to only one ki
          {
              return $this->conference;
 
+    --- a/src/Controller/Admin/CommentCrudController.php
+    +++ b/src/Controller/Admin/CommentCrudController.php
+    @@ -56,8 +56,6 @@ class CommentCrudController extends AbstractCrudController
+             ]);
+             if (Crud::PAGE_EDIT === $pageName) {
+                 yield $createdAt->setFormTypeOption('disabled', true);
+    -        } else {
+    -            yield $createdAt;
+             }
+         }
+     }
+
 The ``ORM\PrePersist`` *event* is triggered when the object is stored in the database for the very first time. When that happens, the ``setCreatedAtValue()`` method is called and the current date and time is used for the value of the ``createdAt`` property.
 
 Adding Slugs to Conferences
@@ -227,7 +239,7 @@ Instead, create a Doctrine entity listener:
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\ORM\Event\LifecycleEventArgs;
+    use Doctrine\Persistence\Event\LifecycleEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
@@ -277,8 +289,8 @@ Here, because our class doesn't implement any interface nor doesn't extend any b
 
      use App\Entity\Conference;
     +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-     use Doctrine\ORM\Event\LifecycleEventArgs;
     +use Doctrine\ORM\Events;
+     use Doctrine\Persistence\Event\LifecycleEventArgs;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
     +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]
