@@ -53,7 +53,7 @@ Wie Du sicherlich schon erraten hast, müssen wir RabbitMQ auch in den Docker Co
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3.7-management
+    +    image: rabbitmq:3-management
     +    ports: [5672, 15672]
     +
      volumes:

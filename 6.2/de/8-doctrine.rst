@@ -43,7 +43,7 @@ Du überprüfst alle exponierten Environment-Variablen, indem Du ``symfony var:e
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Erinnerst Du dich an den ``database``-*Servicenamen*, der in den Konfigurationen von Docker und Platform.sh verwendet wird? Die Servicenamen werden als Präfixe für Environment-Variablen wie ``DATABASE_URL`` verwendet. Wenn Deine Services nach den Symfony-Konventionen benannt sind, ist keine weitere Konfiguration erforderlich.

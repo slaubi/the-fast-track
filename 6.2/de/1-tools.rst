@@ -81,7 +81,7 @@ Wenn Du mit Composer nicht vertraut bist, nimm Dir etwas Zeit, um Dich einzulese
 NodeJS
 ------
 
-Wir werden nicht viel Javascript Code schreiben, aber wir werden JavaScript/NodeJS tools nutzen um unsere Assets zu verwalten. Stelle sicher, dass Du `NodeJS`_ und den Paketmanager `Yarn`_ installiert hast.
+Wir werden nicht viel Javascript Code schreiben, aber wir werden JavaScript/NodeJS tools nutzen um unsere Assets zu verwalten. Stelle sicher, dass Du `NodeJS`_ installiert hast.
 
 Docker und Docker Compose
 -------------------------
@@ -131,12 +131,12 @@ Darüber hinaus wählt die Symfony CLI automatisch die bestmögliche PHP-Version
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
 .. _`NodeJS`: https://nodejs.org/
-.. _`Yarn`: https://docs.docker.com/install/
-.. _`Installiere sie`: https://symfony.com/download
-.. _`Symfony CLI`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
+.. _`Installiere sie`: https://docs.docker.com/install/
+.. _`Symfony CLI`: https://symfony.com/download
+.. _`eine Zertifizierungsstelle (certificate authority -CA) installieren`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
 .. _`Symfony Support Plugins`: https://plugins.jetbrains.com/plugin/7219-symfony-support
 .. _`iTerm2`: https://iterm2.com/
 .. _`Hyper`: https://hyper.is/
 .. _`Git`: https://git-scm.com/
 .. _`Git bash`: https://gitforwindows.org/
-.. _`eine Zertifizierungsstelle (certificate authority -CA) installieren`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy
+.. _`Symfony-Proxy`: https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy

@@ -234,9 +234,9 @@ Docker Compose und Platform.sh arbeiten dank Environment-Variablen nahtlos mit S
 
     PGHOST=127.0.0.1
     PGPORT=32781
-    PGDATABASE=main
-    PGUSER=main
-    PGPASSWORD=main
+    PGDATABASE=app
+    PGUSER=app
+    PGPASSWORD=!ChangeMe!
     # ...
 
 Die ``PG*`` Environment-Variablen werden vom ``psql`` Dienstprogramm gelesen. Was ist mit den anderen?

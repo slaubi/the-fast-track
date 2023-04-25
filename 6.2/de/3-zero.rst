@@ -17,7 +17,7 @@ Erstelle ein neues Symfony-Projekt mit dem ``symfony`` CLI-Tool, das wir zuvor g
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Dieser Befehl ist ein dünner Wrapper von ``Composer`` der die Erstellung von Symfony-Projekten erleichtert. Er verwendet ein `Projektskelett`_, das nur die allernötigsten Abhängigkeiten (Dependencies) enthält; die Symfony-Komponenten, die für fast jedes Projekt benötigt werden: ein Konsolenwerkzeug und die HTTP-Abstraktion, die für die Erstellung von Webanwendungen erforderlich ist.
@@ -205,8 +205,8 @@ Beachte, dass Du nicht die schöne Standard-Symfony-Seite auf der Platform.sh er
 
 .. _`was,`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`Projektskelett`: https://github.com/symfony/skeleton
-.. _`Platform.sh`: https://platform.sh
+.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`offiziellen Symfony-Recipes`: https://github.com/symfony/recipes
 .. _`der Community beigesteuerten Recipes`: https://github.com/symfony/recipes-contrib
 .. _`lokale Symfony Webserver`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Platform.sh-Dokumentation`: https://symfony.com/doc/cloud
+.. _`Platform.sh-Dokumentation`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

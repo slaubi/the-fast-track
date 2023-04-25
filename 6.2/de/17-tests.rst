@@ -211,7 +211,7 @@ Mit einer Testdatenbank arbeiten
     single: Test;Database
     single: Functional Tests,Database
 
-Wie wir schon eher gesehen haben, stellt die Symfony CLI automatisch die ``DATABASE_URL``-Environment-Variable (Umgebungsvariable) bereit. Genauso als wenn PHPUnit ausgeführt wurde und verändert damit den Datenbank-Namen von ``main`` zu ``main_test``, so dass die Tests ihre eigene Datenbank haben:
+Wie wir schon eher gesehen haben, stellt die Symfony CLI automatisch die ``DATABASE_URL``-Environment-Variable (Umgebungsvariable) bereit. Genauso als wenn PHPUnit ausgeführt wurde und verändert damit den Datenbank-Namen von ``app`` zu ``app_test``, so dass die Tests ihre eigene Datenbank haben:
 
 .. code-block:: yaml
     :class: ignore
