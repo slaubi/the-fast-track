@@ -74,7 +74,7 @@
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@
         }
     }
 
-Атрибут ``#[Route('/conference', name: 'conference')]`` є тим, що робить метод ``index()`` контролером (конфігурація знаходиться поруч із кодом, який він налаштовує).
+Атрибут ``#[Route('/conference', name: 'app_conference')]`` є тим, що робить метод ``index()`` контролером (конфігурація знаходиться поруч із кодом, який він налаштовує).
 
 Коли ви переходите за посиланням ``/conference`` в браузері, виконується контролер та повертається відповідь.
 

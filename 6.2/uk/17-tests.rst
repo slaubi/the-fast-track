@@ -211,7 +211,7 @@ SpamChecker — це перший клас, для якого ми будемо 
     single: Test;Database
     single: Functional Tests,Database
 
-Як ми вже бачили, Symfony CLI автоматично надає змінну середовища ``DATABASE_URL``. Коли ``APP_ENV`` має значення ``test``, як це встановлено під час запуску PHPUnit, назва бази даних змінюється з ``main`` на ``main_test``, щоб тести мали свою власну базу даних:
+Як ми вже бачили, Symfony CLI автоматично надає змінну середовища ``DATABASE_URL``. Коли ``APP_ENV`` має значення ``test``, як це встановлено під час запуску PHPUnit, назва бази даних змінюється з ``app`` на ``app_test``, щоб тести мали свою власну базу даних:
 
 .. code-block:: yaml
     :class: ignore

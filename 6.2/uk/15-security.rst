@@ -32,25 +32,6 @@
 
 Якщо ви хочете додати додаткові властивості до користувача ``Admin`` — використовуйте команду ``make:entity``.
 
-Додаймо метод ``__toString()``, як цього потребує EasyAdmin:
-
-.. code-block:: diff
-
-    --- a/src/Entity/Admin.php
-    +++ b/src/Entity/Admin.php
-    @@ -54,6 +54,11 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
-             return (string) $this->username;
-         }
-
-    +    public function __toString(): string
-    +    {
-    +        return $this->username;
-    +    }
-    +
-         /**
-          * @see UserInterface
-          */
-
 На додаток до генерування сутності ``Admin``, команда також оновила конфігурацію безпеки, щоб зв'язати сутність із системою аутентифікації:
 
 .. code-block:: diff

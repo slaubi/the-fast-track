@@ -17,7 +17,7 @@
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Ця команда є тонкою обгорткою над ``Composer``, яка полегшує створення проектів Symfony. Вона використовує `скелет проекту`_, що включає мінімальний набір залежностей; компоненти Symfony, які необхідні практично для будь-якого проекту: консольний інструмент і абстракція HTTP, які необхідні для створення веб-застосунків.
@@ -205,8 +205,8 @@
 
 .. _`те`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`скелет проекту`: https://github.com/symfony/skeleton
-.. _`Platform.sh`: https://platform.sh
+.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`офіційних рецептів Symfony`: https://github.com/symfony/recipes
 .. _`рецептів, що надаються спільнотою`: https://github.com/symfony/recipes-contrib
 .. _`Локальний веб-сервер Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Документація по Platform.sh`: https://symfony.com/doc/cloud
+.. _`Документація по Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

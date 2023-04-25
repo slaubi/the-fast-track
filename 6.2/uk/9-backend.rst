@@ -326,7 +326,6 @@ EasyAdmin надає API для полегшення зв'язування з CR
     +        ;
     +
     +        $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
-    +            'html5' => true,
     +            'years' => range(date('Y'), date('Y') + 5),
     +            'widget' => 'single_text',
     +        ]);
