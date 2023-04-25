@@ -43,6 +43,18 @@ Jeśli schemat działania nie wymaga dostępu do żadnej usługi i ma zastosowan
          {
              return $this->conference;
 
+    --- a/src/Controller/Admin/CommentCrudController.php
+    +++ b/src/Controller/Admin/CommentCrudController.php
+    @@ -56,8 +56,6 @@ class CommentCrudController extends AbstractCrudController
+             ]);
+             if (Crud::PAGE_EDIT === $pageName) {
+                 yield $createdAt->setFormTypeOption('disabled', true);
+    -        } else {
+    -            yield $createdAt;
+             }
+         }
+     }
+
 *Zdarzenie* ``ORM\PrePersist`` jest emitowane, gdy obiekt jest po raz pierwszy zapisany w bazie danych. Gdy tak się stanie, wywołana zostanie metoda ``setCreatedAtValue()``, a jako wartość atrybutu ``createdAt`` zostanie użyta bieżąca data i czas.
 
 Dodawanie slugów do konferencji
@@ -227,7 +239,7 @@ Zamiast tego utwórz nasłuchiwacz zdarzeń Doctrine (ang. Doctrine entity liste
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\ORM\Event\LifecycleEventArgs;
+    use Doctrine\Persistence\Event\LifecycleEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
@@ -277,8 +289,8 @@ Ponieważ nasza klasa nie implementuje żadnego interfejsu ani nie rozszerza ża
 
      use App\Entity\Conference;
     +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-     use Doctrine\ORM\Event\LifecycleEventArgs;
     +use Doctrine\ORM\Events;
+     use Doctrine\Persistence\Event\LifecycleEventArgs;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
     +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]

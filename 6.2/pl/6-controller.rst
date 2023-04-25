@@ -74,7 +74,7 @@ Polecenie tworzy klasę ``ConferenceController`` w katalogu ``src/Controller/``.
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@ Polecenie tworzy klasę ``ConferenceController`` w katalogu ``src/Controller/``.
         }
     }
 
-Atrybut ``#[Route('/conference', name: 'conference')]`` jest tym, co czyni metodę ``index()`` kontrolerem (konfiguracja znajduje się nad kodem, który konfiguruje).
+Atrybut ``#[Route('/conference', name: 'app_conference')]`` jest tym, co czyni metodę ``index()`` kontrolerem (konfiguracja znajduje się nad kodem, który konfiguruje).
 
 Po wejściu na adres: ``/conference`` w przeglądarce kontroler jest wykonywany, a odpowiedź zwracana.
 

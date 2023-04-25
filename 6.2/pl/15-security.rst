@@ -32,25 +32,6 @@ Wygenerowana klasa zawiera metody takie jak ``getRoles()``, ``eraseCredentials()
 
 Jeśli chcesz dodać więcej atrybutów do encji użytkownika ``Admin``, użyj ``make:entity``.
 
-Dodajmy metodę ``__toString()``, której używa EasyAdmin:
-
-.. code-block:: diff
-
-    --- a/src/Entity/Admin.php
-    +++ b/src/Entity/Admin.php
-    @@ -54,6 +54,11 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
-             return (string) $this->username;
-         }
-
-    +    public function __toString(): string
-    +    {
-    +        return $this->username;
-    +    }
-    +
-         /**
-          * @see UserInterface
-          */
-
 Oprócz wygenerowania encji ``Admin``, polecenie zaktualizowało również konfigurację zabezpieczeń, aby połączyć encję z systemem uwierzytelniania:
 
 .. code-block:: diff
@@ -96,7 +77,7 @@ Generowanie hasła dla konta administracyjnego
 .. index::
     single: Security;Password Hashes
 
-Nie stworzymy dedykowanego systemu do tworzenia kont administracyjnych. Będziemy mieli tylko jedno konto administracyjne. Loginem będzie ``admin`` i musimy wygenerować hasha hasła.
+Nie stworzymy dedykowanego systemu do tworzenia kont administracyjnych. Będziemy mieli tylko jedno konto administracyjne. Loginem będzie ``admin`` i musimy wygenerować hash hasła.
 
 .. index::
     single: Command;security:hash-password
@@ -213,7 +194,7 @@ Jak wynika z wskazówki na wyjściu komendy, musimy dostosować trasę (ang. rou
 
 .. tip::
 
-    Skąd mam pamiętać, że trasa EasyAdmin to ``admin`` (taka jaką ustawiłem w ``App\Controller\Admin\DashboardController``)?? Nie wiem. Możesz sprawdzić to w pliku, ale możesz również uruchomić poniższą komendę, która pokazuje związek między nazwami tras (ang. route) a ścieżkami:
+    Skąd mam pamiętać, że trasa EasyAdmin to ``admin`` (taka jaką ustawiłem w ``App\Controller\Admin\DashboardController``)? Nie wiem. Możesz sprawdzić to w pliku, ale możesz również uruchomić poniższą komendę, która pokazuje związek między nazwami tras (ang. route) a ścieżkami:
 
     .. code-block:: terminal
 

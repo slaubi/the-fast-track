@@ -53,7 +53,7 @@ Jak pewnie się domyślasz, musimy dodać RabbitMQ do stosu Docker Compose:
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3.7-management
+    +    image: rabbitmq:3-management
     +    ports: [5672, 15672]
     +
      volumes:

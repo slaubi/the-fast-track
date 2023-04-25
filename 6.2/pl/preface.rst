@@ -36,8 +36,8 @@ Ale dlaczego mielibyśmy kiedykolwiek chcieć dokumentacji nieangielskiej w świ
 
 Jak możesz sobie wyobrazić, tłumaczenie ponad trzystu stron to ogromna praca i chcę podziękować wszystkim osobom, które pomogły przetłumaczyć tę książkę:
 
-* Krystian Marcisz
 * Piotr Grabski-Gradziński
+* Krystian Marcisz
 * Paweł Balicki
 * Paweł Farys
 * Paweł Wiaderny
@@ -67,7 +67,7 @@ Firmy, które wsparły projekt
     :align: center
     :figclass: backer
 
-    https://platform.sh/
+    https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 
 .. figure:: images/logos/qossmic.svg
     :align: center

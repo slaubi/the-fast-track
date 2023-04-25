@@ -211,7 +211,7 @@ Praca z testową bazą danych
     single: Test;Database
     single: Functional Tests,Database
 
-Widzieliśmy również, że narzędzie Symfony CLI automatycznie udostępnia zmienną środowiskową ``DATABASE_URL``. Kiedy zmienna ``APP_ENV`` jest ustawiona na ``test``, podobnie jak wtedy, kiedy uruchamialiśmy PHPUnit, zmienia nazwę bazy danych z ``main`` na ``main_test``, aby testy miały swoją własną bazę danych:
+Widzieliśmy również, że narzędzie Symfony CLI automatycznie udostępnia zmienną środowiskową ``DATABASE_URL``. Kiedy zmienna ``APP_ENV`` jest ustawiona na ``test``, podobnie jak wtedy, kiedy uruchamialiśmy PHPUnit, zmienia nazwę bazy danych z ``app`` na ``app_test``, aby testy miały swoją własną bazę danych:
 
 .. code-block:: yaml
     :class: ignore

@@ -43,7 +43,7 @@ Możesz sprawdzić aktualne zmienne środowiskowe w konsoli poprzez użycie pole
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Pamiętasz *nazwę usługi* ``database``, której użyliśmy w konfiguracji Docker i Platform.sh? Nazwy usług są używane jako prefiksy do definiowania zmiennych środowiskowych, takich jak ``DATABASE_URL``. Jeśli twoje usługi są nazwane zgodnie z konwencjami Symfony, żadna dodatkowa konfiguracja nie jest potrzebna.

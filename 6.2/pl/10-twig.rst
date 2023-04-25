@@ -189,7 +189,7 @@ Ostatnim krokiem jest utworzenie pliku ``templates/conference/show.html.twig``:
         {% if comments|length > 0 %}
             {% for comment in comments %}
                 {% if comment.photofilename %}
-                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
                 {% endif %}
 
                 <h4>{{ comment.author }}</h4>
@@ -384,7 +384,7 @@ Na zakończenie, zaktualizuj szablon dodając odnośniki do następnej i poprzed
     +
              {% for comment in comments %}
                  {% if comment.photofilename %}
-                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
     @@ -18,6 +20,13 @@
 
                  <p>{{ comment.text }}</p>
