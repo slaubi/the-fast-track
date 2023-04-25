@@ -32,25 +32,6 @@ La classe generata contiene metodi come ``getRoles()``, ``eraseCredentials()`` e
 
 Se si desidera aggiungere altre proprietà all'utente ``Admin``, utilizzare il comando ``make:entity``.
 
-Aggiungiamo un metodo ``__toString()`` affinché EasyAdmin lo possa utilizzare per la visualizzazione:
-
-.. code-block:: diff
-
-    --- a/src/Entity/Admin.php
-    +++ b/src/Entity/Admin.php
-    @@ -54,6 +54,11 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
-             return (string) $this->username;
-         }
-
-    +    public function __toString(): string
-    +    {
-    +        return $this->username;
-    +    }
-    +
-         /**
-          * @see UserInterface
-          */
-
 Oltre a generare l'entity ``Admin``, il comando ha anche aggiornato la configurazione di sicurezza per collegare l'entity con il sistema di autenticazione:
 
 .. code-block:: diff

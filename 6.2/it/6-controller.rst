@@ -74,7 +74,7 @@ Il comando crea una classe ``ConferenceController`` nella cartella ``src/Control
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@ Il comando crea una classe ``ConferenceController`` nella cartella ``src/Control
         }
     }
 
-L'attributo ``#[Route('/conference', name: 'conference')]`` è ciò che rende il metodo ``index()`` un controller (la configurazione è assieme al codice che configura).
+L'attributo ``#[Route('/conference', name: 'app_conference')]`` è ciò che rende il metodo ``index()`` un controller (la configurazione è assieme al codice che configura).
 
 Quando si visita ``/conference`` nel browser, il controller viene eseguito e una risposta viene restituita.
 

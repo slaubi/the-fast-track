@@ -234,9 +234,9 @@ Controllare tutte le variabili d'ambiente ``symfony`` esposte, eseguendo ``symfo
 
     PGHOST=127.0.0.1
     PGPORT=32781
-    PGDATABASE=main
-    PGUSER=main
-    PGPASSWORD=main
+    PGDATABASE=app
+    PGUSER=app
+    PGPASSWORD=!ChangeMe!
     # ...
 
 Le variabili d' ambiente ``PG*`` vengono lette dal comando ``psql``. E le altre?

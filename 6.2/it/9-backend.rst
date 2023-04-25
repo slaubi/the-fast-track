@@ -326,7 +326,6 @@ Il pannello amministrativo predefinito funziona bene, ma può essere personalizz
     +        ;
     +
     +        $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
-    +            'html5' => true,
     +            'years' => range(date('Y'), date('Y') + 5),
     +            'widget' => 'single_text',
     +        ]);

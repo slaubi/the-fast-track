@@ -17,7 +17,7 @@ Creare un nuovo progetto Symfony con lo strumento CLI ``symfony``, che abbiamo p
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Questo comando si appoggia a ``Composer`` e facilita la creazione di progetti Symfony. Utilizza uno `scheletro di progetto`_ con dipendenze minime: i componenti di Symfony necessari per quasi ogni progetto, una console e l'astrazione HTTP necessaria per creare applicazioni web.
@@ -205,8 +205,8 @@ Si noti che non si ottiene la bellissima pagina predefinita di Symfony su Platfo
 
 .. _`quella`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`scheletro di progetto`: https://github.com/symfony/skeleton
-.. _`Platform.sh`: https://platform.sh
+.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`ricette ufficiali di Symfony`: https://github.com/symfony/recipes
 .. _`ricette fornite dalla comunità`: https://github.com/symfony/recipes-contrib
 .. _`server web locale di Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`documentazione di Platform.sh`: https://symfony.com/doc/cloud
+.. _`documentazione di Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

@@ -211,7 +211,7 @@ Lavorare con un database di test
     single: Test;Database
     single: Functional Tests,Database
 
-Come abbiamo già visto, Symfony CLI espone automaticamente la varabile d'ambiente ``DATABASE_URL``. Quando la variabile d'ambiente ``APP_ENV`` è impostata a ``test``, che ha questo valore quando eseguiamo PHPUnit, il nome del database è cambiato da ``main`` a ``main_test``, in modo che i test abbiano il proprio database:
+Come abbiamo già visto, Symfony CLI espone automaticamente la varabile d'ambiente ``DATABASE_URL``. Quando la variabile d'ambiente ``APP_ENV`` è impostata a ``test``, che ha questo valore quando eseguiamo PHPUnit, il nome del database è cambiato da ``app`` a ``app_test``, in modo che i test abbiano il proprio database:
 
 .. code-block:: yaml
     :class: ignore

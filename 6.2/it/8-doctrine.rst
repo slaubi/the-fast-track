@@ -43,7 +43,7 @@ Controllare tutte le variabili d'ambiente esposte eseguendo ``symfony var:export
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Ricordate il *nome del servizio* ``database`` usato nelle configurazioni Docker e Platform.sh? I nomi dei servizi sono usati come prefissi per definire variabili d'ambiente come ``DATABASE_URL``. Se i servizi sono nominati secondo le convenzioni di Symfony, non sono necessarie altre configurazioni.
