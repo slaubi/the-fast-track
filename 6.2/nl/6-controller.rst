@@ -74,7 +74,7 @@ Het commando creëert een ``ConferenceController``-class in de ``src/Controller/
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@ Het commando creëert een ``ConferenceController``-class in de ``src/Controller/
         }
     }
 
-De ``#[Route('/conference', name:'conference')]``-attribuut is wat de ``index()``-methode tot een controller maakt (de configuratie staat bij de code die dit configureert).
+De ``#[Route('/conference', name:'app_conference')]``-attribuut is wat de ``index()``-methode tot een controller maakt (de configuratie staat bij de code die dit configureert).
 
 Wanneer je in een browser ``/conference`` bezoekt , wordt de controller uitgevoerd en wordt er een response teruggestuurd.
 

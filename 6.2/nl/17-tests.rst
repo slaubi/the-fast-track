@@ -211,7 +211,7 @@ Werken met een testdatabase
     single: Test;Database
     single: Functional Tests,Database
 
-Zoals we al hebben gezien, stelt de Symfony CLI automatisch de omgevingsvariabele ``DATABASE_URL`` ter beschikking. Wanneer ``APP_ENV`` gelijk is aan ``test``, zoals ingesteld bij het draaien van PHPUnit, verandert het de databasenaam van ``main`` naar ``main_test``. Hierdoor hebben de tests hun eigen database.
+Zoals we al hebben gezien, stelt de Symfony CLI automatisch de omgevingsvariabele ``DATABASE_URL`` ter beschikking. Wanneer ``APP_ENV`` gelijk is aan ``test``, zoals ingesteld bij het draaien van PHPUnit, verandert het de databasenaam van ``app`` naar ``app_test``. Hierdoor hebben de tests hun eigen database.
 
 .. code-block:: yaml
     :class: ignore

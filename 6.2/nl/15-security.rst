@@ -32,25 +32,6 @@ De gegenereerde class bevat methoden als ``getRoles()`` , ``eraseCredentials()``
 
 Als je meer properties aan de ``Admin`` gebruiker wil toevoegen, gebruik dan ``make:entity``.
 
-We voegen een ``__toString()`` methode toe omdat EasyAdmin dit graag heeft:
-
-.. code-block:: diff
-
-    --- a/src/Entity/Admin.php
-    +++ b/src/Entity/Admin.php
-    @@ -54,6 +54,11 @@ class Admin implements UserInterface, PasswordAuthenticatedUserInterface
-             return (string) $this->username;
-         }
-
-    +    public function __toString(): string
-    +    {
-    +        return $this->username;
-    +    }
-    +
-         /**
-          * @see UserInterface
-          */
-
 Naast het genereren van de ``Admin``-entity, heeft het commando ook de securityconfiguratie bijgewerkt om de entity te koppelen met het authenticatiesysteem:
 
 .. code-block:: diff

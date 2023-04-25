@@ -53,7 +53,7 @@ Zoals je misschien al geraden hebt, moeten we ook RabbitMQ toevoegen aan de Dock
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3.7-management
+    +    image: rabbitmq:3-management
     +    ports: [5672, 15672]
     +
      volumes:

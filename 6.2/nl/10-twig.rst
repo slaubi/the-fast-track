@@ -189,7 +189,7 @@ De laatste stap is het aanmaken van het ``templates/conference/show.html.twig`` 
         {% if comments|length > 0 %}
             {% for comment in comments %}
                 {% if comment.photofilename %}
-                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
                 {% endif %}
 
                 <h4>{{ comment.author }}</h4>
@@ -384,7 +384,7 @@ Werk ten slotte de template bij om links naar de volgende en vorige pagina's toe
     +
              {% for comment in comments %}
                  {% if comment.photofilename %}
-                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
     @@ -18,6 +20,13 @@
 
                  <p>{{ comment.text }}</p>

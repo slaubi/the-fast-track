@@ -112,7 +112,7 @@ Update de EasyAdmin-configuratie om de status van de reactie te kunnen zien:
     +        yield TextField::new('state');
 
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
-                 'html5' => true,
+                 'years' => range(date('Y'), date('Y') + 5),
 
 Vergeet niet om ook de tests bij te werken door de ``state`` toe te voegen aan de fixtures:
 
@@ -121,7 +121,7 @@ Vergeet niet om ook de tests bij te werken door de ``state`` toe te voegen aan d
 
     --- a/src/DataFixtures/AppFixtures.php
     +++ b/src/DataFixtures/AppFixtures.php
-    @@ -37,8 +37,16 @@ class AppFixtures extends Fixture
+    @@ -35,8 +35,16 @@ class AppFixtures extends Fixture
              $comment1->setAuthor('Fabien');
              $comment1->setEmail('fabien@example.com');
              $comment1->setText('This was a great conference.');
@@ -284,7 +284,7 @@ Werk de controller bij om ervoor te zorgen dat deze het nieuwe systeem gebruikt:
     @@ -5,21 +5,23 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
-     use App\Form\CommentFormType;
+     use App\Form\CommentType;
     +use App\Message\CommentMessage;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;

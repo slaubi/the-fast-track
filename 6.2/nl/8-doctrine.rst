@@ -43,7 +43,7 @@ Bekijk alle beschikbare omgevingsvariabelen door het uitvoeren van ``symfony var
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Herinner je je de ``database`` *servicenaam* die in de Docker en Platform.sh configuraties wordt gebruikt? De servicenamen worden gebruikt als prefix bij het definiëren van omgevingsvariabelen zoals ``DATABASE_URL``. Als services de Symfony naamgevingsconventies volgen, is er geen extra configuratie nodig.
