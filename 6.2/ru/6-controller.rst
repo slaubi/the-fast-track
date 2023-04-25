@@ -74,7 +74,7 @@
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@
         }
     }
 
-С помощью атрибута ``#[Route('/conference', name: 'conference')]`` метод ``index()`` становится контроллером (его объявление вместе с конфигурацией находится непосредственно над кодом).
+С помощью атрибута ``#[Route('/conference', name: 'app_conference')]`` метод ``index()`` становится контроллером (его объявление вместе с конфигурацией находится непосредственно над кодом).
 
 При переходе в браузере по пути ``/conference`` выполняется контроллер, который возвращает HTTP-ответ.
 
