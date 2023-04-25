@@ -43,7 +43,7 @@ Symfony の環境変数の規約を理解する
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 Docker や Platform.sh の設定で使われている *サービス名* ``database`` を覚えていますか？サービス名は、``DATABASE_URL`` のような環境変数を定義の接頭辞として使われます。Symfony の規約に沿ってサービスが命名されていれば、特に設定は必要ありません。

@@ -234,9 +234,9 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
 
     PGHOST=127.0.0.1
     PGPORT=32781
-    PGDATABASE=main
-    PGUSER=main
-    PGPASSWORD=main
+    PGDATABASE=app
+    PGUSER=app
+    PGPASSWORD=!ChangeMe!
     # ...
 
 ``PG*`` 環境変数は ``psql`` ユーティリティで使われます。他はどうでしょうか？

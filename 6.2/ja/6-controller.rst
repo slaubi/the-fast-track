@@ -74,7 +74,7 @@ Symfony Console の ``list`` コマンドは、指定のネームスペース以
 
     class ConferenceController extends AbstractController
     {
-        #[Route('/conference', name: 'conference')]
+        #[Route('/conference', name: 'app_conference')]
         public function index(): Response
         {
             return $this->render('conference/index.html.twig', [
@@ -83,7 +83,7 @@ Symfony Console の ``list`` コマンドは、指定のネームスペース以
         }
     }
 
-``#[Route('/conference', name: 'conference')]`` アトリビュートが、 ``ConferenceController`` の ``index()`` メソッドをコントローラにしています（設定は、コードに隣接しています）。
+``#[Route('/conference', name: 'app_conference')]`` アトリビュートが、 ``ConferenceController`` の ``index()`` メソッドをコントローラにしています（設定は、コードに隣接しています）。
 
 ``/conference`` をブラウザで開くと、このコントローラが実行され、レスポンスが返されます。
 
