@@ -377,8 +377,8 @@ HTTP-виклик заголовка конференції на даний мо
 
 .. code-block:: terminal
 
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/conference_header
 
 Підкоманда ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` повертає поточну URL-адресу локального веб-сервера.
 

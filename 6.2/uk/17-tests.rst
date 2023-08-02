@@ -192,8 +192,7 @@ SpamChecker — це перший клас, для якого ми будемо 
             <server name="SHELL_VERBOSITY" value="-1" />
             <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
             <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
-        </php>
-    </phpunit>
+            ...
 
 .. index:: Command;secrets:set
 
@@ -533,7 +532,7 @@ SpamChecker — це перший клас, для якого ми будемо 
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
     	symfony console doctrine:fixtures:load -n --env=test
-    	symfony php bin/phpunit $@
+    	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
 .. warning::
@@ -620,7 +619,7 @@ SpamChecker — це перший клас, для якого ми будемо 
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
 
 Вам потрібно буде підтвердити виконання рецепту (тому, що він не є "офіційно" підтримуваним бандлом):
 
@@ -638,25 +637,6 @@ SpamChecker — це перший клас, для якого ми будемо 
         [a] Yes for all packages, only for the current installation session
         [p] Yes permanently, never ask again for this project
         (defaults to n): p
-
-Увімкніть слухача PHPUnit:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/phpunit.xml.dist
-    +++ b/phpunit.xml.dist
-    @@ -29,6 +29,10 @@
-             </include>
-         </coverage>
-
-    +    <extensions>
-    +        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    +    </extensions>
-    +
-         <listeners>
-             <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-         </listeners>
 
 Готово. Будь-які зміни, внесені в тести, тепер автоматично скасовуються в кінці кожного тесту.
 
@@ -699,7 +679,7 @@ SpamChecker — це перший клас, для якого ми будемо 
          public function testIndex()
          {
     -        $client = static::createClient();
-    +        $client = static::createPantherClient(['external_base_uri' => $_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL']]);
+    +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
              $client->request('GET', '/');
 
              $this->assertResponseIsSuccessful();

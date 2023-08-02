@@ -17,7 +17,7 @@
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Ця команда є тонкою обгорткою над ``Composer``, яка полегшує створення проектів Symfony. Вона використовує `скелет проекту`_, що включає мінімальний набір залежностей; компоненти Symfony, які необхідні практично для будь-якого проекту: консольний інструмент і абстракція HTTP, які необхідні для створення веб-застосунків.
