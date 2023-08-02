@@ -192,8 +192,7 @@ Domyślnie, PHPUnit w środowisku Symfony o nazwie ``test``, tak jak zostało to
             <server name="SHELL_VERBOSITY" value="-1" />
             <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
             <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
-        </php>
-    </phpunit>
+            ...
 
 .. index:: Command;secrets:set
 
@@ -533,7 +532,7 @@ Używanie ``Makefile`` jest jednym ze sposobów zautomatyzowania poleceń:
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
     	symfony console doctrine:fixtures:load -n --env=test
-    	symfony php bin/phpunit $@
+    	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
 .. warning::
@@ -620,7 +619,7 @@ Aby resetować bazę danych pomiędzy testami, zainstaluj Doctrine Test Bundle:
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
 
 Będziesz musiał potwierdzić wykonanie przepisu (ang. recipe), ponieważ nie jest to "oficjalnie" obsługiwany pakiet (ang. bundle):
 
@@ -638,25 +637,6 @@ Będziesz musiał potwierdzić wykonanie przepisu (ang. recipe), ponieważ nie j
         [a] Yes for all packages, only for the current installation session
         [p] Yes permanently, never ask again for this project
         (defaults to n): p
-
-Dodaj nasłuchiwacz PHPUnit (ang. listener):
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/phpunit.xml.dist
-    +++ b/phpunit.xml.dist
-    @@ -29,6 +29,10 @@
-             </include>
-         </coverage>
-
-    +    <extensions>
-    +        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    +    </extensions>
-    +
-         <listeners>
-             <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-         </listeners>
 
 I gotowe. Wszelkie zmiany dokonywane przez testy będą teraz automatycznie cofane po zakończeniu każdego z nich.
 
@@ -699,7 +679,7 @@ Następnie możesz pisać testy z użyciem prawdziwego Google Chrome z następuj
          public function testIndex()
          {
     -        $client = static::createClient();
-    +        $client = static::createPantherClient(['external_base_uri' => $_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL']]);
+    +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
              $client->request('GET', '/');
 
              $this->assertResponseIsSuccessful();

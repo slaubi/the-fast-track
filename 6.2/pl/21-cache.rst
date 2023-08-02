@@ -377,8 +377,8 @@ Unieważnienie pamięci podręcznej strony głównej i nagłówka konferencji za
 
 .. code-block:: terminal
 
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/conference_header
 
 Podpolecenie ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` zwraca bieżący adres URL lokalnego serwera WWW.
 
