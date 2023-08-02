@@ -192,8 +192,7 @@ Par défaut, les tests PHPUnit sont exécutés dans l'environnement Symfony ``te
             <server name="SHELL_VERBOSITY" value="-1" />
             <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
             <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
-        </php>
-    </phpunit>
+            ...
 
 .. index:: Command;secrets:set
 
@@ -533,7 +532,7 @@ L'utilisation d'un ``Makefile`` est une façon d'automatiser les commandes :
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
     	symfony console doctrine:fixtures:load -n --env=test
-    	symfony php bin/phpunit $@
+    	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
 .. warning::
@@ -620,7 +619,7 @@ Pour réinitialiser la base de données entre les tests, installez DoctrineTestB
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
 
 Vous devrez confirmer l'application de la recette (car il ne s'agit pas d'un bundle "officiellement" supporté) :
 
@@ -638,25 +637,6 @@ Vous devrez confirmer l'application de la recette (car il ne s'agit pas d'un bun
         [a] Yes for all packages, only for the current installation session
         [p] Yes permanently, never ask again for this project
         (defaults to n): p
-
-Activez le *listener* de PHPUnit :
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/phpunit.xml.dist
-    +++ b/phpunit.xml.dist
-    @@ -29,6 +29,10 @@
-             </include>
-         </coverage>
-
-    +    <extensions>
-    +        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    +    </extensions>
-    +
-         <listeners>
-             <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-         </listeners>
 
 Et voilà. Toute modification apportée pendant les tests est automatiquement annulée à la fin de chaque test.
 
@@ -699,7 +679,7 @@ Vous pouvez ensuite écrire des tests qui utilisent un vrai navigateur Google Ch
          public function testIndex()
          {
     -        $client = static::createClient();
-    +        $client = static::createPantherClient(['external_base_uri' => $_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL']]);
+    +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
              $client->request('GET', '/');
 
              $this->assertResponseIsSuccessful();

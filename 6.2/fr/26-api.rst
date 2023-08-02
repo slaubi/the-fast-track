@@ -81,7 +81,7 @@ Quelques attributs sur la classe Conference suffisent pour configurer l'API :
          #[ORM\OneToMany(mappedBy: 'conference', targetEntity: Comment::class, orphanRemoval: true)]
          private Collection $comments;
 
-         #[ORM\Column(type: 'string', length: 255, unique: true)]
+         #[ORM\Column(length: 255, unique: true)]
     +    #[Groups(['conference:list', 'conference:item'])]
          private ?string $slug = null;
 
