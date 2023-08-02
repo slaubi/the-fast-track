@@ -156,7 +156,7 @@ Because the application will soon use slugs to find each conference, let's tweak
          private Collection $comments;
 
     -    #[ORM\Column(length: 255)]
-    +    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    +    #[ORM\Column(length: 255, unique: true)]
          private ?string $slug = null;
 
          public function __construct()
