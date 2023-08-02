@@ -79,7 +79,7 @@ Als je de standaard antwoorden accepteert, zal de volgende controller worden aan
 
         public function configureMenuItems(): iterable
         {
-            yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
+            yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
             // yield MenuItem::linkToCrud('The Label', 'icon class', EntityClass::class);
         }
     }
@@ -220,26 +220,6 @@ Bij het weergeven van relaties tussen entities (de conferentie die aan een react
     +    public function __toString(): string
     +    {
     +        return $this->city.' '.$this->year;
-    +    }
-    +
-         public function getId(): ?int
-         {
-             return $this->id;
-
-Doe hetzelfde voor de ``Comment``-class:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -33,6 +33,11 @@ class Comment
-         #[ORM\Column(length: 255, nullable: true)]
-         private ?string $photoFilename = null;
-
-    +    public function __toString(): string
-    +    {
-    +        return (string) $this->getEmail();
     +    }
     +
          public function getId(): ?int

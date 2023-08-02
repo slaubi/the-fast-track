@@ -17,7 +17,7 @@ Maak een nieuw Symfony-project met de ``symfony`` CLI tool die we reeds samen ge
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=5.4 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
     $ cd guestbook
 
 Dit commando is een dun laagje bovenop ``Composer`` dat de creatie van Symfony-projecten vergemakkelijkt. Het gebruikt een `project-skelet`_ dat de minimale dependencies bevat; de Symfony-componenten die nodig zijn voor bijna elk project: een console-tool en een HTTP-abstractie die nodig is om webapplicaties te bouwen.

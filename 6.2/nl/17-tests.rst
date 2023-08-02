@@ -192,8 +192,7 @@ Standaard worden PHPUnit-tests gedraaid in de Symfony ``test`` omgeving zoals st
             <server name="SHELL_VERBOSITY" value="-1" />
             <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
             <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
-        </php>
-    </phpunit>
+            ...
 
 .. index:: Command;secrets:set
 
@@ -533,7 +532,7 @@ Het gebruik van een ``Makefile`` is een manier om commando's te automatiseren:
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
     	symfony console doctrine:fixtures:load -n --env=test
-    	symfony php bin/phpunit $@
+    	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
 .. warning::
@@ -620,7 +619,7 @@ Om de database tussen de tests door te resetten, installeer je de DoctrineTestBu
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
 
 Je moet het uitvoeren van de recipe bevestigen (aangezien het geen "officieel" ondersteunde bundle is):
 
@@ -638,25 +637,6 @@ Je moet het uitvoeren van de recipe bevestigen (aangezien het geen "officieel" o
         [a] Yes for all packages, only for the current installation session
         [p] Yes permanently, never ask again for this project
         (defaults to n): p
-
-Activeer de PHPUnit listener:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/phpunit.xml.dist
-    +++ b/phpunit.xml.dist
-    @@ -29,6 +29,10 @@
-             </include>
-         </coverage>
-
-    +    <extensions>
-    +        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    +    </extensions>
-    +
-         <listeners>
-             <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-         </listeners>
 
 En klaar. Eventuele datawijzigingen gemaakt door tests worden nu aan het einde van elke test automatisch teruggedraaid.
 
@@ -699,7 +679,7 @@ Je kan dan tests schrijven die gebruik maken van een echte Google Chrome-browser
          public function testIndex()
          {
     -        $client = static::createClient();
-    +        $client = static::createPantherClient(['external_base_uri' => $_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL']]);
+    +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
              $client->request('GET', '/');
 
              $this->assertResponseIsSuccessful();
