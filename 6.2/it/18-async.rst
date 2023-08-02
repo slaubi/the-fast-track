@@ -42,7 +42,7 @@ Dovremmo anche assicurarci che il valore predefinito di ``state`` sia ``submitte
     +    #[ORM\Column(length: 255, options: ['default' => 'submitted'])]
     +    private ?string $state = 'submitted';
 
-         public function __toString(): string
+         public function getId(): ?int
          {
 
 .. index::

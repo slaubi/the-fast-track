@@ -377,8 +377,8 @@ Invalidiamo la homepage e l'intestazione della conferenza tramite le seguenti ch
 
 .. code-block:: terminal
 
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/conference_header
 
 Il comando ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` restituisce l'URL corrente del server web locale.
 

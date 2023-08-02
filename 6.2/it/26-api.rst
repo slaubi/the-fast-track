@@ -81,7 +81,7 @@ Qualche attributo sulla classe Conference è tutto ciò di cui abbiamo bisogno p
          #[ORM\OneToMany(mappedBy: 'conference', targetEntity: Comment::class, orphanRemoval: true)]
          private Collection $comments;
 
-         #[ORM\Column(type: 'string', length: 255, unique: true)]
+         #[ORM\Column(length: 255, unique: true)]
     +    #[Groups(['conference:list', 'conference:item'])]
          private ?string $slug = null;
 

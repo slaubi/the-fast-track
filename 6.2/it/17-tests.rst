@@ -192,8 +192,7 @@ Per impostazione predefinita, i test di PHPUnit vengono eseguiti nell'ambiente d
             <server name="SHELL_VERBOSITY" value="-1" />
             <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
             <server name="SYMFONY_PHPUNIT_VERSION" value="8.5" />
-        </php>
-    </phpunit>
+            ...
 
 .. index:: Command;secrets:set
 
@@ -533,7 +532,7 @@ Usare un ``Makefile`` è un modo per automatizzare i comandi:
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
     	symfony console doctrine:fixtures:load -n --env=test
-    	symfony php bin/phpunit $@
+    	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
 .. warning::
@@ -620,7 +619,7 @@ Per ripristinare il database tra un test e l'altro, installare DoctrineTestBundl
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
 
 Sarà necessario confermare l'esecuzione della ricetta (in quanto non si tratta di un bundle "ufficialmente" supportato):
 
@@ -638,25 +637,6 @@ Sarà necessario confermare l'esecuzione della ricetta (in quanto non si tratta 
         [a] Yes for all packages, only for the current installation session
         [p] Yes permanently, never ask again for this project
         (defaults to n): p
-
-Abilitare il listener per PHPUnit:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/phpunit.xml.dist
-    +++ b/phpunit.xml.dist
-    @@ -29,6 +29,10 @@
-             </include>
-         </coverage>
-
-    +    <extensions>
-    +        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
-    +    </extensions>
-    +
-         <listeners>
-             <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-         </listeners>
 
 Ci siamo. Tutte le modifiche fatte coi test sono ora automaticamente annullate alla fine di ogni test.
 
@@ -699,7 +679,7 @@ I test funzionali usano un browser speciale che richiama direttamente Symfony. M
          public function testIndex()
          {
     -        $client = static::createClient();
-    +        $client = static::createPantherClient(['external_base_uri' => $_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL']]);
+    +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
              $client->request('GET', '/');
 
              $this->assertResponseIsSuccessful();
