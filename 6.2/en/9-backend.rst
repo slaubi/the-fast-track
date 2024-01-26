@@ -233,13 +233,6 @@ You can now add/modify/delete conferences directly from the admin backend. Play 
     :align: center
     :figclass: with-browser
 
-Add some comments without photos. Set the date manually for now; we will fill-in the ``createdAt`` column automatically in a later step.
-
-.. figure:: screenshots/easy-admin-comments.png
-    :alt: /admin?crudAction=index&crudId=2bfa220&menuIndex=2&submenuIndex=-1
-    :align: center
-    :figclass: with-browser
-
 Customizing EasyAdmin
 ---------------------
 
@@ -319,6 +312,13 @@ The default admin backend works well, but it can be customized in many ways to i
      }
 
 To customize the ``Comment`` section, listing the fields explicitly in the ``configureFields()`` method lets us order them the way we want. Some fields are further configured, like hiding the text field on the index page.
+
+Add some comments without photos. Set the date manually for now; we will fill-in the ``createdAt`` column automatically in a later step.
+
+.. figure:: screenshots/easy-admin-comments.png
+    :alt: /admin?crudAction=index&crudId=2bfa220&menuIndex=2&submenuIndex=-1
+    :align: center
+    :figclass: with-browser
 
 The ``configureFilters()`` methods defines which filters to expose on top of the search field.
 
