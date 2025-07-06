@@ -44,6 +44,7 @@ Initialisiere die ``package.json``-Datei (entspricht der ``composer.json``-Datei
 .. code-block:: terminal
 
     $ npm init -y
+    $ npm pkg delete type
 
 Füge nun einige erforderliche Dependencies hinzu:
 
@@ -201,8 +202,8 @@ Ersetze das "Hello World"-``div`` mit der ``Router``-Komponente:
     :caption: patch_file
     :emphasize-lines: 15,17,20-23
 
-    --- a/src/app.js
-    +++ b/src/app.js
+    --- i/src/app.js
+    +++ w/src/app.js
     @@ -1,9 +1,22 @@
      import {h, render} from 'preact';
     +import {Router, Link} from 'preact-router';
@@ -243,23 +244,23 @@ Lass uns den Sass-Loader zur Website hinzufügen:
 
 .. code-block:: terminal
 
-    $ npm install node-sass sass-loader
+    $ npm install sass sass-loader
 
 Aktiviere den Sass-Loader in Webpack und füge eine Referenz auf das Stylesheet hinzu:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/app.js
-    +++ b/src/app.js
+    --- i/src/app.js
+    +++ w/src/app.js
     @@ -1,3 +1,5 @@
     +import '../assets/styles/app.scss';
     +
      import {h, render} from 'preact';
      import {Router, Link} from 'preact-router';
 
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
+    --- i/webpack.config.js
+    +++ w/webpack.config.js
     @@ -7,6 +7,7 @@ Encore
          .cleanupOutputBeforeBuild()
          .addEntry('app', './src/app.js')
@@ -274,8 +275,8 @@ Wir können nun die Anwendung aktualisieren, um die Stylesheets zu verwenden:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/app.js
-    +++ b/src/app.js
+    --- i/src/app.js
+    +++ w/src/app.js
     @@ -9,10 +9,20 @@ import Conference from './pages/conference';
      function App() {
          return (
@@ -327,8 +328,8 @@ Konfiguriere Webpack, um die Environment-Variable für die API-Endpunkte zu defi
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
+    --- i/webpack.config.js
+    +++ w/webpack.config.js
     @@ -1,3 +1,4 @@
     +const webpack = require('webpack');
      const Encore = require('@symfony/webpack-encore');
@@ -369,8 +370,8 @@ Du kannst nun die Header- und Home-Komponenten anpassen:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/app.js
-    +++ b/src/app.js
+    --- i/src/app.js
+    +++ w/src/app.js
     @@ -2,11 +2,23 @@ import '../assets/styles/app.scss';
 
      import {h, render} from 'preact';
@@ -418,8 +419,8 @@ Du kannst nun die Header- und Home-Komponenten anpassen:
                  </Router>
              </div>
          )
-    --- a/src/pages/home.js
-    +++ b/src/pages/home.js
+    --- i/src/pages/home.js
+    +++ w/src/pages/home.js
     @@ -1,7 +1,28 @@
      import {h} from 'preact';
     +import {Link} from 'preact-router';
@@ -458,8 +459,8 @@ Schließlich übergibt der Preact Router den Platzhalter "slug" als Eigenschaft 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/pages/conference.js
-    +++ b/src/pages/conference.js
+    --- i/src/pages/conference.js
+    +++ w/src/pages/conference.js
     @@ -1,7 +1,48 @@
      import {h} from 'preact';
     +import {findComments} from '../api/api';
@@ -473,8 +474,10 @@ Schließlich übergibt der Preact Router den Platzhalter "slug" als Eigenschaft 
     +    if (!comments) {
     +        return <div className="text-center pt-4">Loading...</div>;
     +    }
-    +
-    +    return (
+
+    -export default function Conference() {
+         return (
+    -        <div>Conference</div>
     +        <div className="pt-4">
     +            {comments.map(comment => (
     +                <div className="shadow border rounded-3 p-3 mb-4">
@@ -491,7 +494,8 @@ Schließlich übergibt der Preact Router den Platzhalter "slug" als Eigenschaft 
     +                </div>
     +            ))}
     +        </div>
-    +    );
+         );
+    -};
     +}
     +
     +export default function Conference({conferences, slug}) {
@@ -501,16 +505,13 @@ Schließlich übergibt der Preact Router den Platzhalter "slug" als Eigenschaft 
     +    useEffect(() => {
     +        findComments(conference).then(comments => setComments(comments));
     +    }, [slug]);
-
-    -export default function Conference() {
-         return (
-    -        <div>Conference</div>
+    +
+    +    return (
     +        <div className="p-3">
     +            <h4>{conference.city} {conference.year}</h4>
     +            <Comment comments={comments} />
     +        </div>
-         );
-    -};
+    +    );
     +}
 
 Die SPA muss nun die URL zu unserer API über die Environment-Variable ``API_ENDPOINT`` kennen. Setze sie auf die API-Webserver-URL (die im ``..``-Verzeichnis läuft):
@@ -592,8 +593,8 @@ Bearbeite die ``.platform/routes.yaml``-Datei, um die ``spa.``-Subdomain an die 
     :caption: patch_file
     :emphasize-lines: 4,5
 
-    --- a/.platform/routes.yaml
-    +++ b/.platform/routes.yaml
+    --- i/.platform/routes.yaml
+    +++ w/.platform/routes.yaml
     @@ -1,2 +1,5 @@
      "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
      "http://{all}/": { type: redirect, to: "https://{all}/" }

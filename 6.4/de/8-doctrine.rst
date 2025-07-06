@@ -59,10 +59,10 @@ Wir werden die ``.env``-Datei dennoch ändern, um die Standard-``DATABASE_URL`` 
 
 .. code-block:: diff
 
-    --- a/.env
-    +++ b/.env
+    --- i/.env
+    +++ w/.env
     @@ -26,7 +26,7 @@ APP_SECRET=ce2ae8138936039d22afb20f4596fe97
-     # DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+     # DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db"
      # DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4"
      # DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"
     -DATABASE_URL="postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
@@ -331,8 +331,8 @@ Wirf einen Blick auf das vollständige Diff für die Entity-Klassen, nachdem Du 
 .. code-block:: diff
     :class: ignore
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -36,6 +36,12 @@ class Comment
           */
          private $createdAt;
@@ -361,8 +361,8 @@ Wirf einen Blick auf das vollständige Diff für die Entity-Klassen, nachdem Du 
     +        return $this;
     +    }
      }
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -2,6 +2,8 @@
 
      namespace App\Entity;

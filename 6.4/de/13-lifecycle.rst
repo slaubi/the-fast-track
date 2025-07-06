@@ -19,8 +19,8 @@ Wenn das Verhalten nicht von einem Service abhängt und nur auf eine bestimmte E
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
     @@ -57,8 +57,6 @@ class CommentCrudController extends AbstractCrudController
              ]);
              if (Crud::PAGE_EDIT === $pageName) {
@@ -30,8 +30,8 @@ Wenn das Verhalten nicht von einem Service abhängt und nur auf eine bestimmte E
              }
          }
      }
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
      use Doctrine\ORM\Mapping as ORM;
 
@@ -97,8 +97,8 @@ Bekommst Du einen Fehler? Das war zu erwarten. Warum? Weil wir festgelegt haben,
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
+    --- i/migrations/Version00000000000000.php
+    +++ w/migrations/Version00000000000000.php
     @@ -20,7 +20,9 @@ final class Version00000000000000 extends AbstractMigration
          public function up(Schema $schema): void
          {
@@ -137,8 +137,8 @@ Da die Anwendung bald Slugs verwenden wird, um jede Konferenz zu finden, sollten
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -6,8 +6,10 @@ use App\Repository\ConferenceRepository;
      use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
@@ -193,8 +193,8 @@ Füge in der ``Conference``-Klasse eine ``computeSlug()``-Methode hinzu, die den
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
@@ -281,8 +281,8 @@ Hier, weil unsere Klasse weder Interfaces implementiert, noch irgendeine Basiskl
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/EntityListener/ConferenceEntityListener.php
-    +++ b/src/EntityListener/ConferenceEntityListener.php
+    --- i/src/EntityListener/ConferenceEntityListener.php
+    +++ w/src/EntityListener/ConferenceEntityListener.php
     @@ -3,9 +3,13 @@
      namespace App\EntityListener;
 
@@ -318,9 +318,9 @@ Die letzte Änderung besteht darin, die Controller und die Templates zu anzupass
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -20,7 +20,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
@@ -329,8 +329,8 @@ Die letzte Änderung besteht darin, die Controller und die Templates zu anzupass
          public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -16,7 +16,7 @@
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
                  <ul>
@@ -340,8 +340,8 @@ Die letzte Änderung besteht darin, die Controller und die Templates zu anzupass
                  {% endfor %}
                  </ul>
                  <hr />
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -351,8 +351,8 @@ Die letzte Änderung besteht darin, die Controller und die Templates zu anzupass
              </p>
          {% endfor %}
      {% endblock %}
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -22,10 +22,10 @@
              {% endfor %}
 

@@ -20,9 +20,9 @@ Nutze den speziellen Routen-Parameter ``_locale``, um die Sprache in Routen zu v
     :caption: patch_file
     :emphasize-lines: 8
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
          ) {
          }
 
@@ -40,9 +40,9 @@ Da Du den Inhalt wahrscheinlich nicht in allen Sprachen übersetzen kannst, besc
     :caption: patch_file
     :emphasize-lines: 8
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
          ) {
          }
 
@@ -59,8 +59,8 @@ Da wir die gleiche Anforderung in fast allen Routen verwenden werden, verschiebe
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -9,6 +9,7 @@ parameters:
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
          default_base_url: 'http://127.0.0.1'
@@ -69,9 +69,9 @@ Da wir die gleiche Anforderung in fast allen Routen verwenden werden, verschiebe
 
      services:
          # default configuration for services in *this* file
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
          ) {
          }
 
@@ -88,9 +88,9 @@ Füge den anderen URLs das gleiche lokale Routenpräfix hinzu:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -35,7 +35,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -35,7 +35,7 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
@@ -99,7 +99,7 @@ Füge den anderen URLs das gleiche lokale Routenpräfix hinzu:
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,7 +43,7 @@ class ConferenceController extends AbstractController
+    @@ -43,7 +43,7 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
@@ -114,9 +114,9 @@ Wir sind fast fertig. Wir haben keine Route mehr, die zu ``/`` passt. Fügen wir
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -27,6 +27,12 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -27,6 +27,12 @@ final class ConferenceController extends AbstractController
          ) {
          }
 
@@ -144,8 +144,8 @@ Damit Benutzer*innen von der Standard-Sprache ``en`` zu einer anderen wechseln k
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -34,6 +34,16 @@
                                          Admin
                                      </a>
@@ -175,8 +175,8 @@ Aktualisiere das Template, um den aktuellen Sprach-Namen anstelle des fest gesch
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -37,7 +37,7 @@
      <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
@@ -204,8 +204,8 @@ Abhängig von der Sprache wird der Name der Sprache nicht immer großgeschrieben
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -37,7 +37,7 @@
      <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
@@ -236,8 +236,8 @@ Die Übersetzung jedes einzelnen Satzes auf einer großen Website kann mühsam s
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -20,7 +20,7 @@
                  <nav class="navbar navbar-expand-xl navbar-light bg-light">
                      <div class="container mt-4 mb-3">
@@ -247,8 +247,8 @@ Die Übersetzung jedes einzelnen Satzes auf einer großen Website kann mühsam s
                          </a>
 
                          <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#header-menu" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Show/Hide navigation">
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -4,7 +4,7 @@
 
      {% block body %}
@@ -316,8 +316,8 @@ Bearbeite die ``translations/messages+intl-icu.fr.xlf``-Datei und übersetze die
     :caption: patch_file
     :class: ignore
 
-    --- a/translations/messages+intl-icu.fr.xlf
-    +++ b/translations/messages+intl-icu.fr.xlf
+    --- i/translations/messages+intl-icu.fr.xlf
+    +++ w/translations/messages+intl-icu.fr.xlf
     @@ -7,15 +7,15 @@
          <body>
            <trans-unit id="eOy4.6V" resname="Conference Guestbook">
@@ -415,8 +415,8 @@ Auf einer Konferenzseite wird die Anzahl der Kommentare angezeigt: ``There are 2
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -44,7 +44,7 @@
                              </div>
                          </div>
@@ -434,8 +434,8 @@ Aktualisiere die Übersetzungsdatei, indem Du die neue Nachricht hinzufügst:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/translations/messages+intl-icu.fr.xlf
-    +++ b/translations/messages+intl-icu.fr.xlf
+    --- i/translations/messages+intl-icu.fr.xlf
+    +++ w/translations/messages+intl-icu.fr.xlf
     @@ -17,6 +17,10 @@
              <source>Conference Guestbook</source>
              <target>Livre d'Or pour Conferences</target>
@@ -477,8 +477,8 @@ Vergiss nicht, die funktionalen Tests zu aktualisieren, um URLs und Inhaltsände
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -11,7 +11,7 @@ class ConferenceControllerTest extends WebTestCase
          public function testIndex()
          {

@@ -16,7 +16,7 @@ PostgreSQL zu Docker Compose hinzufügen
 .. index::
     single: Docker;PostgreSQL
 
-Auf unserem lokalen Rechner haben wir uns entschieden, Docker zur Verwaltung von Diensten zu verwenden. Die generierte ``compose.yml``-Datei beinhaltet bereits PostgreSQL als Dienst:
+Auf unserem lokalen Rechner haben wir uns entschieden, Docker zur Verwaltung von Diensten zu verwenden. Die generierte ``docker-compose.yml``-Datei beinhaltet bereits PostgreSQL als Dienst:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -62,15 +62,20 @@ Docker Compose starten
 Starte Docker Compose im Hintergrund (``-d``):
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker compose up -d
+    $ docker-compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker-compose up -d --remove-orphans
 
 Warte ein wenig, bis die Datenbank hochgefahren ist und überprüfe, ob alles in Ordnung ist:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose ps
+    $ docker-compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,12 +86,12 @@ Warte ein wenig, bis die Datenbank hochgefahren ist und überprüfe, ob alles in
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose logs
+    $ docker-compose logs
 
 Zugriff auf die lokale Datenbank
 --------------------------------
 
-Die Verwendung des ``psql``-Befehls im Terminal kann sich von Zeit zu Zeit als nützlich erweisen. Aber Du musst dir die Anmeldeinformationen und den Datenbanknamen merken. Weniger offensichtlich ist, dass Du auch den lokalen Port kennen musst, mit dem die Datenbank auf dem Host läuft. Docker wählt einen zufälligen Port, so dass Du an mehr als einem Projekt gleichzeitig mit PostgreSQL arbeiten kannst (der lokale Port ist Teil der Ausgabe von ``docker compose ps``).
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
 
 Wenn Du ``psql`` über die Symfony CLI  aufrufst, musst Du dir nichts merken.
 
@@ -104,12 +109,12 @@ Dank dieser Konventionen ist der Zugriff auf die Datenbank via ``symfony run`` v
 
 .. note::
 
-    Wenn Du die ``psql`` Binärdatei nicht auf Deinem lokalen Host hast, kannst Du sie auch über ``docker compose`` laufen lassen:
+    Wenn Du die ``psql`` Binärdatei nicht auf Deinem lokalen Host hast, kannst Du sie auch über ``docker-compose`` laufen lassen:
 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker compose exec database psql app app
+        $ docker-compose exec database psql app app
 
 Datenbank-Daten exportieren und importieren
 -------------------------------------------
@@ -139,7 +144,7 @@ PostgreSQL zu Platform.sh hinzufügen
 .. index::
     single: Platform.sh;PostgreSQL
 
-Für die Produktiv-Infrastruktur auf Platform.sh sollte das Hinzufügen eines Dienstes wie PostgreSQL in der ``.platform/services.yaml``-Datei erfolgen, das wurde bereits durch das Recipe vom ``webapp``-Paket gemacht:
+Für die Produktiv-Infrastruktur auf Platform.sh sollte das Hinzufügen eines Dienstes wie PostgreSQL in der ``.symfony/services.yaml``-Datei erfolgen, das wurde bereits durch das Recipe vom ``webapp``-Paket gemacht:
 
 .. code-block:: yaml
     :caption: .platform/services.yaml
@@ -264,9 +269,9 @@ Du hast es vielleicht noch nicht gemerkt, aber es ist sehr hilfreich die Infrast
 
     * `PostgreSQL-Dokumentation`_;
 
-    * `docker compose Befehle`_.
+    * `docker-compose commands`_.
 
 .. _`Platform.sh-Dienste`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Platform.sh-Tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL-Dokumentation`: https://www.postgresql.org/docs/
-.. _`docker compose Befehle`: https://docs.docker.com/compose/reference/
+.. _`docker-compose commands`: https://docs.docker.com/compose/reference/

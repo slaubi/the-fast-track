@@ -10,8 +10,8 @@ Lass uns einen neuen ``ready``-Zustand und einen ``optimize``-Übergang hinzufü
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/workflow.yaml
-    +++ b/config/packages/workflow.yaml
+    --- i/config/packages/workflow.yaml
+    +++ w/config/packages/workflow.yaml
     @@ -16,6 +16,7 @@ framework:
                      - potential_spam
                      - spam
@@ -114,8 +114,8 @@ Einen neuen Schritt zum Workflow hinzufügen
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -2,6 +2,7 @@
 
      namespace App\MessageHandler;
@@ -167,8 +167,8 @@ Wir haben bereits ein spezielles Verzeichnis mit Lese- und Schreibberechtigung f
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
+    --- i/.platform/services.yaml
+    +++ w/.platform/services.yaml
     @@ -12,3 +12,7 @@ varnish:
              vcl: !include
                  type: string
@@ -183,12 +183,12 @@ Verwende ihn für das Foto-Upload-Verzeichnis:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -35,7 +35,7 @@ web:
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -31,7 +31,7 @@ web:
 
      mounts:
-         "/var": { source: local, source_path: var }
+         "/var/cache": { source: local, source_path: var/cache }
     -    "/public/uploads": { source: local, source_path: uploads }
     +    "/public/uploads": { source: service, service: files, source_path: uploads }
          

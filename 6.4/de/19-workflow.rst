@@ -97,8 +97,8 @@ Ersetze die aktuelle Logik im Message-Handler durch den Workflow:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -6,7 +6,10 @@ use App\Message\CommentMessage;
      use App\Repository\CommentRepository;
      use App\SpamChecker;
@@ -165,8 +165,8 @@ Implementieren wir bis zum nächsten Kapitel eine automatische Validierung!
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -41,6 +41,9 @@ class CommentMessageHandler
                  $this->commentStateMachine->apply($comment, $transition);
                  $this->entityManager->flush();
