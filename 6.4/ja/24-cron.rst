@@ -16,8 +16,8 @@ Cron は、メンテナンスタスクに便利です。ワーカーと異なり
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
     @@ -5,7 +5,9 @@ namespace App\Repository;
      use App\Entity\Comment;
      use App\Entity\Conference;
@@ -28,7 +28,7 @@ Cron は、メンテナンスタスクに便利です。ワーカーと異なり
      use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-    @@ -18,6 +20,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
+    @@ -13,6 +15,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
       */
      class CommentRepository extends ServiceEntityRepository
      {
@@ -37,7 +37,7 @@ Cron は、メンテナンスタスクに便利です。ワーカーと異なり
          public const COMMENTS_PER_PAGE = 2;
 
          public function __construct(ManagerRegistry $registry)
-    @@ -25,6 +29,27 @@ class CommentRepository extends ServiceEntityRepository
+    @@ -20,6 +24,27 @@ class CommentRepository extends ServiceEntityRepository
              parent::__construct($registry, Comment::class);
          }
 
@@ -164,11 +164,11 @@ Platform.sh の便利な点の一つは、ほとんどの設定は ``.platform.a
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -61,6 +61,14 @@ crons:
-             spec: '50 23 * * *'
-             cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape php-security-checker; fi
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -59,6 +59,14 @@ crons:
+             spec: '17,47 * * * *'
+             cmd: croncape php-session-clean
 
     +    comment_cleanup:
     +        # Cleanup every night at 11.50 pm (UTC).
@@ -180,7 +180,7 @@ Platform.sh の便利な点の一つは、ほとんどの設定は ``.platform.a
     +
      workers:
          messenger:
-             commands:
+             # PHP background workers usually don't require much CPU. See
 
 ``crons`` セクションは、全ての Cron ジョブを定義しています。各 Cron は、 ``spec`` スケジュールに応じて実行されます。
 

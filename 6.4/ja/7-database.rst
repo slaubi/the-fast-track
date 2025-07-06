@@ -16,7 +16,7 @@ Docker Compose へ PostgreSQL を追加
 .. index::
     single: Docker;PostgreSQL
 
-私たちのローカル開発環境には、Docker を用いてサービスを運用するようにしています。自動生成された ``compose.yml`` ファイルには既に PostgreSQL がサービスとして追加されています:
+私たちのローカル開発環境には、Docker を用いてサービスを運用するようにしています。自動生成された ``docker-compose.yml`` ファイルには既に PostgreSQL がサービスとして追加されています:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -62,15 +62,20 @@ Docker Compose を起動しましょう
 Docker Compose をバックグラウンドで起動します (``-d``):
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker compose up -d
+    $ docker-compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker-compose up -d --remove-orphans
 
 データベースが起動するのを待って、すべて正しく動いているかチェックしましょう:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose ps
+    $ docker-compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,12 +86,12 @@ Docker Compose をバックグラウンドで起動します (``-d``):
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose logs
+    $ docker-compose logs
 
 ローカルのデータベースへのアクセス
 ---------------------------------------------------
 
-``psql`` コマンドラインを使用することが便利なときもあります。しかし、データベース名やクレデンシャルを覚えておく必要があります。また、ホスト上で動いているデータベースのローカルポートも知る必要があります。Docker は、同時に PostgreSQL を使用するプロジェクトが一つ以上あったときでも動くようにランダムなポートを選択します(ローカルポートは ``docker compose ps`` コマンドで出力できます)。
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
 
 Symfony CLI で ``psql`` を実行する際は、何も覚えておく必要はありません。
 
@@ -104,12 +109,12 @@ Symfony CLI は自動的にプロジェクトで実行されている Docker サ
 
 .. note::
 
-    あなたのローカル開発環境に ``psql`` バイナリがないときは、 ``docker compose`` を介して実行することも可能です:
+    あなたのローカル開発環境に ``psql`` バイナリがないときは、 ``docker-compose`` を介して実行することも可能です:
 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker compose exec database psql app app
+        $ docker-compose exec database psql app app
 
 データベースのダンプとリストア
 ---------------------------------------------
@@ -264,9 +269,9 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
 
     * `PostgreSQL のドキュメント`_;
 
-    * `docker compose コマンド`_.
+    * `docker-compose commands`_.
 
 .. _`Platform.sh サービス`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Platform.sh トンネル`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL のドキュメント`: https://www.postgresql.org/docs/
-.. _`docker compose コマンド`: https://docs.docker.com/compose/reference/
+.. _`docker-compose commands`: https://docs.docker.com/compose/reference/

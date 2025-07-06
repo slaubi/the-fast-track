@@ -59,7 +59,10 @@ PHP
 
 サービスに Docker を使うことになりますが、私はローカルコンピューターにPHPをインストールして使うのが好きです。パフォーマンス、安定性、シンプルさがその理由です。やり方が古いと言われてしまうかもしれませんが、ローカルインストールした PHPと Docker サービスを組み合わせるやり方が理想的だと考えています。
 
-PHPは8.3バージョンを使い、下記の PHP 拡張` がインストール済みになっていることを確認してください。もし入っていなければ今インストールしてください： ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium`` 。オプションで下記をインストールしてください： ``redis``, ``curl`` , ``zip`` 。
+Use PHP 8.3 and check that the following PHP extensions are installed or
+install them now: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``,
+``openssl``, ``sodium``, and ``iconv``. Optionally install ``redis``, ``curl``,
+and ``zip`` as well.
 
 現在有効になっている拡張は ``php -m`` で確認できます。
 

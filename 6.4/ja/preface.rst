@@ -36,7 +36,7 @@ Symfony の公式ドキュメントは英語のみサポートしています。
 
 想像できますように、300ページの翻訳は膨大な仕事です。この書籍の翻訳を手伝ってくれた全ての人に感謝したいと思います:
 
-* SUMIDA, Ippei
+* Ippei Sumida
 * Nana YAMANE
 * Shin Ohno
 * Taku Shinohara
