@@ -78,8 +78,8 @@ To display the form to the user, create the form in the controller and pass it t
     :caption: patch_file
     :emphasize-lines: 19,29
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -2,7 +2,9 @@
 
      namespace App\Controller;
@@ -90,7 +90,7 @@ To display the form to the user, create the form in the controller and pass it t
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    @@ -23,6 +25,9 @@ class ConferenceController extends AbstractController
+    @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
          {
@@ -100,7 +100,7 @@ To display the form to the user, create the form in the controller and pass it t
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-    @@ -31,6 +36,7 @@ class ConferenceController extends AbstractController
+    @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
                  'comments' => $paginator,
                  'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
                  'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
@@ -120,8 +120,8 @@ Displaying the form in the template can be done via the ``form`` Twig function:
     :caption: patch_file
     :emphasize-lines: 10
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -30,4 +30,8 @@
          {% else %}
              <div>No comments have been posted yet for this conference.</div>
@@ -149,8 +149,8 @@ Even if form fields are configured based on their model counterpart, you can cus
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Form/CommentType.php
-    +++ b/src/Form/CommentType.php
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
     @@ -6,26 +6,32 @@ use App\Entity\Comment;
      use App\Entity\Conference;
      use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -168,26 +168,26 @@ Even if form fields are configured based on their model counterpart, you can cus
          {
              $builder
     -            ->add('author')
-    -            ->add('text')
+    +            ->add('author', null, [
+    +                'label' => 'Your name',
+    +            ])
+                 ->add('text')
     -            ->add('email')
     -            ->add('createdAt', null, [
     -                'widget' => 'single_text',
-    +            ->add('author', null, [
-    +                'label' => 'Your name',
-                 ])
-    -            ->add('photoFilename')
-    -            ->add('conference', EntityType::class, [
-    -                'class' => Conference::class,
-    -                'choice_label' => 'id',
-    +            ->add('text')
     +            ->add('email', EmailType::class)
     +            ->add('photo', FileType::class, [
     +                'required' => false,
     +                'mapped' => false,
     +                'constraints' => [
-    +                    new Image(['maxSize' => '1024k'])
+    +                    new Image(maxSize: '1024k')
     +                ],
                  ])
+    -            ->add('photoFilename')
+    -            ->add('conference', EntityType::class, [
+    -                'class' => Conference::class,
+    -                'choice_label' => 'id',
+    -            ])
     -        ;
     +            ->add('submit', SubmitType::class)
     +       ;
@@ -248,8 +248,8 @@ We also need to add some validation constraints on the ``Comment`` data model:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -5,6 +5,7 @@ namespace App\Entity;
      use App\Repository\CommentRepository;
      use Doctrine\DBAL\Types\Types;
@@ -286,8 +286,8 @@ We should now handle the form submission and the persistence of its information 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -7,6 +7,7 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
@@ -298,7 +298,7 @@ We should now handle the form submission and the persistence of its information 
      use Symfony\Component\HttpFoundation\Response;
     @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
     +    public function __construct(
     +        private EntityManagerInterface $entityManager,
@@ -308,7 +308,7 @@ We should now handle the form submission and the persistence of its information 
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -27,6 +33,15 @@ class ConferenceController extends AbstractController
+    @@ -27,6 +33,15 @@ final class ConferenceController extends AbstractController
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -347,8 +347,8 @@ As we don't want to hardcode the directory path in the code, we need a way to st
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -4,6 +4,7 @@
      # Put parameters here that don't need to change on each machine where the app is deployed
      # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
@@ -365,8 +365,8 @@ Now, we have everything we need to know to implement the logic needed to store t
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
@@ -375,7 +375,7 @@ Now, we have everything we need to know to implement the logic needed to store t
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
-    @@ -29,13 +30,22 @@ class ConferenceController extends AbstractController
+    @@ -29,13 +30,22 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
@@ -445,8 +445,8 @@ The admin backend is currently displaying the photo filename, but we want to see
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
     @@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
@@ -474,8 +474,8 @@ Don't commit yet! We don't want to store uploaded images in the Git repository. 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.gitignore
-    +++ b/.gitignore
+    --- i/.gitignore
+    +++ w/.gitignore
     @@ -1,3 +1,4 @@
     +/public/uploads
 
@@ -496,12 +496,12 @@ Let's create a new mount for uploaded photos:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -35,6 +35,7 @@ web:
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -31,6 +31,7 @@ web:
 
      mounts:
-         "/var": { source: local, source_path: var }
+         "/var/cache": { source: local, source_path: var/cache }
     +    "/public/uploads": { source: local, source_path: uploads }
 
 

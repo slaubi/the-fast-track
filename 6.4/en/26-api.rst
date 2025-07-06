@@ -31,8 +31,8 @@ A few attributes on the Conference class is all we need to configure the API:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -2,29 +2,45 @@
 
      namespace App\Entity;
@@ -121,8 +121,8 @@ Do the same for comments:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -2,41 +2,63 @@
 
      namespace App\Entity;

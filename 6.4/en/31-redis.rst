@@ -19,9 +19,9 @@ Here is how you can add Redis to your project in one patch:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -14,6 +14,7 @@ runtime:
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -10,6 +10,7 @@ runtime:
              - iconv
              - mbstring
              - pdo_pgsql
@@ -29,7 +29,7 @@ Here is how you can add Redis to your project in one patch:
              - sodium
              - xsl
 
-    @@ -40,6 +41,7 @@ mounts:
+    @@ -36,6 +37,7 @@ mounts:
 
      relationships:
          database: "database:postgresql"
@@ -37,8 +37,8 @@ Here is how you can add Redis to your project in one patch:
 
      hooks:
          build: |
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
+    --- i/.platform/services.yaml
+    +++ w/.platform/services.yaml
     @@ -16,3 +16,6 @@ varnish:
      files:
          type: network-storage:2.0
@@ -46,9 +46,9 @@ Here is how you can add Redis to your project in one patch:
     +
     +rediscache:
     +    type: redis:5.0
-    --- a/compose.yaml
-    +++ b/compose.yaml
-    @@ -20,6 +20,10 @@ services:
+    --- i/compose.yaml
+    +++ w/compose.yaml
+    @@ -14,6 +14,10 @@ services:
            # - ./docker/db/data:/var/lib/postgresql/data:rw
      ###< doctrine/doctrine-bundle ###
 
@@ -59,9 +59,9 @@ Here is how you can add Redis to your project in one patch:
      volumes:
      ###> doctrine/doctrine-bundle ###
        database_data:
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -9,7 +9,7 @@ framework:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -8,7 +8,7 @@ framework:
          # Enables session support. Note that the session will ONLY be started if you read or write from it.
          # Remove or comment this section to explicitly disable session support.
          session:
@@ -76,8 +76,8 @@ Isn't it *beautiful*?
 
 .. code-block:: terminal
 
-    $ docker compose stop
-    $ docker compose up -d
+    $ docker-compose stop
+    $ docker-compose up -d --remove-orphans
 
 Test locally by browsing the website; everything should still work as before.
 

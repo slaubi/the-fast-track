@@ -38,8 +38,8 @@ Let's write a first test for when the API returns an error:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/SpamCheckerTest.php
-    +++ b/tests/SpamCheckerTest.php
+    --- i/tests/SpamCheckerTest.php
+    +++ w/tests/SpamCheckerTest.php
     @@ -2,12 +2,26 @@
 
      namespace App\Tests;
@@ -83,23 +83,29 @@ Run the tests to check that they pass:
 .. index::
     single: PHPUnit;Data Provider
     single: Data Provider
-    single: Attributes;@dataProvider
+    single: Attributes;DataProvider
 
 Let's add tests for the happy path:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/SpamCheckerTest.php
-    +++ b/tests/SpamCheckerTest.php
-    @@ -24,4 +24,32 @@ class SpamCheckerTest extends TestCase
+    --- i/tests/SpamCheckerTest.php
+    +++ w/tests/SpamCheckerTest.php
+    @@ -4,6 +4,7 @@ namespace App\Tests;
+
+     use App\Entity\Comment;
+     use App\SpamChecker;
+    +use PHPUnit\Framework\Attributes\DataProvider;
+     use PHPUnit\Framework\TestCase;
+     use Symfony\Component\HttpClient\MockHttpClient;
+     use Symfony\Component\HttpClient\Response\MockResponse;
+    @@ -24,4 +25,30 @@ class SpamCheckerTest extends TestCase
              $this->expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
              $checker->getSpamScore($comment, $context);
          }
     +
-    +    /**
-    +     * @dataProvider provideComments
-    +     */
+    +    #[DataProvider('provideComments')]
     +    public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context)
     +    {
     +        $client = new MockHttpClient([$response]);
@@ -272,8 +278,8 @@ A new ``src/DataFixtures/`` directory has been created during the installation w
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
+    --- i/src/DataFixtures/AppFixtures.php
+    +++ w/src/DataFixtures/AppFixtures.php
     @@ -2,6 +2,8 @@
 
      namespace App\DataFixtures;
@@ -292,13 +298,13 @@ A new ``src/DataFixtures/`` directory has been created during the installation w
     +        $amsterdam = new Conference();
     +        $amsterdam->setCity('Amsterdam');
     +        $amsterdam->setYear('2019');
-    +        $amsterdam->setInternational(true);
+    +        $amsterdam->setIsInternational(true);
     +        $manager->persist($amsterdam);
     +
     +        $paris = new Conference();
     +        $paris->setCity('Paris');
     +        $paris->setYear('2020');
-    +        $paris->setInternational(false);
+    +        $paris->setIsInternational(false);
     +        $manager->persist($paris);
     +
     +        $comment1 = new Comment();
@@ -315,8 +321,8 @@ When we load the fixtures, all data is removed; including the admin user. To avo
 
 .. code-block:: diff
 
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
+    --- i/src/DataFixtures/AppFixtures.php
+    +++ w/src/DataFixtures/AppFixtures.php
     @@ -2,13 +2,20 @@
 
      namespace App\DataFixtures;
@@ -393,8 +399,8 @@ Add a new test that clicks on a conference page from the homepage:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -14,4 +14,19 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
@@ -451,8 +457,8 @@ Do you want to get to the next level? Try adding a new comment with a photo on a
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -29,4 +29,19 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertSelectorTextContains('h2', 'Amsterdam 2019');
              $this->assertSelectorExists('div:contains("There are 1 comments")');
@@ -560,8 +566,8 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -15,21 +15,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
@@ -664,8 +670,8 @@ You can then write tests that use a real Google Chrome browser with the followin
 .. code-block:: diff
     :class: ignore
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -2,13 +2,13 @@
 
      namespace App\Tests\Controller;

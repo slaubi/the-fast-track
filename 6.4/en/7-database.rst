@@ -62,15 +62,20 @@ Starting Docker Compose
 Start Docker Compose in the background (``-d``):
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker compose up -d
+    $ docker-compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker-compose up -d --remove-orphans
 
 Wait a bit to let the database start up and check that everything is running fine:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose ps
+    $ docker-compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,12 +86,12 @@ If there are no running containers or if the ``State`` column does not read ``Up
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose logs
+    $ docker-compose logs
 
 Accessing the Local Database
 ----------------------------
 
-Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker compose ps``).
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
 
 If you run ``psql`` via the Symfony CLI, you don't need to remember anything.
 
@@ -109,7 +114,7 @@ Thanks to these conventions, accessing the database via ``symfony run`` is much 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker compose exec database psql app app
+        $ docker-compose exec database psql app app
 
 Dumping and Restoring Database Data
 -----------------------------------
@@ -264,9 +269,9 @@ You might not have realized it yet, but having the infrastructure stored in file
 
     * `PostgreSQL documentation`_;
 
-    * `docker compose commands`_.
+    * `docker-compose commands`_.
 
 .. _`Platform.sh services`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Platform.sh tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL documentation`: https://www.postgresql.org/docs/
-.. _`docker compose commands`: https://docs.docker.com/compose/reference/
+.. _`docker-compose commands`: https://docs.docker.com/compose/reference/

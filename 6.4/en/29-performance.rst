@@ -51,9 +51,9 @@ And enable the PHP probe for our project:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/php.ini
-    +++ b/php.ini
-    @@ -6,3 +6,7 @@ session.use_strict_mode=On
+    --- i/php.ini
+    +++ w/php.ini
+    @@ -7,3 +7,7 @@ session.use_strict_mode=On
      realpath_cache_ttl=3600
      zend.detect_unicode=Off
      xdebug.file_link_format=vscode://file/%f:%l
@@ -115,8 +115,8 @@ You can now launch the new container:
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose stop
-    $ docker compose up -d
+    $ docker-compose stop
+    $ docker-compose up -d --remove-orphans
 
 Fixing a non-working Blackfire Installation
 -------------------------------------------
@@ -127,8 +127,8 @@ If you get an error while profiling, increase the Blackfire log level to get mor
     :caption: patch_file
     :class: ignore
 
-    --- a/php.ini
-    +++ b/php.ini
+    --- i/php.ini
+    +++ w/php.ini
     @@ -10,3 +10,4 @@ zend.detect_unicode=Off
      [blackfire]
      # use php_blackfire.dll on Windows
@@ -208,8 +208,8 @@ And use it to configure Varnish:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/config.vcl
-    +++ b/.platform/config.vcl
+    --- i/.platform/config.vcl
+    +++ w/.platform/config.vcl
     @@ -1,3 +1,11 @@
     +acl profile {
     +   # Authorize the local IP address (replace with the IP found above)
