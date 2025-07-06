@@ -75,7 +75,7 @@ Téléchargez mon image GIF ici :
 .. code-block:: terminal
 
     $ mkdir public/images/
-    $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
+    $ php -r "copy('https://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
 
 Lancer un serveur web local
 ---------------------------
@@ -203,7 +203,7 @@ Notez que vous n'obtenez pas la belle page par défaut de Symfony sur Platform.s
 
     * La `documentation de Platform.sh`_.
 
-.. _`celui`: http://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`celui`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`squelette de projet`: https://github.com/symfony/skeleton
 .. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`recettes officielles de Symfony`: https://github.com/symfony/recipes

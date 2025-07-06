@@ -16,8 +16,8 @@ Pour stocker l'email de l'admin, utilisez un paramètre de conteneur. Pour l'exe
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -5,6 +5,8 @@
      # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
      parameters:
@@ -40,8 +40,8 @@ Dans le gestionnaire de messages, remplaçons la logique d'auto-validation :
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -7,6 +7,9 @@ use App\Repository\CommentRepository;
      use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
@@ -85,8 +85,8 @@ Pour envoyer un email, nous avons besoin d'un expéditeur (l'en-tête   ``From``
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/mailer.yaml
-    +++ b/config/packages/mailer.yaml
+    --- i/config/packages/mailer.yaml
+    +++ w/config/packages/mailer.yaml
     @@ -1,3 +1,5 @@
      framework:
          mailer:
@@ -153,8 +153,8 @@ Définissez le nom de domaine et le schéma à utiliser explicitement :
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -7,6 +7,8 @@ parameters:
          photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com

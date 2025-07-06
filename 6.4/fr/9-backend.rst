@@ -23,9 +23,7 @@ Ajoutez EasyAdmin comme dépendance du projet :
 
 .. code-block:: terminal
 
-    $ symfony composer req "easycorp/easyadmin-bundle:4.x-dev"
-
-``admin`` est un alias pour le paquet ``easycorp/easyadmin-bundle``.
+    $ symfony composer req "easycorp/easyadmin-bundle:^4"
 
 Les *alias* ne sont pas une fonctionnalité interne à Composer, mais un concept fourni par Symfony pour vous faciliter la vie. Les alias sont des raccourcis pour les paquets populaires de Composer. Vous voulez un ORM pour votre application ? Demandez ``orm``. Vous voulez développer une API ? Demandez ``api``. Ces alias font référence à un ou plusieurs paquets normaux de Composer. Ce sont des choix arbitraires faits par l’équipe principale de Symfony.
 
@@ -151,24 +149,24 @@ La dernière étape consiste à relier les CRUDs d'administration des conférenc
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/DashboardController.php
-    +++ b/src/Controller/Admin/DashboardController.php
+    --- i/src/Controller/Admin/DashboardController.php
+    +++ w/src/Controller/Admin/DashboardController.php
     @@ -2,6 +2,8 @@
 
      namespace App\Controller\Admin;
 
     +use App\Entity\Comment;
     +use App\Entity\Conference;
+     use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-     use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-    @@ -40,7 +42,8 @@ class DashboardController extends AbstractDashboardController
+    @@ -44,7 +46,8 @@ class DashboardController extends AbstractDashboardController
 
          public function configureMenuItems(): iterable
          {
     -        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
     -        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
-    +        yield MenuItem::linktoRoute('Back to the website', 'fas fa-home', 'homepage');
+    +        yield MenuItem::linkToRoute('Back to the website', 'fas fa-home', 'homepage');
     +        yield MenuItem::linkToCrud('Conferences', 'fas fa-map-marker-alt', Conference::class);
     +        yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comment::class);
          }
@@ -183,18 +181,18 @@ Le tableau de bord principal est vide pour le moment. C'est ici que vous pouvez 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/DashboardController.php
-    +++ b/src/Controller/Admin/DashboardController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    --- i/src/Controller/Admin/DashboardController.php
+    +++ w/src/Controller/Admin/DashboardController.php
+    @@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
      use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     +use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
 
+     #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
     @@ -15,7 +16,10 @@ class DashboardController extends AbstractDashboardController
-         #[Route('/admin', name: 'admin')]
+     {
          public function index(): Response
          {
     -        return parent::index();
@@ -211,8 +209,8 @@ Quand nous affichons les relations entre les entités (la conférence liée à u
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -35,6 +35,11 @@ class Conference
              $this->comments = new ArrayCollection();
          }
@@ -241,8 +239,8 @@ L'interface d'administration par défaut fonctionne bien, mais elle peut être p
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
     @@ -3,10 +3,17 @@
      namespace App\Controller\Admin;
 

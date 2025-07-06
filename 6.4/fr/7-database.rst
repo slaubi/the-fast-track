@@ -62,15 +62,20 @@ Démarrer Docker Compose
 Lancez Docker Compose en arrière-plan (``-d``) :
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker compose up -d
+    $ docker-compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker-compose up -d --remove-orphans
 
 Attendez un peu pour laisser démarrer la base de données, puis vérifiez que tout fonctionne bien :
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose ps
+    $ docker-compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,12 +86,12 @@ S'il n'y a pas de conteneurs en cours d'exécution ou si la colonne ``State`` n'
 .. code-block:: terminal
     :class: ignore
 
-    $ docker compose logs
+    $ docker-compose logs
 
 Accéder à la base de données locale
 --------------------------------------
 
-L'utilitaire en ligne de commande ``psql`` peut parfois s'avérer utile. Mais vous devez vous rappelez des informations d'identification et du nom de la base de données. Encore moins évident, vous devez aussi connaître le port local sur lequel la base de données tourne sur l'hôte. Docker choisit un port aléatoire pour que vous puissiez travailler sur plus d'un projet en utilisant PostgreSQL en même temps (le port local fait partie de la sortie de ``docker compose ps``).
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
 
 Si vous utilisez ``psql`` avec la commande ``symfony``, vous n'avez pas besoin de vous souvenir de quoi que ce soit.
 
@@ -109,7 +114,7 @@ Grâce à ces conventions, accéder à la base de données avec ``symfony run`` 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker compose exec database psql app app
+        $ docker-compose exec database psql app app
 
 Sauvegarder et restaurer les données de la base
 ------------------------------------------------
@@ -264,9 +269,9 @@ Vous ne vous en êtes peut-être pas encore rendu compte, mais le fait que l'inf
 
     * `Documentation PostgreSQL`_ ;
 
-    * `Les commandes docker compose`_.
+    * `docker-compose commands`_.
 
 .. _`Services Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Tunnel Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Documentation PostgreSQL`: https://www.postgresql.org/docs/
-.. _`Les commandes docker compose`: https://docs.docker.com/compose/reference/
+.. _`docker-compose commands`: https://docs.docker.com/compose/reference/

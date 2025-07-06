@@ -116,9 +116,9 @@ En environnement de développement, lorsqu'une exception est levée, Symfony aff
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/php.ini
-    +++ b/php.ini
-    @@ -5,3 +5,4 @@ max_execution_time=30
+    --- i/php.ini
+    +++ w/php.ini
+    @@ -6,3 +6,4 @@ session.gc_probability=0
      session.use_strict_mode=On
      realpath_cache_ttl=3600
      zend.detect_unicode=Off

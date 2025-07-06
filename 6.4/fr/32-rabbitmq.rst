@@ -14,8 +14,8 @@ Pour utiliser RabbitMQ à la place de PostgreSQL comme gestionnaire de messages 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
+    --- i/config/packages/messenger.yaml
+    +++ w/config/packages/messenger.yaml
     @@ -5,10 +5,7 @@ framework:
              transports:
                  # https://symfony.com/doc/current/messenger.html#transport-configuration
@@ -46,9 +46,9 @@ Comme vous l'avez sûrement deviné, nous avons aussi besoin d'ajouter RabbitMQ 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/compose.yaml
-    +++ b/compose.yaml
-    @@ -24,6 +24,10 @@ services:
+    --- i/compose.yaml
+    +++ w/compose.yaml
+    @@ -18,6 +18,10 @@ services:
          image: redis:5-alpine
          ports: [6379]
 
@@ -67,8 +67,8 @@ Pour forcer Docker Compose à prendre en compte le conteneur RabbitMQ, arrêter 
 
 .. code-block:: terminal
 
-    $ docker compose stop
-    $ docker compose up -d
+    $ docker-compose stop
+    $ docker-compose up -d --remove-orphans
 
 .. code-block:: terminal
     :class: hide
@@ -114,8 +114,8 @@ Ajouter RabbitMQ aux serveurs de production peut être fait en l'ajoutant à la 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
+    --- i/.platform/services.yaml
+    +++ w/.platform/services.yaml
     @@ -19,3 +19,8 @@ files:
 
      rediscache:
@@ -131,9 +131,9 @@ Référencez-le également dans la configuration du conteneur web et activez l'e
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -8,6 +8,7 @@ dependencies:
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -4,6 +4,7 @@ type: php:8.3
 
      runtime:
          extensions:
@@ -141,7 +141,7 @@ Référencez-le également dans la configuration du conteneur web et activez l'e
              - apcu
              - blackfire
              - ctype
-    @@ -42,6 +43,7 @@ mounts:
+    @@ -38,6 +39,7 @@ mounts:
      relationships:
          database: "database:postgresql"
          redis: "rediscache:redis"

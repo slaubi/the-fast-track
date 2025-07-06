@@ -60,11 +60,11 @@ Clonez le `dépôt du livre d'or`_ quelque part sur votre machine :
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=6.4-1 --book guestbook
+    $ symfony new --version=6.4-2 --book guestbook
 
 Ce dépôt contient tout le code source du livre.
 
-Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-6.4-1``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
+Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-6.4-2``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
 
 Le code source est synchronisé à 100% avec le code source du livre (utilisez l'URL exacte du dépôt, indiquée ci-dessus). Essayer de synchroniser manuellement les changements du livre avec le code source du dépôt est presque impossible. J'ai tenté de le faire et je n'y suis pas arrivé. C'est tout simplement impossible. Surtout pour des livres comme ceux que j'écris, qui vous racontent l'histoire du développement d'un site web. Comme chaque chapitre dépend des précédents, un changement sur l'un d'eux peut avoir des conséquences sur tous les suivants.
 

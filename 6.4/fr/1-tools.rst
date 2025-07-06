@@ -59,7 +59,10 @@ PHP
 
 Nous utiliserons Docker pour les services, mais j'aime avoir PHP installé sur mon ordinateur local pour des raisons de performance, de stabilité et de simplicité. C'est peut-être vieux jeu, mais la combinaison d'un PHP local et des services Docker est parfaite pour moi.
 
-Utilisez PHP 8.3 et vérifiez que les extensions PHP suivantes soient installées, ou installez-les maintenant : ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Éventuellement, vous pouvez également installer ``redis``, ``curl`` et ``zip``.
+Use PHP 8.3 and check that the following PHP extensions are installed or
+install them now: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``,
+``openssl``, ``sodium``, and ``iconv``. Optionally install ``redis``, ``curl``,
+and ``zip`` as well.
 
 Vous pouvez vérifier les extensions actuellement activées avec ``php -m``.
 
