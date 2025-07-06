@@ -52,6 +52,7 @@ Generare un controller
 Creiamo il nostro primo *controller* tramite il comando ``make:controller``:
 
 .. code-block:: terminal
+    :class: answers(no)
 
     $ symfony console make:controller ConferenceController
 
@@ -72,7 +73,7 @@ Il comando crea una classe ``ConferenceController`` nella cartella ``src/Control
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
 
-    class ConferenceController extends AbstractController
+    final class ConferenceController extends AbstractController
     {
         #[Route('/conference', name: 'app_conference')]
         public function index(): Response
@@ -93,11 +94,11 @@ Modifichiamo la rotta per farla corrispondere alla homepage:
     :caption: patch_file
     :emphasize-lines: 7
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
     -    #[Route('/conference', name: 'app_conference')]
     +    #[Route('/', name: 'homepage')]
@@ -113,9 +114,9 @@ Al posto della pagina predefinita, restituiamo una semplice pagina HTML:
     :caption: patch_file
     :emphasize-lines: 18
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -11,8 +11,13 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -11,8 +11,13 @@ final class ConferenceController extends AbstractController
          #[Route('/', name: 'homepage')]
          public function index(): Response
          {
@@ -160,8 +161,8 @@ Per dimostrare come una risposta possa sfruttare le informazioni provenienti dal
 .. code-block:: diff
     :emphasize-lines: 18
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -3,17 +3,24 @@
      namespace App\Controller;
 
@@ -170,7 +171,7 @@ Per dimostrare come una risposta possa sfruttare le informazioni provenienti dal
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(): Response
@@ -201,11 +202,11 @@ Avremmo anche potuto rendere il nome parte dell'URL:
 
 .. code-block:: diff
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -9,11 +9,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
     -    #[Route('/', name: 'homepage')]
     -    public function index(Request $request): Response
@@ -247,8 +248,8 @@ Cambiamo momentaneamente il file ``src/Controller/ConferenceController.php`` per
 .. code-block:: diff
     :emphasize-lines: 17
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -3,14 +3,17 @@
      namespace App\Controller;
 
@@ -257,12 +258,13 @@ Cambiamo momentaneamente il file ``src/Controller/ConferenceController.php`` per
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(): Response
+    -    {
     +    public function index(Request $request): Response
-         {
+    +        {
     +        dump($request);
     +
              return new Response(<<<EOF

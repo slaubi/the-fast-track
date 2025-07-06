@@ -16,8 +16,8 @@ Creare alcuni metodi nel repository dei commenti: per trovare i commenti rifiuta
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
     @@ -5,7 +5,9 @@ namespace App\Repository;
      use App\Entity\Comment;
      use App\Entity\Conference;
@@ -28,7 +28,7 @@ Creare alcuni metodi nel repository dei commenti: per trovare i commenti rifiuta
      use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-    @@ -18,6 +20,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
+    @@ -13,6 +15,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
       */
      class CommentRepository extends ServiceEntityRepository
      {
@@ -37,7 +37,7 @@ Creare alcuni metodi nel repository dei commenti: per trovare i commenti rifiuta
          public const COMMENTS_PER_PAGE = 2;
 
          public function __construct(ManagerRegistry $registry)
-    @@ -25,6 +29,27 @@ class CommentRepository extends ServiceEntityRepository
+    @@ -20,6 +24,27 @@ class CommentRepository extends ServiceEntityRepository
              parent::__construct($registry, Comment::class);
          }
 
@@ -164,11 +164,11 @@ Una delle cose belle di Platform.sh è che la maggior parte della configurazione
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -61,6 +61,14 @@ crons:
-             spec: '50 23 * * *'
-             cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape php-security-checker; fi
+    --- i/.platform.app.yaml
+    +++ w/.platform.app.yaml
+    @@ -59,6 +59,14 @@ crons:
+             spec: '17,47 * * * *'
+             cmd: croncape php-session-clean
 
     +    comment_cleanup:
     +        # Cleanup every night at 11.50 pm (UTC).
@@ -180,7 +180,7 @@ Una delle cose belle di Platform.sh è che la maggior parte della configurazione
     +
      workers:
          messenger:
-             commands:
+             # PHP background workers usually don't require much CPU. See
 
 La sezione ``crons`` definisce tutti i processi di cron. Ogni cron funziona secondo quanto indicato in ``spec``.
 

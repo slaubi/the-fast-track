@@ -21,9 +21,9 @@ Mettiamo in cache l'homepage per un'ora:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -29,7 +29,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -29,7 +29,7 @@ final class ConferenceController extends AbstractController
          {
              return $this->render('conference/index.html.twig', [
                  'conferences' => $conferenceRepository->findAll(),
@@ -48,9 +48,9 @@ Per testare la strategia di cache HTTP, occorre abilitare il reverse proxy HTTP 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -23,3 +23,7 @@ when@test:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -22,3 +22,7 @@ when@test:
              test: true
              session:
                  storage_factory_id: session.storage.factory.mock_file
@@ -124,9 +124,9 @@ Creiamo un controller che restituisce solo il frammento HTML che visualizza le c
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -33,6 +33,14 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -32,6 +32,14 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
@@ -164,9 +164,9 @@ Apriamo ``/conference_header`` per controllare che tutto funzioni correttamente.
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,11 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,11 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -197,9 +197,9 @@ In primo luogo, attiviamo il supporto ESI:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -13,7 +13,7 @@ framework:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -12,7 +12,7 @@ framework:
              cookie_secure: auto
              cookie_samesite: lax
 
@@ -218,8 +218,8 @@ Quindi, utilizziamo ``render_esi`` al posto di ``render``:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -14,7 +14,7 @@
          <body>
              <header>
@@ -263,9 +263,9 @@ Ma non è quello che vogliamo. Manteniamo in cache la pagina di intestazione per
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -37,7 +37,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -37,7 +37,7 @@ final class ConferenceController extends AbstractController
          {
              return $this->render('conference/header.html.twig', [
                  'conferences' => $conferenceRepository->findAll(),
@@ -327,8 +327,8 @@ Questa strategia non funziona bene se si vogliono invalidare solo alcuni URL o s
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -20,6 +20,8 @@ security:
                      login_path: app_login
                      check_path: app_login
@@ -338,8 +338,8 @@ Questa strategia non funziona bene se si vogliono invalidare solo alcuni URL o s
                  logout:
                      path: app_logout
                      # where to redirect after logout
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
@@ -397,8 +397,8 @@ Le due rotte del controller di amministrazione hanno lo stesso prefisso ``/admin
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
      use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
@@ -486,8 +486,8 @@ E aggiungiamo la logica della cache al codice:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Command/StepInfoCommand.php
-    +++ b/src/Command/StepInfoCommand.php
+    --- i/src/Command/StepInfoCommand.php
+    +++ w/src/Command/StepInfoCommand.php
     @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Input\InputInterface;
      use Symfony\Component\Console\Output\OutputInterface;
@@ -546,8 +546,8 @@ Aggiungere Varnish ai servizi di Platform.sh:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
+    --- i/.platform/services.yaml
+    +++ w/.platform/services.yaml
     @@ -4,3 +4,11 @@ database:
          disk: 1024
 
@@ -569,8 +569,8 @@ Utilizzare Varnish come punto di ingresso principale nelle rotte:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/routes.yaml
-    +++ b/.platform/routes.yaml
+    --- i/.platform/routes.yaml
+    +++ w/.platform/routes.yaml
     @@ -1,2 +1,2 @@
     -"https://{all}/": { type: upstream, upstream: "app:http" }
     +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
@@ -615,8 +615,8 @@ In ogni caso, vediamo come configurare Varnish per invalidare la cache:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/config.vcl
-    +++ b/.platform/config.vcl
+    --- i/.platform/config.vcl
+    +++ w/.platform/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();

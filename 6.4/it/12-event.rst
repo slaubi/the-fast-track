@@ -15,8 +15,8 @@ Tutto ciò che va visualizzato su ogni pagina, come una barra di navigazione, do
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -12,6 +12,15 @@
              {% endblock %}
          </head>
@@ -41,9 +41,9 @@ Avendo solo due controller, si *potrebbe* fare come segue (non applicare la modi
 .. code-block:: diff
     :class: ignore
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -21,12 +21,13 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -21,12 +21,13 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
@@ -104,8 +104,8 @@ Il comando chiederà quale evento si vuole ascoltare. Scegliere l'evento ``Symfo
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/EventSubscriber/TwigEventSubscriber.php
-    +++ b/src/EventSubscriber/TwigEventSubscriber.php
+    --- i/src/EventSubscriber/TwigEventSubscriber.php
+    +++ w/src/EventSubscriber/TwigEventSubscriber.php
     @@ -2,14 +2,25 @@
 
      namespace App\EventSubscriber;
@@ -148,9 +148,9 @@ Ordinare l'elenco delle conferenze per anno può facilitare la navigazione. Potr
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/ConferenceRepository.php
-    +++ b/src/Repository/ConferenceRepository.php
-    @@ -21,6 +21,11 @@ class ConferenceRepository extends ServiceEntityRepository
+    --- i/src/Repository/ConferenceRepository.php
+    +++ w/src/Repository/ConferenceRepository.php
+    @@ -16,6 +16,11 @@ class ConferenceRepository extends ServiceEntityRepository
              parent::__construct($registry, Conference::class);
          }
 

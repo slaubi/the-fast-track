@@ -82,8 +82,8 @@ Aggiornare il controller per fare rendering del template Twig:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -2,22 +2,19 @@
 
      namespace App\Controller;
@@ -94,7 +94,7 @@ Aggiornare il controller per fare rendering del template Twig:
      use Symfony\Component\Routing\Attribute\Route;
     +use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(): Response
@@ -134,8 +134,8 @@ Aggiungiamo un metodo ``show()`` in ``src/Controller/ConferenceController.php``:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -2,6 +2,8 @@
 
      namespace App\Controller;
@@ -145,7 +145,7 @@ Aggiungiamo un metodo ``show()`` in ``src/Controller/ConferenceController.php``:
      use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -17,4 +19,13 @@ class ConferenceController extends AbstractController
+    @@ -17,4 +19,13 @@ final class ConferenceController extends AbstractController
                  'conferences' => $conferenceRepository->findAll(),
              ]));
          }
@@ -233,8 +233,8 @@ L'ultimo passo per completare la nostra prima versione dell'interfaccia utente Ã
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -7,5 +7,8 @@
 
          {% for conference in conferences %}
@@ -255,8 +255,8 @@ Utilizziamo invece la *funzione* ``path()`` di Twig passando il *nome della rott
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -283,9 +283,9 @@ Creare un metodo ``getCommentPaginator()`` nel repository dei commenti che resti
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -3,8 +3,10 @@
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -3,19 +3,37 @@
      namespace App\Repository;
 
      use App\Entity\Comment;
@@ -296,7 +296,6 @@ Creare un metodo ``getCommentPaginator()`` nel repository dei commenti che resti
 
      /**
       * @extends ServiceEntityRepository<Comment>
-    @@ -16,11 +18,27 @@ use Doctrine\Persistence\ManagerRegistry;
       */
      class CommentRepository extends ServiceEntityRepository
      {
@@ -332,8 +331,8 @@ Per gestire la paginazione nel template, passare a Twig il paginatore di Doctrin
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -6,6 +6,7 @@ use App\Entity\Conference;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
@@ -342,7 +341,7 @@ Per gestire la paginazione nel template, passare a Twig il paginatore di Doctrin
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
-    @@ -21,11 +22,16 @@ class ConferenceController extends AbstractController
+    @@ -21,11 +22,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
@@ -374,8 +373,8 @@ Infine, aggiornare il template per aggiungere link alle pagine successive e prec
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -6,6 +6,8 @@
          <h2>{{ conference }} Conference</h2>
 
@@ -420,15 +419,15 @@ Potresti aver notato che entrambi i metodi in ``ConferenceController`` richiedon
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
     -use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(Environment $twig, ConferenceRepository $conferenceRepository): Response

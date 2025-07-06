@@ -38,8 +38,8 @@ Oltre a generare l'entity ``Admin``, il comando ha anche aggiornato la configura
     :class: ignore
     :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -5,14 +5,18 @@ security:
              Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
          # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -82,7 +82,7 @@ Non svilupperemo un sistema dedicato per la creazione di account amministrativi.
 .. index::
     single: Command;security:hash-password
 
-Scegliere la password desiderata, poi lanciare il seguente comando per generare l'hash della password:
+Selezionare ``App\Entity\Admin`` e scegliere la password desiderata, poi lanciare il seguente comando per generare l'hash della password:
 
 .. code-block:: terminal
     :class: answers(admin)
@@ -139,14 +139,14 @@ Configurare l'autenticazione
 
 Ora che abbiamo un utente amministratore, possiamo proteggere il pannello amministrativo. Symfony supporta diverse strategie di autenticazione. Usiamo il classico e popolare *sistema di autenticazione con form*.
 
-Eseguire il comando ``make:security:form-login`` per aggiornare la configurazione, generare un template per il login e creare un *authenticator*:
+Eseguire il comando ``make:auth`` per aggiornare la configurazione, generare un template per il login e creare un *authenticator*:
 
 .. code-block:: terminal
     :class: answers(SecurityController||yes)
 
     $ symfony console make:security:form-login
 
-Chiamare il controller ``SecurityController`` e generare un URL ``/logout`` (``yes``).
+Selezionare ``1`` per generare un'autenticazione con form, chiamare la classe authenticator ``AppAuthenticator``, il controller ``SecurityController``, e generare un URL ``/logout`` (``yes``).
 
 Il comando ha aggiornato la configurazione di sicurezza per collegare le classi generate:
 
@@ -154,8 +154,8 @@ Il comando ha aggiornato la configurazione di sicurezza per collegare le classi 
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -15,7 +15,15 @@ security:
                  security: false
              main:
@@ -199,8 +199,8 @@ Un sistema di sicurezza è composto da due parti: *autenticazione* e *autorizzaz
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used

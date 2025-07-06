@@ -35,8 +35,8 @@ Invece di usare i normali CSS, passiamo a `Sass`_:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/assets/app.js
-    +++ b/assets/app.js
+    --- i/assets/app.js
+    +++ w/assets/app.js
     @@ -6,4 +6,4 @@
       */
 
@@ -48,16 +48,16 @@ Installare sass-loader:
 
 .. code-block:: terminal
 
-    $ npm install node-sass sass-loader@13 --save-dev
+    $ npm install sass sass-loader --save-dev
 
 E abilitare il Sass loader in webpack:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
-    @@ -54,7 +54,7 @@ Encore
+    --- i/webpack.config.js
+    +++ w/webpack.config.js
+    @@ -57,7 +57,7 @@ Encore
          })
 
          // enables Sass/SCSS support
@@ -86,8 +86,8 @@ Richiediamo Bootstrap nel file CSS (abbiamo anche ripulito il file):
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/assets/styles/app.scss
-    +++ b/assets/styles/app.scss
+    --- i/assets/styles/app.scss
+    +++ w/assets/styles/app.scss
     @@ -1,3 +1 @@
     -body {
     -    background-color: lightgray;
@@ -99,8 +99,8 @@ Facciamo lo stesso per il file JS:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/assets/app.js
-    +++ b/assets/app.js
+    --- i/assets/app.js
+    +++ w/assets/app.js
     @@ -7,3 +7,7 @@
 
      // any CSS you import will output into a single css file (app.css in this case)

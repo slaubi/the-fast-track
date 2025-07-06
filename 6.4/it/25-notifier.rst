@@ -26,8 +26,8 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +36,8 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
     +use Symfony\Component\Notifier\NotifierInterface;
      use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
-    @@ -45,6 +47,7 @@ class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
+    @@ -45,6 +47,7 @@ final class ConferenceController extends AbstractController
              Request $request,
              Conference $conference,
              CommentRepository $commentRepository,
@@ -45,7 +45,7 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
              #[Autowire('%photo_dir%')] string $photoDir,
          ): Response {
              $comment = new Comment();
-    @@ -69,9 +72,15 @@ class ConferenceController extends AbstractController
+    @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
                  ];
                  $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
@@ -77,8 +77,8 @@ La notifica nel browser utilizza *messaggi flash* tramite la sezione *notifiche*
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -3,6 +3,13 @@
      {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
@@ -122,8 +122,8 @@ Invece di avvisare l'amministratore che un commento è stato appena pubblicato, 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -4,15 +4,15 @@ namespace App\MessageHandler;
 
      use App\ImageOptimizer;
@@ -173,8 +173,8 @@ Il metodo ``getAdminRecipients()`` restituisce i destinatari "amministratori" co
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/notifier.yaml
-    +++ b/config/packages/notifier.yaml
+    --- i/config/packages/notifier.yaml
+    +++ w/config/packages/notifier.yaml
     @@ -9,4 +9,4 @@ framework:
                  medium: ['email']
                  low: ['email']
@@ -280,8 +280,8 @@ Aggiorniamo la classe di notifica per inviare i messaggi a seconda del contenuto
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -7,6 +7,7 @@ use Symfony\Component\Notifier\Message\EmailMessage;
      use Symfony\Component\Notifier\Notification\EmailNotificationInterface;
      use Symfony\Component\Notifier\Notification\Notification;
@@ -316,8 +316,8 @@ Per quanto riguarda la posta elettronica, è possibile implementare l'interfacci
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,13 +3,18 @@
      namespace App\Notification;
 
@@ -375,8 +375,8 @@ Modifichiamo la notifica per accettare l'URL di revisione e aggiungere due pulsa
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,6 +3,7 @@
      namespace App\Notification;
 
@@ -410,8 +410,8 @@ Ora si tratta di seguire i cambiamenti a ritroso. Come primo passo aggiorniamo l
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -49,7 +49,8 @@ class CommentMessageHandler
                  $this->entityManager->flush();
                  $this->bus->dispatch($message);
@@ -428,8 +428,8 @@ Come si può vedere, l'URL di recensione dovrebbe essere parte del  commento, ag
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Message/CommentMessage.php
-    +++ b/src/Message/CommentMessage.php
+    --- i/src/Message/CommentMessage.php
+    +++ w/src/Message/CommentMessage.php
     @@ -6,10 +6,16 @@ class CommentMessage
      {
          public function __construct(
@@ -453,8 +453,8 @@ Infine, aggiornare i controller per generare l'URL di revisione e passarlo al co
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
      use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
@@ -473,17 +473,17 @@ Infine, aggiornare i controller per generare l'URL di revisione e passarlo al co
              }
 
              return new Response($this->twig->render('admin/review.html.twig', [
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -17,6 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Notifier\Notification\Notification;
      use Symfony\Component\Notifier\NotifierInterface;
      use Symfony\Component\Routing\Attribute\Route;
     +use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
-    @@ -70,7 +71,8 @@ class ConferenceController extends AbstractController
+    @@ -70,7 +71,8 @@ final class ConferenceController extends AbstractController
                      'referrer' => $request->headers->get('referer'),
                      'permalink' => $request->getUri(),
                  ];
