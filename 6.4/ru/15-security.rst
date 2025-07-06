@@ -38,8 +38,8 @@
     :class: ignore
     :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -5,14 +5,18 @@ security:
              Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
          # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -139,14 +139,14 @@
 
 Теперь, когда у нас есть пользователь с правами администратора, мы можем защитить административную панель. Symfony поддерживает несколько стратегий аутентификации. Давайте воспользуемся классической и достаточно популярной *системой аутентификации с помощью формы*.
 
-Команда ``make:security:form-login`` обновит конфигурацию безопасности, сгенерирует шаблон с формой входа, а также создаст *аутентификатор* (класс для управления аутентификацией):
+Выполните команду ``make:auth``, чтобы обновить конфигурацию безопасности, сгенерировать шаблон с формой входа, а также создать *аутентификатор* (класс для управления аутентификацией):
 
 .. code-block:: terminal
     :class: answers(SecurityController||yes)
 
     $ symfony console make:security:form-login
 
-Назовите контроллер ``SecurityController `` и ответьте ``yes``, чтобы добавить маршрут для выхода из системы по пути ``/logout``.
+Выберите ``1`` для создания аутентификатора с формой входа, назовите класс аутентификатора — ``AppAuthenticator``, контроллер — ``SecurityController`` и ответьте ``yes``, чтобы добавить маршрут для выхода из системы по пути ``/logout``.
 
 Для связывания вновь созданных классов, команда обновит настройки безопасности:
 
@@ -154,8 +154,8 @@
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -15,7 +15,15 @@ security:
                  security: false
              main:
@@ -181,7 +181,7 @@
 
 .. tip::
 
-    Помню ли я, что маршрутом к EasyAdmin является ``admin`` (который задан в ``App\Controller\Admin\DashboardController``)? Вряд ли. Эту информацию можно получить из файла класса или по следующей команде, отображающей все имеющиеся маршруты и соответсвующие пути:
+    Откуда я знаю, что маршрутом к EasyAdmin является ``admin`` (который задан в ``App\Controller\Admin\DashboardController``)? Нет, я не написал его по памяти. Его можно узнать из файла класса, но лучше выполнить следующую команду, которая отобразит все имеющиеся маршруты вместе с их путями:
 
     .. code-block:: terminal
 
@@ -199,8 +199,8 @@
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used

@@ -37,8 +37,8 @@
 Как вы можете себе представить, перевод более 300 страниц — это огромная работа, и я хочу поблагодарить всех, кто помог перевести эту книгу:
 
 * Sergey Panteleev
-* VladimirAus
 * Alexey Pyltsyn
+* VladimirAus
 * Dmitry Naydonov
 * Stan Drozdov
 * Egor Ushakov

@@ -59,7 +59,10 @@ PHP
 
 Мы будем использовать Docker для разнообразных сервисов приложения, хотя для простоты, производительности и стабильности на моём компьютере установлен PHP. Можете считать меня консерватором, но сочетание локально установленного PHP и сервисов Docker — это идеальный для меня вариант.
 
-Установите PHP версию 8.3 со следующими модулями PHP, если они отсутствуют: ``intl``, ``pdo_pgsql``, ``xsl``, ``gd``, ``openssl``, ``sodium``. Дополнительно можно установить ``redis``, ``curl`` и ``zip``.
+Use PHP 8.3 and check that the following PHP extensions are installed or
+install them now: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``,
+``openssl``, ``sodium``, and ``iconv``. Optionally install ``redis``, ``curl``,
+and ``zip`` as well.
 
 С помощью команды ``php -m`` можно посмотреть включённые в данный момент модули.
 

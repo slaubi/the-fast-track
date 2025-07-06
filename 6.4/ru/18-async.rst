@@ -31,8 +31,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -39,8 +39,8 @@ class Comment
          #[ORM\Column(length: 255, nullable: true)]
          private ?string $photoFilename = null;
@@ -59,8 +59,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
+    --- i/migrations/Version00000000000000.php
+    +++ w/migrations/Version00000000000000.php
     @@ -21,6 +21,7 @@ final class Version00000000000000 extends AbstractMigration
          {
              // this up() migration is auto-generated, please modify it to your needs
@@ -85,9 +85,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -29,7 +29,9 @@ class CommentRepository extends ServiceEntityRepository
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -24,7 +24,9 @@ class CommentRepository extends ServiceEntityRepository
          {
              $query = $this->createQueryBuilder('c')
                  ->andWhere('c.conference = :conference')
@@ -103,8 +103,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
     @@ -53,6 +53,7 @@ class CommentCrudController extends AbstractCrudController
                  ->setLabel('Photo')
                  ->onlyOnIndex()
@@ -119,8 +119,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
+    --- i/src/DataFixtures/AppFixtures.php
+    +++ w/src/DataFixtures/AppFixtures.php
     @@ -35,8 +35,16 @@ class AppFixtures extends Fixture
              $comment1->setAuthor('Fabien');
              $comment1->setEmail('fabien@example.com');
@@ -148,8 +148,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -2,6 +2,8 @@
 
      namespace App\Tests\Controller;
@@ -279,8 +279,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -5,20 +5,22 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
@@ -297,7 +297,7 @@
     +use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          public function __construct(
              private EntityManagerInterface $entityManager,
@@ -305,7 +305,7 @@
          ) {
          }
 
-    @@ -35,7 +37,6 @@ class ConferenceController extends AbstractController
+    @@ -35,7 +37,6 @@ final class ConferenceController extends AbstractController
              Request $request,
              Conference $conference,
              CommentRepository $commentRepository,
@@ -313,7 +313,7 @@
              #[Autowire('%photo_dir%')] string $photoDir,
          ): Response {
              $comment = new Comment();
-    @@ -50,6 +51,7 @@ class ConferenceController extends AbstractController
+    @@ -50,6 +51,7 @@ final class ConferenceController extends AbstractController
                  }
 
                  $this->entityManager->persist($comment);
@@ -321,7 +321,7 @@
 
                  $context = [
                      'user_ip' => $request->getClientIp(),
-    @@ -57,11 +59,7 @@ class ConferenceController extends AbstractController
+    @@ -57,11 +59,7 @@ final class ConferenceController extends AbstractController
                      'referrer' => $request->headers->get('referer'),
                      'permalink' => $request->getUri(),
                  ];
@@ -347,8 +347,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
+    --- i/config/packages/messenger.yaml
+    +++ w/config/packages/messenger.yaml
     @@ -26,4 +26,4 @@ framework:
                  Symfony\Component\Notifier\Message\SmsMessage: async
 

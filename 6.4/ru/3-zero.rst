@@ -75,7 +75,7 @@
 .. code-block:: terminal
 
     $ mkdir public/images/
-    $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
+    $ php -r "copy('https://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
 
 Запуск локального веб-сервера
 -------------------------------------------------------
@@ -203,7 +203,7 @@
 
     * `Документация Platform.sh`_.
 
-.. _`эту GIF-картинку`: http://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`эту GIF-картинку`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`заготовку проекта`: https://github.com/symfony/skeleton
 .. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`официальных рецептов Symfony`: https://github.com/symfony/recipes

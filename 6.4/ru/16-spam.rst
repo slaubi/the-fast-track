@@ -112,8 +112,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/SpamChecker.php
-    +++ b/src/SpamChecker.php
+    --- i/src/SpamChecker.php
+    +++ w/src/SpamChecker.php
     @@ -3,6 +3,7 @@
      namespace App;
 
@@ -187,8 +187,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -7,6 +7,7 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
@@ -197,7 +197,7 @@
      use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    @@ -34,6 +35,7 @@ class ConferenceController extends AbstractController
+    @@ -34,6 +35,7 @@ final class ConferenceController extends AbstractController
              Request $request,
              Conference $conference,
              CommentRepository $commentRepository,
@@ -205,7 +205,7 @@
              #[Autowire('%photo_dir%')] string $photoDir,
          ): Response {
              $comment = new Comment();
-    @@ -48,6 +50,17 @@ class ConferenceController extends AbstractController
+    @@ -48,6 +50,17 @@ final class ConferenceController extends AbstractController
                  }
 
                  $this->entityManager->persist($comment);
