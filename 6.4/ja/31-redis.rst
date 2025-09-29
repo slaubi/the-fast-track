@@ -86,7 +86,7 @@ Redisサービスを追加するために、Dockerを"再起動"します:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: より深く学ぶために
 

@@ -636,7 +636,7 @@ SPA サイトの CORS を設定する
 
     $ git add .
     $ git commit -a -m'Add the SPA application'
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 アプリケーションをフラグで指定して、ブラウザで SPA にアクセスしてください:
 

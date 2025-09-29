@@ -82,7 +82,7 @@ Symfony にパスワードをハッシュ化するのに一番有効なアルゴ
 .. index::
     single: Command;security:hash-password
 
-``App\Entity\Admin`` を選び、好きなパスワードを選択して、次のコマンドを実行しパスワードをハッシュ化してください:
+好きなパスワードを選択して、次のコマンドを実行しパスワードをハッシュ化してください:
 
 .. code-block:: terminal
     :class: answers(admin)
@@ -139,14 +139,14 @@ Symfony にパスワードをハッシュ化するのに一番有効なアルゴ
 
 管理者ユーザーができましたので、管理者のバックエンドをセキュアにすることができます。 Symfony は複数の認証の方法をサポートしていますが、ここでは、昔から人気のある *フォーム認証システム* を使いましょう。
 
-``make:auth`` コマンドを実行しセキュリティ設定を更新し、ログインテンプレートを作成し、 *認証システム* を作成しましょう:
+``make:security:form-login`` コマンドを実行しセキュリティ設定を更新し、ログインテンプレートを作成し、 *認証システム* を作成しましょう:
 
 .. code-block:: terminal
     :class: answers(SecurityController||yes)
 
     $ symfony console make:security:form-login
 
-``1`` を選択し、ログインフォーム認証システムを生成し、 ``AppAuthenticator`` とし、コントローラーを ``SecurityController``  と命名し、 ``logout`` URLを生成しましょう(``yes``)。
+コントローラーを ``SecurityController``  と命名し、 ``logout`` URLを生成しましょう(``yes``)。
 
 このコマンドはセキュリティ設定を更新し生成されるクラスとワイヤリングします:
 

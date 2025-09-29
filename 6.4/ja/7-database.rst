@@ -16,7 +16,7 @@ Docker Compose へ PostgreSQL を追加
 .. index::
     single: Docker;PostgreSQL
 
-私たちのローカル開発環境には、Docker を用いてサービスを運用するようにしています。自動生成された ``docker-compose.yml`` ファイルには既に PostgreSQL がサービスとして追加されています:
+私たちのローカル開発環境には、Docker を用いてサービスを運用するようにしています。自動生成された ``compose.yml`` ファイルには既に PostgreSQL がサービスとして追加されています:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -109,7 +109,7 @@ Symfony CLI は自動的にプロジェクトで実行されている Docker サ
 
 .. note::
 
-    あなたのローカル開発環境に ``psql`` バイナリがないときは、 ``docker-compose`` を介して実行することも可能です:
+    あなたのローカル開発環境に ``psql`` バイナリがないときは、 ``docker compose`` を介して実行することも可能です:
 
     .. code-block:: terminal
         :class: ignore
