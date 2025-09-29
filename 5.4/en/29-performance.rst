@@ -336,7 +336,7 @@ Create a ``.blackfire.yaml`` file with the following content:
                 param comment_form[author] 'Fabien'
                 param comment_form[email] 'me@example.com'
                 param comment_form[text] 'Such a good conference!'
-                param comment_form[photo] file(fake('image', '/tmp', 400, 300, 'cats'), 'awesome-cat.jpg')
+                param comment_form[photo] file(fake('simple_image', '/tmp', 400, 300, 'png', true, true), 'placeholder-image.jpg')
                 expect status_code() == 302
             follow
                 expect status_code() == 200

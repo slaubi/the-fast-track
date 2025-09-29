@@ -27,10 +27,10 @@ On our local machine, we have decided to use Docker to manage services. The gene
     database:
         image: postgres:${POSTGRES_VERSION:-13}-alpine
         environment:
-        POSTGRES_DB: ${POSTGRES_DB:-app}
-        # You should definitely change the password in production
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-        POSTGRES_USER: ${POSTGRES_USER:-symfony}
+            POSTGRES_DB: ${POSTGRES_DB:-app}
+            # You should definitely change the password in production
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
+            POSTGRES_USER: ${POSTGRES_USER:-symfony}
     volumes:
         - db-data:/var/lib/postgresql/data:rw
         # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
@@ -109,7 +109,7 @@ Thanks to these conventions, accessing the database via ``symfony run`` is much 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql main main
+        $ docker-compose exec database psql app symfony
 
 Dumping and Restoring Database Data
 -----------------------------------

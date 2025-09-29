@@ -99,7 +99,7 @@ Tweak the route to make it match the homepage:
 
      class ConferenceController extends AbstractController
      {
-    -    #[Route('/conference', name: 'conference')]
+    -    #[Route('/conference', name: 'app_conference')]
     +    #[Route('/', name: 'homepage')]
          public function index(): Response
          {
@@ -123,12 +123,12 @@ Instead of the default rendered page, let's return a simple HTML one:
     -            'controller_name' => 'ConferenceController',
     -        ]);
     +        return new Response(<<<EOF
-    +<html>
-    +    <body>
-    +        <img src="/images/under-construction.gif" />
-    +    </body>
-    +</html>
-    +EOF
+    +            <html>
+    +                <body>
+    +                    <img src="/images/under-construction.gif" />
+    +                </body>
+    +            </html>
+    +            EOF
     +        );
          }
      }
@@ -182,12 +182,12 @@ To demonstrate how a response can leverage information from the request, let's a
     +        }
     +
              return new Response(<<<EOF
-     <html>
-         <body>
-    +        $greet
-             <img src="/images/under-construction.gif" />
-         </body>
-     </html>
+                 <html>
+                     <body>
+    +                    $greet
+                         <img src="/images/under-construction.gif" />
+                     </body>
+                 </html>
 
 Symfony exposes the request data through a ``Request`` object. When Symfony sees a controller argument with this type-hint, it automatically knows to pass it to you. We can use it to get the ``name`` item from the query string and add an ``<h1>`` title.
 
@@ -266,8 +266,8 @@ Temporarily change ``src/Controller/ConferenceController.php`` to dump the Reque
     +        dump($request);
     +
              return new Response(<<<EOF
-     <html>
-         <body>
+                 <html>
+                     <body>
 
 When refreshing the page, notice the new "target" icon in the toolbar; it lets you inspect the dump. Click on it to access a full page where navigating is made simpler:
 

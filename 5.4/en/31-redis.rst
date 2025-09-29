@@ -41,7 +41,7 @@ Here is how you can add Redis to your project in one patch:
     +++ b/.platform/services.yaml
     @@ -15,3 +15,6 @@ varnish:
      files:
-         type: network-storage:1.0
+         type: network-storage:2.0
          disk: 256
     +
     +rediscache:
@@ -87,7 +87,7 @@ Commit and deploy as usual:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: Going Further
 

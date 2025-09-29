@@ -93,7 +93,7 @@ Edit the file to add the table creation in the ``up()`` method:
 
     --- a/migrations/Version00000000000000.php
     +++ b/migrations/Version00000000000000.php
-    @@ -21,6 +21,14 @@ final class Version00000000000000 extends AbstractMigration
+    @@ -21,6 +21,15 @@ final class Version00000000000000 extends AbstractMigration
          {
              // this up() migration is auto-generated, please modify it to your needs
 
@@ -105,6 +105,7 @@ Edit the file to add the table creation in the ``up()`` method:
     +                sess_time INTEGER NOT NULL
     +            )
     +        ');
+    +        $this->addSql('CREATE INDEX EXPIRY ON sessions (sess_lifetime)');
          }
 
          public function down(Schema $schema): void
@@ -168,7 +169,7 @@ Now, let's create a *Platform.sh environment* based on the *Git branch*:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 This command creates a new environment as follows:
 
@@ -263,7 +264,7 @@ And deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 When deploying, only the code and infrastructure changes are pushed to Platform.sh; the data are not affected in any way.
 

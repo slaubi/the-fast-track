@@ -320,9 +320,9 @@ When we will load the fixtures, all data will be removed; including the admin us
      {
     +    private $passwordHasherFactory;
     +
-    +    public function __construct(PasswordHasherFactoryInterface $encoderFactory)
+    +    public function __construct(PasswordHasherFactoryInterface $passwordHasherFactory)
     +    {
-    +        $this->passwordHasherFactory = $encoderFactory;
+    +        $this->passwordHasherFactory = $passwordHasherFactory;
     +    }
     +
          public function load(ObjectManager $manager): void
@@ -353,7 +353,7 @@ When we will load the fixtures, all data will be removed; including the admin us
 
     .. code-block:: terminal
 
-        $ symfony console debug:autowiring encoder
+        $ symfony console debug:autowiring hasher
 
 Loading Fixtures
 ----------------

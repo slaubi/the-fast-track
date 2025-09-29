@@ -373,19 +373,6 @@ By default, handlers are called synchronously. To go async, you need to explicit
 
 The configuration tells the bus to send instances of ``App\Message\CommentMessage`` to the ``async`` queue, which is defined by a DSN (``MESSENGER_TRANSPORT_DSN``), which points to Doctrine as configured in ``.env``. In plain English, we are using PostgreSQL as a queue for our messages.
 
-Setup PostgreSQL tables and triggers:
-
-.. code-block:: terminal
-
-    $ symfony console make:migration
-
-And migrate the database:
-
-.. code-block:: terminal
-    :class: answers(y)
-
-    $ symfony console doctrine:migrations:migrate
-
 .. tip::
 
     Behind the scenes, Symfony uses the PostgreSQL builtin, performant, scalable, and transactional pub/sub system (``LISTEN``/``NOTIFY``). You can also read the RabbitMQ chapter if you want to use it instead of PostgreSQL as a message broker.

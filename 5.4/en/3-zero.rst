@@ -128,17 +128,6 @@ Satisfied? Let's commit our work:
     $ git add public/images
     $ git commit -m'Add the under construction image'
 
-Adding a Favicon
-----------------
-
-To avoid being "spammed" by 404 HTTP errors in the logs because of a missing favicon requested by browsers, let's add one now:
-
-.. code-block:: terminal
-
-    $ php -r "copy('https://symfony.com/favicon.ico', 'public/favicon.ico');"
-    $ git add public/
-    $ git commit -m'Add a favicon'
-
 Preparing for Production
 ------------------------
 
@@ -161,7 +150,7 @@ Going to Production
 
 .. index::
     single: Symfony CLI;cloud:project:create
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Deploy time?
 
@@ -181,7 +170,7 @@ Then, deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 The code is deployed by pushing the Git repository. At the end of the command, the project will have a specific domain name you can use to access it.
 
@@ -216,8 +205,8 @@ Note that you don't get the beautiful default Symfony page on Platform.sh. Why? 
 
 .. _`the one`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`project skeleton`: https://github.com/symfony/skeleton
-.. _`Platform.sh`: https://platform.sh
+.. _`Platform.sh`: https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`official Symfony recipes`: https://github.com/symfony/recipes
 .. _`recipes contributed by the community`: https://github.com/symfony/recipes-contrib
 .. _`Symfony Local Web Server`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Platform.sh documentation`: https://symfony.com/doc/cloud
+.. _`Platform.sh documentation`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

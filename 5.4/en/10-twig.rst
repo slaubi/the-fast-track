@@ -27,11 +27,18 @@ All pages on the website will share the same *layout*. When installing Twig, a `
         <head>
             <meta charset="UTF-8">
             <title>{% block title %}Welcome!{% endblock %}</title>
-            {% block stylesheets %}{% endblock %}
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+            {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+            {% block stylesheets %}
+                {{ encore_entry_link_tags('app') }}
+            {% endblock %}
+
+            {% block javascripts %}
+                {{ encore_entry_script_tags('app') }}
+            {% endblock %}
         </head>
         <body>
             {% block body %}{% endblock %}
-            {% block javascripts %}{% endblock %}
         </body>
     </html>
 
@@ -94,12 +101,12 @@ Update the controller to render the Twig template:
     +    public function index(Environment $twig, ConferenceRepository $conferenceRepository): Response
          {
     -        return new Response(<<<EOF
-    -<html>
-    -    <body>
-    -        <img src="/images/under-construction.gif" />
-    -    </body>
-    -</html>
-    -EOF
+    -            <html>
+    -                <body>
+    -                    <img src="/images/under-construction.gif" />
+    -                </body>
+    -            </html>
+    -            EOF
     -        );
     +        return new Response($twig->render('conference/index.html.twig', [
     +            'conferences' => $conferenceRepository->findAll(),
@@ -288,8 +295,8 @@ Create a ``getCommentPaginator()`` method in the Comment Repository that returns
     +use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-      * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
-    @@ -14,11 +16,27 @@ use Doctrine\Persistence\ManagerRegistry;
+      * @extends ServiceEntityRepository<Comment>
+    @@ -16,11 +18,27 @@ use Doctrine\Persistence\ManagerRegistry;
       */
      class CommentRepository extends ServiceEntityRepository
      {
@@ -314,9 +321,9 @@ Create a ``getCommentPaginator()`` method in the Comment Repository that returns
     +        return new Paginator($query);
     +    }
     +
-         // /**
-         //  * @return Comment[] Returns an array of Comment objects
-         //  */
+         public function add(Comment $entity, bool $flush = false): void
+         {
+             $this->getEntityManager()->persist($entity);
 
 We have set the maximum number of comments per page to 2 to ease testing.
 

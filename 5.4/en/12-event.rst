@@ -126,13 +126,13 @@ The command asks you about which event you want to listen to. Choose the ``Symfo
     +        $this->conferenceRepository = $conferenceRepository;
     +    }
     +
-         public function onControllerEvent(ControllerEvent $event)
+         public function onControllerEvent(ControllerEvent $event): void
          {
     -        // ...
     +        $this->twig->addGlobal('conferences', $this->conferenceRepository->findAll());
          }
 
-         public static function getSubscribedEvents()
+         public static function getSubscribedEvents(): array
 
 Now, you can add as many controllers as you want: the ``conferences`` variable will always be available in Twig.
 
@@ -150,7 +150,7 @@ Ordering the conference list by year may facilitate browsing. We could create a 
 
     --- a/src/Repository/ConferenceRepository.php
     +++ b/src/Repository/ConferenceRepository.php
-    @@ -19,6 +19,11 @@ class ConferenceRepository extends ServiceEntityRepository
+    @@ -21,6 +21,11 @@ class ConferenceRepository extends ServiceEntityRepository
              parent::__construct($registry, Conference::class);
          }
 
@@ -159,9 +159,9 @@ Ordering the conference list by year may facilitate browsing. We could create a 
     +        return $this->findBy([], ['year' => 'ASC', 'city' => 'ASC']);
     +    }
     +
-         // /**
-         //  * @return Conference[] Returns an array of Conference objects
-         //  */
+         public function add(Conference $entity, bool $flush = false): void
+         {
+             $this->getEntityManager()->persist($entity);
 
 At the end of this step, the website should look like the following:
 

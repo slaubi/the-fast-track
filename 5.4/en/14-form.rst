@@ -499,8 +499,8 @@ Let's create a new mount for uploaded photos:
          "/var": { source: local, source_path: var }
     +    "/public/uploads": { source: local, source_path: uploads }
 
+
      relationships:
-         database: "database:postgresql"
 
 You can now deploy the code and photos will be stored in the ``public/uploads/`` directory like our local version.
 

@@ -55,19 +55,15 @@ In addition to generating the ``Admin`` entity, the command also updated the sec
 
 .. code-block:: diff
     :class: ignore
-    :emphasize-lines: 6,7,15,16
+    :emphasize-lines: 11,12,20
 
     --- a/config/packages/security.yaml
     +++ b/config/packages/security.yaml
-    @@ -1,7 +1,15 @@
-     security:
-    +    password_hashers:
-    +        App\Entity\Admin:
-    +            algorithm: auto
-    +
-         # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    @@ -5,14 +5,18 @@ security:
+             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+         # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
          providers:
-    -        in_memory: { memory: null }
+    -        users_in_memory: { memory: null }
     +        # used to reload user from session & other features (e.g. switch_user)
     +        app_user_provider:
     +            entity:
@@ -76,6 +72,14 @@ In addition to generating the ``Admin`` entity, the command also updated the sec
          firewalls:
              dev:
                  pattern: ^/(_(profiler|wdt)|css|images|js)/
+                 security: false
+             main:
+                 lazy: true
+    -            provider: users_in_memory
+    +            provider: app_user_provider
+
+                 # activate different ways to authenticate
+                 # https://symfony.com/doc/current/security.html#the-firewall
 
 We let Symfony select the best possible algorithm for hashing passwords (which will evolve over time).
 
@@ -171,20 +175,18 @@ The command updated the security configuration to wire the generated classes:
 
     --- a/config/packages/security.yaml
     +++ b/config/packages/security.yaml
-    @@ -16,6 +16,13 @@ security:
-                 security: false
+    @@ -17,6 +17,11 @@ security:
              main:
-                 anonymous: lazy
-    +            guard:
-    +                authenticators:
-    +                    - App\Security\AppAuthenticator
+                 lazy: true
+                 provider: app_user_provider
+    +            custom_authenticator: App\Security\AppAuthenticator
     +            logout:
     +                path: app_logout
     +                # where to redirect after logout
     +                # target: app_any_route
 
                  # activate different ways to authenticate
-                 # https://symfony.com/doc/current/security.html#firewalls-authentication
+                 # https://symfony.com/doc/current/security.html#the-firewall
 
 As hinted by the command output, we need to customize the route in the ``onAuthenticationSuccess()`` method to redirect the user when they successfully sign in:
 
@@ -197,7 +199,7 @@ As hinted by the command output, we need to customize the route in the ``onAuthe
              }
 
     -        // For example:
-    -        //return new RedirectResponse($this->urlGenerator->generate('some_route'));
+    -        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
     -        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     +        return new RedirectResponse($this->urlGenerator->generate('admin'));
          }
@@ -231,7 +233,7 @@ A security system is made of two parts: *authentication* and *authorization*. Wh
 
     --- a/config/packages/security.yaml
     +++ b/config/packages/security.yaml
-    @@ -35,7 +35,7 @@ security:
+    @@ -32,7 +32,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used
          access_control:

@@ -192,7 +192,7 @@ We have already defined a special read-write directory for uploaded files in ``.
                  path: config.vcl
     +
     +files:
-    +    type: network-storage:1.0
+    +    type: network-storage:2.0
     +    disk: 256
 
 Use it for the photos upload directory:
@@ -209,8 +209,8 @@ Use it for the photos upload directory:
     -    "/public/uploads": { source: local, source_path: uploads }
     +    "/public/uploads": { source: service, service: files, source_path: uploads }
 
+
      relationships:
-         database: "database:postgresql"
 
 This should be enough to make the feature work in production.
 

@@ -20,6 +20,7 @@ Create the SPA application under the ``spa`` directory and copy the website styl
 
 .. code-block:: terminal
 
+    $ symfony composer req encore
     $ mkdir -p spa/src spa/public spa/assets/styles
     $ cp assets/styles/*.scss spa/assets/styles/
     $ cd spa
@@ -638,7 +639,7 @@ Commit and deploy:
 
     $ git add .
     $ git commit -a -m'Add the SPA application'
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Access the SPA in a browser by specifying the application as a flag:
 
