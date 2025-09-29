@@ -127,7 +127,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Данная команда создаёт новое окружение в следующем порядке:
 
@@ -222,7 +222,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 При развёртывании в Platform.sh отправляются только изменения в коде и инфраструктуре; данные останутся такими же, как и были до развёртывания.
 

@@ -150,7 +150,7 @@
 
 .. index::
     single: Symfony CLI;cloud:project:create
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Не пора ли нам развернуть приложение?
 
@@ -170,7 +170,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Приложение разворачивается автоматически каждый раз при отправке новых изменений в Git-репозиторий. После того как команда отработает, проект будет доступен по уникальному доменному имени.
 

@@ -41,17 +41,17 @@
 
 .. note::
 
-    Если вы развёртываете проект на Platform.sh, у вас уже есть копия Git-репозитория, поскольку при развёртывании через ``cloud:deploy`` Platform.sh использует Git. Но вам не стоит полагаться на Git-репозиторий, используемый Platform.sh. Он не является резервной копией и предназначен только для развёртывания.
+    If you are deploying on Platform.sh, you already have a copy of the Git repository as Platform.sh uses Git behind the scenes when you are using ``cloud:push``. But you should not rely on the Platform.sh Git repository. It is only for deployment usage. It is not a backup.
 
 Развёртывание в продакшене с помощью непрерывной интеграции
 ----------------------------------------------------------------------------------------------------------------
 
 .. index::
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Ещё одной хорошей практикой является частое развёртывание. Развёртывание в конце каждого шага — хорошо и полезно:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
