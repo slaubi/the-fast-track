@@ -16,7 +16,7 @@ PostgreSQL zu Docker Compose hinzufügen
 .. index::
     single: Docker;PostgreSQL
 
-Auf unserem lokalen Rechner haben wir uns entschieden, Docker zur Verwaltung von Diensten zu verwenden. Die generierte ``docker-compose.yml``-Datei beinhaltet bereits PostgreSQL als Dienst:
+Auf unserem lokalen Rechner haben wir uns entschieden, Docker zur Verwaltung von Diensten zu verwenden. Die generierte ``compose.yml``-Datei beinhaltet bereits PostgreSQL als Dienst:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -109,7 +109,7 @@ Dank dieser Konventionen ist der Zugriff auf die Datenbank via ``symfony run`` v
 
 .. note::
 
-    Wenn Du die ``psql`` Binärdatei nicht auf Deinem lokalen Host hast, kannst Du sie auch über ``docker-compose`` laufen lassen:
+    Wenn Du die ``psql`` Binärdatei nicht auf Deinem lokalen Host hast, kannst Du sie auch über ``docker compose`` laufen lassen:
 
     .. code-block:: terminal
         :class: ignore
@@ -144,7 +144,7 @@ PostgreSQL zu Platform.sh hinzufügen
 .. index::
     single: Platform.sh;PostgreSQL
 
-Für die Produktiv-Infrastruktur auf Platform.sh sollte das Hinzufügen eines Dienstes wie PostgreSQL in der ``.symfony/services.yaml``-Datei erfolgen, das wurde bereits durch das Recipe vom ``webapp``-Paket gemacht:
+Für die Produktiv-Infrastruktur auf Platform.sh sollte das Hinzufügen eines Dienstes wie PostgreSQL in der ``.platform/services.yaml``-Datei erfolgen, das wurde bereits durch das Recipe vom ``webapp``-Paket gemacht:
 
 .. code-block:: yaml
     :caption: .platform/services.yaml

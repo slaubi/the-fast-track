@@ -636,7 +636,7 @@ Committe und Deploye:
 
     $ git add .
     $ git commit -a -m'Add the SPA application'
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Greife in einem Browser auf die SPA zu, indem Du die Anwendung als Flag angibst:
 

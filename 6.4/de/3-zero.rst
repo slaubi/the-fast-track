@@ -150,7 +150,7 @@ Der Weg zum Produktivsystem
 
 .. index::
     single: Symfony CLI;cloud:project:create
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Zeit zu deployen?
 
@@ -170,7 +170,7 @@ Dann deploye:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Der Code wird durch das Pushen des Git-Repository bereitgestellt. Nach der Ausführung des Befehls hat das Projekt einen bestimmten Domainnamen, mit dem Du darauf zugreifen kannst.
 

@@ -86,7 +86,7 @@ Commit und deploye wie üblich:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: Weiterführendes
 

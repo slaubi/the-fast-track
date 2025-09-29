@@ -82,7 +82,7 @@ Wir werden kein spezielles System zur Erstellung von Admin-Konten entwickeln. Au
 .. index::
     single: Command;security:hash-password
 
-Wähle ``App\Entity\Admin`` mit einem beliebigen Passwort und führe den folgenden Befehl aus, um den Passwort-Hash zu generieren:
+Wähle ein beliebiges Passwort und führe den folgenden Befehl aus, um den Passwort-Hash zu generieren:
 
 .. code-block:: terminal
     :class: answers(admin)
@@ -139,14 +139,14 @@ Die Sicherheits-Authentifizierung konfigurieren
 
 Jetzt, da wir eine*n Admin-Benutzer*in haben, können wir das Admin-Backend absichern. Symfony unterstützt mehrere Authentifizierungsstrategien. Lass uns ein klassisches und verbreitetes *Formular-Authentifizierungssystem* verwenden.
 
-Führe den ``make:auth``-Befehl aus, um die Sicherheitskonfiguration zu aktualisieren, ein Login-Template zu generieren und einen *Authentifikator* zu erstellen.
+Führe den Befehl ``make:security:form-login`` aus, um die Sicherheitskonfiguration zu aktualisieren, ein Login-Template zu generieren und einen *Authentifikator* zu erstellen.
 
 .. code-block:: terminal
     :class: answers(SecurityController||yes)
 
     $ symfony console make:security:form-login
 
-Wähle ``1``, um einen Login-Formular-Authentifikator zu generieren, benenne die Authentifikatorklasse ``AppAuthenticator``, den Controller ``SecurityController`` und generiere eine ``/logout``-URL (``yes``).
+Benenne den Controller ``SecurityController`` und generiere eine ``/logout``-URL (``yes``).
 
 Der Befehl hat die Sicherheitskonfiguration aktualisiert, um die generierten Klassen zu verbinden:
 
