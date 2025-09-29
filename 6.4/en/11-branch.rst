@@ -127,7 +127,7 @@ Now, let's create a *Platform.sh environment* based on the *Git branch*:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 This command creates a new environment as follows:
 
@@ -222,7 +222,7 @@ And deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 When deploying, only the code and infrastructure changes are pushed to Platform.sh; the data are not affected in any way.
 

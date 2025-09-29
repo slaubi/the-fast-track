@@ -150,7 +150,7 @@ Going to Production
 
 .. index::
     single: Symfony CLI;cloud:project:create
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Deploy time?
 
@@ -170,7 +170,7 @@ Then, deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 The code is deployed by pushing the Git repository. At the end of the command, the project will have a specific domain name you can use to access it.
 
