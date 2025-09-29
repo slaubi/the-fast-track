@@ -86,7 +86,7 @@ Facciamo un commit e rilasciamo il codice come sempre:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: Andare oltre
 

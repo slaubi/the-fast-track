@@ -150,7 +150,7 @@ Andare in produzione
 
 .. index::
     single: Symfony CLI;cloud:project:create
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 È ora di un deploy?
 
@@ -170,7 +170,7 @@ Poi, fare un deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Il deploy avviene automaticamente dopo il push nel repository. Alla fine del comando, il progetto avrà un nome di dominio specifico a cui accedere.
 

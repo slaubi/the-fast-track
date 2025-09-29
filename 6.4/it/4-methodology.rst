@@ -41,17 +41,17 @@ Potrebbe essere utile effettuare il push del nostro repository su un server da q
 
 .. note::
 
-    Eseguendo il deploy su Platform.sh, abbiamo già una copia del repository poiché Platform.sh usa Git dietro le quinte quando si lancia il comando ``cloud:deploy``. Non dovremmo fare affidamento sul repository Git di Platform.sh: infatti il suo scopo è solo per i deploy, non è un backup.
+    If you are deploying on Platform.sh, you already have a copy of the Git repository as Platform.sh uses Git behind the scenes when you are using ``cloud:push``. But you should not rely on the Platform.sh Git repository. It is only for deployment usage. It is not a backup.
 
 Continuous deploy in produzione
 -------------------------------
 
 .. index::
-    single: Symfony CLI;cloud:deploy
+    single: Symfony CLI;cloud:push
 
 Un'altra buona abitudine è quella di effettuare dei deploy frequentemente. Fare deploy alla fine di ogni passo è considerato una buona prassi:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push

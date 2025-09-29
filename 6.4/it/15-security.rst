@@ -82,7 +82,7 @@ Non svilupperemo un sistema dedicato per la creazione di account amministrativi.
 .. index::
     single: Command;security:hash-password
 
-Selezionare ``App\Entity\Admin`` e scegliere la password desiderata, poi lanciare il seguente comando per generare l'hash della password:
+Scegliere la password desiderata, poi lanciare il seguente comando per generare l'hash della password:
 
 .. code-block:: terminal
     :class: answers(admin)
@@ -139,14 +139,14 @@ Configurare l'autenticazione
 
 Ora che abbiamo un utente amministratore, possiamo proteggere il pannello amministrativo. Symfony supporta diverse strategie di autenticazione. Usiamo il classico e popolare *sistema di autenticazione con form*.
 
-Eseguire il comando ``make:auth`` per aggiornare la configurazione, generare un template per il login e creare un *authenticator*:
+Eseguire il comando ``make:security:form-login`` per aggiornare la configurazione, generare un template per il login e creare un *authenticator*:
 
 .. code-block:: terminal
     :class: answers(SecurityController||yes)
 
     $ symfony console make:security:form-login
 
-Selezionare ``1`` per generare un'autenticazione con form, chiamare la classe authenticator ``AppAuthenticator``, il controller ``SecurityController``, e generare un URL ``/logout`` (``yes``).
+Chiamare il controller ``SecurityController`` e generare un URL ``/logout`` (``yes``).
 
 Il comando ha aggiornato la configurazione di sicurezza per collegare le classi generate:
 

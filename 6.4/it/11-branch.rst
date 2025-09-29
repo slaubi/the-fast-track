@@ -127,7 +127,7 @@ Ora, creiamo un *ambiente Platform.sh* a partire dal *branch*:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Con il seguente comando creeremo un nuovo ambiente:
 
@@ -222,7 +222,7 @@ E ora effettuiamo il deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Quando effettuiamo un deploy, solo il codice e le modifiche all'infrastruttura vengono inviate su Platform.sh; i dati non vengono alterati in alcun modo.
 
