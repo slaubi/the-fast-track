@@ -16,14 +16,11 @@ To use RabbitMQ instead of PostgreSQL as a message broker:
 
     --- i/config/packages/messenger.yaml
     +++ w/config/packages/messenger.yaml
-    @@ -5,10 +5,7 @@ framework:
+    @@ -5,7 +5,7 @@ framework:
              transports:
                  # https://symfony.com/doc/current/messenger.html#transport-configuration
                  async:
     -                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-    -                options:
-    -                    use_notify: true
-    -                    check_delayed_interval: 60000
     +                dsn: '%env(RABBITMQ_URL)%'
                      retry_strategy:
                          max_retries: 3
