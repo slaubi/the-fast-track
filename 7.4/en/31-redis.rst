@@ -61,14 +61,11 @@ Here is how you can add Redis to your project in one patch:
        database_data:
     --- i/config/packages/framework.yaml
     +++ w/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
+    @@ -4,3 +4,3 @@ framework:
+         # Note that the session will be started ONLY if you read or write from it.
          session:
     -        handler_id: '%env(resolve:DATABASE_URL)%'
     +        handler_id: '%env(REDIS_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
 
 Isn't it *beautiful*?
 
