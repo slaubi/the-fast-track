@@ -313,7 +313,7 @@ Try adding more conferences in the backend and change the city or the year of an
     single: Twig;path
     single: Attributes;Route
 
-The last change is to update the controllers and the templates to use the conference ``slug`` instead of the conference ``id`` for routes:
+The last change is to update the controllers and the templates to use the conference ``slug`` instead of the conference ``id`` for routes. As the route parameter is no longer the entity primary key, tell ``#[MapEntity]`` which property to match by passing an explicit ``mapping``:
 
 .. code-block:: diff
     :caption: patch_file
@@ -325,8 +325,9 @@ The last change is to update the controllers and the templates to use the confer
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
+    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
     --- i/templates/base.html.twig

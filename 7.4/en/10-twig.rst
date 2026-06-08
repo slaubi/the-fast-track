@@ -136,22 +136,23 @@ Add a ``show()`` method in ``src/Controller/ConferenceController.php``:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -2,6 +2,8 @@
+    @@ -2,6 +2,9 @@
 
      namespace App\Controller;
 
     +use App\Entity\Conference;
     +use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+    +use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -17,4 +19,13 @@ final class ConferenceController extends AbstractController
+    @@ -17,4 +20,13 @@ final class ConferenceController extends AbstractController
                  'conferences' => $conferenceRepository->findAll(),
              ]));
          }
     +
     +    #[Route('/conference/{id}', name: 'conference')]
-    +    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    {
     +        return new Response($twig->render('conference/show.html.twig', [
     +            'conference' => $conference,
@@ -160,7 +161,7 @@ Add a ``show()`` method in ``src/Controller/ConferenceController.php``:
     +    }
      }
 
-This method has a special behavior we have not seen yet. We ask for a ``Conference`` instance to be injected in the method. But there may be many of these in the database. Symfony is able to determine which one you want based on the ``{id}`` passed in the request path (``id`` being the primary key of the ``conference`` table in the database).
+This method has a special behavior we have not seen yet. We ask for a ``Conference`` instance to be injected in the method. But there may be many of these in the database. The ``#[MapEntity]`` attribute tells Symfony to fetch the right one based on the ``{id}`` passed in the request path (``id`` being the primary key of the ``conference`` table in the database).
 
 Retrieving the comments related to the conference can be done via the ``findBy()`` method which takes a criteria as a first argument.
 
@@ -333,20 +334,21 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -6,6 +6,7 @@ use App\Entity\Conference;
+    @@ -6,7 +6,8 @@ use App\Entity\Conference;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
-    @@ -21,11 +22,16 @@ final class ConferenceController extends AbstractController
+    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
          {
     +        $offset = max(0, $request->query->getInt('offset', 0));
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
@@ -441,8 +443,8 @@ You might have noticed that both methods in ``ConferenceController`` take a Twig
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);

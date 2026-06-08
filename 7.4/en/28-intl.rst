@@ -99,7 +99,7 @@ Add the same locale route prefix to the other URLs:
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,7 +43,7 @@ final class ConferenceController extends AbstractController
+    @@ -43,8 +43,8 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
@@ -107,6 +107,7 @@ Add the same locale route prefix to the other URLs:
     +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
          public function show(
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
 
 We are almost done. We don't have a route that matches ``/`` anymore. Let's add it back and make it redirect to ``/en/``:
