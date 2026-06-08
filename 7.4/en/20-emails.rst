@@ -155,15 +155,27 @@ Define the domain name and scheme to use explicitly:
 
     --- i/config/services.yaml
     +++ w/config/services.yaml
-    @@ -7,6 +7,8 @@ parameters:
+    @@ -7,6 +7,7 @@ parameters:
          photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
     +    default_base_url: 'http://127.0.0.1'
-    +    router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
      services:
          # default configuration for services in *this* file
+
+Then tell the router to use it as the default URI when generating URLs outside of an HTTP request:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/routing.yaml
+    +++ w/config/packages/routing.yaml
+    @@ -3,3 +3,3 @@ framework:
+             # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+             # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+    -        default_uri: '%env(DEFAULT_URI)%'
+    +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
 The ``SYMFONY_DEFAULT_ROUTE_URL`` environment variable is automatically set locally when using the ``symfony`` CLI and determined based on the configuration on Platform.sh.
 
