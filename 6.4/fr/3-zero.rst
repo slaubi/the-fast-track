@@ -170,7 +170,7 @@ Puis, déployez :
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Le code est déployé en pushant le dépôt Git. À la fin de la commande, le projet sera accessible par un nom de domaine précis.
 

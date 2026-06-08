@@ -191,7 +191,7 @@ Usarlo per la cartella di caricamento delle foto:
          "/var/cache": { source: local, source_path: var/cache }
     -    "/public/uploads": { source: local, source_path: uploads }
     +    "/public/uploads": { source: service, service: files, source_path: uploads }
-         
+
 
      relationships:
 

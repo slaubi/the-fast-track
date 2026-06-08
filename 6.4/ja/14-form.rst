@@ -503,7 +503,7 @@ Symfony プロジェクトにおいて全てが読み取り権限のみという
      mounts:
          "/var/cache": { source: local, source_path: var/cache }
     +    "/public/uploads": { source: local, source_path: uploads }
-         
+
 
      relationships:
 

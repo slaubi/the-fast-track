@@ -28,13 +28,13 @@ So kannst Du Redis auf einen Schlag zu deinem Projekt hinzufügen:
     +        - redis
              - sodium
              - xsl
-             
+
     @@ -36,6 +37,7 @@ mounts:
 
      relationships:
          database: "database:postgresql"
     +    redis: "rediscache:redis"
-         
+
      hooks:
          build: |
     --- i/.platform/services.yaml

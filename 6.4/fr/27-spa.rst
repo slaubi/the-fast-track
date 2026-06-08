@@ -636,7 +636,7 @@ Commitez et déployez :
 
     $ git add .
     $ git commit -a -m'Add the SPA application'
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Accédez à la SPA dans un navigateur en spécifiant l'application comme option :
 
