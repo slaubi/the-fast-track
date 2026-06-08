@@ -61,10 +61,9 @@ As we will use the same requirement in almost all routes, let's move it to a con
 
     --- i/config/services.yaml
     +++ w/config/services.yaml
-    @@ -9,6 +9,7 @@ parameters:
+    @@ -9,5 +9,6 @@ parameters:
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
          default_base_url: 'http://127.0.0.1'
-         router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
     +    app.supported_locales: 'en|fr'
 
      services:
