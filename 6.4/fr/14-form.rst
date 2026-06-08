@@ -503,7 +503,7 @@ Créez un nouveau montage pour les photos uploadées :
      mounts:
          "/var/cache": { source: local, source_path: var/cache }
     +    "/public/uploads": { source: local, source_path: uploads }
-         
+
 
      relationships:
 

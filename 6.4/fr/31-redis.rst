@@ -28,13 +28,13 @@ Voici comment vous pouvez ajouter Redis à votre projet en un seul patch :
     +        - redis
              - sodium
              - xsl
-             
+
     @@ -36,6 +37,7 @@ mounts:
 
      relationships:
          database: "database:postgresql"
     +    redis: "rediscache:redis"
-         
+
      hooks:
          build: |
     --- i/.platform/services.yaml
@@ -86,7 +86,7 @@ Commitez et déployez comme d'habitude :
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: Aller plus loin
 

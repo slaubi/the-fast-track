@@ -503,7 +503,7 @@ Creiamo un nuovo mount per le foto caricate:
      mounts:
          "/var/cache": { source: local, source_path: var/cache }
     +    "/public/uploads": { source: local, source_path: uploads }
-         
+
 
      relationships:
 

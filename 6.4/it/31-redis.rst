@@ -28,13 +28,13 @@ Qui è dove possiamo aggiungere Redis al progetto in un sol colpo:
     +        - redis
              - sodium
              - xsl
-             
+
     @@ -36,6 +37,7 @@ mounts:
 
      relationships:
          database: "database:postgresql"
     +    redis: "rediscache:redis"
-         
+
      hooks:
          build: |
     --- i/.platform/services.yaml
