@@ -130,7 +130,7 @@ Reference it in the web container configuration as well and enable the ``amqp`` 
 
     --- i/.platform.app.yaml
     +++ w/.platform.app.yaml
-    @@ -4,6 +4,7 @@ type: php:8.3
+    @@ -4,6 +4,7 @@ type: php:8.5
 
      runtime:
          extensions:
