@@ -113,7 +113,7 @@ Adding RabbitMQ to the production servers can be done by adding it to the list o
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -25,6 +25,11 @@ services:
+    @@ -25,4 +25,9 @@ services:
              rediscache:
                  type: redis:8.0
 
@@ -139,7 +139,7 @@ Reference it in the web container configuration as well and enable the ``amqp`` 
                      - apcu
                      - blackfire
                      - ctype
-    @@ -72,6 +73,7 @@ applications:
+    @@ -72,5 +73,6 @@ applications:
              relationships:
                  database: "database:postgresql"
                  redis: "rediscache:redis"
