@@ -46,11 +46,11 @@ As you might have guessed, we also need to add RabbitMQ to the Docker Compose st
     --- i/compose.yaml
     +++ w/compose.yaml
     @@ -18,6 +18,10 @@ services:
-         image: redis:5-alpine
+         image: redis:8.0-alpine
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3-management
+    +    image: rabbitmq:4.2-management
     +    ports: [5672, 15672]
     +
      volumes:
@@ -116,10 +116,10 @@ Adding RabbitMQ to the production servers can be done by adding it to the list o
     @@ -19,3 +19,8 @@ files:
 
      rediscache:
-         type: redis:5.0
+         type: redis:8.0
     +
     +queue:
-    +    type: rabbitmq:3.7
+    +    type: rabbitmq:4.2
     +    disk: 1024
     +    size: S
 

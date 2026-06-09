@@ -553,7 +553,7 @@ Add Varnish to the Platform.sh services:
 
 
     +varnish:
-    +    type: varnish:6.0
+    +    type: varnish:7.6
     +    relationships:
     +        application: 'app:http'
     +    configuration:

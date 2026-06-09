@@ -554,7 +554,7 @@ Platform.sh allows deploying multiple applications per project. Adding another a
 
     name: spa
 
-    type: nodejs:18
+    type: nodejs:24
 
     size: S
 
@@ -578,7 +578,7 @@ Platform.sh allows deploying multiple applications per project. Adding another a
 
             curl -fs https://get.symfony.com/cloud/configurator | bash
 
-            NODE_VERSION=18 node-build
+            NODE_VERSION=24 node-build
 
 .. index::
     single: Platform.sh;Routes

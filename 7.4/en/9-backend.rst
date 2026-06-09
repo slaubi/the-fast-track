@@ -23,7 +23,7 @@ Let's add EasyAdmin as a project dependency:
 
 .. code-block:: terminal
 
-    $ symfony composer req "easycorp/easyadmin-bundle:^4"
+    $ symfony composer req "easycorp/easyadmin-bundle:^5"
 
 *Aliases* are not a Composer feature, but a concept provided by Symfony to make your life easier. Aliases are shortcuts for popular Composer packages. Want an ORM for your application? Require ``orm``. Want to develop an API? Require ``api``. These aliases are automatically resolved to one or more regular Composer packages. They are opinionated choices made by the Symfony core team.
 

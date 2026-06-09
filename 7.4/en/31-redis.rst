@@ -45,7 +45,7 @@ Here is how you can add Redis to your project in one patch:
          disk: 256
     +
     +rediscache:
-    +    type: redis:5.0
+    +    type: redis:8.0
     --- i/compose.yaml
     +++ w/compose.yaml
     @@ -14,6 +14,10 @@ services:
@@ -53,7 +53,7 @@ Here is how you can add Redis to your project in one patch:
      ###< doctrine/doctrine-bundle ###
 
     +  redis:
-    +    image: redis:5-alpine
+    +    image: redis:8.0-alpine
     +    ports: [6379]
     +
      volumes:

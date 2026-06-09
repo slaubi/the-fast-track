@@ -63,7 +63,7 @@ Image optimizations will be done thanks to `GD`_ (check that your local PHP inst
 
 .. code-block:: terminal
 
-    $ symfony composer req "imagine/imagine:^1.2"
+    $ symfony composer req "imagine/imagine:^1.5"
 
 Resizing an image can be done via the following service class:
 
