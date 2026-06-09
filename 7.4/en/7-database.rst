@@ -139,7 +139,7 @@ And restore the data:
     $ symfony run psql < dump.sql
 
 Adding PostgreSQL to Upsun
---------------------------------
+--------------------------
 
 .. index::
     single: Upsun;PostgreSQL
@@ -180,7 +180,7 @@ Check that the ``pdo_pgsql`` extension is already installed for the PHP runtime:
             # other extensions
 
 Accessing the Upsun Database
-----------------------------------
+----------------------------
 
 PostgreSQL is now running both locally via Docker and in production on Upsun.
 

@@ -153,7 +153,7 @@ Clean up the database by running the command:
     $ symfony console app:comment:cleanup
 
 Setting up a Cron on Upsun
---------------------------------
+--------------------------
 
 .. index::
     single: Upsun;Cron

@@ -501,7 +501,7 @@ Inspect failed messages and retry them via the following commands:
     $ symfony console messenger:failed:retry
 
 Running Workers on Upsun
-------------------------------
+------------------------
 
 .. index::
     single: Upsun;Workers

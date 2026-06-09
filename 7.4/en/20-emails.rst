@@ -382,7 +382,7 @@ Symfony comes with assertions that ease such tests, here is a test example that 
 These assertions work when emails are sent synchronously or asynchronously.
 
 Sending Emails on Upsun
------------------------------
+-----------------------
 
 .. index::
     single: Upsun;Emails
