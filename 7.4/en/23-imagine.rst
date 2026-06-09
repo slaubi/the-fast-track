@@ -186,12 +186,15 @@ Use it for the photos upload directory:
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -54,4 +54,4 @@ applications:
+    @@ -54,7 +54,7 @@ applications:
              mounts:
                  "/var/cache": { source: instance, source_path: var/cache }
                  "/var/share": { source: storage, source_path: var/share }
     -            "/public/uploads": { source: storage, source_path: uploads }
     +            "/public/uploads": { source: service, service: files, source_path: uploads }
+
+
+             relationships:
 
 This should be enough to make the feature work in production.
 
