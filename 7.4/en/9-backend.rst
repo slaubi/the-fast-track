@@ -53,17 +53,15 @@ Accepting the default answers creates the following controller:
 
     namespace App\Controller\Admin;
 
+    use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
     use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Attribute\Route;
 
+    #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
     class DashboardController extends AbstractDashboardController
     {
-        /**
-         * @Route("/admin", name="admin")
-         */
         public function index(): Response
         {
             return parent::index();
@@ -78,13 +76,13 @@ Accepting the default answers creates the following controller:
         public function configureMenuItems(): iterable
         {
             yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-            // yield MenuItem::linkToCrud('The Label', 'icon class', EntityClass::class);
+            // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
         }
     }
 
 By convention, all admin controllers are stored under their own ``App\Controller\Admin`` namespace.
 
-Access the generated admin backend at ``/admin`` as configured by the ``index()`` method; you can change the URL to anything you like:
+Access the generated admin backend at ``/admin`` as configured by the ``#[AdminDashboard]`` attribute; you can change the URL to anything you like:
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -165,7 +163,7 @@ The last step is to link the conference and comment admin CRUDs to the dashboard
          public function configureMenuItems(): iterable
          {
     -        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-    -        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+    -        // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
     +        yield MenuItem::linkToRoute('Back to the website', 'fas fa-home', 'homepage');
     +        yield MenuItem::linkToCrud('Conferences', 'fas fa-map-marker-alt', Conference::class);
     +        yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comment::class);
