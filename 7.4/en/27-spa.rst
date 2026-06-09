@@ -546,7 +546,11 @@ Deploying the SPA to Production
 .. index::
     single: Upsun;Multi-Applications
 
-Upsun allows deploying multiple applications per project. Add a second application named ``spa``, rooted in the ``spa/`` directory, to ``.upsun/config.yaml``:
+Upsun allows deploying multiple applications per project. Move back to the project root and add a second application named ``spa``, rooted in the ``spa/`` directory, to ``.upsun/config.yaml``:
+
+.. code-block:: terminal
+
+    $ cd ../
 
 .. code-block:: diff
     :caption: patch_file
@@ -595,10 +599,6 @@ Upsun allows deploying multiple applications per project. Add a second applicati
     single: Upsun;Routes
 
 Edit the ``.upsun/config.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application:
-
-.. code-block:: terminal
-
-    $ cd ../
 
 .. code-block:: diff
     :caption: patch_file
