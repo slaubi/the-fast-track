@@ -553,11 +553,10 @@ Upsun allows deploying multiple applications per project. Add a second applicati
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -97,3 +97,33 @@ applications:
-                     commands:
-                         # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
-                         start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
-    +
+    @@ -20,6 +20,36 @@ services:
+             disk: 256
+
+     applications:
     +    spa:
     +        source:
     +            root: "/spa"
@@ -587,6 +586,10 @@ Upsun allows deploying multiple applications per project. Add a second applicati
     +                curl -fs https://get.symfony.com/cloud/configurator | bash
     +
     +                NODE_VERSION=24 node-build
+    +
+         app:
+             source:
+                 root: "/"
 
 .. index::
     single: Upsun;Routes
