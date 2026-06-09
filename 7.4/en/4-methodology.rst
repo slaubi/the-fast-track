@@ -41,7 +41,7 @@ It could be nice to push your repository to a server somewhere. GitHub, GitLab, 
 
 .. note::
 
-    If you are deploying on Platform.sh, you already have a copy of the Git repository as Platform.sh uses Git behind the scenes when you are using ``cloud:push``. But you should not rely on the Platform.sh Git repository. It is only for deployment usage. It is not a backup.
+    If you are deploying on Upsun, you already have a copy of the Git repository as Upsun uses Git behind the scenes when you are using ``cloud:push``. But you should not rely on the Upsun Git repository. It is only for deployment usage. It is not a backup.
 
 Deploying to Production Continuously
 ------------------------------------

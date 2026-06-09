@@ -132,18 +132,18 @@ Preparing for Production
 ------------------------
 
 .. index::
-    single: Platform.sh;Initialization
+    single: Upsun;Initialization
 
 What about deploying our work to production? I know, we don't even have a proper HTML page yet to welcome our users. But being able to see the little "under construction" image on a production server would be a great step forward. And you know the motto: *deploy early and often*.
 
 You can host this application on any provider supporting PHP... which means almost all hosting providers out there. Check a few things though: we want the latest PHP version and the possibility to host services like a database, a queue, and some more.
 
-I have made my choice, it's going to be `Platform.sh`_. It provides everything we need and it helps fund the development of Symfony.
+I have made my choice, it's going to be `Upsun`_. It provides everything we need and it helps fund the development of Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-As we used the ``--cloud`` option when we created the project, Platform.sh has already been initialized with a few files needed by Platform.sh, namely ``.platform/services.yaml``, ``.platform/routes.yaml``, and ``.platform.app.yaml``.
+As we used the ``--upsun`` option when we created the project, Upsun has already been initialized with the single configuration file it needs, namely ``.upsun/config.yaml``.
 
 Going to Production
 -------------------
@@ -154,7 +154,7 @@ Going to Production
 
 Deploy time?
 
-Create a new remote Platform.sh project:
+Create a new remote Upsun project:
 
 .. code-block:: terminal
 
@@ -162,9 +162,9 @@ Create a new remote Platform.sh project:
 
 This command does a lot:
 
-* The first time you launch this command, authenticate with your Platform.sh credentials if not done already.
+* The first time you launch this command, authenticate with your Upsun credentials if not done already.
 
-* It provisions a new project on Platform.sh (you get 30 days *for free* on the first project you create).
+* It provisions a new project on Upsun (you get 30 days *for free* on the first project you create).
 
 Then, deploy:
 
@@ -186,14 +186,14 @@ Check that everything worked fine:
 
 You should get a 404, but browsing to ``/images/under-construction.gif`` should reveal our work.
 
-Note that you don't get the beautiful default Symfony page on Platform.sh. Why? You will learn soon that Symfony supports several environments and Platform.sh automatically deployed the code in the production environment.
+Note that you don't get the beautiful default Symfony page on Upsun. Why? You will learn soon that Symfony supports several environments and Upsun automatically deployed the code in the production environment.
 
 .. index::
     single: Symfony CLI;cloud:project:delete
 
 .. tip::
 
-    If you want to delete the project on Platform.sh, use the ``cloud:project:delete`` command.
+    If you want to delete the project on Upsun, use the ``cloud:project:delete`` command.
 
 .. sidebar:: Going Further
 
@@ -201,12 +201,12 @@ Note that you don't get the beautiful default Symfony page on Platform.sh. Why? 
 
     * The `Symfony Local Web Server`_;
 
-    * The `Platform.sh documentation`_.
+    * The `Upsun documentation`_.
 
 .. _`the one`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`project skeleton`: https://github.com/symfony/skeleton
-.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`official Symfony recipes`: https://github.com/symfony/recipes
 .. _`recipes contributed by the community`: https://github.com/symfony/recipes-contrib
 .. _`Symfony Local Web Server`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Platform.sh documentation`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun documentation`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

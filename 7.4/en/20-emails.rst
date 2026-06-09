@@ -177,7 +177,7 @@ Then tell the router to use it as the default URI when generating URLs outside o
     -        default_uri: '%env(DEFAULT_URI)%'
     +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
-The ``SYMFONY_DEFAULT_ROUTE_URL`` environment variable is automatically set locally when using the ``symfony`` CLI and determined based on the configuration on Platform.sh.
+The ``SYMFONY_DEFAULT_ROUTE_URL`` environment variable is automatically set locally when using the ``symfony`` CLI and determined based on the configuration on Upsun.
 
 Wiring a Route to a Controller
 ------------------------------
@@ -381,16 +381,16 @@ Symfony comes with assertions that ease such tests, here is a test example that 
 
 These assertions work when emails are sent synchronously or asynchronously.
 
-Sending Emails on Platform.sh
+Sending Emails on Upsun
 -----------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-There is no specific configuration for Platform.sh. All accounts come with a SendGrid account that is automatically used to send emails.
+There is no specific configuration for Upsun. All accounts come with a SendGrid account that is automatically used to send emails.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -413,11 +413,11 @@ There is no specific configuration for Platform.sh. All accounts come with a Sen
 
     * The `Symfony Framework Mailer documentation`_;
 
-    * The `Platform.sh documentation about Emails`_.
+    * The `Upsun documentation about Emails`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`SymfonyCasts Mailer tutorial`: https://symfonycasts.com/screencast/mailer
 .. _`Inky templating language docs`: https://get.foundation/emails/docs/inky.html
 .. _`Environment Variable Processors`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Symfony Framework Mailer documentation`: https://symfony.com/doc/current/mailer.html
-.. _`Platform.sh documentation about Emails`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Upsun documentation about Emails`: https://symfony.com/doc/current/cloud/services/emails.html

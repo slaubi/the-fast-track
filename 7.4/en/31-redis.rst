@@ -14,38 +14,39 @@ Here is how you can add Redis to your project in one patch:
     single: Session;Redis
     single: Redis
     single: Docker;Redis
-    single: Platform.sh;Redis
+    single: Upsun;Redis
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -10,6 +10,7 @@ runtime:
-             - iconv
-             - mbstring
-             - pdo_pgsql
-    +        - redis
-             - sodium
-             - xsl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -37,6 +37,7 @@ applications:
+                     - iconv
+                     - mbstring
+                     - pdo_pgsql
+    +                - redis
+                     - sodium
+                     - xsl
 
-    @@ -36,6 +37,7 @@ mounts:
+    @@ -62,6 +63,7 @@ applications:
 
-     relationships:
-         database: "database:postgresql"
-    +    redis: "rediscache:redis"
+             relationships:
+                 database: "database:postgresql"
+    +            redis: "rediscache:redis"
 
-     hooks:
-         build: |
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -16,3 +16,6 @@ varnish:
-     files:
-         type: network-storage:2.0
-         disk: 256
+             hooks:
+                 build: |
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -22,6 +22,9 @@ services:
+                 type: network-storage:2.0
+                 disk: 256
+
+    +    rediscache:
+    +        type: redis:8.0
     +
-    +rediscache:
-    +    type: redis:8.0
+     applications:
     --- i/compose.yaml
     +++ w/compose.yaml
     @@ -14,6 +14,10 @@ services:

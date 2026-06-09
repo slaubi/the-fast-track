@@ -171,7 +171,7 @@ The generated login form is now styled as well as the Maker bundle uses Bootstra
     :align: center
     :figclass: with-browser
 
-For production, Platform.sh automatically detects that you are using Encore and compiles the assets for you during the build phase.
+For production, Upsun automatically detects that you are using Encore and compiles the assets for you during the build phase.
 
 .. sidebar:: Going Further
 

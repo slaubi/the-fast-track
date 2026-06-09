@@ -160,40 +160,38 @@ Storing Uploaded Data in Production
 -----------------------------------
 
 .. index::
-    single: Platform.sh;File Service
+    single: Upsun;File Service
 
-We have already defined a special read-write directory for uploaded files in ``.platform.app.yaml``. But the mount is local. If we want the web container and the message consumer worker to be able to access the same mount, we need to create a *file service*:
+We have already defined a special read-write directory for uploaded files in ``.upsun/config.yaml``. But the mount is local to the application container. If we want the web container and the message consumer worker to be able to access the same mount, we need to create a *file service*:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -12,3 +12,7 @@ varnish:
-             vcl: !include
-                 type: string
-                 path: config.vcl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -15,6 +15,10 @@ services:
+                     type: string
+                     path: config.vcl
+
+    +    files:
+    +        type: network-storage:2.0
+    +        disk: 256
     +
-    +files:
-    +    type: network-storage:2.0
-    +    disk: 256
+     applications:
 
 Use it for the photos upload directory:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -31,7 +31,7 @@ web:
-
-     mounts:
-         "/var/cache": { source: local, source_path: var/cache }
-    -    "/public/uploads": { source: local, source_path: uploads }
-    +    "/public/uploads": { source: service, service: files, source_path: uploads }
-
-
-     relationships:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -54,4 +54,4 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    -            "/public/uploads": { source: storage, source_path: uploads }
+    +            "/public/uploads": { source: service, service: files, source_path: uploads }
 
 This should be enough to make the feature work in production.
 

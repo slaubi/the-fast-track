@@ -544,46 +544,54 @@ Deploying the SPA to Production
 -------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh allows deploying multiple applications per project. Adding another application can be done by creating a ``.platform.app.yaml`` file in any sub-directory. Create one under ``spa/`` named ``spa``:
+Upsun allows deploying multiple applications per project. Add a second application named ``spa``, rooted in the ``spa/`` directory, to ``.upsun/config.yaml``:
 
-.. code-block:: yaml
-    :caption: .platform.app.yaml
-    :emphasize-lines: 1
+.. code-block:: diff
+    :caption: patch_file
 
-    name: spa
-
-    type: nodejs:24
-
-    size: S
-
-    build:
-        flavor: none
-
-    web:
-        commands:
-            start: sleep
-        locations:
-            "/":
-                root: "public"
-                index:
-                    - "index.html"
-                scripts: false
-                expires: 10m
-
-    hooks:
-        build: |
-            set -x -e
-
-            curl -fs https://get.symfony.com/cloud/configurator | bash
-
-            NODE_VERSION=24 node-build
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -100,3 +100,33 @@ applications:
+                     commands:
+                         # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+                         start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+    +
+    +    spa:
+    +        source:
+    +            root: "/spa"
+    +
+    +        type: nodejs:24
+    +
+    +        size: S
+    +
+    +        build:
+    +            flavor: none
+    +
+    +        web:
+    +            commands:
+    +                start: sleep
+    +            locations:
+    +                "/":
+    +                    root: "public"
+    +                    index:
+    +                        - "index.html"
+    +                    scripts: false
+    +                    expires: 10m
+    +
+    +        hooks:
+    +            build: |
+    +                set -x -e
+    +
+    +                curl -fs https://get.symfony.com/cloud/configurator | bash
+    +
+    +                NODE_VERSION=24 node-build
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
-Edit the ``.platform/routes.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application stored in the project root directory:
+Edit the ``.upsun/config.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application:
 
 .. code-block:: terminal
 
@@ -591,16 +599,18 @@ Edit the ``.platform/routes.yaml`` file to route the ``spa.`` subdomain to the `
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 4,5
+    :emphasize-lines: 5,6
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
-    @@ -1,2 +1,5 @@
-     "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -2,6 +2,9 @@ routes:
+         "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
+
+    +    "https://spa.{all}/": { type: upstream, upstream: "spa:http" }
+    +    "http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
     +
-    +"https://spa.{all}/": { type: upstream, upstream: "spa:http" }
-    +"http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
+     services:
 
 Configuring CORS for the SPA
 ----------------------------

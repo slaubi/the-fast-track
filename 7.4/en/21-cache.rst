@@ -536,50 +536,53 @@ Configuring a Reverse Proxy Cache on Production
 
 .. index::
     single: HTTP Cache;Varnish
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 Instead of using the Symfony reverse proxy in production, we are going to use the "more robust" Varnish reverse proxy.
 
-Add Varnish to the Platform.sh services:
+Add Varnish to the Upsun services:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -4,3 +4,11 @@ database:
-         disk: 1024
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -6,6 +6,15 @@ services:
+         database:
+             type: postgresql:16
 
-
-    +varnish:
-    +    type: varnish:7.6
-    +    relationships:
-    +        application: 'app:http'
-    +    configuration:
-    +        vcl: !include
-    +            type: string
-    +            path: config.vcl
+    +    varnish:
+    +        type: varnish:7.6
+    +        relationships:
+    +            application: 'app:http'
+    +        configuration:
+    +            vcl: !include
+    +                type: string
+    +                path: config.vcl
+    +
+     applications:
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Use Varnish as the main entry point in the routes:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
-    @@ -1,2 +1,2 @@
-    -"https://{all}/": { type: upstream, upstream: "app:http" }
-    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -1,5 +1,5 @@
+     routes:
+    -    "https://{all}/": { type: upstream, upstream: "app:http" }
+    +    "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 Finally, create a ``config.vcl`` file to configure Varnish:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -591,7 +594,7 @@ Enabling ESI Support on Varnish
 ESI support on Varnish should be enabled explicitly for each request. To make it universal, Symfony uses the standard ``Surrogate-Capability`` and ``Surrogate-Control`` headers to negotiate ESI support:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -615,8 +618,8 @@ Anyway, let's see how to configure Varnish for cache invalidation:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/config.vcl
-    +++ w/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();
@@ -653,7 +656,7 @@ The URLs looks a bit strange because the URLs returned by ``env:url`` already en
 
     * `HTTP cache validation model`_;
 
-    * `HTTP Cache in Platform.sh`_.
+    * `HTTP Cache in Upsun`_.
 
 .. _`Blackfire`: https://blackfire.io/
 .. _`Varnish docs`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
@@ -663,4 +666,4 @@ The URLs looks a bit strange because the URLs returned by ``env:url`` already en
 .. _`ESI specification`: https://www.w3.org/TR/esi-lang
 .. _`ESI developer resources`: https://www.akamai.com/us/en/support/esi.jsp
 .. _`HTTP cache validation model`: https://symfony.com/doc/current/http_cache/validation.html
-.. _`HTTP Cache in Platform.sh`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
+.. _`HTTP Cache in Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html

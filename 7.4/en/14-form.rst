@@ -489,7 +489,7 @@ Don't commit yet! We don't want to store uploaded images in the Git repository. 
 Storing Uploaded Files on Production Servers
 --------------------------------------------
 
-The last step is to store the uploaded files on production servers. Why would we have to do something special? Because most modern cloud platforms use read-only containers for various reasons. Platform.sh is no exception.
+The last step is to store the uploaded files on production servers. Why would we have to do something special? Because most modern cloud platforms use read-only containers for various reasons. Upsun is no exception.
 
 Not everything is read-only in a Symfony project. We try hard to generate as much cache as possible when building the container (during the cache warmup phase), but Symfony still needs to be able to write somewhere for the user cache, the logs, the sessions if they are stored on the filesystem, and more.
 

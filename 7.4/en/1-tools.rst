@@ -98,7 +98,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Last, but not least, we will use the ``symfony`` CLI to boost our productivity. From the local web server it provides, to full Docker integration and cloud support through Platform.sh, it will be a great time saver.
+Last, but not least, we will use the ``symfony`` CLI to boost our productivity. From the local web server it provides, to full Docker integration and cloud support through Upsun, it will be a great time saver.
 
 Install the `Symfony CLI`_ now.
 

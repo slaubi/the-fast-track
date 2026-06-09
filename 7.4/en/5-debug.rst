@@ -68,7 +68,7 @@ For instance, all debugging tools are enabled in the ``dev`` environment. In the
 
 Switching from one environment to another can be done by changing the ``APP_ENV`` environment variable.
 
-When you deployed to Platform.sh, the environment (stored in ``APP_ENV``) was automatically switched to ``prod``.
+When you deployed to Upsun, the environment (stored in ``APP_ENV``) was automatically switched to ``prod``.
 
 Managing Environment Configurations
 -----------------------------------
@@ -130,8 +130,8 @@ Debugging Production
 --------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 

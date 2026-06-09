@@ -103,7 +103,7 @@ Deploying RabbitMQ
 ------------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Adding RabbitMQ to the production servers can be done by adding it to the list of services:
@@ -111,44 +111,45 @@ Adding RabbitMQ to the production servers can be done by adding it to the list o
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -19,3 +19,8 @@ files:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -25,6 +25,11 @@ services:
+             rediscache:
+                 type: redis:8.0
 
-     rediscache:
-         type: redis:8.0
+    +    queue:
+    +        type: rabbitmq:4.2
+    +        disk: 1024
+    +        size: S
     +
-    +queue:
-    +    type: rabbitmq:4.2
-    +    disk: 1024
-    +    size: S
+     applications:
 
 Reference it in the web container configuration as well and enable the ``amqp`` PHP extension:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -4,6 +4,7 @@ type: php:8.5
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -39,6 +39,7 @@ applications:
 
-     runtime:
-         extensions:
-    +        - amqp
-             - apcu
-             - blackfire
-             - ctype
-    @@ -38,6 +39,7 @@ mounts:
-     relationships:
-         database: "database:postgresql"
-         redis: "rediscache:redis"
-    +    rabbitmq: "queue:rabbitmq"
+             runtime:
+                 extensions:
+    +                - amqp
+                     - apcu
+                     - blackfire
+                     - ctype
+    @@ -72,6 +73,7 @@ applications:
+             relationships:
+                 database: "database:postgresql"
+                 redis: "rediscache:redis"
+    +            rabbitmq: "queue:rabbitmq"
 
-     hooks:
-         build: |
+             hooks:
+                 build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

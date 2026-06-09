@@ -40,7 +40,7 @@ One of the great benefit of using a framework is the small amount of code needed
 
 * 20 lines of development infrastructure configuration (Docker);
 
-* 100 lines of production infrastructure configuration (Platform.sh);
+* 100 lines of production infrastructure configuration (Upsun);
 
 * 5 explicit environment variables.
 

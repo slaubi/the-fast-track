@@ -51,7 +51,7 @@ The needed steps to make it a reality are typical:
 #. Update the PHP configuration if needed (like adding the PostgreSQL PHP
    extension);
 
-#. Update the infrastructure on Docker and Platform.sh if needed (add the PostgreSQL service);
+#. Update the infrastructure on Docker and Upsun if needed (add the PostgreSQL service);
 
 #. Test locally;
 
@@ -98,7 +98,7 @@ Test locally by browsing the website. As there are no visual changes and because
 
 .. note::
 
-    We don't need steps 3 to 5 here as we are re-using the database as the session storage, but the chapter about using Redis shows how straightforward it is to add, test, and deploy a new service in both Docker and Platform.sh.
+    We don't need steps 3 to 5 here as we are re-using the database as the session storage, but the chapter about using Redis shows how straightforward it is to add, test, and deploy a new service in both Docker and Upsun.
 
 Commit your changes to the new branch:
 
@@ -112,7 +112,7 @@ Deploying a Branch
 ------------------
 
 .. index::
-    single: Platform.sh;Environment
+    single: Upsun;Environment
 
 Before deploying to production, we should test the branch on the same infrastructure as the production one. We should also validate that everything works fine for the Symfony ``prod`` environment (the local website used the Symfony ``dev`` environment).
 
@@ -120,7 +120,7 @@ Before deploying to production, we should test the branch on the same infrastruc
     single: Symfony CLI;cloud:env:delete
     single: Symfony CLI;cloud:env:create
 
-Now, let's create a *Platform.sh environment* based on the *Git branch*:
+Now, let's create a *Upsun environment* based on the *Git branch*:
 
 .. code-block:: terminal
     :class: hide
@@ -153,7 +153,7 @@ Once the deployment is finished, open the new branch in a browser:
 
     $ symfony cloud:url -1
 
-Note that all Platform.sh commands work on the current Git branch. This command opens the deployed URL for the ``sessions-in-db`` branch; the URL will look like ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
+Note that all Upsun commands work on the current Git branch. This command opens the deployed URL for the ``sessions-in-db`` branch; the URL will look like ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
 
 Test the website on this new environment, you should see all the data that you created in the master environment.
 
@@ -175,9 +175,9 @@ Debugging Production Deployments before Deploying
 -------------------------------------------------
 
 .. index::
-    single: Platform.sh;Debugging
+    single: Upsun;Debugging
 
-By default, all Platform.sh environments use the same settings as the ``master``/``prod`` environment (aka the Symfony ``prod`` environment). This allows you to test the application in real-life conditions. It gives you the feeling of developing and testing directly on production servers, but without the risks associated with it. This reminds me of the good old days when we were deploying via FTP.
+By default, all Upsun environments use the same settings as the ``master``/``prod`` environment (aka the Symfony ``prod`` environment). This allows you to test the application in real-life conditions. It gives you the feeling of developing and testing directly on production servers, but without the risks associated with it. This reminds me of the good old days when we were deploying via FTP.
 
 .. index::
     single: Symfony CLI;cloud:env:debug
@@ -226,7 +226,7 @@ And deploy:
 
     $ symfony cloud:push
 
-When deploying, only the code and infrastructure changes are pushed to Platform.sh; the data are not affected in any way.
+When deploying, only the code and infrastructure changes are pushed to Upsun; the data are not affected in any way.
 
 Cleaning up
 -----------
@@ -235,7 +235,7 @@ Cleaning up
     single: Symfony CLI;env:delete
     single: Git;branch
 
-Finally, clean up by removing the Git branch and the Platform.sh environment:
+Finally, clean up by removing the Git branch and the Upsun environment:
 
 .. code-block:: terminal
 
