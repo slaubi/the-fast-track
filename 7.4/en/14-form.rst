@@ -493,23 +493,20 @@ The last step is to store the uploaded files on production servers. Why would we
 
 Not everything is read-only in a Symfony project. We try hard to generate as much cache as possible when building the container (during the cache warmup phase), but Symfony still needs to be able to write somewhere for the user cache, the logs, the sessions if they are stored on the filesystem, and more.
 
-Have a look at ``.platform.app.yaml``, there is already a writeable *mount* for the ``var/`` directory. The ``var/`` directory is the only directory where Symfony writes (caches, logs, ...).
+Have a look at ``.upsun/config.yaml``, there is already a writeable *mount* for the ``var/`` directory. The ``var/`` directory is the only directory where Symfony writes (caches, logs, ...).
 
 Let's create a new mount for uploaded photos:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -31,6 +31,7 @@ web:
-
-     mounts:
-         "/var/cache": { source: local, source_path: var/cache }
-    +    "/public/uploads": { source: local, source_path: uploads }
-
-
-     relationships:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -41,3 +41,4 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    +            "/public/uploads": { source: storage, source_path: uploads }
 
 You can now deploy the code and photos will be stored in the ``public/uploads/`` directory like our local version.
 
