@@ -166,7 +166,7 @@ One of the nice things about Upsun is that most of the configuration is stored i
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -83,3 +83,11 @@ applications:
+    @@ -83,5 +83,13 @@ applications:
                      spec: '17,47 * * * *'
                      commands:
                          start: croncape php-session-clean
@@ -178,6 +178,8 @@ One of the nice things about Upsun is that most of the configuration is stored i
     +                        if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
     +                            croncape symfony console app:comment:cleanup
     +                        fi
+
+             workers:
 
 The ``crons`` section defines all cron jobs. Each cron runs according to a ``spec`` schedule.
 

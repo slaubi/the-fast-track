@@ -502,11 +502,14 @@ Let's create a new mount for uploaded photos:
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -41,3 +41,4 @@ applications:
+    @@ -41,6 +41,7 @@ applications:
              mounts:
                  "/var/cache": { source: instance, source_path: var/cache }
                  "/var/share": { source: storage, source_path: var/share }
     +            "/public/uploads": { source: storage, source_path: uploads }
+
+
+             relationships:
 
 You can now deploy the code and photos will be stored in the ``public/uploads/`` directory like our local version.
 
