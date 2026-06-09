@@ -149,30 +149,21 @@ The last step is to link the conference and comment admin CRUDs to the dashboard
 
     --- i/src/Controller/Admin/DashboardController.php
     +++ w/src/Controller/Admin/DashboardController.php
-    @@ -2,6 +2,8 @@
-
-     namespace App\Controller\Admin;
-
-    +use App\Entity\Comment;
-    +use App\Entity\Conference;
-     use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-    @@ -44,7 +46,8 @@ class DashboardController extends AbstractDashboardController
+    @@ -44,7 +44,8 @@ class DashboardController extends AbstractDashboardController
 
          public function configureMenuItems(): iterable
          {
     -        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
     -        // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
     +        yield MenuItem::linkToRoute('Back to the website', 'fas fa-home', 'homepage');
-    +        yield MenuItem::linkToCrud('Conferences', 'fas fa-map-marker-alt', Conference::class);
-    +        yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comment::class);
+    +        yield MenuItem::linkTo(ConferenceCrudController::class, 'Conferences', 'fas fa-map-marker-alt');
+    +        yield MenuItem::linkTo(CommentCrudController::class, 'Comments', 'fas fa-comments');
          }
      }
 
-We have overridden the ``configureMenuItems()`` method to add menu items with relevant icons for conferences and comments and to add a link back to the website home page.
+We have overridden the ``configureMenuItems()`` method to add menu items with relevant icons for conferences and comments and to add a link back to the website home page. The ``ConferenceCrudController`` and ``CommentCrudController`` classes live in the same ``App\Controller\Admin`` namespace as the dashboard, so they need no extra ``use`` statements.
 
-EasyAdmin exposes an API to ease linking to entity CRUDs via the ``MenuItem::linkToRoute()`` method.
+EasyAdmin exposes an API to ease linking to entity CRUDs via the ``MenuItem::linkTo()`` method, which takes the CRUD controller class.
 
 The main dashboard page is empty for now. This is where you can display some statistics, or any relevant information. As we don't have any important to display, let's redirect to the conference list:
 
