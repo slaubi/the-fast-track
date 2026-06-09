@@ -205,8 +205,8 @@ Note that you don't get the beautiful default Symfony page on Upsun. Why? You wi
 
 .. _`the one`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`project skeleton`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://upsun.com/symfony/
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`official Symfony recipes`: https://github.com/symfony/recipes
 .. _`recipes contributed by the community`: https://github.com/symfony/recipes-contrib
 .. _`Symfony Local Web Server`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Upsun documentation`: https://developer.upsun.com/docs/get-started/stacks/symfony/index
+.. _`Upsun documentation`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
