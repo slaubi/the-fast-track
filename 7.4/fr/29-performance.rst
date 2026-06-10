@@ -156,9 +156,9 @@ Configurer Blackfire en production
 ----------------------------------
 
 .. index::
-    single: Platform.sh;Blackfire
+    single: Upsun;Blackfire
 
-Blackfire est inclus par défaut dans tous les projets Platform.sh.
+Blackfire est inclus par défaut dans tous les projets Upsun.
 
 Définissez les informations de connexion du *serveur* comme secrets de **production** :
 
@@ -192,7 +192,7 @@ Configurer Varnish pour Blackfire
 ---------------------------------
 
 .. index::
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
 
 Avant de pouvoir déployer pour commencer le profilage, vous devez trouver un moyen de contourner le cache HTTP de Varnish, sinon Blackfire n'atteindra jamais l'application PHP. Vous n'allez autoriser que les demandes de profil provenant de votre machine locale à ignorer Varnish.
 
@@ -407,7 +407,7 @@ La gestion de la performance ne consiste pas seulement à améliorer la performa
 
 Le scénario décrit dans la section précédente peut être exécuté automatiquement dans un workflow d'intégration continue ou régulièrement en production.
 
-Platform.sh permet également d'`exécuter les scénarios`_ à chaque fois que vous créez une nouvelle branche ou déployez en production pour vérifier automatiquement les performances du nouveau code.
+Upsun permet également d'`exécuter les scénarios`_ à chaque fois que vous créez une nouvelle branche ou déployez en production pour vérifier automatiquement les performances du nouveau code.
 
 .. sidebar:: Aller plus loin
 

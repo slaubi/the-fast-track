@@ -171,7 +171,7 @@ Prenez le temps de découvrir les modifications visuelles. Jetez un coup d'œil 
     :align: center
     :figclass: with-browser
 
-En production, Platform.sh détecte automatiquement que vous utilisez Encore et compile les ressources pour vous pendant la phase de *build*.
+En production, Upsun détecte automatiquement que vous utilisez Encore et compile les ressources pour vous pendant la phase de *build*.
 
 .. sidebar:: Aller plus loin
 

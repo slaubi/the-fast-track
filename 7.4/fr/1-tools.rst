@@ -98,7 +98,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Finalement, nous utiliserons la commande ``symfony`` pour accroître notre productivité. Du serveur web local qu'il fournit à l'intégration complète de Docker, en passant par le support du cloud au travers de Platform.sh, nous gagnerons un temps considérable.
+Finalement, nous utiliserons la commande ``symfony`` pour accroître notre productivité. Du serveur web local qu'il fournit à l'intégration complète de Docker, en passant par le support du cloud au travers d'Upsun, nous gagnerons un temps considérable.
 
 Installez la `commande symfony`_.
 

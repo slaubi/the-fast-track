@@ -500,14 +500,14 @@ Inspectez les messages ayant échoué et relancez-les à l'aide des commandes su
 
     $ symfony console messenger:failed:retry
 
-Exécuter des workers sur Platform.sh
+Exécuter des workers sur Upsun
 -------------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-Pour consommer les messages de PostgreSQL, nous devons exécuter la commande ``messenger:consume`` en continu. Sur Platform.sh, c'est le rôle d'un *worker* :
+Pour consommer les messages de PostgreSQL, nous devons exécuter la commande ``messenger:consume`` en continu. Sur Upsun, c'est le rôle d'un *worker* :
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -520,7 +520,7 @@ Pour consommer les messages de PostgreSQL, nous devons exécuter la commande ``m
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Comme pour la commande ``symfony``, Platform.sh gère les redémarrages et les logs.
+Comme pour la commande ``symfony``, Upsun gère les redémarrages et les logs.
 
 .. index::
     single: Symfony CLI;cloud:logs

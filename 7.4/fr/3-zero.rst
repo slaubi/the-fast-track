@@ -28,7 +28,7 @@ Comme nous créans une application web complète, nous avons ajouté quelques op
 
 * ``--docker`` : Sur votre machine locale, nous utiliserons Docker pour gérer les services comme PostgreSQL. Cette option active Docker de manière à ce que Symfony ajoute de manière automatique les services Docker requis par les paquets installés (un service PostgreSQL quand l'ORM est ajouté ou un intercepteur de mails quand Symfony Mailer est ajouté par exemple).
 
-* ``--cloud`` : Si vous voulez déployer sur Platform.sh, cette option génère automatiquement une configuration pour Platform.sh. Platform.sh est la manière la plus simple de déployer les environnements de test, préprod et production
+* ``--upsun`` : Si vous voulez déployer sur Upsun, cette option génère automatiquement une configuration pour Upsun. Upsun est la manière la plus simple de déployer les environnements de test, préprod et production
 
 Si vous regardez le dépôt GitHub pour le squelette, vous remarquerez qu'il est presque vide : il ne contient qu'un fichier ``composer.json``, mais le répertoire ``guestbook`` est lui plein de fichiers. Comment est-ce possible ? La réponse se trouve dans le paquet ``symfony/flex``. Symfony Flex est un plugin Composer qui se greffe au processus d'installation. Lorsqu'il détecte un paquet pour lequel une *recette* existe, il l'exécute.
 
@@ -132,18 +132,18 @@ Se préparer pour la production
 -------------------------------
 
 .. index::
-    single: Platform.sh;Initialization
+    single: Upsun;Initialization
 
 Qu'en est-il du déploiement de notre travail en production ? Je sais, nous n'avons même pas encore de page HTML pour accueillir convenablement nos internautes, mais voir la petite image "en construction" sur un serveur de production serait une grande satisfaction. Et vous connaissez la devise : *déployer tôt, déployez souvent*.
 
 Vous pouvez héberger cette application chez n'importe quel fournisseur supportant PHP, soit presque tous les hébergeurs. Vérifiez tout de même quelques points : nous voulons la dernière version de PHP et la possibilité d'héberger des services comme une base de données, une file d'attente, etc.
 
-J'ai fait mon choix, ce sera `Platform.sh`_. Il fournit tout ce dont nous avons besoin et aide à financer le développement de Symfony.
+J'ai fait mon choix, ce sera `Upsun`_. Il fournit tout ce dont nous avons besoin et aide à financer le développement de Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-Comme nous avons utilisé l'option ``--cloud`` quand nous avons créé le projet, Platform.sh a déjà été initialisé avec les quelques fichiers requis par Platform.sh, comme ``.platform/services.yaml``, ``.platform/routes.yaml`` et ``.platform.app.yaml``.
+Comme nous avons utilisé l'option ``--upsun`` quand nous avons créé le projet, Upsun a déjà été initialisé avec les quelques fichiers requis par Upsun, comme ``.upsun/config.yaml``, ``.upsun/config.yaml`` et ``.upsun/config.yaml``.
 
 Mise en production
 ------------------
@@ -154,7 +154,7 @@ Mise en production
 
 On déploie ?
 
-Créez un nouveau projet Platform.sh distant :
+Créez un nouveau projet Upsun distant :
 
 .. code-block:: terminal
 
@@ -162,9 +162,9 @@ Créez un nouveau projet Platform.sh distant :
 
 Cette commande fait beaucoup de choses :
 
-* La première fois que vous lancez cette commande, identifiez-vous avec votre compte Platform.sh, si ce n'était pas déjà fait.
+* La première fois que vous lancez cette commande, identifiez-vous avec votre compte Upsun, si ce n'était pas déjà fait.
 
-* Elle crée un nouveau projet sur Platform.sh (vous bénéficiez de 30 jours *gratuits* sur le premier projet que vous créez).
+* Elle crée un nouveau projet sur Upsun (vous bénéficiez de 30 jours *gratuits* sur le premier projet que vous créez).
 
 Puis, déployez :
 
@@ -186,14 +186,14 @@ Vérifiez que tout fonctionne bien :
 
 Vous devriez obtenir une 404, mais si vous naviguez vers ``/images/under-construction.gif`` vous devriez pouvoir admirer votre travail.
 
-Notez que vous n'obtenez pas la belle page par défaut de Symfony sur Platform.sh. Pourquoi ? Vous apprendrez bientôt que Symfony supporte plusieurs environnements, et que Platform.sh a automatiquement déployé le code en environnement de production.
+Notez que vous n'obtenez pas la belle page par défaut de Symfony sur Upsun. Pourquoi ? Vous apprendrez bientôt que Symfony supporte plusieurs environnements, et qu'Upsun a automatiquement déployé le code en environnement de production.
 
 .. index::
     single: Symfony CLI;cloud:project:delete
 
 .. tip::
 
-    Si vous voulez supprimer le projet sur Platform.sh, utilisez la commande ``cloud:project:delete``.
+    Si vous voulez supprimer le projet sur Upsun, utilisez la commande ``cloud:project:delete``.
 
 .. sidebar:: Aller plus loin
 
@@ -201,12 +201,12 @@ Notez que vous n'obtenez pas la belle page par défaut de Symfony sur Platform.s
 
     * Le `serveur web local de Symfony`_ ;
 
-    * La `documentation de Platform.sh`_.
+    * La `documentation d'Upsun`_.
 
 .. _`celui`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`squelette de projet`: https://github.com/symfony/skeleton
-.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`recettes officielles de Symfony`: https://github.com/symfony/recipes
 .. _`recettes créées par la communauté`: https://github.com/symfony/recipes-contrib
 .. _`serveur web local de Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`documentation de Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`documentation d'Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

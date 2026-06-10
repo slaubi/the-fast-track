@@ -165,7 +165,7 @@ Définissez le nom de domaine et le schéma à utiliser explicitement :
      services:
          # default configuration for services in *this* file
 
-La variable d'environnement ``SYMFONY_DEFAULT_ROUTE_URL`` est automatiquement définie localement lors de l'utilisation de la commande ``symfony`` et déterminées en fonction de la configuration sur Platform.sh.
+La variable d'environnement ``SYMFONY_DEFAULT_ROUTE_URL`` est automatiquement définie localement lors de l'utilisation de la commande ``symfony`` et déterminées en fonction de la configuration sur Upsun.
 
 Lier une route à un contrôleur
 --------------------------------
@@ -369,16 +369,16 @@ Symfony est fourni avec des assertions qui facilitent de tels tests. Voici un ex
 
 Ces assertions fonctionnent lorsque les emails sont envoyés de façon synchrone ou asynchrone.
 
-Envoyer des emails sur Platform.sh
+Envoyer des emails sur Upsun
 ----------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Il n'y a pas de configuration spécifique pour Platform.sh. Tous les comptes sont fournis avec un compte SendGrid qui est automatiquement utilisé pour envoyer les emails.
+Il n'y a pas de configuration spécifique pour Upsun. Tous les comptes sont fournis avec un compte SendGrid qui est automatiquement utilisé pour envoyer les emails.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -401,11 +401,11 @@ Il n'y a pas de configuration spécifique pour Platform.sh. Tous les comptes son
 
     * La `documentation du Mailer de Symfony`_ ;
 
-    * La `documentation de Platform.sh sur les emails`_.
+    * La `documentation d'Upsun sur les emails`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Tutoriel SymfonyCasts sur Mailer`: https://symfonycasts.com/screencast/mailer
 .. _`documentation sur le langage de templating Inky`: https://get.foundation/emails/docs/inky.html
 .. _`processeurs de variables d'environnement`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`documentation du Mailer de Symfony`: https://symfony.com/doc/current/mailer.html
-.. _`documentation de Platform.sh sur les emails`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`documentation d'Upsun sur les emails`: https://symfony.com/doc/current/cloud/services/emails.html

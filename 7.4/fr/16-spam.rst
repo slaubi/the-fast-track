@@ -232,12 +232,12 @@ Gérer les chaînes secrètes en production
 -------------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-En production, Platform.sh prend en charge le paramétrage des *variables d'environnement sensibles* :
+En production, Upsun prend en charge le paramétrage des *variables d'environnement sensibles* :
 
 .. code-block:: terminal
     :class: ignore
@@ -274,7 +274,7 @@ Rajoutez la chaîne secrète d'Akismet dans le coffre-fort en production, mais a
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-La dernière étape consiste à envoyer la clé de déchiffrement à Platform.sh en définissant une variable sensible :
+La dernière étape consiste à envoyer la clé de déchiffrement à Upsun en définissant une variable sensible :
 
 .. code-block:: terminal
 

@@ -40,7 +40,7 @@ L'un des avantages majeurs d'utiliser un framework est la faible quantité de co
 
 * 20 lignes de configuration de l'infrastructure de développement (Docker) ;
 
-* 100 lignes de configuration de l'infrastructure de production (Platform.sh) ;
+* 100 lignes de configuration de l'infrastructure de production (Upsun) ;
 
 * 5 variables d'environnement explicites.
 

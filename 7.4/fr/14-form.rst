@@ -489,11 +489,11 @@ Ne *commitez* pas encore ! Nous ne voulons pas stocker les images uploadées dan
 Stocker les fichiers uploadés sur les serveurs de production
 -------------------------------------------------------------
 
-La dernière étape consiste à stocker les fichiers uploadés sur les serveurs de production. Pourquoi devrions-nous faire quelque chose de spécial ? Parce que la plupart des plates-formes modernes de cloud utilisent des conteneurs en lecture seule pour diverses raisons. Platform.sh n'échappe pas à cette règle.
+La dernière étape consiste à stocker les fichiers uploadés sur les serveurs de production. Pourquoi devrions-nous faire quelque chose de spécial ? Parce que la plupart des plates-formes modernes de cloud utilisent des conteneurs en lecture seule pour diverses raisons. Upsun n'échappe pas à cette règle.
 
 Tout n'est pas en lecture seule dans un projet Symfony. Nous essayons de générer autant de cache que possible lors de la construction du conteneur (pendant la phase de démarrage du cache), mais Symfony doit quand même être capable d'écrire quelque part pour le cache, les logs, les sessions si elles sont stockées dans le système de fichiers, etc.
 
-Jetez un coup d'oeil au fichier ``.platform.app.yaml``, il y a déjà un *montage* accessible en écriture pour le dossier ``var/``. Le dossier ``var/`` est le seul répertoire où Symfony écrit (caches, logs, etc.).
+Jetez un coup d'oeil au fichier ``.upsun/config.yaml``, il y a déjà un *montage* accessible en écriture pour le dossier ``var/``. Le dossier ``var/`` est le seul répertoire où Symfony écrit (caches, logs, etc.).
 
 Créez un nouveau montage pour les photos uploadées :
 

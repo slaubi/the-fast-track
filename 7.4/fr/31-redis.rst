@@ -14,7 +14,7 @@ Voici comment vous pouvez ajouter Redis à votre projet en un seul patch :
     single: Session;Redis
     single: Redis
     single: Docker;Redis
-    single: Platform.sh;Redis
+    single: Upsun;Redis
 
 .. code-block:: diff
     :caption: patch_file

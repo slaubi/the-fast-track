@@ -51,7 +51,7 @@ Les étapes nécessaires pour le faire sont classiques :
 #. Update the PHP configuration if needed (like adding the PostgreSQL PHP
    extension);
 
-#. Mettez à jour l'infrastructure pour Docker et Platform.sh si nécessaire (ajoutez le service PostgreSQL) ;
+#. Mettez à jour l'infrastructure pour Docker et Upsun si nécessaire (ajoutez le service PostgreSQL) ;
 
 #. Testez localement ;
 
@@ -98,7 +98,7 @@ Testez localement en naviguant sur le site. Comme il n'y a pas de changement vis
 
 .. note::
 
-    Nous n'avons pas besoin des étapes 3 à 5 ici puisque nous ré-utilisons la base de données comme stockage de session, mais le chapitre à propos de l'utilisation de Redis montre à quel point il est facile d'ajouter, tester et déployer un nouveau service avec Docker et Platform.sh.
+    Nous n'avons pas besoin des étapes 3 à 5 ici puisque nous ré-utilisons la base de données comme stockage de session, mais le chapitre à propos de l'utilisation de Redis montre à quel point il est facile d'ajouter, tester et déployer un nouveau service avec Docker et Upsun.
 
 Committez vos changements sur la nouvelle branche :
 
@@ -112,7 +112,7 @@ Déployer une branche
 ---------------------
 
 .. index::
-    single: Platform.sh;Environment
+    single: Upsun;Environment
 
 Avant le déploiement en production, nous devrions tester la branche sur la même infrastructure que celle de production. Nous devrions également valider que tout fonctionne bien pour l'environnement ``prod`` de Symfony (le site local utilise l'environnement ``dev`` de Symfony).
 
@@ -120,7 +120,7 @@ Avant le déploiement en production, nous devrions tester la branche sur la mêm
     single: Symfony CLI;cloud:env:delete
     single: Symfony CLI;cloud:env:create
 
-Maintenant, créons un *environnement Platform.sh* basé sur la *branche Git* :
+Maintenant, créons un *environnement Upsun* basé sur la *branche Git* :
 
 .. code-block:: terminal
     :class: hide
@@ -153,7 +153,7 @@ Une fois le déploiement terminé, ouvrez la nouvelle branche dans un navigateur
 
     $ symfony cloud:url -1
 
-Notez que toutes les commandes Platform.sh fonctionnent sur la branche Git courante. Cela ouvrira l'URL de la branche ``sessions-in-db`` déployée. L'URL ressemblera à ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
+Notez que toutes les commandes Upsun fonctionnent sur la branche Git courante. Cela ouvrira l'URL de la branche ``sessions-in-db`` déployée. L'URL ressemblera à ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
 
 Testez le site web sur ce nouvel environnement. Vous devriez voir toutes les données que vous avez créées dans l'environnement ``master``.
 
@@ -175,9 +175,9 @@ Déboguer les déploiements en production avant de déployer
 ------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Debugging
+    single: Upsun;Debugging
 
-Par défaut, tous les environnements Platform.sh utilisent les mêmes paramètres que l'environnement ``master``/``prod`` (c'est à dire l'environnement Symfony ``prod``). Cela vous permet de tester l'application dans des conditions réelles. Il vous donne l'impression de développer et de tester directement sur des serveurs de production, mais sans les risques qui y sont associés. Cela me rappelle le bon vieux temps où nous déployions par FTP.
+Par défaut, tous les environnements Upsun utilisent les mêmes paramètres que l'environnement ``master``/``prod`` (c'est à dire l'environnement Symfony ``prod``). Cela vous permet de tester l'application dans des conditions réelles. Il vous donne l'impression de développer et de tester directement sur des serveurs de production, mais sans les risques qui y sont associés. Cela me rappelle le bon vieux temps où nous déployions par FTP.
 
 .. index::
     single: Symfony CLI;cloud:env:debug
@@ -226,7 +226,7 @@ Et déployez :
 
     $ symfony cloud:push
 
-Lors du déploiement, seuls le code et les changements d'infrastructure sont poussés vers Platform.sh ; les données ne sont en aucun cas affectées.
+Lors du déploiement, seuls le code et les changements d'infrastructure sont poussés vers Upsun ; les données ne sont en aucun cas affectées.
 
 Faire le ménage
 ----------------
@@ -235,7 +235,7 @@ Faire le ménage
     single: Symfony CLI;env:delete
     single: Git;branch
 
-Enfin, faites le ménage en supprimant la branche Git et l'environnement Platform.sh :
+Enfin, faites le ménage en supprimant la branche Git et l'environnement Upsun :
 
 .. code-block:: terminal
 

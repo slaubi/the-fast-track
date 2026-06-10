@@ -41,7 +41,7 @@ Les chaînes bizarres sont des marqueurs ajoutés par Symfony Flex pour qu'il sa
 
 .. note::
 
-    Si vous déployez sur Platform.sh, vous avez déjà une copie du dépôt Git car Platform.sh utilise Git de manière transparente quand vous utilisez `cloud:deploy`. Mais vous ne devriez pas vous fier au dépôt Git de Platform.sh. Il est réservé pour le déploiement. Ce n'est pas une sauvegarde de votre travail.
+    Si vous déployez sur Upsun, vous avez déjà une copie du dépôt Git car Upsun utilise Git de manière transparente quand vous utilisez `cloud:deploy`. Mais vous ne devriez pas vous fier au dépôt Git d'Upsun. Il est réservé pour le déploiement. Ce n'est pas une sauvegarde de votre travail.
 
 Déploiement continu en production
 ----------------------------------

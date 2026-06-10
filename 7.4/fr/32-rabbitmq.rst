@@ -103,7 +103,7 @@ Déployer RabbitMQ
 ------------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Ajouter RabbitMQ aux serveurs de production peut être fait en l'ajoutant à la liste des services :
@@ -148,7 +148,7 @@ Référencez-le également dans la configuration du conteneur web et activez l'e
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

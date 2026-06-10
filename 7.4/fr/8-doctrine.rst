@@ -27,9 +27,9 @@ Comprendre les conventions des variables d'environnement de Symfony
 
 Vous pouvez définir la variable ``DATABASE_URL`` manuellement dans le fichier ``.env`` ou ``.env.local``. En fait, grâce à la recette du paquet, vous verrez un exemple de variable ``DATABASE_URL`` dans votre fichier ``.env``. Mais comme le port exposé par Docker vers PostgreSQL peut changer, c'est assez lourd. Il y a une meilleure solution.
 
-Au lieu de coder en dur la variable ``DATABASE_URL`` dans un fichier, nous pouvons préfixer toutes les commandes avec ``symfony``. Ceci détectera les services exécutés par Docker et/ou Platform.sh (lorsque le tunnel est ouvert) et définira automatiquement la variable d'environnement.
+Au lieu de coder en dur la variable ``DATABASE_URL`` dans un fichier, nous pouvons préfixer toutes les commandes avec ``symfony``. Ceci détectera les services exécutés par Docker et/ou Upsun (lorsque le tunnel est ouvert) et définira automatiquement la variable d'environnement.
 
-Docker Compose et Platform.sh fonctionnent parfaitement avec Symfony grâce à ces variables d'environnement.
+Docker Compose et Upsun fonctionnent parfaitement avec Symfony grâce à ces variables d'environnement.
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Vérifiez toutes les variables d'environnement exposées en exécutant ``symfony
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Vous rappelez-vous du *nom du service* ``database`` utilisé dans les configurations Docker et Platform.sh ? Les noms des services sont utilisés comme préfixes pour définir des variables d'environnement telles que ``DATABASE_URL``. Si vos services sont nommés selon les conventions Symfony, aucune autre configuration n'est nécessaire.
+Vous rappelez-vous du *nom du service* ``database`` utilisé dans les configurations Docker et Upsun ? Les noms des services sont utilisés comme préfixes pour définir des variables d'environnement telles que ``DATABASE_URL``. Si vos services sont nommés selon les conventions Symfony, aucune autre configuration n'est nécessaire.
 
 .. note::
 
@@ -509,7 +509,7 @@ Mettre à jour la base de données de production
 
 Les étapes nécessaires à la migration de la base de données de production sont les mêmes que celles que vous connaissez déjà : *commiter* les changements et déployer.
 
-Lors du déploiement du projet, Platform.sh met à jour le code, mais exécute également la migration de la base de données si nécessaire (il détecte si la commande ``doctrine:migrations:migrate`` existe).
+Lors du déploiement du projet, Upsun met à jour le code, mais exécute également la migration de la base de données si nécessaire (il détecte si la commande ``doctrine:migrations:migrate`` existe).
 
 .. sidebar:: Aller plus loin
 

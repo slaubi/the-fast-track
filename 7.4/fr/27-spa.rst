@@ -544,12 +544,12 @@ Déployer la SPA en production
 ------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh permet de déployer plusieurs applications par projet. L'ajout d'une autre application peut se faire en créant un fichier ``.platform.app.yaml`` dans n'importe quel sous-répertoire. Créez-en un sous ``spa/`` nommé ``spa`` :
+Upsun permet de déployer plusieurs applications par projet. L'ajout d'une autre application peut se faire en créant un fichier ``.upsun/config.yaml`` dans n'importe quel sous-répertoire. Créez-en un sous ``spa/`` nommé ``spa`` :
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1
 
     name: spa
@@ -581,9 +581,9 @@ Platform.sh permet de déployer plusieurs applications par projet. L'ajout d'une
             NODE_VERSION=18 node-build
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
-Modifiez le fichier ``.platform/routes.yaml`` pour faire pointer le sous-domaine ``spa.`` vers l'application ``spa`` stockée dans le répertoire racine du projet :
+Modifiez le fichier ``.upsun/config.yaml`` pour faire pointer le sous-domaine ``spa.`` vers l'application ``spa`` stockée dans le répertoire racine du projet :
 
 .. code-block:: terminal
 
@@ -593,8 +593,8 @@ Modifiez le fichier ``.platform/routes.yaml`` pour faire pointer le sous-domaine
     :caption: patch_file
     :emphasize-lines: 4,5
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
     @@ -1,2 +1,5 @@
      "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
      "http://{all}/": { type: redirect, to: "https://{all}/" }

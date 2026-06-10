@@ -68,7 +68,7 @@ Par exemple, tous les outils de débogage sont activés en environnement de ``de
 
 Basculer d'un environnement à l'autre peut se faire en changeant la variable d'environnement ``APP_ENV``.
 
-Lorsque vous avez déployé vers Platform.sh, l'environnement (stocké dans ``APP_ENV``) a été automatiquement modifié en ``prod``.
+Lorsque vous avez déployé vers Upsun, l'environnement (stocké dans ``APP_ENV``) a été automatiquement modifié en ``prod``.
 
 Gérer la configuration des environnements
 ------------------------------------------
@@ -130,8 +130,8 @@ Déboguer en production
 -----------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 
