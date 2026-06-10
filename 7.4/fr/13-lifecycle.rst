@@ -313,7 +313,7 @@ Essayez d'ajouter d'autres conférences dans l'interface d'administration et cha
     single: Twig;path
     single: Attributes;Route
 
-La dernière modification consiste à mettre à jour les contrôleurs et les modèles pour utiliser le ``slug`` de la conférence pour les routes, au lieu de son ``id`` :
+La dernière modification consiste à mettre à jour les contrôleurs et les modèles pour utiliser le ``slug`` de la conférence pour les routes, au lieu de son ``id``. Comme le paramètre de route n'est plus la clé primaire de l'entité, indiquez à ``#[MapEntity]`` quelle propriété faire correspondre en passant un ``mapping`` explicite :
 
 .. code-block:: diff
     :caption: patch_file

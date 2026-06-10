@@ -161,7 +161,7 @@ Ajoutez une méthode ``show()`` dans le fichier ``src/Controller/ConferenceContr
     +    }
      }
 
-Cette méthode a un comportement particulier que nous n'avons pas encore vu. Nous demandons qu'une instance de ``Conference`` soit injectée dans la méthode. Mais il y en a peut-être beaucoup dans la base de données. Symfony est capable de déterminer celle que vous voulez en se basant sur l'``{id}`` passé dans le chemin de la requête (``id`` étant la clé primaire de la table ``conference`` dans la base de données).
+Cette méthode a un comportement particulier que nous n'avons pas encore vu. Nous demandons qu'une instance de ``Conference`` soit injectée dans la méthode. Mais il y en a peut-être beaucoup dans la base de données. L'attribut ``#[MapEntity]`` indique à Symfony de récupérer la bonne en se basant sur l'``{id}`` passé dans le chemin de la requête (``id`` étant la clé primaire de la table ``conference`` dans la base de données).
 
 La récupération des commentaires associés à la conférence peut se faire via la méthode ``findBy()``, qui prend un critère comme premier argument.
 
