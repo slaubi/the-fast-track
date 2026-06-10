@@ -354,7 +354,7 @@ Créez un fichier ``api.js`` qui abstrait la récupération des données de l'AP
     :caption: src/api/api.js
 
     function fetchCollection(path) {
-        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['hydra:member']);
+        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['member']);
     }
 
     export function findConferences() {
@@ -546,44 +546,7 @@ Déployer la SPA en production
 .. index::
     single: Upsun;Multi-Applications
 
-Upsun permet de déployer plusieurs applications par projet. L'ajout d'une autre application peut se faire en créant un fichier ``.upsun/config.yaml`` dans n'importe quel sous-répertoire. Créez-en un sous ``spa/`` nommé ``spa`` :
-
-.. code-block:: yaml
-    :caption: .upsun/config.yaml
-    :emphasize-lines: 1
-
-    name: spa
-
-    type: nodejs:18
-
-    size: S
-
-    build:
-        flavor: none
-
-    web:
-        commands:
-            start: sleep
-        locations:
-            "/":
-                root: "public"
-                index:
-                    - "index.html"
-                scripts: false
-                expires: 10m
-
-    hooks:
-        build: |
-            set -x -e
-
-            curl -fs https://get.symfony.com/cloud/configurator | bash
-
-            NODE_VERSION=18 node-build
-
-.. index::
-    single: Upsun;Routes
-
-Modifiez le fichier ``.upsun/config.yaml`` pour faire pointer le sous-domaine ``spa.`` vers l'application ``spa`` stockée dans le répertoire racine du projet :
+Upsun permet de déployer plusieurs applications par projet. Revenez à la racine du projet et ajoutez une seconde application nommée ``spa``, dont la racine est le répertoire ``spa/``, dans ``.upsun/config.yaml`` :
 
 .. code-block:: terminal
 
@@ -591,16 +554,66 @@ Modifiez le fichier ``.upsun/config.yaml`` pour faire pointer le sous-domaine ``
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 4,5
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -1,2 +1,5 @@
-     "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    @@ -19,6 +19,36 @@ services:
+             type: network-storage:2.0
+
+     applications:
+    +    spa:
+    +        source:
+    +            root: "/spa"
     +
-    +"https://spa.{all}/": { type: upstream, upstream: "spa:http" }
-    +"http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
+    +        type: nodejs:24
+    +
+    +        size: S
+    +
+    +        build:
+    +            flavor: none
+    +
+    +        web:
+    +            commands:
+    +                start: sleep
+    +            locations:
+    +                "/":
+    +                    root: "public"
+    +                    index:
+    +                        - "index.html"
+    +                    scripts: false
+    +                    expires: 10m
+    +
+    +        hooks:
+    +            build: |
+    +                set -x -e
+    +
+    +                curl -fs https://get.symfony.com/cloud/configurator | bash
+    +
+    +                NODE_VERSION=24 assets-build
+    +
+         app:
+             source:
+                 root: "/"
+
+.. index::
+    single: Upsun;Routes
+
+Modifiez le fichier ``.upsun/config.yaml`` pour faire pointer le sous-domaine ``spa.`` vers l'application ``spa`` :
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 5,6
+
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -2,6 +2,9 @@ routes:
+         "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
+
+    +    "https://spa.{all}/": { type: upstream, upstream: "spa:http" }
+    +    "http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
+    +
+     services:
 
 Configurer CORS pour la SPA
 ---------------------------
