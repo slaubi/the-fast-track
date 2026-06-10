@@ -64,7 +64,7 @@ Cloniamo il `repository del libro degli ospiti`_ da qualche parte nella nostra m
 
 Questo repository contiene tutto il codice del libro.
 
-Si noti che stiamo usando ``symfony new`` invece di ``git clone``, in quanto questo non si limita a clonare il repository (ospitato su Github sotto l'organizzazione ``the-fast-track``: ``https://github.com/the-fast-track/book-6.4-2``), ma avvia anche il server web, i container, migra il database, carica le fixture... Dopo aver eseguito il comando, l'applicazione dovrebbe essere attiva e funzionante, pronta per essere utilizzata.
+Si noti che stiamo usando ``symfony new`` invece di ``git clone``, in quanto questo non si limita a clonare il repository (ospitato su Github sotto l'organizzazione ``the-fast-track``: ``https://github.com/the-fast-track/book-7.4-1``), ma avvia anche il server web, i container, migra il database, carica le fixture... Dopo aver eseguito il comando, l'applicazione dovrebbe essere attiva e funzionante, pronta per essere utilizzata.
 
 Posso garantire che il codice nel libro sia al 100% sincronizzato con quello nel repository (utilizzando l'URL esatto fornito precedentemente). Sincronizzare manualmente le modifiche fra libro e codice sorgente nel repository è quasi impossibile. Parlo per esperienza, in passato ci ho provato e ho fallito: è semplicemente impossibile, in particolar modo per la tipologia di libri che scrivo io, quelli in cui si parla di sviluppo di applicazioni web. Poiché ogni capitolo dipende da quelli precedenti, ogni modifica potrebbe avere conseguenze su tutti i capitoli successivi.
 
@@ -123,4 +123,4 @@ Si possono anche visualizzare diff, tag e commit direttamente su GitHub. Questo 
 
 .. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
 .. _`libro degli ospiti`: https://en.wikipedia.org/wiki/Guestbook
-.. _`repository del libro degli ospiti`: https://github.com/the-fast-track/book-5.0-1
+.. _`repository del libro degli ospiti`: https://github.com/the-fast-track/book-7.4-1
