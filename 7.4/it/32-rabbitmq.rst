@@ -46,11 +46,11 @@ Come potreste aver intuito, abbiamo bisogno di aggiungere RabbitMQ allo stack di
     --- i/compose.yaml
     +++ w/compose.yaml
     @@ -18,6 +18,10 @@ services:
-         image: redis:5-alpine
+         image: redis:8.0-alpine
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3-management
+    +    image: rabbitmq:4.2-management
     +    ports: [5672, 15672]
     +
      volumes:
@@ -111,41 +111,41 @@ Aggiungere RabbitMQ ai server di produzione può essere fatto aggiungendolo alla
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -19,3 +19,8 @@ files:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -25,4 +25,8 @@ services:
+             rediscache:
+                 type: redis:8.0
 
-     rediscache:
-         type: redis:5.0
+    +    queue:
+    +        type: rabbitmq:4.2
+    +        size: S
     +
-    +queue:
-    +    type: rabbitmq:3.7
-    +    disk: 1024
-    +    size: S
+     applications:
 
 Fare riferimento ad esso anche nella configurazione del container web, ed abilitare l'estensione PHP ``amqp``:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -4,6 +4,7 @@ type: php:8.3
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -39,6 +39,7 @@ applications:
 
-     runtime:
-         extensions:
-    +        - amqp
-             - apcu
-             - blackfire
-             - ctype
-    @@ -38,6 +39,7 @@ mounts:
-     relationships:
-         database: "database:postgresql"
-         redis: "rediscache:redis"
-    +    rabbitmq: "queue:rabbitmq"
+             runtime:
+                 extensions:
+    +                - amqp
+                     - apcu
+                     - blackfire
+                     - ctype
+    @@ -72,5 +73,6 @@ applications:
+             relationships:
+                 database: "database:postgresql"
+                 redis: "rediscache:redis"
+    +            rabbitmq: "queue:rabbitmq"
 
-     hooks:
-         build: |
+             hooks:
+                 build: |
 
 .. index::
     single: Platform.sh;Tunnel

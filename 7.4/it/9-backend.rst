@@ -23,7 +23,7 @@ Aggiungiamo EasyAdmin come dipendenza del progetto:
 
 .. code-block:: terminal
 
-    $ symfony composer req "easycorp/easyadmin-bundle:^4"
+    $ symfony composer req "easycorp/easyadmin-bundle:^5"
 
 Gli *alias* non sono una funzionalità di Composer, ma un concetto fornito da Symfony per rendere la vita più facile. Gli alias sono una scorciatoia per i pacchetti Composer più popolari. Vuoi un ORM per la tua applicazione? Richiedi ``orm``. Vuoi sviluppare delle API? Richiedi ``api``. Questi alias sono risolti automaticamente con uno o più pacchetti Composer. Sono scelte basate sull'opinione del core team di Symfony.
 
@@ -53,17 +53,15 @@ Accettare le risposte predefinite per creare il seguente controller:
 
     namespace App\Controller\Admin;
 
+    use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
     use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Attribute\Route;
 
+    #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
     class DashboardController extends AbstractDashboardController
     {
-        /**
-         * @Route("/admin", name="admin")
-         */
         public function index(): Response
         {
             return parent::index();
@@ -78,7 +76,7 @@ Accettare le risposte predefinite per creare il seguente controller:
         public function configureMenuItems(): iterable
         {
             yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-            // yield MenuItem::linkToCrud('The Label', 'icon class', EntityClass::class);
+            // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
         }
     }
 
@@ -151,24 +149,15 @@ L'ultimo passo è quello di collegare alla dashboard i CRUD di amministrazione p
 
     --- i/src/Controller/Admin/DashboardController.php
     +++ w/src/Controller/Admin/DashboardController.php
-    @@ -2,6 +2,8 @@
-
-     namespace App\Controller\Admin;
-
-    +use App\Entity\Comment;
-    +use App\Entity\Conference;
-     use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-    @@ -44,7 +46,8 @@ class DashboardController extends AbstractDashboardController
+    @@ -44,7 +44,8 @@ class DashboardController extends AbstractDashboardController
 
          public function configureMenuItems(): iterable
          {
     -        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-    -        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+    -        // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
     +        yield MenuItem::linkToRoute('Back to the website', 'fas fa-home', 'homepage');
-    +        yield MenuItem::linkToCrud('Conferences', 'fas fa-map-marker-alt', Conference::class);
-    +        yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comment::class);
+    +        yield MenuItem::linkTo(ConferenceCrudController::class, 'Conferences', 'fas fa-map-marker-alt');
+    +        yield MenuItem::linkTo(CommentCrudController::class, 'Comments', 'fas fa-comments');
          }
      }
 

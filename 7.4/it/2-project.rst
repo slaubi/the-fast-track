@@ -60,7 +60,7 @@ Cloniamo il `repository del libro degli ospiti`_ da qualche parte nella nostra m
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=6.4-2 --book guestbook
+    $ symfony new --version=7.4-1 --book guestbook
 
 Questo repository contiene tutto il codice del libro.
 

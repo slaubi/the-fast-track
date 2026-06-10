@@ -76,11 +76,11 @@ Per mostrare il form all'utente, creare il form nel controller e passarlo al tem
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 19,29
+    :emphasize-lines: 20,30
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -2,7 +2,9 @@
+    @@ -2,8 +2,10 @@
 
      namespace App\Controller;
 
@@ -89,10 +89,11 @@ Per mostrare il form all'utente, creare il form nel controller e passarlo al tem
     +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+         public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
@@ -288,11 +289,12 @@ Ora dovremmo gestire l'invio del form e il salvataggio delle sue informazioni ne
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    @@ -7,7 +7,8 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
@@ -367,22 +369,24 @@ Ora sappiamo tutto ciò che ci serve per implementare la logica richiesta al fin
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
+    @@ -9,7 +9,8 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
-    @@ -29,13 +30,22 @@ final class ConferenceController extends AbstractController
+    @@ -29,13 +30,23 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
     -    {
     +    public function show(
     +        Request $request,
+    +        #[MapEntity(mapping: ['slug' => 'slug'])]
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
@@ -496,16 +500,16 @@ Creiamo un nuovo mount per le foto caricate:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -31,6 +31,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -41,6 +41,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    +            "/public/uploads": { source: storage, source_path: uploads }
 
-     mounts:
-         "/var/cache": { source: local, source_path: var/cache }
-    +    "/public/uploads": { source: local, source_path: uploads }
 
-
-     relationships:
+             relationships:
 
 Ora si può eseguire il deploy del codice e le foto saranno memorizzate nella cartella ``public/uploads/``, come nella nostra versione locale.
 

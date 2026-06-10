@@ -125,9 +125,9 @@ Ora siamo pronti per impostare lo stile dell'applicazione. Scarichiamo ed estrai
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.4.zip', 'guestbook-6.4.zip');"
-    $ unzip -o guestbook-6.4.zip
-    $ rm guestbook-6.4.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-7.4.zip', 'guestbook-7.4.zip');"
+    $ unzip -o guestbook-7.4.zip
+    $ rm guestbook-7.4.zip
 
 Dando un'occhiata ai template, potreste imparare un paio di trucchi su Twig.
 

@@ -19,33 +19,33 @@ Qui è dove possiamo aggiungere Redis al progetto in un sol colpo:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -10,6 +10,7 @@ runtime:
-             - iconv
-             - mbstring
-             - pdo_pgsql
-    +        - redis
-             - sodium
-             - xsl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -37,6 +37,7 @@ applications:
+                     - iconv
+                     - mbstring
+                     - pdo_pgsql
+    +                - redis
+                     - sodium
+                     - xsl
 
-    @@ -36,6 +37,7 @@ mounts:
+    @@ -62,6 +63,7 @@ applications:
 
-     relationships:
-         database: "database:postgresql"
-    +    redis: "rediscache:redis"
+             relationships:
+                 database: "database:postgresql"
+    +            redis: "rediscache:redis"
 
-     hooks:
-         build: |
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -16,3 +16,6 @@ varnish:
-     files:
-         type: network-storage:2.0
-         disk: 256
+             hooks:
+                 build: |
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -21,3 +21,6 @@ services:
+                 type: network-storage:2.0
+
+    +    rediscache:
+    +        type: redis:8.0
     +
-    +rediscache:
-    +    type: redis:5.0
+     applications:
     --- i/compose.yaml
     +++ w/compose.yaml
     @@ -14,6 +14,10 @@ services:
@@ -53,7 +53,7 @@ Qui è dove possiamo aggiungere Redis al progetto in un sol colpo:
      ###< doctrine/doctrine-bundle ###
 
     +  redis:
-    +    image: redis:5-alpine
+    +    image: redis:8.0-alpine
     +    ports: [6379]
     +
      volumes:
@@ -61,14 +61,11 @@ Qui è dove possiamo aggiungere Redis al progetto in un sol colpo:
        database_data:
     --- i/config/packages/framework.yaml
     +++ w/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
+    @@ -4,3 +4,3 @@ framework:
+         # Note that the session will be started ONLY if you read or write from it.
          session:
     -        handler_id: '%env(resolve:DATABASE_URL)%'
     +        handler_id: '%env(REDIS_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
 
 Non è *bellissimo*?
 
