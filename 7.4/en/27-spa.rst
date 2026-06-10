@@ -589,7 +589,7 @@ Upsun allows deploying multiple applications per project. Move back to the proje
     +
     +                curl -fs https://get.symfony.com/cloud/configurator | bash
     +
-    +                NODE_VERSION=24 node-build
+    +                NODE_VERSION=24 assets-build
     +
          app:
              source:
