@@ -281,7 +281,7 @@ Update the controller to use the new system:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -5,20 +5,22 @@ namespace App\Controller;
+    @@ -5,21 +5,23 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -290,6 +290,7 @@ Update the controller to use the new system:
      use App\Repository\ConferenceRepository;
     -use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
@@ -305,8 +306,9 @@ Update the controller to use the new system:
          ) {
          }
 
-    @@ -35,7 +37,6 @@ final class ConferenceController extends AbstractController
+    @@ -35,8 +37,7 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
@@ -498,17 +500,17 @@ Inspect failed messages and retry them via the following commands:
 
     $ symfony console messenger:failed:retry
 
-Running Workers on Platform.sh
-------------------------------
+Running Workers on Upsun
+------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-To consume messages from PostgreSQL, we need to run the ``messenger:consume`` command continuously. On Platform.sh, this is the role of a *worker*:
+To consume messages from PostgreSQL, we need to run the ``messenger:consume`` command continuously. On Upsun, this is the role of a *worker*:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1,5
     :class: ignore
 
@@ -518,7 +520,7 @@ To consume messages from PostgreSQL, we need to run the ``messenger:consume`` co
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Like for the Symfony CLI, Platform.sh manages restarts and logs.
+Like for the Symfony CLI, Upsun manages restarts and logs.
 
 .. index::
     single: Symfony CLI;cloud:logs

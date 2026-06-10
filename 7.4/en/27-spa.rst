@@ -354,7 +354,7 @@ Create an ``api.js`` file that abstracts data retrieval from the API:
     :caption: src/api/api.js
 
     function fetchCollection(path) {
-        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['hydra:member']);
+        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['member']);
     }
 
     export function findConferences() {
@@ -544,46 +544,9 @@ Deploying the SPA to Production
 -------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh allows deploying multiple applications per project. Adding another application can be done by creating a ``.platform.app.yaml`` file in any sub-directory. Create one under ``spa/`` named ``spa``:
-
-.. code-block:: yaml
-    :caption: .platform.app.yaml
-    :emphasize-lines: 1
-
-    name: spa
-
-    type: nodejs:18
-
-    size: S
-
-    build:
-        flavor: none
-
-    web:
-        commands:
-            start: sleep
-        locations:
-            "/":
-                root: "public"
-                index:
-                    - "index.html"
-                scripts: false
-                expires: 10m
-
-    hooks:
-        build: |
-            set -x -e
-
-            curl -fs https://get.symfony.com/cloud/configurator | bash
-
-            NODE_VERSION=18 node-build
-
-.. index::
-    single: Platform.sh;Routes
-
-Edit the ``.platform/routes.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application stored in the project root directory:
+Upsun allows deploying multiple applications per project. Move back to the project root and add a second application named ``spa``, rooted in the ``spa/`` directory, to ``.upsun/config.yaml``:
 
 .. code-block:: terminal
 
@@ -591,16 +554,66 @@ Edit the ``.platform/routes.yaml`` file to route the ``spa.`` subdomain to the `
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 4,5
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
-    @@ -1,2 +1,5 @@
-     "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -19,6 +19,36 @@ services:
+             type: network-storage:2.0
+
+     applications:
+    +    spa:
+    +        source:
+    +            root: "/spa"
     +
-    +"https://spa.{all}/": { type: upstream, upstream: "spa:http" }
-    +"http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
+    +        type: nodejs:24
+    +
+    +        size: S
+    +
+    +        build:
+    +            flavor: none
+    +
+    +        web:
+    +            commands:
+    +                start: sleep
+    +            locations:
+    +                "/":
+    +                    root: "public"
+    +                    index:
+    +                        - "index.html"
+    +                    scripts: false
+    +                    expires: 10m
+    +
+    +        hooks:
+    +            build: |
+    +                set -x -e
+    +
+    +                curl -fs https://get.symfony.com/cloud/configurator | bash
+    +
+    +                NODE_VERSION=24 assets-build
+    +
+         app:
+             source:
+                 root: "/"
+
+.. index::
+    single: Upsun;Routes
+
+Edit the ``.upsun/config.yaml`` file to route the ``spa.`` subdomain to the ``spa`` application:
+
+.. code-block:: diff
+    :caption: patch_file
+    :emphasize-lines: 5,6
+
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -2,6 +2,9 @@ routes:
+         "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
+
+    +    "https://spa.{all}/": { type: upstream, upstream: "spa:http" }
+    +    "http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
+    +
+     services:
 
 Configuring CORS for the SPA
 ----------------------------

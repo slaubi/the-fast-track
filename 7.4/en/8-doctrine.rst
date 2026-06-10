@@ -27,9 +27,9 @@ Understanding Symfony Environment Variable Conventions
 
 You can define the ``DATABASE_URL`` manually in the ``.env`` or ``.env.local`` file. In fact, thanks to the package's recipe, you'll see an example ``DATABASE_URL`` in your ``.env`` file. But because the local port to PostgreSQL exposed by Docker can change, it is quite cumbersome. There is a better way.
 
-Instead of hard-coding ``DATABASE_URL`` in a file, we can prefix all commands with ``symfony``. This will detect services ran by Docker and/or Platform.sh (when the tunnel is open) and set the environment variable automatically.
+Instead of hard-coding ``DATABASE_URL`` in a file, we can prefix all commands with ``symfony``. This will detect services ran by Docker and/or Upsun (when the tunnel is open) and set the environment variable automatically.
 
-Docker Compose and Platform.sh work seamlessly with Symfony thanks to these environment variables.
+Docker Compose and Upsun work seamlessly with Symfony thanks to these environment variables.
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Check all exposed environment variables by executing ``symfony var:export``:
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Remember the ``database`` *service name* used in the Docker and Platform.sh configurations? The service names are used as prefixes to define environment variables like ``DATABASE_URL``. If your services are named according to the Symfony conventions, no other configuration is needed.
+Remember the ``database`` *service name* used in the Docker and Upsun configurations? The service names are used as prefixes to define environment variables like ``DATABASE_URL``. If your services are named according to the Symfony conventions, no other configuration is needed.
 
 .. note::
 
@@ -509,7 +509,7 @@ Updating the Production Database
 
 The steps needed to migrate the production database are the same as the ones you are already familiar with: commit the changes and deploy.
 
-When deploying the project, Platform.sh updates the code, but also runs the database migration if any (it detects if the ``doctrine:migrations:migrate`` command exists).
+When deploying the project, Upsun updates the code, but also runs the database migration if any (it detects if the ``doctrine:migrations:migrate`` command exists).
 
 .. sidebar:: Going Further
 

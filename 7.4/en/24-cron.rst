@@ -152,35 +152,34 @@ Clean up the database by running the command:
 
     $ symfony console app:comment:cleanup
 
-Setting up a Cron on Platform.sh
---------------------------------
+Setting up a Cron on Upsun
+--------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-One of the nice things about Platform.sh is that most of the configuration is stored in one file: ``.platform.app.yaml``. The web container, the workers, and the cron jobs are described together to help maintenance:
+One of the nice things about Upsun is that most of the configuration is stored in one file: ``.upsun/config.yaml``. The web container, the workers, and the cron jobs are described together to help maintenance:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -59,6 +59,14 @@ crons:
-             spec: '17,47 * * * *'
-             cmd: croncape php-session-clean
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -83,5 +83,13 @@ applications:
+                     spec: '17,47 * * * *'
+                     commands:
+                         start: croncape php-session-clean
+    +            comment_cleanup:
+    +                # Cleanup every night at 11.50 pm (UTC).
+    +                spec: '50 23 * * *'
+    +                commands:
+    +                    start: |
+    +                        if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
+    +                            croncape symfony console app:comment:cleanup
+    +                        fi
 
-    +    comment_cleanup:
-    +        # Cleanup every night at 11.50 pm (UTC).
-    +        spec: '50 23 * * *'
-    +        cmd: |
-    +            if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                croncape symfony console app:comment:cleanup
-    +            fi
-    +
-     workers:
-         messenger:
-             # PHP background workers usually don't require much CPU. See
+             workers:
 
 The ``crons`` section defines all cron jobs. Each cron runs according to a ``spec`` schedule.
 
@@ -196,7 +195,7 @@ Configure the ``MAILTO`` environment variable:
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Note that crons are set up on all Platform.sh branches. If you don't want to run some on non-production environments, check the ``$PLATFORM_ENVIRONMENT_TYPE`` environment variable:
+Note that crons are set up on all Upsun branches. If you don't want to run some on non-production environments, check the ``$PLATFORM_ENVIRONMENT_TYPE`` environment variable:
 
 .. code-block:: bash
     :class: ignore

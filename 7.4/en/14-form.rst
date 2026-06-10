@@ -76,11 +76,11 @@ To display the form to the user, create the form in the controller and pass it t
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 19,29
+    :emphasize-lines: 20,30
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -2,7 +2,9 @@
+    @@ -2,8 +2,10 @@
 
      namespace App\Controller;
 
@@ -89,10 +89,11 @@ To display the form to the user, create the form in the controller and pass it t
     +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+         public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
@@ -288,11 +289,12 @@ We should now handle the form submission and the persistence of its information 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    @@ -7,7 +7,8 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
@@ -367,22 +369,24 @@ Now, we have everything we need to know to implement the logic needed to store t
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
+    @@ -9,7 +9,8 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
-    @@ -29,13 +30,22 @@ final class ConferenceController extends AbstractController
+    @@ -29,13 +30,23 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
     -    {
     +    public function show(
     +        Request $request,
+    +        #[MapEntity(mapping: ['slug' => 'slug'])]
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
@@ -485,27 +489,27 @@ Don't commit yet! We don't want to store uploaded images in the Git repository. 
 Storing Uploaded Files on Production Servers
 --------------------------------------------
 
-The last step is to store the uploaded files on production servers. Why would we have to do something special? Because most modern cloud platforms use read-only containers for various reasons. Platform.sh is no exception.
+The last step is to store the uploaded files on production servers. Why would we have to do something special? Because most modern cloud platforms use read-only containers for various reasons. Upsun is no exception.
 
 Not everything is read-only in a Symfony project. We try hard to generate as much cache as possible when building the container (during the cache warmup phase), but Symfony still needs to be able to write somewhere for the user cache, the logs, the sessions if they are stored on the filesystem, and more.
 
-Have a look at ``.platform.app.yaml``, there is already a writeable *mount* for the ``var/`` directory. The ``var/`` directory is the only directory where Symfony writes (caches, logs, ...).
+Have a look at ``.upsun/config.yaml``, there is already a writeable *mount* for the ``var/`` directory. The ``var/`` directory is the only directory where Symfony writes (caches, logs, ...).
 
 Let's create a new mount for uploaded photos:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -31,6 +31,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -41,6 +41,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    +            "/public/uploads": { source: storage, source_path: uploads }
 
-     mounts:
-         "/var/cache": { source: local, source_path: var/cache }
-    +    "/public/uploads": { source: local, source_path: uploads }
 
-
-     relationships:
+             relationships:
 
 You can now deploy the code and photos will be stored in the ``public/uploads/`` directory like our local version.
 

@@ -189,16 +189,18 @@ One simple way to check for spam when a new comment is submitted is to call the 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    @@ -7,7 +7,8 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    @@ -34,6 +35,7 @@ final class ConferenceController extends AbstractController
+    @@ -34,7 +35,8 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        SpamChecker $spamChecker,
@@ -230,12 +232,12 @@ Managing Secrets in Production
 ------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-For production, Platform.sh supports setting *sensitive environment variables*:
+For production, Upsun supports setting *sensitive environment variables*:
 
 .. code-block:: terminal
     :class: ignore
@@ -272,7 +274,7 @@ Re-add the Akismet secret in the production vault but with its production value:
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-The last step is to send the decryption key to Platform.sh by setting a sensitive variable:
+The last step is to send the decryption key to Upsun by setting a sensitive variable:
 
 .. code-block:: terminal
 

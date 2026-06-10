@@ -156,9 +156,9 @@ Configuring Blackfire in Production
 -----------------------------------
 
 .. index::
-    single: Platform.sh;Blackfire
+    single: Upsun;Blackfire
 
-Blackfire is included by default in all Platform.sh projects.
+Blackfire is included by default in all Upsun projects.
 
 Set up the *server* credentials as **production** secrets:
 
@@ -173,7 +173,7 @@ Set up the *server* credentials as **production** secrets:
 The PHP probe is already enabled as any other needed PHP extension:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 9
     :class: ignore
 
@@ -192,7 +192,7 @@ Configuring Varnish for Blackfire
 ---------------------------------
 
 .. index::
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
 
 Before you can deploy to start profiling, you need a way to bypass the Varnish HTTP cache. If not, Blackfire will never hit the PHP application. You are going to authorize the bypass of Varnish only for profiling requests coming from your local machine.
 
@@ -208,8 +208,8 @@ And use it to configure Varnish:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/config.vcl
-    +++ w/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,3 +1,11 @@
     +acl profile {
     +   # Authorize the local IP address (replace with the IP found above)
@@ -407,7 +407,7 @@ Managing performance is not only about improving the performance of existing cod
 
 The scenario written in the previous section can be run automatically in a Continuous Integration workflow or in production on a regular basis.
 
-Platform.sh also allows to `run the scenarios`_ whenever you create a new branch or deploy to production to check the performance of the new code automatically.
+Upsun also allows to `run the scenarios`_ whenever you create a new branch or deploy to production to check the performance of the new code automatically.
 
 .. sidebar:: Going Further
 
