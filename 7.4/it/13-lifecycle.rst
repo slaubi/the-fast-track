@@ -313,7 +313,7 @@ Proviamo ad aggiungere più conferenze nel backend e cambiamo la città o l'anno
     single: Twig;path
     single: Attributes;Route
 
-L'ultima modifica è quella di aggiornare i controller e i template per utilizzare nelle rotte lo ``slug`` della conferenza al posto del suo ``id``:
+L'ultima modifica è quella di aggiornare i controller e i template per utilizzare nelle rotte lo ``slug`` della conferenza al posto del suo ``id``. Dato che il parametro della rotta non è più la chiave primaria dell'entità, indicare a ``#[MapEntity]`` quale proprietà far corrispondere passando un ``mapping`` esplicito:
 
 .. code-block:: diff
     :caption: patch_file
