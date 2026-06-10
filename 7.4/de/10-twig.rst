@@ -161,7 +161,7 @@ Füge eine ``show()``-Methode in ``src/Controller/ConferenceController.php`` hin
     +    }
      }
 
-Diese Methode hat ein besonderes Verhalten, das wir noch nicht gesehen haben. Wir bitten darum, dass eine ``Conference``-Instanz in die Methode injiziert wird. Aber es kann viele davon in der Datenbank geben. Symfony ist in der Lage, die ``{id}`` aus dem Request-Pfad  zu nutzen (``id`` ist der  Primärschlüssel der ``conference``-Tabelle).
+Diese Methode hat ein besonderes Verhalten, das wir noch nicht gesehen haben. Wir bitten darum, dass eine ``Conference``-Instanz in die Methode injiziert wird. Aber es kann viele davon in der Datenbank geben. Das ``#[MapEntity]``-Attribut weist Symfony an, die richtige anhand der ``{id}`` aus dem Request-Pfad zu holen (``id`` ist der Primärschlüssel der ``conference``-Tabelle).
 
 Das Abrufen der Kommentare zur Konferenz kann über die ``findBy()``-Methode erfolgen, deren erstes Argument ein Abfragekriterium ist.
 

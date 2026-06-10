@@ -313,7 +313,7 @@ Versuche, weitere Konferenzen im Backend hinzuzufügen und ändere  die Stadt od
     single: Twig;path
     single: Attributes;Route
 
-Die letzte Änderung besteht darin, die Controller und die Templates zu anzupassen, sodass diese den Konferenz-``slug`` anstelle der Konferenz-``id`` für Routen verwenden:
+Die letzte Änderung besteht darin, die Controller und die Templates zu anzupassen, sodass diese den Konferenz-``slug`` anstelle der Konferenz-``id`` für Routen verwenden. Da der Routenparameter nicht mehr der Primärschlüssel der Entität ist, gib ``#[MapEntity]`` über ein explizites ``mapping`` an, welche Eigenschaft zugeordnet werden soll:
 
 .. code-block:: diff
     :caption: patch_file
