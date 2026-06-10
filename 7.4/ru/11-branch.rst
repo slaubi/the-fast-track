@@ -70,14 +70,16 @@
 
     --- i/config/packages/framework.yaml
     +++ w/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: null
+    @@ -3,7 +3,8 @@ framework:
+         secret: '%env(APP_SECRET)%'
+
+         # Note that the session will be started ONLY if you read or write from it.
+    -    session: true
+    +    session:
     +        handler_id: '%env(resolve:DATABASE_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
+
+         #esi: true
+         #fragments: true
 
 Для хранения сессий в базе данных нам нужно создать таблицу ``sessions``. Создадим её с помощью миграции Doctrine:
 

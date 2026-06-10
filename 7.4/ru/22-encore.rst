@@ -125,9 +125,9 @@
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.4.zip', 'guestbook-6.4.zip');"
-    $ unzip -o guestbook-6.4.zip
-    $ rm guestbook-6.4.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-7.4.zip', 'guestbook-7.4.zip');"
+    $ unzip -o guestbook-7.4.zip
+    $ rm guestbook-7.4.zip
 
 Изучите код шаблонов, возможно, вы узнаете кое-что новое о Twig.
 

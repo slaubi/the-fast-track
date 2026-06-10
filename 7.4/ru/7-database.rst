@@ -147,19 +147,18 @@ Symfony CLI автоматически обнаруживает сервисы D
 Добавление такого сервиса, как PostgreSQL, в инфраструктуру продакшена на Platform.sh, делается через изменения в файле ``.platform/services.yaml``, что уже было сделано с помощью рецепта пакета ``webapp``:
 
 .. code-block:: yaml
-    :caption: .platform/services.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     database:
         type: postgresql:16
-        disk: 1024
 
 Сервис ``database`` — это PostgreSQL (такой же версии, что и для Docker), который мы разместим в небольшом контейнере с диском объёмом 1 Гб.
 
 Также необходимо "привязать" БД к контейнеру приложения, который описан в ``.platform.app.yaml``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     relationships:
@@ -170,7 +169,7 @@ Symfony CLI автоматически обнаруживает сервисы D
 Последним шагом будет добавление PHP-модуля ``pdo_pgsql``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     runtime:

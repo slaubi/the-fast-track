@@ -173,7 +173,7 @@ Blackfire состоит из нескольких частей:
 Зонд PHP уже включён, как и любой другой необходимый модуль PHP:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 9
     :class: ignore
 
@@ -208,8 +208,8 @@ Blackfire состоит из нескольких частей:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/config.vcl
-    +++ w/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,3 +1,11 @@
     +acl profile {
     +   # Authorize the local IP address (replace with the IP found above)
