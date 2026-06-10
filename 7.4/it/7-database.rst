@@ -153,7 +153,7 @@ Per l'infrastruttura di produzione su Upsun, l'aggiunta di un servizio come Post
     database:
         type: postgresql:16
 
-Il servizio ``database`` è un database PostgreSQL (stessa versione di Docker), che vogliamo configurare con 1GB di spazio.
+Il servizio ``database`` è un database PostgreSQL (stessa versione di Docker). Upsun assegna automaticamente il suo spazio su disco al primo deploy; all'occorrenza è possibile modificarlo in seguito con ``symfony cloud:resources:set``.
 
 Abbiamo anche bisogno di "collegare" il DB al container dell'applicazione, come descritto nel file ``.upsun/config.yaml``:
 

@@ -162,7 +162,7 @@ Salvare i dati caricati in produzione
 .. index::
     single: Upsun;File Service
 
-Abbiamo già definito una speciale cartella in lettura e scrittura per i file caricati in ``.upsun/config.yaml``. Ma il mount è locale. Se vogliamo che il container e il consumer dei messaggi siano in grado di accedere allo stesso mount, dobbiamo  creare un *servizio per i file*:
+Abbiamo già definito una speciale cartella in lettura e scrittura per i file caricati in ``.upsun/config.yaml``. Ma il mount è locale al container dell'applicazione. Se vogliamo che il container e il consumer dei messaggi siano in grado di accedere allo stesso mount, dobbiamo  creare un *servizio per i file*:
 
 .. code-block:: diff
     :caption: patch_file
