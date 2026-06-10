@@ -164,23 +164,22 @@ L'un des avantages de Platform.sh est qu'une bonne partie de la configuration es
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -59,6 +59,14 @@ crons:
-             spec: '17,47 * * * *'
-             cmd: croncape php-session-clean
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -83,5 +83,13 @@ applications:
+                     spec: '17,47 * * * *'
+                     commands:
+                         start: croncape php-session-clean
+    +            comment_cleanup:
+    +                # Cleanup every night at 11.50 pm (UTC).
+    +                spec: '50 23 * * *'
+    +                commands:
+    +                    start: |
+    +                        if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
+    +                            croncape symfony console app:comment:cleanup
+    +                        fi
 
-    +    comment_cleanup:
-    +        # Cleanup every night at 11.50 pm (UTC).
-    +        spec: '50 23 * * *'
-    +        cmd: |
-    +            if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                croncape symfony console app:comment:cleanup
-    +            fi
-    +
-     workers:
-         messenger:
-             # PHP background workers usually don't require much CPU. See
+             workers:
 
 La section ``crons`` définit tous les *cron jobs*. Chaque cron fonctionne selon un planning spécifique (``spec``).
 

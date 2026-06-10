@@ -136,22 +136,23 @@ Ajoutez une méthode ``show()`` dans le fichier ``src/Controller/ConferenceContr
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -2,6 +2,8 @@
+    @@ -2,6 +2,9 @@
 
      namespace App\Controller;
 
     +use App\Entity\Conference;
     +use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+    +use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -17,4 +19,13 @@ final class ConferenceController extends AbstractController
+    @@ -17,4 +20,13 @@ final class ConferenceController extends AbstractController
                  'conferences' => $conferenceRepository->findAll(),
              ]));
          }
     +
     +    #[Route('/conference/{id}', name: 'conference')]
-    +    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    {
     +        return new Response($twig->render('conference/show.html.twig', [
     +            'conference' => $conference,
@@ -333,20 +334,21 @@ Pour gérer la pagination dans le template, transmettez à Twig le Doctrine Pagi
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -6,6 +6,7 @@ use App\Entity\Conference;
+    @@ -6,7 +6,8 @@ use App\Entity\Conference;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
-    @@ -21,11 +22,16 @@ final class ConferenceController extends AbstractController
+    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
          {
     +        $offset = max(0, $request->query->getInt('offset', 0));
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
@@ -441,8 +443,8 @@ Vous avez peut-être remarqué que les deux méthodes présentes dans ``Conferen
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);

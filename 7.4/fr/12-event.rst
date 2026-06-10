@@ -47,8 +47,8 @@ Comme nous n'avons que deux contrôleurs, vous *pourriez* procéder comme ceci (
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);

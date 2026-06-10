@@ -189,16 +189,18 @@ Une façon simple de vérifier la présence de spam lorsqu'un nouveau commentair
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    @@ -7,7 +7,8 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    @@ -34,6 +35,7 @@ final class ConferenceController extends AbstractController
+    @@ -34,7 +35,8 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        SpamChecker $spamChecker,

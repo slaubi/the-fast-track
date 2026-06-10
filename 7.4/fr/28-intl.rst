@@ -61,10 +61,9 @@ Comme nous utiliserons la même condition dans presque toutes les routes, dépla
 
     --- i/config/services.yaml
     +++ w/config/services.yaml
-    @@ -9,6 +9,7 @@ parameters:
+    @@ -9,5 +9,6 @@ parameters:
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
          default_base_url: 'http://127.0.0.1'
-         router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
     +    app.supported_locales: 'en|fr'
 
      services:
@@ -99,7 +98,7 @@ Ajoutez le même préfixe de route locale aux autres URLs :
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,7 +43,7 @@ final class ConferenceController extends AbstractController
+    @@ -43,8 +43,8 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
@@ -107,6 +106,7 @@ Ajoutez le même préfixe de route locale aux autres URLs :
     +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
          public function show(
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
 
 Nous avons presque fini. Cependant, nous n'avons plus de route correspondant à ``/``. Recréons-la et faisons en sorte qu'elle redirige vers ``/en/`` :

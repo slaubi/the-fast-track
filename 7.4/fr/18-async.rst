@@ -281,7 +281,7 @@ Modifiez le contrôleur pour utiliser le nouveau système :
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -5,20 +5,22 @@ namespace App\Controller;
+    @@ -5,21 +5,23 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -290,6 +290,7 @@ Modifiez le contrôleur pour utiliser le nouveau système :
      use App\Repository\ConferenceRepository;
     -use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
@@ -305,8 +306,9 @@ Modifiez le contrôleur pour utiliser le nouveau système :
          ) {
          }
 
-    @@ -35,7 +37,6 @@ final class ConferenceController extends AbstractController
+    @@ -35,8 +37,7 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
@@ -508,7 +510,7 @@ Exécuter des workers sur Platform.sh
 Pour consommer les messages de PostgreSQL, nous devons exécuter la commande ``messenger:consume`` en continu. Sur Platform.sh, c'est le rôle d'un *worker* :
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1,5
     :class: ignore
 

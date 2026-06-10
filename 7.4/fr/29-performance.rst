@@ -173,7 +173,7 @@ Définissez les informations de connexion du *serveur* comme secrets de **produc
 La sonde PHP est déjà activée comme n'importe quelle autre extention PHP nécessaire :
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 9
     :class: ignore
 
@@ -208,8 +208,8 @@ Et utilisez-la pour configurer Varnish :
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/config.vcl
-    +++ w/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,3 +1,11 @@
     +acl profile {
     +   # Authorize the local IP address (replace with the IP found above)

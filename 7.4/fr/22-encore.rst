@@ -125,9 +125,9 @@ Nous pouvons maintenant styliser l'application. Téléchargez et extrayez l'arch
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.4.zip', 'guestbook-6.4.zip');"
-    $ unzip -o guestbook-6.4.zip
-    $ rm guestbook-6.4.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-7.4.zip', 'guestbook-7.4.zip');"
+    $ unzip -o guestbook-7.4.zip
+    $ rm guestbook-7.4.zip
 
 Jetez un coup d’œil aux templates, vous pourriez apprendre un truc ou deux sur Twig.
 
