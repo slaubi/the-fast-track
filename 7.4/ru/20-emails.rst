@@ -165,7 +165,7 @@
      services:
          # default configuration for services in *this* file
 
-Переменная окружения ``SYMFONY_DEFAULT_ROUTE_URL`` автоматически устанавливается локально при использовании CLI-команды ``symfony`` и определяются на основе конфигурации в Platform.sh.
+Переменная окружения ``SYMFONY_DEFAULT_ROUTE_URL`` автоматически устанавливается локально при использовании CLI-команды ``symfony`` и определяются на основе конфигурации в Upsun.
 
 Подключение маршрута к контроллеру
 -----------------------------------------------------------------
@@ -369,16 +369,16 @@
 
 Эти проверки работают, когда электронная почта отправляется синхронно или асинхронно.
 
-Отправка электронной почты в Platform.sh
+Отправка электронной почты в Upsun
 -----------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Для Platform.sh нет специальной конфигурации. Все учётные записи имеют аккаунт на сервисе Sendgrid, который автоматически используется для отправки электронных писем.
+Для Upsun нет специальной конфигурации. Все учётные записи имеют аккаунт на сервисе Sendgrid, который автоматически используется для отправки электронных писем.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -401,11 +401,11 @@
 
     * `Документация по Mailer на сайте Symfony`_;
 
-    * `Документация по настройке электронной почты в Platform.sh`_.
+    * `Документация по настройке электронной почты в Upsun`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Обучающий видеокурс по Mailer на SymfonyCasts`: https://symfonycasts.com/screencast/mailer
 .. _`Документация по шаблонизатору Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Процессоры переменных окружения`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Документация по Mailer на сайте Symfony`: https://symfony.com/doc/current/mailer.html
-.. _`Документация по настройке электронной почты в Platform.sh`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Документация по настройке электронной почты в Upsun`: https://symfony.com/doc/current/cloud/services/emails.html

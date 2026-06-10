@@ -152,14 +152,14 @@
 
     $ symfony console app:comment:cleanup
 
-Настройка cron в Platform.sh
+Настройка cron в Upsun
 --------------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Одним из удобств Platform.sh является то, что большая часть конфигурации хранится в одном файле: ``.platform.app.yaml``. Веб-контейнер, воркеры и cron-задания для простоты администрирования описаны в одном месте:
+Одним из удобств Upsun является то, что большая часть конфигурации хранится в одном файле: ``.upsun/config.yaml``. Веб-контейнер, воркеры и cron-задания для простоты администрирования описаны в одном месте:
 
 .. code-block:: diff
     :caption: patch_file
@@ -195,7 +195,7 @@
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Обратите внимание, что задания для cron настроены для всех веток Platform.sh. Если вы не хотите запускать какие-то задания вне продакшена, проверьте переменную окружения ``$PLATFORM_ENVIRONMENT_TYPE``:
+Обратите внимание, что задания для cron настроены для всех веток Upsun. Если вы не хотите запускать какие-то задания вне продакшена, проверьте переменную окружения ``$PLATFORM_ENVIRONMENT_TYPE``:
 
 .. code-block:: bash
     :class: ignore

@@ -500,14 +500,14 @@ Symfony CLI может управлять такими фоновыми кома
 
     $ symfony console messenger:failed:retry
 
-Выполнение воркеров на Platform.sh
+Выполнение воркеров на Upsun
 ------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-Чтобы получать сообщения от PostgreSQL, нам нужно постоянно запускать команду ``messenger:consume``. В Platform.sh для этой задачи отведена специальная роль — *воркер*:
+Чтобы получать сообщения от PostgreSQL, нам нужно постоянно запускать команду ``messenger:consume``. В Upsun для этой задачи отведена специальная роль — *воркер*:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -520,7 +520,7 @@ Symfony CLI может управлять такими фоновыми кома
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Подобно Symfony CLI, Platform.sh позволяет управлять перезагрузками и логами.
+Подобно Symfony CLI, Upsun позволяет управлять перезагрузками и логами.
 
 .. index::
     single: Symfony CLI;cloud:logs

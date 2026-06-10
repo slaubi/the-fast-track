@@ -103,7 +103,7 @@ RabbitMQ — очень популярный брокер сообщений, к
 --------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Чтобы активировать RabbitMQ на продакшен-серверах добавьте его в список сервисов:
@@ -148,7 +148,7 @@ RabbitMQ — очень популярный брокер сообщений, к
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

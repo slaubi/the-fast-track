@@ -536,12 +536,12 @@ Symfony автоматически активирует поддержку ESI, 
 
 .. index::
     single: HTTP Cache;Varnish
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 Вместо использования обратного прокси-сервера Symfony в продакшене, мы будем использовать "более надёжный" обратный прокси-сервер Varnish.
 
-Добавьте Varnish в сервисы Platform.sh:
+Добавьте Varnish в сервисы Upsun:
 
 .. code-block:: diff
     :caption: patch_file
@@ -564,7 +564,7 @@ Symfony автоматически активирует поддержку ESI, 
      applications:
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Используйте Varnish в качестве основной точки входа в маршруты:
 
@@ -656,7 +656,7 @@ URL-адреса выглядит немного необычно, потому 
 
     * `Модель валидации HTTP-кеширования`_;
 
-    * `HTTP-кеширование в Platform.sh`_.
+    * `HTTP-кеширование в Upsun`_.
 
 .. _`Blackfire`: https://blackfire.io/
 .. _`документации Varnish`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
@@ -666,4 +666,4 @@ URL-адреса выглядит немного необычно, потому 
 .. _`Спецификация ESI`: https://www.w3.org/TR/esi-lang
 .. _`ресурсы по ESI`: https://www.akamai.com/us/en/support/esi.jsp
 .. _`Модель валидации HTTP-кеширования`: https://symfony.com/doc/current/http_cache/validation.html
-.. _`HTTP-кеширование в Platform.sh`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
+.. _`HTTP-кеширование в Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html

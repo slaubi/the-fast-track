@@ -232,12 +232,12 @@
 ----------------------------------------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-Для продакшена Platform.sh поддерживает установку *конфиденциальных переменных окружения*:
+Для продакшена Upsun поддерживает установку *конфиденциальных переменных окружения*:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,7 +274,7 @@
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-Последний шаг — отправьте ключ дешифрования в Platform.sh, установив специальную для этого переменную:
+Последний шаг — отправьте ключ дешифрования в Upsun, установив специальную для этого переменную:
 
 .. code-block:: terminal
 

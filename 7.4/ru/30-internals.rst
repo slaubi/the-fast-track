@@ -128,7 +128,7 @@
     single: Composer;Autoloader
     single: Autoloader
 
-Откуда он взялся? Platform.sh выполняет оптимизацию при развёртывании приложения Symfony, например, оптимизирует автозагрузчик Composer (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). Также, чтобы не парсить файл ``.env`` с переменными окружения при каждом запросе, сгенерируем файл ``.env.local.php``:
+Откуда он взялся? Upsun выполняет оптимизацию при развёртывании приложения Symfony, например, оптимизирует автозагрузчик Composer (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). Также, чтобы не парсить файл ``.env`` с переменными окружения при каждом запросе, сгенерируем файл ``.env.local.php``:
 
 .. code-block:: terminal
     :class: ignore
