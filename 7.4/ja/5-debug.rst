@@ -68,7 +68,7 @@ Symfony は、 *環境* の概念があります。デフォルトでは、 ``de
 
 ``APP_ENV`` の環境変数を変更することで、環境をスイッチすることができます。
 
-Platform.sh へデプロイする際は ``APP_ENV`` に既にセットされている環境は、自動的に ``prod`` となります。
+Upsun へデプロイする際は ``APP_ENV`` に既にセットされている環境は、自動的に ``prod`` となります。
 
 環境設定の扱いに関して
 ---------------------------------
@@ -130,8 +130,8 @@ IDE の設定
 ---------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 

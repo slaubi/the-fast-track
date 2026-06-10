@@ -232,12 +232,12 @@ Akismet Key をヴォールトに追加します:
 ------------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-本番では、 Platform.sh は *注意が必要な環境変数* の設定をサポートしています:
+本番では、 Upsun は *注意が必要な環境変数* の設定をサポートしています:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,7 +274,7 @@ Akismet Key をヴォールトに追加します:
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-最後に、Platform.sh に、注意が必要な値をセットした際の復号キーを送ってください:
+最後に、Upsun に、注意が必要な値をセットした際の復号キーを送ってください:
 
 .. code-block:: terminal
 

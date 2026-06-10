@@ -128,7 +128,7 @@ Blackfire のデバッグアドオンを使用する
     single: Composer;Autoloader
     single: Autoloader
 
-Platform.sh は、Symfony アプリケーションをデプロイする際に、 最適化を行います。Composer のオートローダーを最適化するのと同じようなものです (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``)。また、  ``.env.local.php`` ファイルによって生成される  ``.env`` ファイルに定義してある環境変数も最適化してリクエスト毎にファイルをパースしないようにします:
+Upsun は、Symfony アプリケーションをデプロイする際に、 最適化を行います。Composer のオートローダーを最適化するのと同じようなものです (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``)。また、  ``.env.local.php`` ファイルによって生成される  ``.env`` ファイルに定義してある環境変数も最適化してリクエスト毎にファイルをパースしないようにします:
 
 .. code-block:: terminal
     :class: ignore

@@ -152,14 +152,14 @@ Symfony にビルトインされている全てのアプリケーションのコ
 
     $ symfony console app:comment:cleanup
 
-Platform.sh で Cron をセットアップする
+Upsun で Cron をセットアップする
 ------------------------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Platform.sh の便利な点の一つは、ほとんどの設定は ``.platform.app.yaml`` に格納されていることです。メンテナンスを楽にするために、Webコンテナ、ワーカー、Cron ジョブが一緒に記述されています:
+Upsun の便利な点の一つは、ほとんどの設定は ``.upsun/config.yaml`` に格納されていることです。メンテナンスを楽にするために、Webコンテナ、ワーカー、Cron ジョブが一緒に記述されています:
 
 .. code-block:: diff
     :caption: patch_file
@@ -195,7 +195,7 @@ Platform.sh の便利な点の一つは、ほとんどの設定は ``.platform.a
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Cron は、全ての Platform.sh のブランチにセットアップされています。本番以外の環境で Cron を走らせたくない場合は、環境変数の ``$PLATFORM_ENVIRONMENT_TYPE``  をチェックしてください:
+Cron は、全ての Upsun のブランチにセットアップされています。本番以外の環境で Cron を走らせたくない場合は、環境変数の ``$PLATFORM_ENVIRONMENT_TYPE``  をチェックしてください:
 
 .. code-block:: bash
     :class: ignore

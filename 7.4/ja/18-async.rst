@@ -500,14 +500,14 @@ Symfony CLI は、 ``run`` コマンドに ``-d`` フラグを付けることで
 
     $ symfony console messenger:failed:retry
 
-Platform.sh でワーカーを実行する
+Upsun でワーカーを実行する
 ------------------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-PostgreSQL からメッセージ取得実行をするには、 ``messenger:consume`` コマンドを継続的に実行する必要があります。これは Platform.sh の *ワーカー* の役割です:
+PostgreSQL からメッセージ取得実行をするには、 ``messenger:consume`` コマンドを継続的に実行する必要があります。これは Upsun の *ワーカー* の役割です:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -520,7 +520,7 @@ PostgreSQL からメッセージ取得実行をするには、 ``messenger:consu
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Symfony CLI のように、Platform.sh マネージャーはログをリスタートします。
+Symfony CLI のように、Upsun マネージャーはログをリスタートします。
 
 .. index::
     single: Symfony CLI;cloud:logs

@@ -138,13 +138,13 @@ Symfony CLI は自動的にプロジェクトで実行されている Docker サ
 
     $ symfony run psql < dump.sql
 
-PostgreSQL を Platform.sh へ追加
+PostgreSQL を Upsun へ追加
 ------------------------------------
 
 .. index::
-    single: Platform.sh;PostgreSQL
+    single: Upsun;PostgreSQL
 
-Platform.sh の本番インフラでは、PostgreSQL のようなサービスを追加する際に、``.platform/services.yaml`` ファイルを使用しますが、 ``webapp`` パッケージのレシピで既に追加されています:
+Upsun の本番インフラでは、PostgreSQL のようなサービスを追加する際に、``.upsun/config.yaml`` ファイルを使用しますが、 ``webapp`` パッケージのレシピで既に追加されています:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -155,7 +155,7 @@ Platform.sh の本番インフラでは、PostgreSQL のようなサービスを
 
 ``database`` サービスは PostgreSQL データベース (Dockerと同じバージョン) で、ディスク 1GB のコンテナをプロビジョニングする必要があります。
 
-また、アプリケーションコンテナと DB を "リンク" する必要があります。これは、 ``.platform.app.yaml`` に記述されます:
+また、アプリケーションコンテナと DB を "リンク" する必要があります。これは、 ``.upsun/config.yaml`` に記述されます:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -178,21 +178,21 @@ Platform.sh の本番インフラでは、PostgreSQL のようなサービスを
             - pdo_pgsql
             # other extensions
 
-Platform.sh のデータベースへのアクセス
+Upsun のデータベースへのアクセス
 ---------------------------------------------------
 
-PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動いています。
+PostgreSQL が Docker 経由のローカルと、 Upsun の本番で動いています。
 
 ここで見たように、 ``symfony run`` コマンドで環境変数が公開されているので、 ``symfony run psql`` を実行すると Docker によってホストされているデータベースに自動的に接続することができます。
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;var:expose-from-tunnel
     single: Symfony CLI;run psql
 
-本番のコンテナ上の PostgreSQL に接続したければ、ローカル環境と Platform.sh の間で SSH トンネルを開く事が可能です:
+本番のコンテナ上の PostgreSQL に接続したければ、ローカル環境と Upsun の間で SSH トンネルを開く事が可能です:
 
 .. code-block:: terminal
     :class: ignore
@@ -200,7 +200,7 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
     $ symfony cloud:tunnel:open
     $ symfony var:expose-from-tunnel
 
-デフォルトでは、 Platform.sh のサービスは、ローカル環境に環境変数を公開していません。 ``var:expose-from-tunnel`` コマンドを実行して明示する必要があります。本番のデータベースに接続するのは、危険な運用だからです。*本当の* データを壊してしまうかもしれません。フラグを必須とすることで、あなたがしようとしていることの確認をしているのです。
+デフォルトでは、 Upsun のサービスは、ローカル環境に環境変数を公開していません。 ``var:expose-from-tunnel`` コマンドを実行して明示する必要があります。本番のデータベースに接続するのは、危険な運用だからです。*本当の* データを壊してしまうかもしれません。フラグを必須とすることで、あなたがしようとしていることの確認をしているのです。
 
 今度は、前のように ``symfony run psql`` 経由でリモートの PostgreSQL データベースへ接続しましょう:
 
@@ -224,10 +224,10 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
 ---------------------------
 
 .. index::
-    single: Platform.sh;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-環境変数を使うことで、Docker Compose と Platform.sh はシームレスに Symfony と連携することができます。
+環境変数を使うことで、Docker Compose と Upsun はシームレスに Symfony と連携することができます。
 
 ``symfony var:export`` を実行して ``symfony`` が公開している全ての環境変数をチェックしてみましょう:
 
@@ -245,7 +245,7 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
 
 ``PG*`` 環境変数は ``psql`` ユーティリティで使われます。他はどうでしょうか？
 
-``var:expose-from-tunnel`` コマンドを実行して、 Platform.sh へのトンネルをオープンすると、 ``var:export`` コマンドは、リモートの環境変数を返します:
+``var:expose-from-tunnel`` コマンドを実行して、 Upsun へのトンネルをオープンすると、 ``var:export`` コマンドは、リモートの環境変数を返します:
 
 .. code-block:: terminal
     :class: ignore
@@ -258,19 +258,19 @@ PostgreSQL が Docker 経由のローカルと、 Platform.sh の本番で動い
 インフラストラクチャ情報を記述する
 ---------------------------------------------------
 
-まだ気づいていないかもしれませんが、インフラストラクチャ情報をコードと一緒にファイルに保存することは、非常に役に立ちます。DockerやPlatform.shは設定ファイルを使って、プロジェクトのインフラストラクチャ情報を記述します。新しい機能でサービスの追加が必要な場合、同じパッチで、コードとインフラストラクチャを変更することができます。
+まだ気づいていないかもしれませんが、インフラストラクチャ情報をコードと一緒にファイルに保存することは、非常に役に立ちます。DockerやUpsunは設定ファイルを使って、プロジェクトのインフラストラクチャ情報を記述します。新しい機能でサービスの追加が必要な場合、同じパッチで、コードとインフラストラクチャを変更することができます。
 
 .. sidebar:: より深く学ぶために
 
-    * `Platform.sh サービス`_;
+    * `Upsun サービス`_;
 
-    * `Platform.sh トンネル`_;
+    * `Upsun トンネル`_;
 
     * `PostgreSQL のドキュメント`_;
 
     * `docker-compose commands`_.
 
-.. _`Platform.sh サービス`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
-.. _`Platform.sh トンネル`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
+.. _`Upsun サービス`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
+.. _`Upsun トンネル`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL のドキュメント`: https://www.postgresql.org/docs/
 .. _`docker-compose commands`: https://docs.docker.com/compose/reference/

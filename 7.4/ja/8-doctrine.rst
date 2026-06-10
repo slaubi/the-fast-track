@@ -27,9 +27,9 @@ Symfony の環境変数の規約を理解する
 
 ``.env`` や ``.env.local`` ファイルに手動で ``DATABASE_URL`` を定義することもできます。実際、パッケージのレシピを使うことで、 ``.env`` ファイル内に ``DATABASE_URL`` がサンプルが書かれていますので確認してください。しかし、Docker が PostgreSQL のローカルポートは変えることがありますので、少し面倒なときもあります。そんなときのために、より良い方法があります。
 
-ファイル内に ``DATABASE_URL`` をハードコードするのではなく、全てのコマンドに ``symfony`` の接頭辞をつけることができます。このことによって Docker や Platform.sh (トンネルが開いていれば)で動いているサービスを検知し、環境変数を自動的に設定してくれます。
+ファイル内に ``DATABASE_URL`` をハードコードするのではなく、全てのコマンドに ``symfony`` の接頭辞をつけることができます。このことによって Docker や Upsun (トンネルが開いていれば)で動いているサービスを検知し、環境変数を自動的に設定してくれます。
 
-これらの環境変数を使うことで Docker Compose と Platform.sh は、Symfony とシームレスに連携することができます。
+これらの環境変数を使うことで Docker Compose と Upsun は、Symfony とシームレスに連携することができます。
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Symfony の環境変数の規約を理解する
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Docker や Platform.sh の設定で使われている *サービス名* ``database`` を覚えていますか？サービス名は、``DATABASE_URL`` のような環境変数を定義の接頭辞として使われます。Symfony の規約に沿ってサービスが命名されていれば、特に設定は必要ありません。
+Docker や Upsun の設定で使われている *サービス名* ``database`` を覚えていますか？サービス名は、``DATABASE_URL`` のような環境変数を定義の接頭辞として使われます。Symfony の規約に沿ってサービスが命名されていれば、特に設定は必要ありません。
 
 .. note::
 
@@ -509,7 +509,7 @@ Doctrine の生成物を見てみましょう:
 
 本番のデータベースのマイグレーションに必要なステップは、既にやった内容と同じです: コミットして変更をデプロイするのみです。
 
-プロジェクトをデプロイすると、 Platform.sh はコードを更新し、必要であればデータベースマイグレーションを実行します(``doctrine:migrations:migrate`` コマンドがあるかを検知します)。
+プロジェクトをデプロイすると、 Upsun はコードを更新し、必要であればデータベースマイグレーションを実行します(``doctrine:migrations:migrate`` コマンドがあるかを検知します)。
 
 .. sidebar:: より深く学ぶために
 
