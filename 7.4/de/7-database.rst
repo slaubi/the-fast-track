@@ -147,19 +147,18 @@ PostgreSQL zu Platform.sh hinzufügen
 Für die Produktiv-Infrastruktur auf Platform.sh sollte das Hinzufügen eines Dienstes wie PostgreSQL in der ``.platform/services.yaml``-Datei erfolgen, das wurde bereits durch das Recipe vom ``webapp``-Paket gemacht:
 
 .. code-block:: yaml
-    :caption: .platform/services.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     database:
         type: postgresql:16
-        disk: 1024
 
 Der ``database``-Dienst ist eine PostgreSQL-Datenbank (in der selben Version wie für Docker), die wir mit einer Kapazität von 1 GB bereitstellen wollen.
 
 Wir müssen die Datenbank auch mit dem Anwendungscontainer "verknüpfen", was in ``.platform.app.yaml`` beschrieben ist:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     relationships:
@@ -170,7 +169,7 @@ Der ``database``-Dienst vom Typ ``postgresql`` wird  auf dem Anwendungscontainer
 Kontrolliere, daß die ``pdo_pgsql``-Erweiterung bereits installiert ist für die PHP-Runtime.
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     runtime:

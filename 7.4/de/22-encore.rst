@@ -125,9 +125,9 @@ Wir sind nun bereit, die Anwendung zu gestalten. Lade das Archiv herunter und en
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.4.zip', 'guestbook-6.4.zip');"
-    $ unzip -o guestbook-6.4.zip
-    $ rm guestbook-6.4.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-7.4.zip', 'guestbook-7.4.zip');"
+    $ unzip -o guestbook-7.4.zip
+    $ rm guestbook-7.4.zip
 
 Wirf einen Blick auf die Templates, vielleicht lernst Du ein oder zwei Tricks über Twig.
 

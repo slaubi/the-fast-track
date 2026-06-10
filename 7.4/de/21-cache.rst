@@ -546,20 +546,22 @@ Füge Varnish zu den Platform.sh-Diensten hinzu:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -4,3 +4,11 @@ database:
-         disk: 1024
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -6,6 +6,15 @@ services:
+         database:
+             type: postgresql:16
 
-
-    +varnish:
-    +    type: varnish:6.0
-    +    relationships:
-    +        application: 'app:http'
-    +    configuration:
-    +        vcl: !include
-    +            type: string
-    +            path: config.vcl
+    +    varnish:
+    +        type: varnish:7.6
+    +        relationships:
+    +            application: 'app:http'
+    +        configuration:
+    +            vcl: !include
+    +                type: string
+    +                path: config.vcl
+    +
+     applications:
 
 .. index::
     single: Platform.sh;Routes
@@ -569,17 +571,18 @@ Verwende Varnish als Main-Entry-Point in den Routen:
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
-    @@ -1,2 +1,2 @@
-    -"https://{all}/": { type: upstream, upstream: "app:http" }
-    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -1,5 +1,5 @@
+     routes:
+    -    "https://{all}/": { type: upstream, upstream: "app:http" }
+    +    "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 Erstelle zum Abschluss eine ``config.vcl``-Datei zur Konfiguration von Varnish:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -591,7 +594,7 @@ ESI-Unterstützung für Varnish aktivieren
 Die ESI-Unterstützung für Varnish sollte für jeden Request explizit aktiviert werden. Um es universell zu machen verwendet Symfony die standardisierten ``Surrogate-Capability``- und ``Surrogate-Control``-Header, um die ESI-Unterstützung auszuhandeln:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -615,8 +618,8 @@ Wie auch immer, lasse uns sehen, wie man Varnish für die Invalidierung des Cach
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/config.vcl
-    +++ w/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();

@@ -325,8 +325,9 @@ Die letzte Änderung besteht darin, die Controller und die Templates zu anzupass
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
+    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
          {
              $offset = max(0, $request->query->getInt('offset', 0));
     --- i/templates/base.html.twig

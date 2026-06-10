@@ -63,7 +63,7 @@ Die Bildoptimierungen werden mittels `GD`_ (überprüfe, ob Deine lokale PHP-Ins
 
 .. code-block:: terminal
 
-    $ symfony composer req "imagine/imagine:^1.2"
+    $ symfony composer req "imagine/imagine:^1.5"
 
 Die Skalierung eines Bildes kann über die folgende Service-Klasse erfolgen:
 
@@ -167,33 +167,33 @@ Wir haben bereits ein spezielles Verzeichnis mit Lese- und Schreibberechtigung f
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform/services.yaml
-    +++ w/.platform/services.yaml
-    @@ -12,3 +12,7 @@ varnish:
-             vcl: !include
-                 type: string
-                 path: config.vcl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -15,6 +15,9 @@ services:
+                     type: string
+                     path: config.vcl
+
+    +    files:
+    +        type: network-storage:2.0
     +
-    +files:
-    +    type: network-storage:2.0
-    +    disk: 256
+     applications:
 
 Verwende ihn für das Foto-Upload-Verzeichnis:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/.platform.app.yaml
-    +++ w/.platform.app.yaml
-    @@ -31,7 +31,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -54,7 +54,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    -            "/public/uploads": { source: storage, source_path: uploads }
+    +            "/public/uploads": { source: service, service: files, source_path: uploads }
 
-     mounts:
-         "/var/cache": { source: local, source_path: var/cache }
-    -    "/public/uploads": { source: local, source_path: uploads }
-    +    "/public/uploads": { source: service, service: files, source_path: uploads }
 
-
-     relationships:
+             relationships:
 
 Dies sollte ausreichen, damit das Feature im Produktivsystem funktioniert.
 
