@@ -82,7 +82,7 @@ Durch das Akzeptieren der Standardantworten werden die folgenden Controller erst
 
 Den Konventionen folgend, sind alle Admin-Controller unter ihrem eigenem ``App\Controller\Admin``-Namespace abgelegt.
 
-Greife auf das generierte Admin-Backend unter ``/admin`` zu. Das ist in der ``index()``-Methode konfiguriert und kann von Dir nach Belieben geändert werden:
+Greife auf das generierte Admin-Backend unter ``/admin`` zu. Das ist im ``#[AdminDashboard]``-Attribut konfiguriert und kann von Dir nach Belieben geändert werden:
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -161,9 +161,9 @@ Zuletzt wollen wir die CRUDs für Konferenzen und Kommentare mit dem Dashboard v
          }
      }
 
-Wir haben die ``configureMenuItems()``-Methode überschrieben, um Menüpunkte mit relevanten Icons für Konferenzen und Kommentare und einen Link zurück zur Website-Startseite hinzuzufügen.
+Wir haben die ``configureMenuItems()``-Methode überschrieben, um Menüpunkte mit relevanten Icons für Konferenzen und Kommentare und einen Link zurück zur Website-Startseite hinzuzufügen. Die Klassen ``ConferenceCrudController`` und ``CommentCrudController`` liegen im selben Namespace ``App\Controller\Admin`` wie das Dashboard, sie benötigen daher keine zusätzlichen ``use``-Anweisungen.
 
-EasyAdmin stellt eine API bereit, um einfach Entity-CRUDs mittels der ``MenuItem::linkToRoute()``-Methode zu verlinken.
+EasyAdmin stellt eine API bereit, um einfach Entity-CRUDs mittels der ``MenuItem::linkTo()``-Methode zu verlinken, die die CRUD-Controller-Klasse entgegennimmt.
 
 Die Seite mit dem Haupt-Dashboard ist im Moment noch leer. Hier kannst Du ein paar Statistiken oder andere relevante Informationen darstellen. Da wir gerade nichts wichtiges darzustellen haben, leiten wir die Startseite zur Konferenz-Liste um:
 
