@@ -17,7 +17,7 @@
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.4 --php=8.3 --webapp --docker --cloud
+    $ symfony new guestbook --version=7.4 --php=8.5 --webapp --docker --upsun
     $ cd guestbook
 
 このコマンドは ``Composer`` コマンドの薄いラッパーで、Symfony プロジェクトを作成することを簡単にしてくれます。このコマンドは、最小限の依存のみを含んでいます。それは、どんなプロジェクトでも必要になるコンソールツールや HTTP アブストラクションなどのWebアプリケーションを作成するのに必要なSymfony コンポーネントの依存を含んだ `プロジェクトのスケルトン`_ を使用します。

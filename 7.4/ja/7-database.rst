@@ -147,19 +147,18 @@ PostgreSQL を Platform.sh へ追加
 Platform.sh の本番インフラでは、PostgreSQL のようなサービスを追加する際に、``.platform/services.yaml`` ファイルを使用しますが、 ``webapp`` パッケージのレシピで既に追加されています:
 
 .. code-block:: yaml
-    :caption: .platform/services.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     database:
         type: postgresql:16
-        disk: 1024
 
 ``database`` サービスは PostgreSQL データベース (Dockerと同じバージョン) で、ディスク 1GB のコンテナをプロビジョニングする必要があります。
 
 また、アプリケーションコンテナと DB を "リンク" する必要があります。これは、 ``.platform.app.yaml`` に記述されます:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     relationships:
@@ -170,7 +169,7 @@ Platform.sh の本番インフラでは、PostgreSQL のようなサービスを
 ``pdo_pgsql`` 拡張がPHP ランタイムに追加されていることを確認しましょう:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     runtime:
