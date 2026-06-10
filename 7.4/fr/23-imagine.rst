@@ -162,7 +162,7 @@ Enregistrer des données uploadées en production
 .. index::
     single: Upsun;File Service
 
-Nous avons déjà défini un dossier en lecture-écriture dédié pour les fichiers uploadés dans ``.upsun/config.yaml``. Mais le montage étant local, nous devons créer un *service de fichiers*, afin que le conteneur web et le *message consumer worker* puissent accéder au même support :
+Nous avons déjà défini un dossier en lecture-écriture dédié pour les fichiers uploadés dans ``.upsun/config.yaml``. Mais le montage étant local au conteneur de l'application, nous devons créer un *service de fichiers*, afin que le conteneur web et le *message consumer worker* puissent accéder au même support :
 
 .. code-block:: diff
     :caption: patch_file
