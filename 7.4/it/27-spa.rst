@@ -544,12 +544,12 @@ Deploy della SPA in produzione
 ------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh permette il deploy di più applicazioni per progetto. L'aggiunta di un'altra applicazione può essere fatta creando un file ``.platform.app.yaml`` in qualsiasi sottocartella. Crearne uno nella cartella ``spa/`` con il nome ``spa``:
+Upsun permette il deploy di più applicazioni per progetto. L'aggiunta di un'altra applicazione può essere fatta creando un file ``.upsun/config.yaml`` in qualsiasi sottocartella. Crearne uno nella cartella ``spa/`` con il nome ``spa``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1
 
     name: spa
@@ -581,9 +581,9 @@ Platform.sh permette il deploy di più applicazioni per progetto. L'aggiunta di 
             NODE_VERSION=18 node-build
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
-Modificare il file ``.platform/routes.yaml`` affinché al sottodominio ``spa.`` risponda l'applicazione ``spa`` contenuta nella cartella principale del progetto:
+Modificare il file ``.upsun/config.yaml`` affinché al sottodominio ``spa.`` risponda l'applicazione ``spa`` contenuta nella cartella principale del progetto:
 
 .. code-block:: terminal
 
@@ -593,8 +593,8 @@ Modificare il file ``.platform/routes.yaml`` affinché al sottodominio ``spa.`` 
     :caption: patch_file
     :emphasize-lines: 4,5
 
-    --- i/.platform/routes.yaml
-    +++ w/.platform/routes.yaml
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
     @@ -1,2 +1,5 @@
      "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
      "http://{all}/": { type: redirect, to: "https://{all}/" }

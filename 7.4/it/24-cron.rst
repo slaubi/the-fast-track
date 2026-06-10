@@ -152,14 +152,14 @@ Pulire il database eseguendo il comando:
 
     $ symfony console app:comment:cleanup
 
-Impostare un cron su Platform.sh
+Impostare un cron su Upsun
 --------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Una delle cose belle di Platform.sh è che la maggior parte della configurazione è memorizzata in un unico file: ``.platform.app.yaml``. Il container web, i worker e i cron sono descritti insieme, per facilitare la manutenzione:
+Una delle cose belle di Upsun è che la maggior parte della configurazione è memorizzata in un unico file: ``.upsun/config.yaml``. Il container web, i worker e i cron sono descritti insieme, per facilitare la manutenzione:
 
 .. code-block:: diff
     :caption: patch_file
@@ -195,7 +195,7 @@ Configurare la variabile d'ambiente ``MAILTO``:
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Si noti che i cron sono impostati su tutti i branch di Platform.sh. Se si desidera escluderne qualcuno in ambienti non di produzione, controllare la variabile d'ambiente ``$PLATFORM_ENVIRONMENT_TYPE``:
+Si noti che i cron sono impostati su tutti i branch di Upsun. Se si desidera escluderne qualcuno in ambienti non di produzione, controllare la variabile d'ambiente ``$PLATFORM_ENVIRONMENT_TYPE``:
 
 .. code-block:: bash
     :class: ignore

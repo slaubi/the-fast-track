@@ -68,7 +68,7 @@ Per esempio, tutti gli strumenti di debug sono abilitati nell'ambiente ``dev``. 
 
 Il passaggio da un ambiente all'altro può essere fatto cambiando la variabile d'ambiente ``APP_ENV``
 
-Quando abbiamo eseguito il deploy su Platform.sh, l'ambiente (memorizzato in ``APP_ENV``) è stato automaticamente cambiato in ``prod``.
+Quando abbiamo eseguito il deploy su Upsun, l'ambiente (memorizzato in ``APP_ENV``) è stato automaticamente cambiato in ``prod``.
 
 Gestire le configurazioni d'ambiente
 ------------------------------------
@@ -130,8 +130,8 @@ Debug in produzione
 -------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 

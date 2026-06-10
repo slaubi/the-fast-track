@@ -98,7 +98,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Per ultima, ma non per questo meno importante, useremo la CLI ``symfony``. Grazie al suo server locale, alla piena integrazione con Docker e al supporto cloud attraverso Platform.sh, ci permetterà di risparmiare molto tempo e di conseguenza essere più produttivi.
+Per ultima, ma non per questo meno importante, useremo la CLI ``symfony``. Grazie al suo server locale, alla piena integrazione con Docker e al supporto cloud attraverso Upsun, ci permetterà di risparmiare molto tempo e di conseguenza essere più produttivi.
 
 Installiamo ora il `binario di Symfony (Symfony CLI)`_.
 

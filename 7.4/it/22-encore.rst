@@ -171,7 +171,7 @@ Il form di login generato ha ora uno stile, perché MakerBundle usa di default l
     :align: center
     :figclass: with-browser
 
-In produzione, Platform.sh rileva automaticamente che si sta usando Encore e compila gli asset per noi durante la fase di build.
+In produzione, Upsun rileva automaticamente che si sta usando Encore e compila gli asset per noi durante la fase di build.
 
 .. sidebar:: Andare oltre
 

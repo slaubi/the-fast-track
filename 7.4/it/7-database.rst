@@ -138,13 +138,13 @@ E importare i dati:
 
     $ symfony run psql < dump.sql
 
-Aggiungere PostgreSQL a Platform.sh
+Aggiungere PostgreSQL a Upsun
 -----------------------------------
 
 .. index::
-    single: Platform.sh;PostgreSQL
+    single: Upsun;PostgreSQL
 
-Per l'infrastruttura di produzione su Platform.sh, l'aggiunta di un servizio come PostgreSQL dovrebbe essere fatta nel file ``.platform/services.yaml``, cosa che è già stata fatta attraverso la ricetta del pacchetto ``webapp``:
+Per l'infrastruttura di produzione su Upsun, l'aggiunta di un servizio come PostgreSQL dovrebbe essere fatta nel file ``.upsun/config.yaml``, cosa che è già stata fatta attraverso la ricetta del pacchetto ``webapp``:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -155,7 +155,7 @@ Per l'infrastruttura di produzione su Platform.sh, l'aggiunta di un servizio com
 
 Il servizio ``database`` è un database PostgreSQL (stessa versione di Docker), che vogliamo configurare con 1GB di spazio.
 
-Abbiamo anche bisogno di "collegare" il DB al container dell'applicazione, come descritto nel file ``.platform.app.yaml``:
+Abbiamo anche bisogno di "collegare" il DB al container dell'applicazione, come descritto nel file ``.upsun/config.yaml``:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -178,21 +178,21 @@ Controllare che l'estensione `pdo_pgsql`` sia installata per PHP:
             - pdo_pgsql
             # other extensions
 
-Accesso al database di Platform.sh
+Accesso al database di Upsun
 ----------------------------------
 
-PostgreSQL è ora in esecuzione sia localmente tramite Docker sia in produzione su Platform.sh.
+PostgreSQL è ora in esecuzione sia localmente tramite Docker sia in produzione su Upsun.
 
 Come abbiamo appena visto, eseguendo ``symfony run psql`` si connette automaticamente al database ospitato da Docker, grazie alle variabili d'ambiente esposte da ``symfony run``.
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;var:expose-from-tunnel
     single: Symfony CLI;run psql
 
-Se ci si vuole connettere a PostgreSQL ospitato sui container di produzione, si può aprire un tunnel SSH tra la macchina locale e l'infrastruttura Platform.sh:
+Se ci si vuole connettere a PostgreSQL ospitato sui container di produzione, si può aprire un tunnel SSH tra la macchina locale e l'infrastruttura Upsun:
 
 .. code-block:: terminal
     :class: ignore
@@ -200,7 +200,7 @@ Se ci si vuole connettere a PostgreSQL ospitato sui container di produzione, si 
     $ symfony cloud:tunnel:open
     $ symfony var:expose-from-tunnel
 
-Per impostazione predefinita, i servizi di Platform.sh non sono esposti come variabili d'ambiente sulla macchina locale. È necessario farlo esplicitamente utilizzando il comando ``var:expose-from-tunnel``. Perché? Il collegamento al database di produzione è un'operazione pericolosa. Si possono mettere a repentaglio i dati *reali*.
+Per impostazione predefinita, i servizi di Upsun non sono esposti come variabili d'ambiente sulla macchina locale. È necessario farlo esplicitamente utilizzando il comando ``var:expose-from-tunnel``. Perché? Il collegamento al database di produzione è un'operazione pericolosa. Si possono mettere a repentaglio i dati *reali*.
 
 Ora, connettersi al database PostgreSQL remoto tramite ``symfony run psql``, come in precedenza:
 
@@ -224,10 +224,10 @@ Esporre le variabili d'ambiente
 -------------------------------
 
 .. index::
-    single: Platform.sh;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-Docker Compose e Platform.sh funzionano perfettamente con Symfony, grazie alle variabili d'ambiente.
+Docker Compose e Upsun funzionano perfettamente con Symfony, grazie alle variabili d'ambiente.
 
 Controllare tutte le variabili d'ambiente ``symfony`` esposte, eseguendo ``symfony var:export``:
 
@@ -245,7 +245,7 @@ Controllare tutte le variabili d'ambiente ``symfony`` esposte, eseguendo ``symfo
 
 Le variabili d' ambiente ``PG*`` vengono lette dal comando ``psql``. E le altre?
 
-Quando si apre un tunnel verso Platform.sh usando ``var:expose-from-tunnel``, il comando ``var:export`` restituisce le variabili d'ambiente remote:
+Quando si apre un tunnel verso Upsun usando ``var:expose-from-tunnel``, il comando ``var:export`` restituisce le variabili d'ambiente remote:
 
 .. code-block:: terminal
     :class: ignore
@@ -258,19 +258,19 @@ Quando si apre un tunnel verso Platform.sh usando ``var:expose-from-tunnel``, il
 Descrivere l'infrastruttura
 ---------------------------
 
-Potrebbe non essere evidente all'inizio, ma avere l'infrastruttura memorizzata in dei file, insieme al codice, aiuta molto. Docker e Platform.sh usano dei file per descrivere l'infrastruttura del progetto. Quando una nuova funzionalità necessita di un servizio aggiuntivo, le modifiche al codice e quelle all'infrastruttura andranno così di pari passo.
+Potrebbe non essere evidente all'inizio, ma avere l'infrastruttura memorizzata in dei file, insieme al codice, aiuta molto. Docker e Upsun usano dei file per descrivere l'infrastruttura del progetto. Quando una nuova funzionalità necessita di un servizio aggiuntivo, le modifiche al codice e quelle all'infrastruttura andranno così di pari passo.
 
 .. sidebar:: Andare oltre
 
-    * `Servizi di Platform.sh`_;
+    * `Servizi di Upsun`_;
 
-    * `Tunnel Platform.sh`_;
+    * `Tunnel Upsun`_;
 
     * `Documentazione PostgreSQL`_;
 
     * `docker-compose commands`_.
 
-.. _`Servizi di Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
-.. _`Tunnel Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
+.. _`Servizi di Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
+.. _`Tunnel Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Documentazione PostgreSQL`: https://www.postgresql.org/docs/
 .. _`docker-compose commands`: https://docs.docker.com/compose/reference/

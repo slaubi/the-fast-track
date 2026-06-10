@@ -128,7 +128,7 @@ In produzione, si vedrebbe ad esempio il caricamento di un file di nome ``.env.l
     single: Composer;Autoloader
     single: Autoloader
 
-Da dove viene? Platform.sh fa alcune ottimizzazioni quando si effettua il deploy un'applicazione Symfony, come l'ottimizzazione dell'autoloader di Composer  ( ``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). Ottimizza anche le variabili d'ambiente definite nel file ``.env`` (per evitare di analizzare il file a ogni richiesta) generando il file ``.env.local.php``:
+Da dove viene? Upsun fa alcune ottimizzazioni quando si effettua il deploy un'applicazione Symfony, come l'ottimizzazione dell'autoloader di Composer  ( ``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). Ottimizza anche le variabili d'ambiente definite nel file ``.env`` (per evitare di analizzare il file a ogni richiesta) generando il file ``.env.local.php``:
 
 .. code-block:: terminal
     :class: ignore

@@ -232,12 +232,12 @@ Gestire stringhe segrete in produzione
 --------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-Per la produzione, Platform.sh supporta l'impostazione di *variabili d'ambiente sensibili*:
+Per la produzione, Upsun supporta l'impostazione di *variabili d'ambiente sensibili*:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,7 +274,7 @@ Aggiungere nuovamente la stringa segreta di Akismet nel portachiavi di produzion
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-L'ultimo passo è quello di inviare la chiave di decrittazione a Platform.sh, impostando una variabile:
+L'ultimo passo è quello di inviare la chiave di decrittazione a Upsun, impostando una variabile:
 
 .. code-block:: terminal
 

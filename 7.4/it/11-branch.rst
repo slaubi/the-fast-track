@@ -51,7 +51,7 @@ I passi necessari per fare questo sono semplicemente:
 #. Update the PHP configuration if needed (like adding the PostgreSQL PHP
    extension);
 
-#. Aggiornare l'infrastruttura su Docker e Platform.sh se necessario (aggiungendo il servizio PostgreSQL);
+#. Aggiornare l'infrastruttura su Docker e Upsun se necessario (aggiungendo il servizio PostgreSQL);
 
 #. Testare nel nostro ambiente in locale;
 
@@ -98,7 +98,7 @@ Controlliamo il sito in locale. Poiché non ci sono cambiamenti visivi e poiché
 
 .. note::
 
-    Non abbiamo bisogno dei passi da 3 a 5, poiché stiamo riutilizzando il database per salvare le sessioni, ma il capitolo su Redis mostra quanto sia facile aggiungere, testare e mettere in produzione un nuovo servizio con Docker e Platform.sh.
+    Non abbiamo bisogno dei passi da 3 a 5, poiché stiamo riutilizzando il database per salvare le sessioni, ma il capitolo su Redis mostra quanto sia facile aggiungere, testare e mettere in produzione un nuovo servizio con Docker e Upsun.
 
 Eseguiamo il commit delle modifiche sul nuovo branch:
 
@@ -112,7 +112,7 @@ Deploy di un branch
 -------------------
 
 .. index::
-    single: Platform.sh;Environment
+    single: Upsun;Environment
 
 Prima di passare al deploy in produzione, dovremmo testare il branch su un'infrastruttura identica a quella di produzione. Dovremmo anche controllare che tutto funzioni bene sull'ambiente Symfony ``prod`` (il sito locale usava l'ambiente Symfony ``dev``).
 
@@ -120,7 +120,7 @@ Prima di passare al deploy in produzione, dovremmo testare il branch su un'infra
     single: Symfony CLI;cloud:env:delete
     single: Symfony CLI;cloud:env:create
 
-Ora, creiamo un *ambiente Platform.sh* a partire dal *branch*:
+Ora, creiamo un *ambiente Upsun* a partire dal *branch*:
 
 .. code-block:: terminal
     :class: hide
@@ -153,7 +153,7 @@ Una volta completato il deploy, apriamo col browser l'URL inerente al nuovo bran
 
     $ symfony cloud:url -1
 
-Si noti che tutti i comandi di Platform.sh funzionano sul branch corrente. Il deploy del branch ``sessions-in-db`` metterà a disposizione un URL simile a ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
+Si noti che tutti i comandi di Upsun funzionano sul branch corrente. Il deploy del branch ``sessions-in-db`` metterà a disposizione un URL simile a ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
 
 Testiamo il sito su questo nuovo ambiente, dovremmo vedere tutti i dati che abbiamo creato nell'ambiente master.
 
@@ -175,9 +175,9 @@ Effettuare il debug del deploy di produzione prima del deploy effettivo
 -----------------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Debugging
+    single: Upsun;Debugging
 
-Per impostazione predefinita, tutti gli ambienti Platform.sh usano le stesse impostazioni dell'ambiente ``master`` ovvero l'ambiente Symfony ``prod``. Questo ci permette di testare l'applicazione in condizioni reali. Ci dà la sensazione di sviluppare e testare direttamente sui server di produzione, ma senza i rischi associati. Questo mi ricorda i bei vecchi tempi dei deploy via FTP.
+Per impostazione predefinita, tutti gli ambienti Upsun usano le stesse impostazioni dell'ambiente ``master`` ovvero l'ambiente Symfony ``prod``. Questo ci permette di testare l'applicazione in condizioni reali. Ci dà la sensazione di sviluppare e testare direttamente sui server di produzione, ma senza i rischi associati. Questo mi ricorda i bei vecchi tempi dei deploy via FTP.
 
 .. index::
     single: Symfony CLI;cloud:env:debug
@@ -226,7 +226,7 @@ E ora effettuiamo il deploy:
 
     $ symfony cloud:push
 
-Quando effettuiamo un deploy, solo il codice e le modifiche all'infrastruttura vengono inviate su Platform.sh; i dati non vengono alterati in alcun modo.
+Quando effettuiamo un deploy, solo il codice e le modifiche all'infrastruttura vengono inviate su Upsun; i dati non vengono alterati in alcun modo.
 
 Fare pulizia
 ------------
@@ -235,7 +235,7 @@ Fare pulizia
     single: Symfony CLI;env:delete
     single: Git;branch
 
-Infine, facciamo pulizia rimuovendo il branch e l'ambiente Platform.sh:
+Infine, facciamo pulizia rimuovendo il branch e l'ambiente Upsun:
 
 .. code-block:: terminal
 

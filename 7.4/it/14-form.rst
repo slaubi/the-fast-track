@@ -489,11 +489,11 @@ Non fare ancora commit! Non vogliamo memorizzare le immagini caricate nel reposi
 Salvare i file caricati sui server di produzione
 ------------------------------------------------
 
-L'ultimo passo è quello di salvare i file caricati sui server di produzione. Perché dovremmo fare qualcosa di speciale? Perché la maggior parte delle piattaforme cloud moderne utilizzano container di sola lettura per vari motivi. Platform.sh non fa eccezione.
+L'ultimo passo è quello di salvare i file caricati sui server di produzione. Perché dovremmo fare qualcosa di speciale? Perché la maggior parte delle piattaforme cloud moderne utilizzano container di sola lettura per vari motivi. Upsun non fa eccezione.
 
 Non tutto è di sola lettura in un progetto Symfony. Cerchiamo di generare più cache possibile quando si costruisce il container (durante la fase di warmup della cache), ma Symfony deve comunque essere in grado di scrivere da qualche parte la cache dell'utente, i log, le sessioni (se memorizzate su filesystem) e altro ancora.
 
-Guardando in ``.platform.app.yaml``, si può vedere che c'è già un *mount* scrivibile per la cartella ``var/``. La cartella ``var/`` è l'unica cartella in cui Symfony scrive (cache, log, ...).
+Guardando in ``.upsun/config.yaml``, si può vedere che c'è già un *mount* scrivibile per la cartella ``var/``. La cartella ``var/`` è l'unica cartella in cui Symfony scrive (cache, log, ...).
 
 Creiamo un nuovo mount per le foto caricate:
 

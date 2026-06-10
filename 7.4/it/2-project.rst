@@ -40,7 +40,7 @@ Uno dei grandi vantaggi dell'uso di un framework è la ridotta quantità di codi
 
 * 20 righe di configurazione dell'infrastruttura di sviluppo (Docker);
 
-* 100 righe di configurazione dell'infrastruttura di produzione (Platform.sh);
+* 100 righe di configurazione dell'infrastruttura di produzione (Upsun);
 
 * 5 variabili d'ambiente esplicite.
 

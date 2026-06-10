@@ -103,7 +103,7 @@ Distribuire RabbitMQ
 --------------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Aggiungere RabbitMQ ai server di produzione può essere fatto aggiungendolo alla lista dei servizi:
@@ -148,7 +148,7 @@ Fare riferimento ad esso anche nella configurazione del container web, ed abilit
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq
