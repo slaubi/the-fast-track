@@ -489,11 +489,11 @@ Noch nicht committen! Wir wollen keine hochgeladenen Bilder im Git-Repository sp
 Hochgeladene Dateien auf Produktivservern speichern
 ---------------------------------------------------
 
-Der letzte Schritt besteht darin, die hochgeladenen Dateien auf Produktionsservern zu speichern. Warum sollten wir etwas Besonderes tun müssen? Weil die meisten modernen Cloud-Plattformen, aus verschiedenen Gründen, schreibgeschützte Container verwenden. Platform.sh bildet dabei keine Ausnahme.
+Der letzte Schritt besteht darin, die hochgeladenen Dateien auf Produktionsservern zu speichern. Warum sollten wir etwas Besonderes tun müssen? Weil die meisten modernen Cloud-Plattformen, aus verschiedenen Gründen, schreibgeschützte Container verwenden. Upsun bildet dabei keine Ausnahme.
 
 In einem Symfony-Projekt ist nicht alles schreibgeschützt. Wir versuchen, beim Erstellen des Containers (während der Aufwärmphase des Caches) so viel Cache wie möglich zu erzeugen, aber Symfony muss immer noch in der Lage sein, irgendwo schreiben zu können – etwa den Cache für den*ie Benutzer*in, Logs, die Sessions (wenn sie im Dateisystem gespeichert werden) uvm.
 
-Wirf einen Blick in ``.platform.app.yaml``, da gibt es bereits einen beschreibbaren *mount* für das Verzeichnis ``var/``. Es ist das einzige Verzeichnis, in das Symfony schreibt (Caches, Logs, ...).
+Wirf einen Blick in ``.upsun/config.yaml``, da gibt es bereits einen beschreibbaren *mount* für das Verzeichnis ``var/``. Es ist das einzige Verzeichnis, in das Symfony schreibt (Caches, Logs, ...).
 
 Lass uns einen neuen Mount für hochgeladene Fotos erstellen:
 

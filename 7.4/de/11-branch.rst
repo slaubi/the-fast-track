@@ -51,7 +51,7 @@ Die notwendigen Schritte, um dies zu verwirklichen, sind typisch:
 #. Update the PHP configuration if needed (like adding the PostgreSQL PHP
    extension);
 
-#. Aktualisiere die Infrastruktur auf Docker und Platform.sh falls nötig (füge den PostgreSQL-Dienst hinzu);
+#. Aktualisiere die Infrastruktur auf Docker und Upsun falls nötig (füge den PostgreSQL-Dienst hinzu);
 
 #. Teste lokal;
 
@@ -98,7 +98,7 @@ Teste lokal, indem Du Dir die Website anschaust. Da es keine visuellen Veränder
 
 .. note::
 
-    Wir brauchen Schritt 3 bis 5 hier nicht, weil wir die Datenbank erneut für die Session-Speicherung gebrauchen, aber das Kapitel wie man Redis gebraucht zeigt uns unkompliziert wie man einen neuen Dienst für Docker und Platform.sh hinzufügt, testet und bereitstellt.
+    Wir brauchen Schritt 3 bis 5 hier nicht, weil wir die Datenbank erneut für die Session-Speicherung gebrauchen, aber das Kapitel wie man Redis gebraucht zeigt uns unkompliziert wie man einen neuen Dienst für Docker und Upsun hinzufügt, testet und bereitstellt.
 
 Commit Deine Änderungen zu dem neuen Branch:
 
@@ -112,7 +112,7 @@ Einen Branch deployen
 ---------------------
 
 .. index::
-    single: Platform.sh;Environment
+    single: Upsun;Environment
 
 Bevor wir zum Produktivsystem deployen, sollten wir den Branch auf der gleichen Infrastruktur wie die Production-Environment testen. Wir sollten auch sicherstellen, dass für die Symfony ``prod``-Environment alles gut funktioniert (die lokale Website hat die Symfony ``dev``-Environment verwendet).
 
@@ -120,7 +120,7 @@ Bevor wir zum Produktivsystem deployen, sollten wir den Branch auf der gleichen 
     single: Symfony CLI;cloud:env:delete
     single: Symfony CLI;cloud:env:create
 
-Lasst uns nun eine *Platform.sh-Environment* erstellen, die auf dem *Git-Branch* basiert:
+Lasst uns nun eine *Upsun-Environment* erstellen, die auf dem *Git-Branch* basiert:
 
 .. code-block:: terminal
     :class: hide
@@ -153,7 +153,7 @@ Wenn das Deployment abgeschlossen ist, öffne den neuen Branch in einem Browser:
 
     $ symfony cloud:url -1
 
-Beachte, dass alle Platform.sh-Befehle mit dem aktuellen Git-Branch arbeiten. Somit wird der Befehl die URL für den ``sessions-in-db``-Branch aufrufen. Die URL sieht dann so ``https://sessions-in-db-xxx.eu-5.platformsh.site/`` aus.
+Beachte, dass alle Upsun-Befehle mit dem aktuellen Git-Branch arbeiten. Somit wird der Befehl die URL für den ``sessions-in-db``-Branch aufrufen. Die URL sieht dann so ``https://sessions-in-db-xxx.eu-5.platformsh.site/`` aus.
 
 Teste die Website auf dieser neuen Environment. Du solltest jetzt alle Daten sehen, die Du in der Master-Environment angelegt hast.
 
@@ -175,9 +175,9 @@ Fehler von Deployments in die Produktivumgebung vermeiden
 ---------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Debugging
+    single: Upsun;Debugging
 
-Standardmäßig verwenden alle Platform.sh-Environments die Einstellungen der ``master``/``prod``-Environment (auch bekannt als die ``prod``-Symfony-Environment). Auf diese Weise kannst Du die Anwendung unter realen Bedingungen testen. Dies gibt Dir das Gefühl, direkt auf Produktivsystemen zu entwickeln und zu testen, aber ohne den damit verbundenen Risiken. Das erinnert mich an die guten alten Zeiten, als wir Deployments noch über FTP gemacht haben.
+Standardmäßig verwenden alle Upsun-Environments die Einstellungen der ``master``/``prod``-Environment (auch bekannt als die ``prod``-Symfony-Environment). Auf diese Weise kannst Du die Anwendung unter realen Bedingungen testen. Dies gibt Dir das Gefühl, direkt auf Produktivsystemen zu entwickeln und zu testen, aber ohne den damit verbundenen Risiken. Das erinnert mich an die guten alten Zeiten, als wir Deployments noch über FTP gemacht haben.
 
 .. index::
     single: Symfony CLI;cloud:env:debug
@@ -226,7 +226,7 @@ Und deploye:
 
     $ symfony cloud:push
 
-Beim Deployment werden nur die Code- und Infrastrukturänderungen zu Platform.sh übertragen; die Daten werden in keiner Weise beeinträchtigt.
+Beim Deployment werden nur die Code- und Infrastrukturänderungen zu Upsun übertragen; die Daten werden in keiner Weise beeinträchtigt.
 
 Aufräumen
 ----------
@@ -235,7 +235,7 @@ Aufräumen
     single: Symfony CLI;env:delete
     single: Git;branch
 
-Entferne zum Abschluss den Git-Branch und die Platform.sh-Environment:
+Entferne zum Abschluss den Git-Branch und die Upsun-Environment:
 
 .. code-block:: terminal
 

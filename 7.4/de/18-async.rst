@@ -500,14 +500,14 @@ Wenn beim Verarbeiten einer Message ein Problem auftritt, wird der Consumer es d
 
     $ symfony console messenger:failed:retry
 
-Worker bei Platform.sh ausführen
+Worker bei Upsun ausführen
 ---------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-Um Messages von PostgreSQL zu bearbeiten, müssen wir den ``messenger:consume``-Befehl kontinuierlich ausführen. Bei Platform.sh ist dies die Rolle eines *Workers*:
+Um Messages von PostgreSQL zu bearbeiten, müssen wir den ``messenger:consume``-Befehl kontinuierlich ausführen. Bei Upsun ist dies die Rolle eines *Workers*:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -520,7 +520,7 @@ Um Messages von PostgreSQL zu bearbeiten, müssen wir den ``messenger:consume``-
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Wie Symfony CLI verwaltet Platform.sh Neustarts und Logs.
+Wie Symfony CLI verwaltet Upsun Neustarts und Logs.
 
 .. index::
     single: Symfony CLI;cloud:logs

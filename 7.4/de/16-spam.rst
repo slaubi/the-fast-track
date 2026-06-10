@@ -232,12 +232,12 @@ Secrets im Produktivbetrieb verwalten
 -------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-Für den Produktivbetrieb unterstützt Platform.sh das Setzen *sensibler Environment-Variablen*:
+Für den Produktivbetrieb unterstützt Upsun das Setzen *sensibler Environment-Variablen*:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,7 +274,7 @@ Füge das Akismet-Secret für den Produktivbetrieb nun dem Produktiv-Vault hinzu
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-Der letzte Schritt besteht darin, den Entschlüsselungscode an Platform.sh zu senden, indem Du eine sensible Variable setzt:
+Der letzte Schritt besteht darin, den Entschlüsselungscode an Upsun zu senden, indem Du eine sensible Variable setzt:
 
 .. code-block:: terminal
 

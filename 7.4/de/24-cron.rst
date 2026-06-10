@@ -152,14 +152,14 @@ Bereinige die Datenbank, indem Du diesen Befehl ausführst:
 
     $ symfony console app:comment:cleanup
 
-Einen Cron-Job bei Platform.sh einrichten
+Einen Cron-Job bei Upsun einrichten
 -----------------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Das Schöne an Platform.sh ist, dass der Großteil der Konfiguration in einer Datei gespeichert ist: ``.platform.app.yaml``. Der Webcontainer, die Worker und die Cron-Jobs werden gemeinsam definiert, um die Wartung zu erleichtern:
+Das Schöne an Upsun ist, dass der Großteil der Konfiguration in einer Datei gespeichert ist: ``.upsun/config.yaml``. Der Webcontainer, die Worker und die Cron-Jobs werden gemeinsam definiert, um die Wartung zu erleichtern:
 
 .. code-block:: diff
     :caption: patch_file
@@ -195,7 +195,7 @@ Konfiguriere die Environment-Variable ``MAILTO``:
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Beachte, dass Cron-Jobs auf allen Platform.sh-Branches eingerichtet sind. Überprüfe die Environment-Variable ``$PLATFORM_ENVIRONMENT_TYPE`` wenn Du keine Cron-Jobs in Nicht-Production-Environments ausführen möchtest:
+Beachte, dass Cron-Jobs auf allen Upsun-Branches eingerichtet sind. Überprüfe die Environment-Variable ``$PLATFORM_ENVIRONMENT_TYPE`` wenn Du keine Cron-Jobs in Nicht-Production-Environments ausführen möchtest:
 
 .. code-block:: bash
     :class: ignore

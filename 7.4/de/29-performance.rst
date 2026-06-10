@@ -156,9 +156,9 @@ Blackfire auf dem Produktivsystem konfigurieren
 -----------------------------------------------
 
 .. index::
-    single: Platform.sh;Blackfire
+    single: Upsun;Blackfire
 
-Blackfire ist standardmäßig in allen Platform.sh-Projekten enthalten.
+Blackfire ist standardmäßig in allen Upsun-Projekten enthalten.
 
 Erstelle die *Server*-Zugangsdaten als **production**-Geheimnisse:
 
@@ -192,7 +192,7 @@ Varnish für Blackfire konfigurieren
 ------------------------------------
 
 .. index::
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
 
 Bevor Du deployst um Blackfire nutzen zu können, benötigst Du eine Möglichkeit, den Varnish HTTP-Cache zu umgehen. Wenn nicht, wird Blackfire nie direkt auf die PHP-Anwendung zugreifen. Du wirst nur autorisierte Anfragen analysieren, die von deinem lokalen Rechner kommen.
 
@@ -407,7 +407,7 @@ Beim Performance-Management geht es nicht nur darum, die Performance des vorhand
 
 Das im vorherigen Abschnitt beschriebene Szenario kann automatisch in einem Continuous Integration-Workflow oder regelmäßig auf dem Produktivsystem ausgeführt werden.
 
-Bei Platform.sh können `die Szenarien ausgeführt werden`_, wenn Du einen neuen Branch erstellst oder zum Produktivsystem deployst, um die Performance des neuen Codes automatisch zu überprüfen.
+Bei Upsun können `die Szenarien ausgeführt werden`_, wenn Du einen neuen Branch erstellst oder zum Produktivsystem deployst, um die Performance des neuen Codes automatisch zu überprüfen.
 
 .. sidebar:: Weiterführendes
 

@@ -40,7 +40,7 @@ Einer der großen Vorteile der Verwendung eines Frameworks ist die geringe Menge
 
 * 20 Zeilen Konfiguration der Entwicklungsinfrastruktur (Docker);
 
-* 100 Zeilen Konfiguration der Produktivinfrastruktur (Platform.sh);
+* 100 Zeilen Konfiguration der Produktivinfrastruktur (Upsun);
 
 * 5 explizite Environment-Variablen (Umgebungsvariablen).
 

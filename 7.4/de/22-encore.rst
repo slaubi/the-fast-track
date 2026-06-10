@@ -171,7 +171,7 @@ Das generierte Anmeldeformular ist sieht jetzt gut aus, weil das Maker-Bundle st
     :align: center
     :figclass: with-browser
 
-Für den Produktivbetrieb erkennt Platform.sh automatisch, dass Du Encore verwendest, und erstellt die Assets für Dich während der Build-Phase.
+Für den Produktivbetrieb erkennt Upsun automatisch, dass Du Encore verwendest, und erstellt die Assets für Dich während der Build-Phase.
 
 .. sidebar:: Weiterführendes
 

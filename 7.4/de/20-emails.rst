@@ -165,7 +165,7 @@ Definiere explizit die zu verwendende Domain und das zu verwendende Schema:
      services:
          # default configuration for services in *this* file
 
-Die Environment-Variable ``SYMFONY_DEFAULT_ROUTE_URL`` wird bei Verwendung der ``symfony``-CLI automatisch lokal gesetzt. Bei Platform.sh wird sie anhand der Konfiguration bestimmt.
+Die Environment-Variable ``SYMFONY_DEFAULT_ROUTE_URL`` wird bei Verwendung der ``symfony``-CLI automatisch lokal gesetzt. Bei Upsun wird sie anhand der Konfiguration bestimmt.
 
 Eine Route mit einem Controller verknüpfen
 -------------------------------------------
@@ -369,16 +369,16 @@ Symfony enthält Assertations, die solche Tests erleichtern, hier ist ein Testbe
 
 Diese Assertions funktionieren sowohl wenn E-Mails synchron als auch wenn sie asynchron gesendet werden.
 
-E-Mails auf Platform.sh versenden
+E-Mails auf Upsun versenden
 ---------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Es gibt keine spezielle Konfiguration für Platform.sh. Alle Platform.sh-Konten verfügen über einen Sendgrid-Zugang, welcher automatisch zum Versenden von E-Mails verwendet wird.
+Es gibt keine spezielle Konfiguration für Upsun. Alle Upsun-Konten verfügen über einen Sendgrid-Zugang, welcher automatisch zum Versenden von E-Mails verwendet wird.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -401,11 +401,11 @@ Es gibt keine spezielle Konfiguration für Platform.sh. Alle Platform.sh-Konten 
 
     * Die `Symfony Framework Mailer Dokumentation`_;
 
-    * Die `Platform.sh-Dokumentation über E-Mails`_.
+    * Die `Upsun-Dokumentation über E-Mails`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`SymfonyCasts Mailer Tutorial`: https://symfonycasts.com/screencast/mailer
 .. _`Inky templating language Dokumentation`: https://get.foundation/emails/docs/inky.html
 .. _`Dokumentation zur Verarbeitung von Environment-Variablen`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Symfony Framework Mailer Dokumentation`: https://symfony.com/doc/current/mailer.html
-.. _`Platform.sh-Dokumentation über E-Mails`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Upsun-Dokumentation über E-Mails`: https://symfony.com/doc/current/cloud/services/emails.html

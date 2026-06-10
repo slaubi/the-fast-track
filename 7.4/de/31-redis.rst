@@ -14,7 +14,7 @@ So kannst Du Redis auf einen Schlag zu deinem Projekt hinzufügen:
     single: Session;Redis
     single: Redis
     single: Docker;Redis
-    single: Platform.sh;Redis
+    single: Upsun;Redis
 
 .. code-block:: diff
     :caption: patch_file

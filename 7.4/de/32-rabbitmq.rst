@@ -103,7 +103,7 @@ RabbitMQ deployen
 -----------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Man kann RabbitMQ auf dem Produktivsystem aktivieren, indem man es zu der Liste der Dienste hinzufügt:
@@ -148,7 +148,7 @@ Verweise auch darauf in der Web-Container-Konfiguration und aktiviere die ``amqp
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

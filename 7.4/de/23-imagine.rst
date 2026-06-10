@@ -160,9 +160,9 @@ Hochgeladene Dateien auf dem Produktivsystem speichern
 ------------------------------------------------------
 
 .. index::
-    single: Platform.sh;File Service
+    single: Upsun;File Service
 
-Wir haben bereits ein spezielles Verzeichnis mit Lese- und Schreibberechtigung für hochgeladene Dateien in der ``.platform.app.yaml`` definiert. Die Verbindung zu diesem Verzeichnis ist jedoch nur lokal. Wenn wir wollen, dass der Web-Container als auch der Message-Consumer-Worker auf das gleiche Verzeichnis zugreifen können, müssen wir einen Datei-Service (*file service*) anlegen:
+Wir haben bereits ein spezielles Verzeichnis mit Lese- und Schreibberechtigung für hochgeladene Dateien in der ``.upsun/config.yaml`` definiert. Die Verbindung zu diesem Verzeichnis ist jedoch nur lokal. Wenn wir wollen, dass der Web-Container als auch der Message-Consumer-Worker auf das gleiche Verzeichnis zugreifen können, müssen wir einen Datei-Service (*file service*) anlegen:
 
 .. code-block:: diff
     :caption: patch_file

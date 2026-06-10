@@ -27,9 +27,9 @@ Konventionen für Symfony-Environment-Variablen verstehen
 
 Du kannst ``DATABASE_URL`` manuell in der ``.env``- oder ``.env.local``-Datei definieren. Dank des Recipes des Paketes siehst Du sogar eine beispielhafte ``DATABASE_URL`` in Deiner ``.env``-Datei. Aber da sich der lokale Port auf PostgreSQL, der von Docker festgelegt wird, ändern kann, ist dieser Weg recht umständlich. Es gibt einen besseren Weg.
 
-Anstatt in einer Datei fest ``DATABASE_URL`` einzusetzen, können wir alle Befehle mit ``symfony`` prefixen. Dadurch werden Dienste erkannt, die von Docker und/oder Platform.sh ausgeführt werden (wenn der Tunnel geöffnet ist) und die Environment-Variable wird automatisch gesetzt.
+Anstatt in einer Datei fest ``DATABASE_URL`` einzusetzen, können wir alle Befehle mit ``symfony`` prefixen. Dadurch werden Dienste erkannt, die von Docker und/oder Upsun ausgeführt werden (wenn der Tunnel geöffnet ist) und die Environment-Variable wird automatisch gesetzt.
 
-Docker Compose und Platform.sh arbeiten dank dieser Environment-Variablen nahtlos mit Symfony zusammen.
+Docker Compose und Upsun arbeiten dank dieser Environment-Variablen nahtlos mit Symfony zusammen.
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Du überprüfst alle exponierten Environment-Variablen, indem Du ``symfony var:e
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Erinnerst Du dich an den ``database``-*Servicenamen*, der in den Konfigurationen von Docker und Platform.sh verwendet wird? Die Servicenamen werden als Präfixe für Environment-Variablen wie ``DATABASE_URL`` verwendet. Wenn Deine Services nach den Symfony-Konventionen benannt sind, ist keine weitere Konfiguration erforderlich.
+Erinnerst Du dich an den ``database``-*Servicenamen*, der in den Konfigurationen von Docker und Upsun verwendet wird? Die Servicenamen werden als Präfixe für Environment-Variablen wie ``DATABASE_URL`` verwendet. Wenn Deine Services nach den Symfony-Konventionen benannt sind, ist keine weitere Konfiguration erforderlich.
 
 .. note::
 
@@ -509,7 +509,7 @@ Die Datenbank der Produktivumgebung aktualisieren
 
 Die Schritte, die für die Migration der Datenbank für die Produktivumgebung erforderlich sind, sind die gleichen wie die, mit denen Du bereits vertraut bist: Committe die Änderungen und deploye.
 
-Beim Deployment des Projekts aktualisiert Platform.sh den Code, führt aber auch die Datenbankmigration durch, falls vorhanden (Platform.sh erkennt, ob der ``doctrine:migrations:migrate``-Befehl existiert).
+Beim Deployment des Projekts aktualisiert Upsun den Code, führt aber auch die Datenbankmigration durch, falls vorhanden (Upsun erkennt, ob der ``doctrine:migrations:migrate``-Befehl existiert).
 
 .. sidebar:: Weiterführendes
 
