@@ -39,9 +39,8 @@ Here is how you can add Redis to your project in one patch:
                  build: |
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -22,4 +22,7 @@ services:
+    @@ -21,3 +21,6 @@ services:
                  type: network-storage:2.0
-                 disk: 256
 
     +    rediscache:
     +        type: redis:8.0

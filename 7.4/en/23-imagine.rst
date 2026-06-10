@@ -169,13 +169,12 @@ We have already defined a special read-write directory for uploaded files in ``.
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -15,6 +15,10 @@ services:
+    @@ -15,6 +15,9 @@ services:
                      type: string
                      path: config.vcl
 
     +    files:
     +        type: network-storage:2.0
-    +        disk: 256
     +
      applications:
 

@@ -152,9 +152,8 @@ For the production infrastructure on Upsun, adding a service like PostgreSQL sho
 
     database:
         type: postgresql:16
-        disk: 1024
 
-The ``database`` service is a PostgreSQL database (same version as for Docker) that we want to provision with 1GB of disk.
+The ``database`` service is a PostgreSQL database (same version as for Docker). Upsun allocates its disk automatically on the first deployment; adjust it later with ``symfony cloud:resources:set`` if needed.
 
 We also need to "link" the DB to the application container, which is described in ``.upsun/config.yaml``:
 

@@ -557,8 +557,8 @@ Upsun allows deploying multiple applications per project. Move back to the proje
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -20,6 +20,36 @@ services:
-             disk: 256
+    @@ -19,6 +19,36 @@ services:
+             type: network-storage:2.0
 
      applications:
     +    spa:

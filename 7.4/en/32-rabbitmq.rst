@@ -113,13 +113,12 @@ Adding RabbitMQ to the production servers can be done by adding it to the list o
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -25,4 +25,9 @@ services:
+    @@ -25,4 +25,8 @@ services:
              rediscache:
                  type: redis:8.0
 
     +    queue:
     +        type: rabbitmq:4.2
-    +        disk: 1024
     +        size: S
     +
      applications:
