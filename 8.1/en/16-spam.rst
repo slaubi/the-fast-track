@@ -41,7 +41,7 @@ Create a new class under ``src/`` named ``SpamChecker`` to wrap the logic of cal
 
     class SpamChecker
     {
-        private $endpoint;
+        private string $endpoint;
 
         public function __construct(
             private HttpClientInterface $client,
