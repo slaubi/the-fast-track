@@ -28,7 +28,7 @@ Symfony: The Fast Track
     19-workflow
     20-emails
     21-cache
-    22-encore
+    22-styling
     23-imagine
     24-cron
     25-notifier
