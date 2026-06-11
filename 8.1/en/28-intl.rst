@@ -98,10 +98,11 @@ Add the same locale route prefix to the other URLs:
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,8 +43,8 @@ final class ConferenceController extends AbstractController
+    @@ -43,9 +43,9 @@ final class ConferenceController extends AbstractController
              ])->setSharedMaxAge(3600);
          }
 
+         #[RateLimit('comment_submission', methods: ['POST'])]
     -    #[Route('/conference/{slug}', name: 'conference')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
          public function show(

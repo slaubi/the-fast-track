@@ -281,7 +281,7 @@ Update the controller to use the new system:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -5,21 +5,23 @@ namespace App\Controller;
+    @@ -5,22 +5,24 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -295,6 +295,7 @@ Update the controller to use the new system:
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
     +use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Routing\Attribute\Route;
 

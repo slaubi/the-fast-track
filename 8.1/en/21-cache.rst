@@ -31,7 +31,7 @@ Let's cache the homepage for an hour:
     +        ])->setSharedMaxAge(3600);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[RateLimit('comment_submission', methods: ['POST'])]
 
 The ``setSharedMaxAge()`` method configures the cache expiration for reverse proxies. Use ``setMaxAge()`` to control the browser cache. Time is expressed in seconds (1 hour = 60 minutes = 3600 seconds).
 
@@ -138,9 +138,9 @@ Create a controller that only returns the HTML fragment that displays the confer
     +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(
-             Request $request,
 
 Create the corresponding template:
 
@@ -273,7 +273,7 @@ This is not what we want though. Cache the header page for an hour, independentl
     +        ])->setSharedMaxAge(3600);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[RateLimit('comment_submission', methods: ['POST'])]
 
 Cache is now enabled for both requests:
 

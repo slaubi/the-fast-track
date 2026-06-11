@@ -228,6 +228,69 @@ One simple way to check for spam when a new comment is submitted is to call the 
 
 Check that it works fine.
 
+Rate Limiting Comment Submissions
+---------------------------------
+
+.. index::
+    single: Rate Limiter
+    single: Components;RateLimiter
+
+Detecting spam protects the website against sophisticated spammers. A complementary and much cheaper protection is to limit how fast the same client can submit comments: nobody legitimately posts dozens of comments per hour on a guestbook.
+
+Add the Symfony Rate Limiter component:
+
+.. code-block:: terminal
+
+    $ symfony composer req rate-limiter
+
+Configure a limiter that accepts at most 5 comments per hour from the same client:
+
+.. code-block:: yaml
+    :caption: config/packages/rate_limiter.yaml
+
+    framework:
+        rate_limiter:
+            comment_submission:
+                policy: 'fixed_window'
+                limit: 5
+                interval: '1 hour'
+
+    when@test:
+        framework:
+            rate_limiter:
+                comment_submission:
+                    limit: 1000
+
+Automated tests legitimately submit many comments in a short period of time, so the limit is raised for the ``test`` environment.
+
+Enforce the limiter on comment submissions with the ``#[RateLimit]`` attribute; by default, it identifies clients by their IP address:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Routing\Attribute\Route;
+
+     final class ConferenceController extends AbstractController
+    @@ -31,6 +32,7 @@ final class ConferenceController extends AbstractController
+             ]);
+         }
+
+    +    #[RateLimit('comment_submission', methods: ['POST'])]
+         #[Route('/conference/{slug}', name: 'conference')]
+         public function show(
+             Request $request,
+
+Note the ``methods`` argument: browsing a conference page is a ``GET`` request and must not be limited; only comment submissions (``POST`` requests) are.
+
+When the limit is reached, Symfony automatically returns a ``429 Too Many Requests`` response with a ``Retry-After`` HTTP header telling the client when it can retry.
+
 Managing Secrets in Production
 ------------------------------
 
