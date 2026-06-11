@@ -150,16 +150,16 @@ For the controller tests, simulate the validation:
 
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
-    @@ -2,6 +2,8 @@
+    @@ -4,6 +4,8 @@ namespace App\Tests\Controller;
 
-     namespace App\Tests\Controller;
-
+     use App\Factory\CommentFactory;
+     use App\Factory\ConferenceFactory;
     +use App\Repository\CommentRepository;
     +use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-     class ConferenceControllerTest extends WebTestCase
-    @@ -22,10 +24,16 @@ class ConferenceControllerTest extends WebTestCase
+     use Zenstruck\Foundry\Test\Factories;
+     use Zenstruck\Foundry\Test\ResetDatabase;
+    @@ -33,10 +35,16 @@ class ConferenceControllerTest extends WebTestCase
              $client->submitForm('Submit', [
                  'comment[author]' => 'Fabien',
                  'comment[text]' => 'Some feedback from an automated functional test',

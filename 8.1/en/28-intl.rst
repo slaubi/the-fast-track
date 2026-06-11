@@ -480,7 +480,7 @@ Don't forget to update the functional tests to take URLs and content changes int
 
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
-    @@ -11,7 +11,7 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -16,7 +16,7 @@ class ConferenceControllerTest extends WebTestCase
          public function testIndex(): void
          {
              $client = static::createClient();
@@ -489,25 +489,25 @@ Don't forget to update the functional tests to take URLs and content changes int
 
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
-    @@ -20,7 +20,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testCommentSubmission(): void
-         {
-             $client = static::createClient();
-    -        $client->request('GET', '/conference/amsterdam-2019');
-    +        $client->request('GET', '/en/conference/amsterdam-2019');
+    @@ -29,7 +29,7 @@ class ConferenceControllerTest extends WebTestCase
+             $berlin = ConferenceFactory::createOne(['city' => 'Berlin', 'year' => '2021', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $berlin]);
+
+    -        $client->request('GET', '/conference/berlin-2021');
+    +        $client->request('GET', '/en/conference/berlin-2021');
              $client->submitForm('Submit', [
                  'comment[author]' => 'Fabien',
                  'comment[text]' => 'Some feedback from an automated functional test',
-    @@ -41,7 +41,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testConferencePage(): void
-         {
-             $client = static::createClient();
+    @@ -50,7 +50,7 @@ class ConferenceControllerTest extends WebTestCase
+             ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $amsterdam]);
+
     -        $crawler = $client->request('GET', '/');
     +        $crawler = $client->request('GET', '/en/');
 
              $this->assertCount(2, $crawler->filter('h4'));
 
-    @@ -50,6 +50,6 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -59,6 +59,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertPageTitleContains('Amsterdam');
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Amsterdam 2019');
