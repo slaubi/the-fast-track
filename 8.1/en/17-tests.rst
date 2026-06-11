@@ -532,7 +532,7 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
 
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
-    @@ -22,25 +22,6 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -22,26 +22,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
 
@@ -559,7 +559,7 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
          public function testCommentSubmission(): void
          {
              $client = static::createClient();
-    @@ -41,5 +22,24 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -41,5 +22,25 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertResponseRedirects();
              $client->followRedirect();
              $this->assertSelectorExists('div:contains("There are 2 comments")');
