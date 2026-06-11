@@ -29,24 +29,33 @@ Instead of calling the model's HTTP API ourselves, we will use the Symfony AI Bu
 
 .. code-block:: terminal
 
-    $ symfony composer req symfony/ai-bundle symfony/ai-open-ai-platform
+    $ symfony composer req symfony/ai-bundle symfony/ai-agent symfony/ai-open-ai-platform
 
 .. note::
 
     Symfony AI is a young set of components and still experimental: its APIs may evolve faster than the rest of Symfony.
 
-Configure the OpenAI platform and a default agent:
+The OpenAI bridge recipe has already configured the platform for us; it references an ``OPENAI_API_KEY`` environment variable (and added an empty default for it in ``.env``):
 
 .. code-block:: yaml
-    :caption: config/packages/ai.yaml
+    :caption: config/packages/ai_open_ai_platform.yaml
+    :class: ignore
 
     ai:
         platform:
             openai:
                 api_key: '%env(OPENAI_API_KEY)%'
+
+Configure a default *agent* on top of it:
+
+.. code-block:: yaml
+    :caption: config/packages/ai.yaml
+
+    ai:
         agent:
             default:
-                model: 'gpt-4o-mini'
+                platform: 'ai.platform.openai'
+                model: 'gpt-5-mini'
 
 Using Environment Variables
 ---------------------------
@@ -56,7 +65,7 @@ Using Environment Variables
     single: .env
     single: .env.local
 
-The configuration references the ``OPENAI_API_KEY`` environment variable. We certainly don't want to hard-code the key's value in the configuration, so it is read from the environment instead.
+We certainly don't want to hard-code the key's value in the configuration; that's why it is read from the ``OPENAI_API_KEY`` environment variable.
 
 It is then up to each developer to set a "real" environment variable or to store the value in a ``.env.local`` file:
 

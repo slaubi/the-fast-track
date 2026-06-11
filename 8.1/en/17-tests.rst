@@ -63,7 +63,7 @@ Let's write a first test for when the model cannot be reached:
     +        $comment->setText('Such a nice conference!');
     +
     +        $platform = new InMemoryPlatform(fn () => throw new RuntimeException('The model is down.'));
-    +        $checker = new SpamChecker(new Agent($platform, 'gpt-4o-mini'));
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-5-mini'));
     +
     +        $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
@@ -113,7 +113,7 @@ Let's add tests for the happy path:
     +        $comment->setText('Such a nice conference!');
     +
     +        $platform = new InMemoryPlatform($answer);
-    +        $checker = new SpamChecker(new Agent($platform, 'gpt-4o-mini'));
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-5-mini'));
     +
     +        $this->assertSame($expectedScore, $checker->getSpamScore($comment, []));
     +    }
