@@ -37,7 +37,7 @@ As a first step, let's notify the users that comments are moderated directly in 
      use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
-    @@ -45,9 +47,10 @@ final class ConferenceController extends AbstractController
+    @@ -45,8 +47,9 @@ final class ConferenceController extends AbstractController
              Request $request,
              #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
