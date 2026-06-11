@@ -161,7 +161,7 @@ Aggiungiamo un metodo ``show()`` in ``src/Controller/ConferenceController.php``:
     +    }
      }
 
-Questo metodo ha un comportamento speciale che non abbiamo ancora visto. Chiediamo un'istanza ``Conference`` da iniettare nel metodo, ma potrebbero essercene molte nel database. Symfony è in grado di determinare quella desiderata in base al valore di ``{id}`` passato nel percorso dell'URL della richiesta (essendo la chiave primaria della tabella ``conference`` nel database).
+Questo metodo ha un comportamento speciale che non abbiamo ancora visto. Chiediamo un'istanza ``Conference`` da iniettare nel metodo, ma potrebbero essercene molte nel database. L'attributo ``#[MapEntity]`` indica a Symfony di recuperare quella giusta in base al valore di ``{id}`` passato nel percorso dell'URL della richiesta (essendo la chiave primaria della tabella ``conference`` nel database).
 
 Possiamo recuperare i commenti relativi alla conferenza attraverso il metodo ``findBy()``, il quale accetta un filtro come primo parametro.
 

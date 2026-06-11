@@ -82,7 +82,7 @@ Accettare le risposte predefinite per creare il seguente controller:
 
 Per convenzione, tutti i controller di amministrazione sono sotto il namespace ``App\Controller\Admin``.
 
-Accedere al pannello amministrativo generato in ``/admin``, come configurato nel metodo ``index()``. Si può modificare l'URL a piacimento:
+Accedere al pannello amministrativo generato in ``/admin``, come configurato nell'attributo ``#[AdminDashboard]``. Si può modificare l'URL a piacimento:
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -161,9 +161,9 @@ L'ultimo passo è quello di collegare alla dashboard i CRUD di amministrazione p
          }
      }
 
-Abbiamo sovrascritto il metodo ``configureMenuItems`` per aggiungere elementi di menù con le icone pertinenti a conferenze e commenti, e per aggiungere un link di ritorno alla home page.
+Abbiamo sovrascritto il metodo ``configureMenuItems()`` per aggiungere elementi di menù con le icone pertinenti a conferenze e commenti, e per aggiungere un link di ritorno alla home page. Le classi ``ConferenceCrudController`` e ``CommentCrudController`` si trovano nello stesso namespace ``App\Controller\Admin`` del dashboard, quindi non richiedono istruzioni ``use`` aggiuntive.
 
-EasyAdmin espone una API per facilitare il collegamento dei CRUD delle entità tramite il metodo ``MenuItem::linkToRoute()``
+EasyAdmin espone una API per facilitare il collegamento dei CRUD delle entità tramite il metodo ``MenuItem::linkTo()``, che accetta la classe del controller CRUD.
 
 Per il momento la dashboard della pagina principale è vuota. In questa pagina si potranno mostrare statistiche o altre informazioni d'interesse. Siccome non abbiamo niente di importante da mostrare, facciamo un redirect alla lista delle conferenze:
 
