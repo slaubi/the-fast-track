@@ -1,10 +1,10 @@
-Running Crons
-=============
+Scheduling Tasks
+================
 
 .. index::
     single: Cron
 
-Crons are useful to do maintenance tasks. Unlike workers, they run on a schedule for a short period of time.
+Some maintenance tasks must run on a schedule. Unlike workers, which run continuously, scheduled tasks run periodically for a short period of time.
 
 Cleaning up Comments
 --------------------
@@ -139,44 +139,85 @@ Clean up the database by running the command:
 
     $ symfony console app:comment:cleanup
 
-Setting up a Cron on Upsun
---------------------------
+Scheduling the Command
+----------------------
 
 .. index::
-    single: Upsun;Cron
-    single: Upsun;Croncape
+    single: Scheduler
+    single: Components;Scheduler
+    single: Attributes;AsCronTask
 
-One of the nice things about Upsun is that most of the configuration is stored in one file: ``.upsun/config.yaml``. The web container, the workers, and the cron jobs are described together to help maintenance:
+Running the command by hand works, but it should run every night. The Symfony Scheduler component generates messages on a schedule; they are then consumed by a worker, like any other Messenger messages.
+
+Add the Scheduler component:
+
+.. code-block:: terminal
+
+    $ symfony composer req scheduler
+
+Schedule the command with the ``#[AsCronTask]`` attribute:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Command/CommentCleanupCommand.php
+    +++ w/src/Command/CommentCleanupCommand.php
+    @@ -7,8 +7,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Attribute\Option;
+     use Symfony\Component\Console\Command\Command;
+     use Symfony\Component\Console\Style\SymfonyStyle;
+    +use Symfony\Component\Scheduler\Attribute\AsCronTask;
+
+     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
+    +#[AsCronTask('50 23 * * *')]
+     class CommentCleanupCommand
+     {
+         public function __invoke(
+
+The attribute registers the command on the default *schedule* with a cron expression: every night at 11.50 pm (UTC). Check it:
+
+.. code-block:: terminal
+
+    $ symfony console debug:scheduler
+
+A schedule is exposed as a regular Messenger transport named after it; consume it like any other transport:
+
+.. code-block:: terminal
+
+    $ symfony run -d symfony console messenger:consume scheduler_default -vv
+
+Deploying the Schedule
+----------------------
+
+.. index::
+    single: Upsun;Workers
+
+On Upsun, the worker only consumes the ``async`` transport. Make it consume the schedule as well:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -83,5 +83,13 @@ applications:
-                     spec: '17,47 * * * *'
-                     commands:
-                         start: croncape php-session-clean
-    +            comment_cleanup:
-    +                # Cleanup every night at 11.50 pm (UTC).
-    +                spec: '50 23 * * *'
-    +                commands:
-    +                    start: |
-    +                        if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                            croncape symfony console app:comment:cleanup
-    +                        fi
+    @@ -87,4 +87,4 @@ applications:
+             messenger:
+                 commands:
+                     # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+    -                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+    +                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async scheduler_default
 
-             workers:
+That's all it takes: no crontab, no extra process; the schedule lives in the PHP code, next to the task it triggers, and it is deployed and versioned like the rest of the application.
 
-The ``crons`` section defines all cron jobs. Each cron runs according to a ``spec`` schedule.
-
-The ``croncape`` utility monitors the execution of the command and sends an email to the addresses defined in the ``MAILTO`` environment variable if the command returns any exit code different than ``0``.
+What about System Crons?
+------------------------
 
 .. index::
-    single: Symfony CLI;cloud:variable:create
-    single: Symfony CLI;cron
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Configure the ``MAILTO`` environment variable:
+Upsun also supports OS-level cron jobs, described in ``.upsun/config.yaml`` alongside the web container and the workers; the default configuration already defines one that cleans up expired PHP sessions. System crons are a good fit for tasks that are not implemented in PHP.
+
+The ``croncape`` utility used by the default cron monitors the execution of the command and sends an email to the addresses defined in the ``MAILTO`` environment variable if the command returns any exit code different than ``0``:
 
 .. code-block:: terminal
 
@@ -193,6 +234,8 @@ Note that crons are set up on all Upsun branches. If you don't want to run some 
 
 .. sidebar:: Going Further
 
+    * The `Scheduler component docs`_;
+
     * `Cron/crontab syntax`_;
 
     * `Croncape repository`_;
@@ -201,6 +244,7 @@ Note that crons are set up on all Upsun branches. If you don't want to run some 
 
     * The `Symfony Console Cheat Sheet`_.
 
+.. _`Scheduler component docs`: https://symfony.com/doc/current/scheduler.html
 .. _`Cron/crontab syntax`: https://en.wikipedia.org/wiki/Cron
 .. _`Croncape repository`: https://github.com/symfonycorp/croncape
 .. _`Symfony Console commands`: https://symfony.com/doc/current/console.html

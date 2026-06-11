@@ -30,7 +30,7 @@ Symfony: The Fast Track
     21-cache
     22-styling
     23-imagine
-    24-cron
+    24-scheduler
     25-notifier
     26-api
     27-ux
