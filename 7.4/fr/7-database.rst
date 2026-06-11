@@ -153,7 +153,7 @@ Pour l'infrastructure de production sur Upsun, l'ajout d'un service comme Postgr
     database:
         type: postgresql:16
 
-Le service ``database`` est une base de données PostgreSQL (même version que pour Docker) que nous voulons provisionner avec 1 Go d'espace disque.
+Le service ``database`` est une base de données PostgreSQL (même version que pour Docker). Upsun alloue son espace disque automatiquement lors du premier déploiement ; ajustez-le ensuite avec ``symfony cloud:resources:set`` si nécessaire.
 
 Nous devons également "lier" la BDD au conteneur de l'application, qui est décrit dans ``.upsun/config.yaml`` :
 

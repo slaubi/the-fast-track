@@ -82,7 +82,7 @@ Accepter les réponses par défaut crée le contrôleur suivant :
 
 Par convention, les contrôleurs d'administration sont stockés dans leur propre espace de nom ``App\Controller\Admin``.
 
-Accédez à l'interface d'administration générée grâce à l'URL ``/admin`` telle que configurée par la méthode ``index()`` (vous pouvez modifier l'URL comme bon vous semble) :
+Accédez à l'interface d'administration générée grâce à l'URL ``/admin`` telle que configurée par l'attribut ``#[AdminDashboard]`` (vous pouvez modifier l'URL comme bon vous semble) :
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -161,9 +161,9 @@ La dernière étape consiste à relier les CRUDs d'administration des conférenc
          }
      }
 
-Nous avons surchargé la méthode ``configureMenuItems()`` pour ajouter les éléments de menu avec les icônes adéquates pour les conférences et les commentaires, et pour ajouter un lien de retour vers la page d'accueil du site.
+Nous avons surchargé la méthode ``configureMenuItems()`` pour ajouter les éléments de menu avec les icônes adéquates pour les conférences et les commentaires, et pour ajouter un lien de retour vers la page d'accueil du site. Les classes ``ConferenceCrudController`` et ``CommentCrudController`` se trouvent dans le même espace de noms ``App\Controller\Admin`` que le tableau de bord, elles ne nécessitent donc aucune instruction ``use`` supplémentaire.
 
-EasyAdmin expose une API pour faciliter les liaisons avec les CRUDs des entités via la méthode ``MenuItem::linkToRoute()``.
+EasyAdmin expose une API pour faciliter les liaisons avec les CRUDs des entités via la méthode ``MenuItem::linkTo()``, qui prend la classe du contrôleur CRUD.
 
 Le tableau de bord principal est vide pour le moment. C'est ici que vous pouvez afficher certaines statistiques, ou n'importe quelle information pertinente. Comme nous n'avons rien d'important à y afficher, redirigeons cette page vers la liste des conférences :
 

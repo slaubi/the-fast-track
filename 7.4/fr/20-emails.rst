@@ -155,17 +155,29 @@ Définissez le nom de domaine et le schéma à utiliser explicitement :
 
     --- i/config/services.yaml
     +++ w/config/services.yaml
-    @@ -7,6 +7,8 @@ parameters:
+    @@ -7,6 +7,7 @@ parameters:
          photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
     +    default_base_url: 'http://127.0.0.1'
-    +    router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
      services:
          # default configuration for services in *this* file
 
-La variable d'environnement ``SYMFONY_DEFAULT_ROUTE_URL`` est automatiquement définie localement lors de l'utilisation de la commande ``symfony`` et déterminées en fonction de la configuration sur Upsun.
+Indiquez ensuite au routeur de l'utiliser comme URI par défaut lors de la génération d'URLs en dehors d'une requête HTTP :
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/routing.yaml
+    +++ w/config/packages/routing.yaml
+    @@ -3,3 +3,3 @@ framework:
+             # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+             # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+    -        default_uri: '%env(DEFAULT_URI)%'
+    +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
+
+La variable d'environnement ``SYMFONY_DEFAULT_ROUTE_URL`` est automatiquement définie localement lors de l'utilisation de la commande ``symfony`` et déterminée en fonction de la configuration sur Upsun.
 
 Lier une route à un contrôleur
 --------------------------------
