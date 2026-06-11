@@ -102,38 +102,25 @@ Create a CLI command named ``app:comment:cleanup`` by creating a ``src/Command/C
 
     use App\Repository\CommentRepository;
     use Symfony\Component\Console\Attribute\AsCommand;
+    use Symfony\Component\Console\Attribute\Option;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\InputOption;
-    use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Console\Style\SymfonyStyle;
 
     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
-    class CommentCleanupCommand extends Command
+    class CommentCleanupCommand
     {
-        public function __construct(
-            private CommentRepository $commentRepository,
-        ) {
-            parent::__construct();
-        }
-
-        protected function configure(): void
-        {
-            $this
-                ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run')
-            ;
-        }
-
-        protected function execute(InputInterface $input, OutputInterface $output): int
-        {
-            $io = new SymfonyStyle($input, $output);
-
-            if ($input->getOption('dry-run')) {
+        public function __invoke(
+            SymfonyStyle $io,
+            CommentRepository $commentRepository,
+            #[Option(description: 'Dry run')]
+            bool $dryRun = false,
+        ): int {
+            if ($dryRun) {
                 $io->note('Dry mode enabled');
 
-                $count = $this->commentRepository->countOldRejected();
+                $count = $commentRepository->countOldRejected();
             } else {
-                $count = $this->commentRepository->deleteOldRejected();
+                $count = $commentRepository->deleteOldRejected();
             }
 
             $io->success(sprintf('Deleted "%d" old rejected/spam comments.', $count));
@@ -144,7 +131,7 @@ Create a CLI command named ``app:comment:cleanup`` by creating a ``src/Command/C
 
 All application commands are registered alongside Symfony built-in ones and they are all accessible via ``symfony console``. As the number of available commands can be large, you should namespace them. By convention, the application commands should be stored under the ``app`` namespace. Add any number of sub-namespaces by separating them by a colon (``:``).
 
-A command gets the *input* (arguments and options passed to the command) and you can use the *output* to write to the console.
+A command declares its *arguments* and *options* with the ``#[Argument]`` and ``#[Option]`` attributes on the parameters of ``__invoke()`` (the ``$dryRun`` parameter becomes the ``--dry-run`` option). Symfony injects the other parameters based on their type: ``SymfonyStyle`` to write nicely-formatted output to the console, and any service, like the comment repository, the same way it does for controller arguments.
 
 Clean up the database by running the command:
 

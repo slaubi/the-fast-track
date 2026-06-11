@@ -446,14 +446,13 @@ Implement the command:
 
     use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
     #[AsCommand('app:step:info')]
-    class StepInfoCommand extends Command
+    class StepInfoCommand
     {
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
@@ -464,51 +463,34 @@ Implement the command:
     }
 
 .. index::
-    single: Command;make:command
-
-.. note::
-
-    You could have used ``make:command`` to create the command:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
-
-.. index::
     single: Cache
     single: Components;Cache
 
 What if we want to cache the output for a few minutes? Use the Symfony Cache.
 
-And wrap the code with the cache logic:
+Symfony injects services type-hinted in the ``__invoke()`` method of a command, the same way it does for controller arguments. Wrap the code with the cache logic:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Command/StepInfoCommand.php
     +++ w/src/Command/StepInfoCommand.php
-    @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
      #[AsCommand('app:step:info')]
-     class StepInfoCommand extends Command
+     class StepInfoCommand
      {
-    +    public function __construct(
-    +         private CacheInterface $cache,
-    +    ) {
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
