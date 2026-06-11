@@ -155,17 +155,29 @@
 
     --- i/config/services.yaml
     +++ w/config/services.yaml
-    @@ -7,6 +7,8 @@ parameters:
+    @@ -7,6 +7,7 @@ parameters:
          photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
     +    default_base_url: 'http://127.0.0.1'
-    +    router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
      services:
          # default configuration for services in *this* file
 
-Переменная окружения ``SYMFONY_DEFAULT_ROUTE_URL`` автоматически устанавливается локально при использовании CLI-команды ``symfony`` и определяются на основе конфигурации в Upsun.
+Затем укажите маршрутизатору использовать её как URI по умолчанию при генерации URL вне HTTP-запроса:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/routing.yaml
+    +++ w/config/packages/routing.yaml
+    @@ -3,3 +3,3 @@ framework:
+             # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+             # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+    -        default_uri: '%env(DEFAULT_URI)%'
+    +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
+
+Переменная окружения ``SYMFONY_DEFAULT_ROUTE_URL`` автоматически устанавливается локально при использовании CLI-команды ``symfony`` и определяется на основе конфигурации в Upsun.
 
 Подключение маршрута к контроллеру
 -----------------------------------------------------------------

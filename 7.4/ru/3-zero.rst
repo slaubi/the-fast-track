@@ -143,7 +143,7 @@
 .. index::
     single: Symfony CLI;project:init
 
-Поскольку при создании проекта мы использовали опцию ``--upsun``, Upsun уже инициализирован несколькими файлами, необходимыми Upsun, а именно: ``.upsun/config.yaml``, ``.upsun/config.yaml`` и ``.upsun/config.yaml``.
+Поскольку при создании проекта мы использовали опцию ``--upsun``, Upsun уже инициализирован единственным необходимым ему конфигурационным файлом, а именно ``.upsun/config.yaml``.
 
 Развёртывание в продакшене
 --------------------------------------------------
@@ -205,8 +205,8 @@
 
 .. _`эту GIF-картинку`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`заготовку проекта`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`официальных рецептов Symfony`: https://github.com/symfony/recipes
 .. _`рецептов сообщества`: https://github.com/symfony/recipes-contrib
 .. _`Локальный веб-сервер Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Документация Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Документация Upsun`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
