@@ -47,7 +47,7 @@ The ``App\Form\CommentType`` class defines a form for the ``App\Entity\Comment``
 
     class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('author')
@@ -59,7 +59,7 @@ The ``App\Form\CommentType`` class defines a form for the ``App\Entity\Comment``
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Comment::class,
