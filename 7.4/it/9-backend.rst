@@ -161,7 +161,7 @@ L'ultimo passo è quello di collegare alla dashboard i CRUD di amministrazione p
          }
      }
 
-Abbiamo sovrascritto il metodo ``configureMenuItems`` per aggiungere elementi di menù con le icone pertinenti a conferenze e commenti, e per aggiungere un link di ritorno alla home page. Le classi ``ConferenceCrudController`` e ``CommentCrudController`` si trovano nello stesso namespace ``App\Controller\Admin`` del dashboard, quindi non richiedono istruzioni ``use`` aggiuntive.
+Abbiamo sovrascritto il metodo ``configureMenuItems()`` per aggiungere elementi di menù con le icone pertinenti a conferenze e commenti, e per aggiungere un link di ritorno alla home page. Le classi ``ConferenceCrudController`` e ``CommentCrudController`` si trovano nello stesso namespace ``App\Controller\Admin`` del dashboard, quindi non richiedono istruzioni ``use`` aggiuntive.
 
 EasyAdmin espone una API per facilitare il collegamento dei CRUD delle entità tramite il metodo ``MenuItem::linkTo()``, che accetta la classe del controller CRUD.
 
