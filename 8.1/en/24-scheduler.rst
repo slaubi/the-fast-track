@@ -149,11 +149,11 @@ Scheduling the Command
 
 Running the command by hand works, but it should run every night. The Symfony Scheduler component generates messages on a schedule; they are then consumed by a worker, like any other Messenger messages.
 
-Add the Scheduler component:
+Add the Scheduler component, along with the library that parses cron expressions:
 
 .. code-block:: terminal
 
-    $ symfony composer req scheduler
+    $ symfony composer req scheduler dragonmantank/cron-expression
 
 Schedule the command with the ``#[AsCronTask]`` attribute:
 
