@@ -4,7 +4,7 @@ Going Async
 .. index::
     single: Async
 
-Checking for spam during the handling of the form submission might lead to some problems. If the Akismet API becomes slow, our website will also be slow for users. But even worse, if we hit a timeout or if the Akismet API is unavailable, we might lose comments.
+Checking for spam during the handling of the form submission might lead to some problems. If the AI model becomes slow, our website will also be slow for users. But even worse, if we hit a timeout or if the model is unavailable, we might lose comments.
 
 Ideally, we should store the submitted data without publishing it, and immediately return a response. Checking for spam can then be done out of band.
 
@@ -394,12 +394,12 @@ It should immediately consume the message dispatched for the submitted comment:
      // Quit the worker with CONTROL-C.
 
     11:30:20 INFO      [messenger] Received message App\Message\CommentMessage ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
-    11:30:20 INFO      [http_client] Request: "POST https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
-    11:30:20 INFO      [http_client] Response: "200 https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
+    11:30:20 INFO      [http_client] Request: "POST https://api.openai.com/v1/responses"
+    11:30:20 INFO      [http_client] Response: "200 https://api.openai.com/v1/responses"
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-The message consumer activity is logged, but you get instant feedback on the console by passing the ``-vv`` flag. You should even be able to spot the call to the Akismet API.
+The message consumer activity is logged, but you get instant feedback on the console by passing the ``-vv`` flag. You should even be able to spot the call to the OpenAI API.
 
 To stop the consumer, press ``Ctrl+C``.
 
@@ -462,7 +462,7 @@ To stop a worker, stop the web server or kill the PID given by the ``server:stat
 Retrying Failed Messages
 ------------------------
 
-What if Akismet is down while consuming a message? There is no impact for people submitting comments, but the message is lost and spam is not checked.
+What if the database is down while consuming a message? There is no impact for people submitting comments, but the message fails and spam is not checked.
 
 Messenger has a retry mechanism for when an exception occurs while handling a message:
 

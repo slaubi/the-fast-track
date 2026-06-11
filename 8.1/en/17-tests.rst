@@ -28,51 +28,50 @@ Writing Unit Tests
 
     $ symfony console make:test TestCase SpamCheckerTest
 
-Testing the SpamChecker is a challenge as we certainly don't want to hit the Akismet API. We are going to *mock* the API.
+Testing the SpamChecker is a challenge as we certainly don't want to hit the OpenAI API: it would be slow, expensive, and the answers would not even be deterministic. We are going to replace the *platform* with a fake one.
 
 .. index::
     single: Mock
 
-Let's write a first test for when the API returns an error:
+Let's write a first test for when the model cannot be reached:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/tests/SpamCheckerTest.php
     +++ w/tests/SpamCheckerTest.php
-    @@ -2,12 +2,26 @@
+    @@ -2,12 +2,27 @@
 
      namespace App\Tests;
 
     +use App\Entity\Comment;
     +use App\SpamChecker;
      use PHPUnit\Framework\TestCase;
-    +use Symfony\Component\HttpClient\MockHttpClient;
-    +use Symfony\Component\HttpClient\Response\MockResponse;
-    +use Symfony\Contracts\HttpClient\ResponseInterface;
+    +use Symfony\AI\Agent\Agent;
+    +use Symfony\AI\Platform\Exception\RuntimeException;
+    +use Symfony\AI\Platform\Test\InMemoryPlatform;
 
      class SpamCheckerTest extends TestCase
      {
     -    public function testSomething(): void
-    +    public function testSpamScoreWithInvalidRequest(): void
+    +    public function testSpamScoreWhenTheModelIsDown(): void
          {
     -        $this->assertTrue(true);
     +        $comment = new Comment();
-    +        $comment->setCreatedAtValue();
-    +        $context = [];
+    +        $comment->setAuthor('Fabien');
+    +        $comment->setEmail('fabien@example.com');
+    +        $comment->setText('Such a nice conference!');
     +
-    +        $client = new MockHttpClient([new MockResponse('invalid', ['response_headers' => ['x-akismet-debug-help: Invalid key']])]);
-    +        $checker = new SpamChecker($client, 'abcde');
+    +        $platform = new InMemoryPlatform(fn () => throw new RuntimeException('The model is down.'));
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-4o-mini'));
     +
-    +        $this->expectException(\RuntimeException::class);
-    +        $this->expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
-    +        $checker->getSpamScore($comment, $context);
+    +        $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
      }
 
-The ``MockHttpClient`` class makes it possible to mock any HTTP server. It takes an array of ``MockResponse`` instances that contain the expected body and Response headers.
+The ``InMemoryPlatform`` class implements the platform interface without calling any external API. Given a callable, it can simulate any behavior, including failures. We wrap it in a real ``Agent`` so that the ``SpamChecker`` logic is tested for real.
 
-Then, we call the ``getSpamScore()`` method and check that an exception is thrown via the ``expectException()`` method of PHPUnit.
+When the model is down, comments must reach a human moderator: the expected score is ``1``.
 
 Run the tests to check that they pass:
 
@@ -98,37 +97,32 @@ Let's add tests for the happy path:
      use App\SpamChecker;
     +use PHPUnit\Framework\Attributes\DataProvider;
      use PHPUnit\Framework\TestCase;
-     use Symfony\Component\HttpClient\MockHttpClient;
-     use Symfony\Component\HttpClient\Response\MockResponse;
-    @@ -24,4 +25,30 @@ class SpamCheckerTest extends TestCase
-             $this->expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
-             $checker->getSpamScore($comment, $context);
+     use Symfony\AI\Agent\Agent;
+     use Symfony\AI\Platform\Exception\RuntimeException;
+    @@ -23,4 +24,23 @@ class SpamCheckerTest extends TestCase
+
+             $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
     +
     +    #[DataProvider('provideComments')]
-    +    public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context): void
+    +    public function testSpamScore(int $expectedScore, string $answer): void
     +    {
-    +        $client = new MockHttpClient([$response]);
-    +        $checker = new SpamChecker($client, 'abcde');
+    +        $comment = new Comment();
+    +        $comment->setAuthor('Fabien');
+    +        $comment->setEmail('fabien@example.com');
+    +        $comment->setText('Such a nice conference!');
     +
-    +        $score = $checker->getSpamScore($comment, $context);
-    +        $this->assertSame($expectedScore, $score);
+    +        $platform = new InMemoryPlatform($answer);
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-4o-mini'));
+    +
+    +        $this->assertSame($expectedScore, $checker->getSpamScore($comment, []));
     +    }
     +
     +    public static function provideComments(): iterable
     +    {
-    +        $comment = new Comment();
-    +        $comment->setCreatedAtValue();
-    +        $context = [];
-    +
-    +        $response = new MockResponse('', ['response_headers' => ['x-akismet-pro-tip: discard']]);
-    +        yield 'blatant_spam' => [2, $response, $comment, $context];
-    +
-    +        $response = new MockResponse('true');
-    +        yield 'spam' => [1, $response, $comment, $context];
-    +
-    +        $response = new MockResponse('false');
-    +        yield 'ham' => [0, $response, $comment, $context];
+    +        yield 'blatant_spam' => [2, 'blatant spam'];
+    +        yield 'maybe_spam' => [1, 'Maybe spam.'];
+    +        yield 'ham' => [0, 'ham'];
     +    }
      }
 
@@ -202,12 +196,12 @@ By default, PHPUnit tests are run in the ``test`` Symfony environment as defined
 
 .. index:: Command;secrets:set
 
-To make tests work, we must set the ``AKISMET_KEY`` secret for this ``test`` environment:
+To make tests work, we must set the ``OPENAI_API_KEY`` secret for this ``test`` environment:
 
 .. code-block:: terminal
-    :class: answers(AKISMET_KEY_VALUE)
+    :class: answers(OPENAI_API_KEY_VALUE)
 
-    $ symfony console secrets:set AKISMET_KEY --env=test
+    $ symfony console secrets:set OPENAI_API_KEY --env=test
 
 Working with a Test Database
 ----------------------------
