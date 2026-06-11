@@ -332,15 +332,14 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -6,7 +6,8 @@ use App\Entity\Conference;
-     use App\Repository\CommentRepository;
-     use App\Repository\ConferenceRepository;
+    @@ -8,6 +8,7 @@ use App\Repository\ConferenceRepository;
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
     +use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
+
     @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 

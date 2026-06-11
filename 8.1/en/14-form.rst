@@ -289,7 +289,7 @@ We should now handle the form submission and the persistence of its information 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,6 +7,8 @@ use App\Entity\Conference;
+    @@ -7,8 +7,10 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
@@ -298,6 +298,8 @@ We should now handle the form submission and the persistence of its information 
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
     @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
@@ -310,7 +312,9 @@ We should now handle the form submission and the persistence of its information 
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -25,8 +31,17 @@ final class ConferenceController extends AbstractController
+    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
+         }
+
          #[Route('/conference/{slug}', name: 'conference')]
     -    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
