@@ -111,7 +111,7 @@ Avoiding SQL Requests with ESI
     single: HTTP Cache;ESI
     single: ESI
 
-The ``TwigEventSubscriber`` listener injects a global variable in Twig with all conference objects. It does so for every single page of the website. It is probably a great target for optimization.
+The ``TwigEventListener`` listener injects a global variable in Twig with all conference objects. It does so for every single page of the website. It is probably a great target for optimization.
 
 You won't add new conferences every day, so the code is querying the exact same data from the database over and over again.
 
@@ -306,7 +306,7 @@ Remove the listener as we don't need it anymore:
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Purging the HTTP Cache for Testing
 ----------------------------------
