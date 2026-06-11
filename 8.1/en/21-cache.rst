@@ -404,7 +404,7 @@ Now that everything is validated, disable it; Varnish will take over in producti
 
     --- i/config/packages/framework.yaml
     +++ w/config/packages/framework.yaml
-    @@ -14,8 +14,4 @@ when@test:
+    @@ -14,7 +14,3 @@ when@test:
              test: true
              session:
                  storage_factory_id: session.storage.factory.mock_file
