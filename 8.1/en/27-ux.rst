@@ -56,18 +56,15 @@ The comments list is a perfect candidate. When browsing comment pages via the "P
 
     --- i/templates/conference/show.html.twig
     +++ w/templates/conference/show.html.twig
-    @@ -16,4 +16,5 @@
-
+    @@ -17,3 +17,4 @@
          <div class="row">
              <div class="col-12 col-lg-8">
     +            <turbo-frame id="comments" data-turbo-action="advance">
                  {% if comments|length > 0 %}
-    @@ -54,7 +55,8 @@
-                 {% else %}
-                     <div class="text-center">
-                         No comments have been posted yet for this conference.
-                     </div>
-                 {% endif %}
+    @@ -56,5 +57,6 @@
+                     No comments have been posted yet for this conference.
+                 </div>
+             {% endif %}
     +            </turbo-frame>
              </div>
              <div class="col-12 col-lg-4">
