@@ -361,10 +361,10 @@ Add a new test that clicks on a conference page from the homepage:
          public function testIndex(): void
          {
              $client = static::createClient();
-    @@ -14,4 +21,24 @@
-         $this->assertResponseIsSuccessful();
-         $this->assertSelectorTextContains('h2', 'Give your feedback');
-     }
+    @@ -14,4 +21,24 @@ class ConferenceControllerTest extends WebTestCase
+             $this->assertResponseIsSuccessful();
+             $this->assertSelectorTextContains('h2', 'Give your feedback');
+         }
     +
     +    public function testConferencePage(): void
     +    {
