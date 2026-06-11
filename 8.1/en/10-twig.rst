@@ -337,8 +337,8 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
      use App\Repository\ConferenceRepository;
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
     @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
@@ -346,9 +346,9 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
 
          #[Route('/conference/{id}', name: 'conference')]
     -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-    +        $offset = max(0, $request->query->getInt('offset', 0));
+    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
@@ -361,7 +361,7 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
          }
      }
 
-The controller gets the ``offset`` from the Request query string (``$request->query``) as an integer (``getInt()``), defaulting to 0 if not available.
+The ``#[MapQueryParameter]`` attribute maps the ``offset`` query string parameter to the ``$offset`` controller argument, defaulting to ``0`` when it is not set. As the offset comes from the client, we clamp it to avoid negative values.
 
 The ``previous`` and ``next`` offsets are computed based on all the information we have from the paginator.
 
@@ -422,8 +422,8 @@ You might have noticed that both methods in ``ConferenceController`` take a Twig
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
     @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
     -use Twig\Environment;
 
@@ -441,10 +441,10 @@ You might have noticed that both methods in ``ConferenceController`` take a Twig
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [

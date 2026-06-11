@@ -198,13 +198,14 @@ One simple way to check for spam when a new comment is submitted is to call the 
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    @@ -34,7 +35,8 @@ final class ConferenceController extends AbstractController
+    @@ -34,8 +35,9 @@ final class ConferenceController extends AbstractController
              Request $request,
              #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -48,6 +50,17 @@ final class ConferenceController extends AbstractController
@@ -270,10 +271,11 @@ Enforce the limiter on comment submissions with the ``#[RateLimit]`` attribute; 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    @@ -14,7 +14,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
     +use Symfony\Component\HttpKernel\Attribute\RateLimit;
      use Symfony\Component\Routing\Attribute\Route;
 

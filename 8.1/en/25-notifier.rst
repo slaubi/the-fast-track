@@ -28,21 +28,23 @@ As a first step, let's notify the users that comments are moderated directly in 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
-     use Symfony\Component\HttpFoundation\Request;
-     use Symfony\Component\HttpFoundation\Response;
+    @@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
      use Symfony\Component\Messenger\MessageBusInterface;
     +use Symfony\Component\Notifier\Notification\Notification;
     +use Symfony\Component\Notifier\NotifierInterface;
      use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
-    @@ -45,6 +47,7 @@ final class ConferenceController extends AbstractController
+    @@ -45,9 +47,10 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
@@ -58,7 +60,7 @@ As a first step, let's notify the users that comments are moderated directly in 
     +            $notifier->send(new Notification('Can you check your submission? There are some problems with it.', ['browser']));
     +        }
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 The notifier *sends* a *notification* to *recipients* via a *channel*.

@@ -327,11 +327,11 @@ The last change is to update the controllers and the templates to use the confer
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
     --- i/templates/base.html.twig
     +++ w/templates/base.html.twig
     @@ -16,7 +16,7 @@

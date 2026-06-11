@@ -47,10 +47,10 @@ As we only have two controllers, you *might* do the following (do not apply the 
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
              return $this->render('conference/show.html.twig', [

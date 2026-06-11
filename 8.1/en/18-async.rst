@@ -281,7 +281,7 @@ Update the controller to use the new system:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -5,22 +5,24 @@ namespace App\Controller;
+    @@ -5,23 +5,25 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -295,6 +295,7 @@ Update the controller to use the new system:
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\HttpKernel\Attribute\RateLimit;
     +use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Routing\Attribute\Route;
@@ -307,13 +308,14 @@ Update the controller to use the new system:
          ) {
          }
 
-    @@ -35,8 +37,7 @@ final class ConferenceController extends AbstractController
+    @@ -35,9 +37,8 @@ final class ConferenceController extends AbstractController
              Request $request,
              #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -50,6 +51,7 @@ final class ConferenceController extends AbstractController
