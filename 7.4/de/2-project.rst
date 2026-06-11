@@ -64,7 +64,7 @@ Klone das `Gästebuch-Repository`_ irgendwo auf Deinem lokalen Rechner:
 
 Dieses Repository enthält den gesamten Code aus diesem Buch.
 
-Beachte, dass wir anstelle von ``git clone`` den Befehl ``symfony new`` verwenden, weil der Befehl mehr macht als einfach nur das Repository zu klonen (gehostet auf Github unter der ``the-fast-track`` Organisation: ``https://github.com/the-fast-track/book-6.4-2``). Er startet auch den Webserver, die Container, migriert die Datenbank und lädt die Fixtures. Nach dem Ausführen des Befehls sollte die Website betriebs- und einsatzbereit sein.
+Beachte, dass wir anstelle von ``git clone`` den Befehl ``symfony new`` verwenden, weil der Befehl mehr macht als einfach nur das Repository zu klonen (gehostet auf Github unter der ``the-fast-track`` Organisation: ``https://github.com/the-fast-track/book-7.4-1``). Er startet auch den Webserver, die Container, migriert die Datenbank und lädt die Fixtures. Nach dem Ausführen des Befehls sollte die Website betriebs- und einsatzbereit sein.
 
 Der Code ist zu 100% mit dem Code im Buch synchronisiert (verwende dafür die genaue Repository-URL, die oben aufgeführt ist). Der Versuch, Änderungen aus dem Buch manuell mit dem Quellcode im Repository zu synchronisieren, ist fast unmöglich. Ich habe es in der Vergangenheit versucht und dabei versagt. Es ist einfach unmöglich. Besonders für Bücher wie die, die ich schreibe: Solche, die Dir eine Geschichte über die Entwicklung einer Website erzählen. Da jedes Kapitel von den vorherigen abhängt, kann eine Änderung in allen folgenden Kapiteln Konsequenzen haben.
 
@@ -123,4 +123,4 @@ Du kannst auch Diffs, Tags und Commits direkt auf GitHub durchsuchen. Dies ist e
 
 .. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
 .. _`Gästebuch`: https://en.wikipedia.org/wiki/Guestbook
-.. _`Gästebuch-Repository`: https://github.com/the-fast-track/book-5.0-1
+.. _`Gästebuch-Repository`: https://github.com/the-fast-track/book-7.4-1

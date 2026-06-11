@@ -153,7 +153,7 @@ Für die Produktiv-Infrastruktur auf Upsun sollte das Hinzufügen eines Dienstes
     database:
         type: postgresql:16
 
-Der ``database``-Dienst ist eine PostgreSQL-Datenbank (in der selben Version wie für Docker), die wir mit einer Kapazität von 1 GB bereitstellen wollen.
+Der ``database``-Dienst ist eine PostgreSQL-Datenbank (in der selben Version wie für Docker). Upsun weist ihren Speicher beim ersten Deployment automatisch zu; passe ihn bei Bedarf später mit ``symfony cloud:resources:set`` an.
 
 Wir müssen die Datenbank auch mit dem Anwendungscontainer "verknüpfen", was in ``.upsun/config.yaml`` beschrieben ist:
 

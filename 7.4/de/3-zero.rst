@@ -143,7 +143,7 @@ Ich habe meine Wahl getroffen, es wird `Upsun`_ sein. Sie bietet alles, was wir 
 .. index::
     single: Symfony CLI;project:init
 
-Da wir die ``--upsun``-Option gewählt haben, als wir das Projekt erstellten, ist Upsun bereits mit ein paar Dateien initialisiert, die Upsun braucht; genauer gesagt: ``.upsun/config.yaml``, ``.upsun/config.yaml`` und ``.upsun/config.yaml``.
+Da wir die ``--upsun``-Option gewählt haben, als wir das Projekt erstellten, ist Upsun bereits mit der einzigen Konfigurationsdatei initialisiert, die es braucht, nämlich ``.upsun/config.yaml``.
 
 Der Weg zum Produktivsystem
 ---------------------------
@@ -205,8 +205,8 @@ Beachte, dass Du nicht die schöne Standard-Symfony-Seite auf der Upsun erhälts
 
 .. _`was,`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`Projektskelett`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`offiziellen Symfony-Recipes`: https://github.com/symfony/recipes
 .. _`der Community beigesteuerten Recipes`: https://github.com/symfony/recipes-contrib
 .. _`lokale Symfony Webserver`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Upsun-Dokumentation`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun-Dokumentation`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
