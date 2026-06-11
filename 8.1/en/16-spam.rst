@@ -112,6 +112,15 @@ For development secrets, you can decide to commit the vault and the keys that ha
 
 Secrets can also be overridden by setting an environment variable of the same name.
 
+.. index::
+    single: Command;secrets:reveal
+
+To read a secret back from the vault, use ``secrets:reveal``:
+
+.. code-block:: terminal
+
+    $ symfony console secrets:reveal OPENAI_API_KEY
+
 Designing a Spam Checker Class
 ------------------------------
 
@@ -306,6 +315,24 @@ Enforce the limiter on comment submissions with the ``#[RateLimit]`` attribute; 
 Note the ``methods`` argument: browsing a conference page is a ``GET`` request and must not be limited; only comment submissions (``POST`` requests) are.
 
 When the limit is reached, Symfony automatically returns a ``429 Too Many Requests`` response with a ``Retry-After`` HTTP header telling the client when it can retry.
+
+The same component also protects the admin login form against brute-force attacks; enabling *login throttling* on the firewall takes one line:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -19,6 +19,7 @@ security:
+             main:
+                 lazy: true
+                 provider: app_user_provider
+    +            login_throttling: ~
+                 form_login:
+                     login_path: app_login
+                     check_path: app_login
+
+By default, Symfony blocks an IP after 5 failed login attempts on the same username within a minute (a successful login resets the counter). Use the ``max_attempts`` and ``interval`` options to tune the policy.
 
 Managing Secrets in Production
 ------------------------------

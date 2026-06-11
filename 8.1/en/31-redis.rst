@@ -73,8 +73,8 @@ Isn't it *beautiful*?
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Test locally by browsing the website; everything should still work as before.
 

@@ -22,10 +22,10 @@ Use the special ``_locale`` route parameter to reference the locale in routes:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/', name: 'homepage')]
     +    #[Route('/{_locale}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -42,10 +42,10 @@ As you will probably not be able to translate the content in all valid locales, 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale}/', name: 'homepage')]
     +    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -70,10 +70,10 @@ As we will use the same requirement in almost all routes, let's move it to a con
          # default configuration for services in *this* file
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
     +    #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -89,17 +89,17 @@ Add the same locale route prefix to the other URLs:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -35,7 +35,7 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -38,7 +38,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/conference_header', name: 'conference_header')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference_header', name: 'conference_header')]
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,9 +43,9 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -46,9 +46,9 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
          #[RateLimit('comment_submission', methods: ['POST'])]

@@ -23,17 +23,24 @@ Let's cache the homepage for an hour:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -29,7 +29,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
          }
 
-         #[RateLimit('comment_submission', methods: ['POST'])]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
 
-The ``setSharedMaxAge()`` method configures the cache expiration for reverse proxies. Use ``setMaxAge()`` to control the browser cache. Time is expressed in seconds (1 hour = 60 minutes = 3600 seconds).
+The ``#[Cache]`` attribute configures the cache expiration for reverse proxies via its ``smaxage`` argument; use ``maxage`` to control the browser cache. Time is expressed in seconds (1 hour = 60 minutes = 3600 seconds). And like for routing or rate limiting, the caching policy is declared right where it applies: on the controller.
 
 Caching the conference page is more challenging as it is more dynamic. Anyone can add a comment anytime, and nobody wants to wait for an hour to see it online. In such cases, use the *HTTP validation* strategy.
 
@@ -126,8 +133,8 @@ Create a controller that only returns the HTML fragment that displays the confer
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -32,6 +32,14 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
@@ -265,15 +272,14 @@ This is not what we want though. Cache the header page for an hour, independentl
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -37,7 +37,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
-         #[RateLimit('comment_submission', methods: ['POST'])]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/conference_header', name: 'conference_header')]
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
 
 Cache is now enabled for both requests:
 

@@ -64,18 +64,18 @@ Start Docker Compose in the background (``-d``):
 .. code-block:: terminal
     :class: hide
 
-    $ docker-compose down --remove-orphans
+    $ docker compose down --remove-orphans
 
 .. code-block:: terminal
 
-    $ docker-compose up -d --remove-orphans
+    $ docker compose up -d --remove-orphans
 
 Wait a bit to let the database start up and check that everything is running fine:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ If there are no running containers or if the ``State`` column does not read ``Up
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 Accessing the Local Database
 ----------------------------
@@ -114,7 +114,7 @@ Thanks to these conventions, accessing the database via ``symfony run`` is much 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 Dumping and Restoring Database Data
 -----------------------------------
@@ -268,9 +268,9 @@ You might not have realized it yet, but having the infrastructure stored in file
 
     * `PostgreSQL documentation`_;
 
-    * `docker-compose commands`_.
+    * the `Docker Compose commands`_.
 
 .. _`Upsun services`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Upsun tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL documentation`: https://www.postgresql.org/docs/
-.. _`docker-compose commands`: https://docs.docker.com/compose/reference/
+.. _`Docker Compose commands`: https://docs.docker.com/reference/cli/docker/compose/
