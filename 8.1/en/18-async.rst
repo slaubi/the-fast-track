@@ -114,30 +114,21 @@ Update the EasyAdmin configuration to be able to see the comment's state:
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Don't forget to also update the tests by setting the ``state`` of the fixtures:
+Don't forget to also update the test factories: comments created by ``CommentFactory`` should be published by default so that they show up on the conference pages (a test can always override the state when it needs a moderated comment):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/src/DataFixtures/AppFixtures.php
-    +++ w/src/DataFixtures/AppFixtures.php
-    @@ -35,8 +35,16 @@ class AppFixtures extends Fixture
-             $comment1->setAuthor('Fabien');
-             $comment1->setEmail('fabien@example.com');
-             $comment1->setText('This was a great conference.');
-    +        $comment1->setState('published');
-             $manager->persist($comment1);
-
-    +        $comment2 = new Comment();
-    +        $comment2->setConference($amsterdam);
-    +        $comment2->setAuthor('Lucas');
-    +        $comment2->setEmail('lucas@example.com');
-    +        $comment2->setText('I think this one is going to be moderated.');
-    +        $manager->persist($comment2);
-    +
-             $admin = new Admin();
-             $admin->setRoles(['ROLE_ADMIN']);
-             $admin->setUsername('admin');
+    --- i/src/Factory/CommentFactory.php
+    +++ w/src/Factory/CommentFactory.php
+    @@ -38,6 +38,7 @@ final class CommentFactory extends PersistentObjectFactory
+                 'conference' => ConferenceFactory::new(),
+                 'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+                 'email' => self::faker()->email(),
+    +            'state' => 'published',
+                 'text' => self::faker()->text(),
+             ];
+         }
 
 .. index::
     single: Test;Container
