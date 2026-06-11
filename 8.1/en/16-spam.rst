@@ -25,11 +25,11 @@ Depending on the Symfony AI Bundle
     single: AI;Agent
     single: AI;Platform
 
-Instead of calling the model's HTTP API ourselves, we will use the Symfony AI Bundle. It provides a *platform* abstraction for the model providers and an *agent* that wraps a model to make calls; and it benefits from all the Symfony debugging tools like the integration with the Symfony Profiler:
+Instead of calling the model's HTTP API ourselves, we will use the Symfony AI Bundle. It provides a *platform* abstraction for the model providers (each provider comes as its own bridge package) and an *agent* that wraps a model to make calls; and it benefits from all the Symfony debugging tools like the integration with the Symfony Profiler:
 
 .. code-block:: terminal
 
-    $ symfony composer req symfony/ai-bundle
+    $ symfony composer req symfony/ai-bundle symfony/ai-open-ai-platform
 
 .. note::
 
