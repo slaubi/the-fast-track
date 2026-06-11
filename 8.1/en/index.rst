@@ -33,7 +33,7 @@ Symfony: The Fast Track
     24-cron
     25-notifier
     26-api
-    27-spa
+    27-ux
     28-intl
     29-performance
     30-internals

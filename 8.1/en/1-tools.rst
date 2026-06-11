@@ -81,11 +81,6 @@ If you are not familiar with Composer, take some time to read about it.
 
     You don't need to type the full command names: ``composer req`` does the same as ``composer require``, use ``composer rem`` instead of ``composer remove``, ...
 
-NodeJS
-------
-
-We won't write much JavaScript code, but we will use JavaScript/NodeJS tools to manage our assets. Check that you have the `NodeJS`_ installed.
-
 Docker and Docker Compose
 -------------------------
 
@@ -133,7 +128,6 @@ Moreover, the Symfony CLI automatically selects the "best" possible PHP version 
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Install them`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
 .. _`install a certificate authority (CA)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

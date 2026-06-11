@@ -288,7 +288,7 @@ Profiling API Resources
 .. index::
     single: Profiling;API
 
-Profiling the API or the SPA is better done on the CLI via the Blackfire CLI Tool that you have installed previously:
+Profiling the API is better done on the CLI via the Blackfire CLI Tool that you have installed previously:
 
 .. code-block:: terminal
     :class: ignore
