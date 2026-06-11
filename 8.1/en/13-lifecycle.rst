@@ -238,7 +238,8 @@ Instead, create a Doctrine entity listener:
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\Persistence\Event\LifecycleEventArgs;
+    use Doctrine\ORM\Event\PrePersistEventArgs;
+    use Doctrine\ORM\Event\PreUpdateEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
@@ -248,12 +249,12 @@ Instead, create a Doctrine entity listener:
         ) {
         }
 
-        public function prePersist(Conference $conference, LifecycleEventArgs $event): void
+        public function prePersist(Conference $conference, PrePersistEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
 
-        public function preUpdate(Conference $conference, LifecycleEventArgs $event): void
+        public function preUpdate(Conference $conference, PreUpdateEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
@@ -283,13 +284,14 @@ Here, because our class doesn't implement any interface or extend any base class
 
     --- i/src/EntityListener/ConferenceEntityListener.php
     +++ w/src/EntityListener/ConferenceEntityListener.php
-    @@ -3,9 +3,13 @@
+    @@ -3,10 +3,14 @@
      namespace App\EntityListener;
 
      use App\Entity\Conference;
     +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+     use Doctrine\ORM\Event\PrePersistEventArgs;
+     use Doctrine\ORM\Event\PreUpdateEventArgs;
     +use Doctrine\ORM\Events;
-     use Doctrine\Persistence\Event\LifecycleEventArgs;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
     +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]
