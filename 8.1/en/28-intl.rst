@@ -127,9 +127,9 @@ We are almost done. We don't have a route that matches ``/`` anymore. Let's add 
     +        return $this->redirectToRoute('homepage', ['_locale' => 'en']);
     +    }
     +
+         #[Cache(smaxage: 3600)]
          #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
-         {
 
 Now that all main routes are locale aware, notice that generated URLs on the pages take the current locale into account automatically.
 
