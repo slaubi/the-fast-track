@@ -553,7 +553,7 @@ Add Varnish to the Upsun services:
              type: postgresql:16
 
     +    varnish:
-    +        type: varnish:7.6
+    +        type: varnish:9.0
     +        relationships:
     +            application: 'app:http'
     +        configuration:

@@ -565,7 +565,7 @@ Upsun allows deploying multiple applications per project. Move back to the proje
     +        source:
     +            root: "/spa"
     +
-    +        type: nodejs:24
+    +        type: nodejs:26
     +
     +        size: S
     +
@@ -589,7 +589,7 @@ Upsun allows deploying multiple applications per project. Move back to the proje
     +
     +                curl -fs https://get.symfony.com/cloud/configurator | bash
     +
-    +                NODE_VERSION=24 assets-build
+    +                NODE_VERSION=26 assets-build
     +
          app:
              source:

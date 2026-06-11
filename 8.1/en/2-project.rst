@@ -60,11 +60,11 @@ Clone the `guestbook repository`_ somewhere on your local machine:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=7.4-1 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 This repository contains all the code of the book.
 
-Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-7.4-1``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
+Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-8.1-1``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
 
 The code is 100% guaranteed to be synchronized with the code in the book (use the exact repository URL listed above). Trying to manually synchronize changes from the book with the source code in the repository is almost impossible. I tried in the past. I failed. It is just impossible. Especially for books like the ones I write: books that tells you a story about developing a website. As each chapter depends on the previous ones, a change might have consequences in all following chapters.
 
@@ -123,4 +123,4 @@ You can also browse diffs, tags, and commits directly on GitHub. This is a great
 
 .. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
 .. _`guestbook`: https://en.wikipedia.org/wiki/Guestbook
-.. _`guestbook repository`: https://github.com/the-fast-track/book-7.4-1
+.. _`guestbook repository`: https://github.com/the-fast-track/book-8.1-1

@@ -125,9 +125,9 @@ We are now ready to style the application. Download and expand the archive at th
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-7.4.zip', 'guestbook-7.4.zip');"
-    $ unzip -o guestbook-7.4.zip
-    $ rm guestbook-7.4.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-8.1.zip', 'guestbook-8.1.zip');"
+    $ unzip -o guestbook-8.1.zip
+    $ rm guestbook-8.1.zip
 
 Have a look at the templates, you might learn a trick or two about Twig.
 
