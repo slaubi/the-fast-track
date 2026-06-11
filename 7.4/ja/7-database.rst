@@ -153,7 +153,7 @@ Upsun の本番インフラでは、PostgreSQL のようなサービスを追加
     database:
         type: postgresql:16
 
-``database`` サービスは PostgreSQL データベース (Dockerと同じバージョン) で、ディスク 1GB のコンテナをプロビジョニングする必要があります。
+``database`` サービスは PostgreSQL データベース (Dockerと同じバージョン) です。Upsunは初回デプロイ時にディスクを自動的に割り当てます。必要に応じて、後から ``symfony cloud:resources:set`` で調整してください。
 
 また、アプリケーションコンテナと DB を "リンク" する必要があります。これは、 ``.upsun/config.yaml`` に記述されます:
 
