@@ -106,7 +106,7 @@ Let's add tests for the happy path:
          }
     +
     +    #[DataProvider('provideComments')]
-    +    public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context)
+    +    public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context): void
     +    {
     +        $client = new MockHttpClient([$response]);
     +        $checker = new SpamChecker($client, 'abcde');
@@ -156,7 +156,7 @@ Create a functional test for the Conference controller:
 
     class ConferenceControllerTest extends WebTestCase
     {
-        public function testIndex()
+        public function testIndex(): void
         {
             $client = static::createClient();
             $client->request('GET', '/');
@@ -406,7 +406,7 @@ Add a new test that clicks on a conference page from the homepage:
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
     +
-    +    public function testConferencePage()
+    +    public function testConferencePage(): void
     +    {
     +        $client = static::createClient();
     +        $crawler = $client->request('GET', '/');
@@ -464,7 +464,7 @@ Do you want to get to the next level? Try adding a new comment with a photo on a
              $this->assertSelectorExists('div:contains("There are 1 comments")');
          }
     +
-    +    public function testCommentSubmission()
+    +    public function testCommentSubmission(): void
     +    {
     +        $client = static::createClient();
     +        $client->request('GET', '/conference/amsterdam-2019');
@@ -572,7 +572,7 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
 
-    -    public function testConferencePage()
+    -    public function testConferencePage(): void
     -    {
     -        $client = static::createClient();
     -        $crawler = $client->request('GET', '/');
@@ -587,7 +587,7 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
     -        $this->assertSelectorExists('div:contains("There are 1 comments")');
     -    }
     -
-         public function testCommentSubmission()
+         public function testCommentSubmission(): void
          {
              $client = static::createClient();
     @@ -44,4 +29,19 @@ class ConferenceControllerTest extends WebTestCase
@@ -595,7 +595,7 @@ Move the ``testConferencePage`` test after the ``testCommentSubmission`` one:
              $this->assertSelectorExists('div:contains("There are 2 comments")');
          }
     +
-    +    public function testConferencePage()
+    +    public function testConferencePage(): void
     +    {
     +        $client = static::createClient();
     +        $crawler = $client->request('GET', '/');
@@ -682,7 +682,7 @@ You can then write tests that use a real Google Chrome browser with the followin
     -class ConferenceControllerTest extends WebTestCase
     +class ConferenceControllerTest extends PantherTestCase
      {
-         public function testIndex()
+         public function testIndex(): void
          {
     -        $client = static::createClient();
     +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);

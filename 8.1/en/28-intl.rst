@@ -481,7 +481,7 @@ Don't forget to update the functional tests to take URLs and content changes int
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -11,7 +11,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testIndex()
+         public function testIndex(): void
          {
              $client = static::createClient();
     -        $client->request('GET', '/');
@@ -490,7 +490,7 @@ Don't forget to update the functional tests to take URLs and content changes int
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
     @@ -20,7 +20,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testCommentSubmission()
+         public function testCommentSubmission(): void
          {
              $client = static::createClient();
     -        $client->request('GET', '/conference/amsterdam-2019');
@@ -499,7 +499,7 @@ Don't forget to update the functional tests to take URLs and content changes int
                  'comment[author]' => 'Fabien',
                  'comment[text]' => 'Some feedback from an automated functional test',
     @@ -41,7 +41,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testConferencePage()
+         public function testConferencePage(): void
          {
              $client = static::createClient();
     -        $crawler = $client->request('GET', '/');

@@ -255,7 +255,7 @@ Create a ``CommentMessageHandler`` class under a new ``App\MessageHandler`` name
         ) {
         }
 
-        public function __invoke(CommentMessage $message)
+        public function __invoke(CommentMessage $message): void
         {
             $comment = $this->commentRepository->find($message->getId());
             if (!$comment) {

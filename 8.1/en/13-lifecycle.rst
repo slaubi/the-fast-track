@@ -45,7 +45,7 @@ When the behavior does not need any service and should be applied to only one ki
          }
 
     +    #[ORM\PrePersist]
-    +    public function setCreatedAtValue()
+    +    public function setCreatedAtValue(): void
     +    {
     +        $this->createdAt = new \DateTimeImmutable();
     +    }
@@ -207,7 +207,7 @@ Add a ``computeSlug()`` method to the ``Conference`` class that computes the slu
              return $this->id;
          }
 
-    +    public function computeSlug(SluggerInterface $slugger)
+    +    public function computeSlug(SluggerInterface $slugger): void
     +    {
     +        if (!$this->slug || '-' === $this->slug) {
     +            $this->slug = (string) $slugger->slug((string) $this)->lower();
@@ -248,12 +248,12 @@ Instead, create a Doctrine entity listener:
         ) {
         }
 
-        public function prePersist(Conference $conference, LifecycleEventArgs $event)
+        public function prePersist(Conference $conference, LifecycleEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
 
-        public function preUpdate(Conference $conference, LifecycleEventArgs $event)
+        public function preUpdate(Conference $conference, LifecycleEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
