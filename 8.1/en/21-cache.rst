@@ -392,6 +392,27 @@ The ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` sub-command returns
 
     The controller does not have a route name as it will never be referenced in the code.
 
+Disabling the HTTP Cache in Development
+---------------------------------------
+
+The HTTP cache was great to validate our cache headers and to learn how to purge stale entries. But having a reverse proxy enabled in the development environment is unusual, and it quickly gets in the way: responses are served from the cache while you iterate on the code, and some vendor assets are even served with an empty body because of a long-standing HttpCache limitation with file responses.
+
+Now that everything is validated, disable it; Varnish will take over in production:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,8 +14,4 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Grouping similar Routes with a Prefix
 -------------------------------------
 
