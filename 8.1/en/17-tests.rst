@@ -40,7 +40,7 @@ Let's write a first test for when the model cannot be reached:
 
     --- i/tests/SpamCheckerTest.php
     +++ w/tests/SpamCheckerTest.php
-    @@ -2,12 +2,27 @@
+    @@ -2,12 +2,25 @@
 
      namespace App\Tests;
 
@@ -99,7 +99,7 @@ Let's add tests for the happy path:
      use PHPUnit\Framework\TestCase;
      use Symfony\AI\Agent\Agent;
      use Symfony\AI\Platform\Exception\RuntimeException;
-    @@ -23,4 +24,23 @@ class SpamCheckerTest extends TestCase
+    @@ -23,4 +24,25 @@ class SpamCheckerTest extends TestCase
 
              $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
