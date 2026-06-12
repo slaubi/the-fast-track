@@ -13,6 +13,10 @@ And it is not just about new ways of doing things. It is also about new componen
 
 I also feel the need for a new book as the Web has evolved a lot. Topics like `APIs`_, `SPAs`_, `containerization`_, `Continuous Deployment`_, and many others should be discussed now.
 
+Is a book still worth your time now that an LLM can write the code for you? I asked myself the question while working on this edition. My answer is a resounding yes. I use AI tools every day, and they write a good share of my code; but they have not changed what matters. You still need to understand the architecture of your application, decide what to build, review the generated code, and catch what is subtly wrong. You cannot review code you do not understand; and you cannot direct a tool toward an architecture you cannot picture.
+
+That understanding is exactly what this book builds: a complete mental model of a Symfony application, from the first commit to production. With that model in your head, the next time a model generates a controller or a Messenger handler for you, you will know whether it is right, and why. We will even put an LLM to work inside the application itself to moderate comments. AI did not make books obsolete; it made understanding the scarcest skill of all.
+
 Your time is precious. Don't expect long paragraphs, nor long explanations about core concepts. The book is more about the journey. Where to start. Which code to write. When. How. I will try to generate some interest on important topics and let you decide if you want to learn more and dig further.
 
 I don't want to replicate the existing documentation either. Its quality is excellent. I will reference the documentation copiously in the "Going Further" section at the end of each step/chapter. Consider this book as a list of pointers to more resources.
