@@ -213,7 +213,7 @@ Le code généré ressemble à ce qui suit (seule une petite partie du fichier e
 
 Notez que la classe elle-même est une classe PHP sans aucune référence à Doctrine. Les attributs sont utilisés pour ajouter des métadonnées utiles à Doctrine afin de mapper la classe à sa table associée dans la base de données.
 
-Doctrine a ajouté un attribut ``id`` pour stocker la clé primaire de la ligne dans la table de la base de données. Cette clé (``ORM\Id()``) est générée automatiquement (``ORM\GeneratedValue()``) avec une stratégie qui dépend du moteur de base de données.
+Doctrine a ajouté un attribut ``id`` pour stocker la clé primaire de la ligne dans la table de la base de données. Cette clé (``#[ORM\Id]``) est générée automatiquement (``#[ORM\GeneratedValue]``) avec une stratégie qui dépend du moteur de base de données.
 
 .. index::
     single: Command;make:entity
