@@ -268,9 +268,9 @@ Potrebbe non essere evidente all'inizio, ma avere l'infrastruttura memorizzata i
 
     * `Documentazione PostgreSQL`_;
 
-    * `docker-compose commands`_.
+    * i `comandi di Docker Compose`_.
 
 .. _`Servizi di Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Tunnel Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Documentazione PostgreSQL`: https://www.postgresql.org/docs/
-.. _`docker-compose commands`: https://docs.docker.com/compose/reference/
+.. _`comandi di Docker Compose`: https://docs.docker.com/reference/cli/docker/compose/

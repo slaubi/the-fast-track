@@ -213,7 +213,7 @@ Il codice generato ha il seguente aspetto (solo una piccola parte del file viene
 
 Si noti che la classe stessa è una semplice classe PHP, senza segni di Doctrine. Gli attributi sono usati per aggiungere metadati utili a Doctrine per mappare la classe alla relativa tabella del database.
 
-Doctrine ha aggiunto una proprietà ``id`` per memorizzare la chiave primaria della riga nella tabella del database. Questa chiave (``ORM\Id()``) viene generata automaticamente (``ORM\GeneratedValue()``) tramite una strategia che dipende dal tipo di database.
+Doctrine ha aggiunto una proprietà ``id`` per memorizzare la chiave primaria della riga nella tabella del database. Questa chiave (``#[ORM\Id]``) viene generata automaticamente (``#[ORM\GeneratedValue]``) tramite una strategia che dipende dal tipo di database.
 
 .. index::
     single: Command;make:entity

@@ -80,26 +80,24 @@ Un altro esempio di eventi e listener in azione è nel ciclo di vita di un coman
 
 Qualsiasi pacchetto o bundle può anche inviare i propri eventi per rendere il codice estensibile.
 
-Per evitare di avere un file di configurazione che descriva quali eventi un listener vuole ascoltare, creare un *subscriber*. Un subscriber è un listener con un metodo statico ``getSubscribedEvents()`` che restituisce la sua configurazione. Questo permette ai subscriber di registrarsi automaticamente nel dispatcher di Symfony.
+Per evitare di avere un file di configurazione che descriva quali eventi un listener vuole ascoltare, aggiungere l'attributo ``#[AsEventListener]`` sulla classe o sul metodo del listener. Questo permette ai listener di registrarsi automaticamente nel dispatcher di Symfony.
 
-Implementare un Subscriber
---------------------------
+Implementare un Listener
+------------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Ormai conoscete la canzone a memoria, usate MakerBundle per generare un subscriber:
+Ormai conoscete la canzone a memoria, usate MakerBundle per generare un listener:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:listener TwigEventListener
 
-Il comando chiederà quale evento si vuole ascoltare. Scegliere l'evento ``Symfony\Component\HttpKernel\Event\ControllerEvent``, che viene inviato appena prima che il controller venga chiamato. È il momento migliore per iniettare la variabile globale ``conferences``, in modo che Twig vi abbia accesso quando il controller processerà il template. Aggiorniamo il subscriber come segue:
+Il comando chiederà quale evento si vuole ascoltare. Scegliere l'evento ``Symfony\Component\HttpKernel\Event\ControllerEvent``, che viene inviato appena prima che il controller venga chiamato. È il momento migliore per iniettare la variabile globale ``conferences``, in modo che Twig vi abbia accesso quando il controller processerà il template. Aggiorniamo il listener come segue:
 
 .. code-block:: diff
     :caption: patch_file

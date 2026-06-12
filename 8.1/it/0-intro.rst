@@ -13,6 +13,10 @@ E non si tratta solo di nuovi modi di fare le cose. Si tratta anche di nuovi com
 
 Persino io sento il bisogno di un nuovo libro, visto che il web si è evoluto molto. È il momento di discutere di argomenti come `API`_, `SPA`_, `containerizzazione`_, `continuous deployment`_, e molto altro.
 
+Un libro vale ancora il tempo del lettore, ora che un LLM può scrivere il codice al posto suo? Mi sono posto la domanda lavorando a questa edizione. La mia risposta è un sì convinto. Uso strumenti di IA ogni giorno, e ormai scrivono quasi tutto il mio codice; ma non hanno cambiato ciò che conta. Bisogna ancora capire l'architettura della propria applicazione, decidere cosa costruire, rivedere il codice generato e individuare ciò che è sottilmente sbagliato. Non si può rivedere codice che non si capisce; e non si può guidare uno strumento verso un'architettura che non si riesce a immaginare. Leggere libri è una questione di giudizio, non di nostalgia.
+
+Il giudizio richiede comprensione, e la comprensione è esattamente ciò che questo libro costruisce: un modello mentale completo di un'applicazione Symfony, dal primo commit alla produzione. Con questo modello in testa, la prossima volta che un LLM genererà un controller o un gestore Messenger, si saprà se è corretto, e perché. Ne metteremo persino uno al lavoro all'interno dell'applicazione stessa, per moderare i commenti.
+
 Il tempo è prezioso. Non aspettatevi lunghi paragrafi, né lunghe spiegazioni sui concetti fondamentali. Il libro parla di più del viaggio. Da dove cominciare. Quale codice scrivere. Quando. Come. Cercheremo di generare un certo interesse su argomenti importanti e lasciare al lettore la decisione su eventuali approfondimenti.
 
 Lo scopo non è quello di replicare la documentazione esistente: la sua qualità è già eccellente. Faremo spesso dei richiami alla documentazione nella sezione "Andare oltre" alla fine di ogni capitolo. Questo libro va visto come un insieme di riferimenti ad altre risorse.

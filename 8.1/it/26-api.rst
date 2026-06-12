@@ -238,7 +238,7 @@ Configurare CORS
 
 Per impostazione predefinita, le policy di sicurezza dei moderni client HTTP non consentono la chiamata dell'API da un dominio diverso. NelmioCorsBundle, installato come parte di ``composer req api``, invia gli header Cross-Origin Resource Sharing in base alla variabile d'ambiente ``CORS_ALLOW_ORIGIN``.
 
-Per impostazione predefinita, il suo valore, definito in ``.env``, permette richieste HTTP da ``localhost`` e ``127.0.0.1`` su qualsiasi porta. Questo è esattamente ciò che ci serve, perché nel prossimo passo creeremo una SPA che avrà un suo server web, che richiamerà l'API.
+Per impostazione predefinita, il suo valore, definito in ``.env``, permette richieste HTTP da ``localhost`` e ``127.0.0.1`` su qualsiasi porta. Adattarlo quando un'applicazione ospitata su un altro dominio, come un'applicazione mobile o un front-end esterno, deve richiamare l'API.
 
 .. sidebar:: Andare oltre
 
