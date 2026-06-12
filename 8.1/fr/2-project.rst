@@ -10,7 +10,7 @@ Comme le livre doit sortir pendant la SymfonyCon d'Amsterdam, ce serait intéres
 
 Nous tenons notre sujet. Le projet a pour but d'obtenir un retour d'expérience sur les conférences : une liste des conférences sur la page d'accueil ainsi qu'une page pour chacune d'entre elles, pleine de commentaires sympathiques. Un commentaire est composé d'un petit texte et d'une photo, optionnelle, prise pendant la conférence. Je suppose que je viens de rédiger toutes les spécifications dont nous avons besoin pour commencer.
 
-Le *projet* comprendra plusieurs *applications* : une application web traditionnelle avec une interface HTML, une API et une SPA pour les téléphones mobiles. Qu'en dites-vous ?
+Le *projet* comprendra plusieurs *applications* : une application web traditionnelle avec une interface HTML aussi réactive qu'une SPA, et une API prête à alimenter des applications mobiles. Qu'en dites-vous ?
 
 La maîtrise s’acquiert par la pratique
 -----------------------------------------
@@ -64,7 +64,7 @@ Clonez le `dépôt du livre d'or`_ quelque part sur votre machine :
 
 Ce dépôt contient tout le code source du livre.
 
-Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-7.4-1``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
+Notez que nous utilisons ``symfony new`` au lieu de ``git clone`` puisque la commande fait bien plus que simplement cloner le dépôt (hébergé sur Github dans l'organisation ``the-fast-track`` : ``https://github.com/the-fast-track/book-8.1-1``). Elle démarre également le serveur web et les conteneurs, migre la base de données, charge les données de test, etc. Après l'exécution de la commande, le site devrait être opérationnel, prêt à être utilisé.
 
 Le code source est synchronisé à 100% avec le code source du livre (utilisez l'URL exacte du dépôt, indiquée ci-dessus). Essayer de synchroniser manuellement les changements du livre avec le code source du dépôt est presque impossible. J'ai tenté de le faire et je n'y suis pas arrivé. C'est tout simplement impossible. Surtout pour des livres comme ceux que j'écris, qui vous racontent l'histoire du développement d'un site web. Comme chaque chapitre dépend des précédents, un changement sur l'un d'eux peut avoir des conséquences sur tous les suivants.
 
@@ -123,4 +123,4 @@ Vous pouvez également parcourir les *diffs*, les *tags* et les *commits* direct
 
 .. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
 .. _`livre d'or`: https://en.wikipedia.org/wiki/Guestbook
-.. _`dépôt du livre d'or`: https://github.com/the-fast-track/book-7.4-1
+.. _`dépôt du livre d'or`: https://github.com/the-fast-track/book-8.1-1
