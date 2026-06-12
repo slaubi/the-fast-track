@@ -23,17 +23,24 @@ Mettiamo in cache l'homepage per un'ora:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -29,7 +29,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
 
-Il metodo ``setSharedMaxAge()`` configura la scadenza della cache per i reverse proxy. Utilizzare il metodo ``setMaxAge()`` per impostare il tempo di cache per i browser. Il tempo è espresso in secondi (1 ora = 60 minuti = 3600 secondi).
+L'attributo ``#[Cache]`` configura la scadenza della cache per i reverse proxy tramite il suo argomento ``smaxage``; utilizzare ``maxage`` per impostare il tempo di cache per i browser. Il tempo è espresso in secondi (1 ora = 60 minuti = 3600 secondi). E come per il routing o il rate limiting, la politica di cache viene dichiarata proprio dove si applica: sul controller.
 
 Gestire la cache della pagina della conferenza è più impegnativo, perché è una pagina più dinamica. Chiunque può aggiungere un commento in qualsiasi momento e nessuno vuole aspettare un'ora per vederlo online. In questi casi, utilizzare la strategia di *validazione HTTP* .
 
@@ -111,7 +118,7 @@ Evitare richieste SQL con ESI
     single: HTTP Cache;ESI
     single: ESI
 
-Il listener ``TwigEventSubscriber`` aggiunge una variabile globale in Twig con tutti gli oggetti conferenza. Questo viene fatto per ogni singola pagina del sito. Probabilmente dovrebbe essere ottimizzato.
+Il listener ``TwigEventListener`` aggiunge una variabile globale in Twig con tutti gli oggetti conferenza. Questo viene fatto per ogni singola pagina del sito. Probabilmente dovrebbe essere ottimizzato.
 
 Non si aggiungono nuove conferenze ogni giorno, quindi il codice interroga gli stessi identici dati dal database più e più volte.
 
@@ -126,8 +133,8 @@ Creiamo un controller che restituisce solo il frammento HTML che visualizza le c
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -32,6 +32,14 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
@@ -138,9 +145,9 @@ Creiamo un controller che restituisce solo il frammento HTML che visualizza le c
     +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(
-             Request $request,
 
 Creiamo il template corrispondente:
 
@@ -265,15 +272,14 @@ Ma non è quello che vogliamo. Manteniamo in cache la pagina di intestazione per
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -37,7 +37,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/conference_header', name: 'conference_header')]
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
 
 La cache è ora abilitata per entrambe le richieste:
 
@@ -306,7 +312,7 @@ Rimuoviamo il listener, non ne abbiamo più bisogno:
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Pulire la cache HTTP per i test
 -------------------------------
@@ -386,6 +392,27 @@ Il comando ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` restituisce 
 
     Il controller non ha un nome di rotta, in quanto non sarà mai menzionato nel codice.
 
+Disabilitare la cache HTTP in sviluppo
+--------------------------------------
+
+La cache HTTP è stata preziosa per convalidare i nostri header di cache e per imparare a eliminare le voci obsolete. Ma tenere un reverse proxy attivo nell'ambiente di sviluppo è insolito, e diventa presto d'intralcio: le risposte vengono servite dalla cache mentre si itera sul codice, e alcuni asset dei vendor vengono perfino serviti con un corpo vuoto a causa di una vecchia limitazione di HttpCache con le risposte di tipo file.
+
+Ora che tutto è convalidato, disabilitarla; Varnish prenderà il suo posto in produzione:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,7 +14,3 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Raggruppamento di percorsi simili con un prefisso
 -------------------------------------------------
 
@@ -446,14 +473,13 @@ Implementiamo il comando:
 
     use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
     #[AsCommand('app:step:info')]
-    class StepInfoCommand extends Command
+    class StepInfoCommand
     {
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
@@ -464,51 +490,34 @@ Implementiamo il comando:
     }
 
 .. index::
-    single: Command;make:command
-
-.. note::
-
-    Avremmo potuto usare ``make:command`` per creare il comando:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
-
-.. index::
     single: Cache
     single: Components;Cache
 
 E se volessimo mettere in cache l'output per qualche minuto? Usiamo il componente Cache di Symfony.
 
-E aggiungiamo la logica della cache al codice:
+Symfony inietta i servizi tipizzati nel metodo ``__invoke()`` di un comando, allo stesso modo degli argomenti dei controller. Aggiungiamo la logica della cache al codice:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Command/StepInfoCommand.php
     +++ w/src/Command/StepInfoCommand.php
-    @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
      #[AsCommand('app:step:info')]
-     class StepInfoCommand extends Command
+     class StepInfoCommand
      {
-    +    public function __construct(
-    +         private CacheInterface $cache,
-    +    ) {
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
@@ -553,7 +562,7 @@ Aggiungere Varnish ai servizi di Upsun:
              type: postgresql:16
 
     +    varnish:
-    +        type: varnish:7.6
+    +        type: varnish:9.0
     +        relationships:
     +            application: 'app:http'
     +        configuration:
