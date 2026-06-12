@@ -360,7 +360,7 @@ Per gestire la paginazione nel template, passare a Twig il paginatore di Doctrin
          }
      }
 
-Il controller riceve la stringa ``offset`` dalla query string della Request (``$request->query``) come un intero (``getInt()``), con un valore predefinito a 0 se non disponibile.
+L'attributo ``#[MapQueryParameter]`` mappa il parametro ``offset`` della query string sull'argomento ``$offset`` del controller, con ``0`` come valore predefinito se non impostato. Poiché l'offset arriva dal client, lo limitiamo per evitare valori negativi.
 
 Gli offset ``previous`` e ``next`` sono calcolati in base a tutte le informazioni fornite dal paginatore.
 

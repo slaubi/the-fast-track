@@ -334,6 +334,8 @@ Ora dovremmo gestire l'invio del form e il salvataggio delle sue informazioni ne
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+Si noti che l'oggetto ``Request`` viene ora iniettato nel controller, perché il form ne ha bisogno per ispezionare i dati inviati tramite ``handleRequest()``.
+
 All'invio del form, l'oggetto ``Comment`` viene aggiornato in base ai dati inviati.
 
 La conferenza deve essere la stessa dell'URL (l'abbiamo rimossa dal form).

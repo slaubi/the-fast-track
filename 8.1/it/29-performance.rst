@@ -288,7 +288,7 @@ Profilazione delle risorse API
 .. index::
     single: Profiling;API
 
-La profilazione delle API o della SPA viene fatta in modo migliore sul terminale tramite la CLI di Blackfire, installata in precedenza:
+La profilazione delle API viene fatta in modo migliore sul terminale tramite la CLI di Blackfire, installata in precedenza:
 
 .. code-block:: terminal
     :class: ignore

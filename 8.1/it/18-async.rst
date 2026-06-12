@@ -4,7 +4,7 @@ Esecuzione asincrona
 .. index::
     single: Async
 
-Controllare la presenza di spam durante la gestione dell'invio del form potrebbe portare ad alcuni problemi. Se le API di Akismet diventano lente, il nostro sito web lo sarà anche per gli utenti. Ma peggio ancora, se si verifica un timeout o se le API di Akismet sono temporaneamente non disponibili, potremmo perdere dei commenti.
+Controllare la presenza di spam durante la gestione dell'invio del form potrebbe portare ad alcuni problemi. Se il modello di IA diventa lento, il nostro sito web lo sarà anche per gli utenti. Ma peggio ancora, se si verifica un timeout o se il modello è temporaneamente non disponibile, potremmo perdere dei commenti.
 
 Idealmente, dovremmo salvare i dati inviati senza pubblicarli e restituire immediatamente una risposta. Lo spam può essere controllato in un secondo momento.
 
@@ -114,7 +114,7 @@ Aggiornare la configurazione di EasyAdmin per poter vedere lo stato del commento
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Non dimentichiamo di aggiornare anche i test impostando lo ``state`` nelle fixture:
+Non dimentichiamo di aggiornare anche le factory di test: i commenti creati da ``CommentFactory`` dovrebbero essere pubblicati in modo predefinito, così da apparire nelle pagine delle conferenze (un test può sempre sovrascrivere lo stato quando ha bisogno di un commento in moderazione):
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Dovrebbe consumare immediatamente il messaggio inviato, grazie al commento invia
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-L'attività di consumo dei messaggi dalla coda viene salvata nei log, ma è possibile ottenere un feedback immediato in console aggiungendo al comando l'opzione ``-vv``. In questo modo si dovrebbe anche poter vedere la chiamata alle API di Akismet.
+L'attività di consumo dei messaggi dalla coda viene salvata nei log, ma è possibile ottenere un feedback immediato in console aggiungendo al comando l'opzione ``-vv``. In questo modo si dovrebbe anche poter vedere la chiamata alle API di OpenAI.
 
 Per fermare il consumer premere ``Ctrl+C``.
 
@@ -453,7 +453,7 @@ Per fermare un worker occorre fermare il server web, oppure eseguire il comando 
 Riprovare con i messaggi falliti
 --------------------------------
 
-E se le API di Akismet non fossero disponibili mentre viene consumato un messaggio? Questo non farà alcuna differenza per l'utente che invia un commento, ma il messaggio andrà perso, e non ci sarà alcun controllo sulla presenza di spam.
+E se il database non fosse disponibile mentre viene consumato un messaggio? Questo non farà alcuna differenza per l'utente che invia un commento, ma il messaggio fallirà, e non ci sarà alcun controllo sulla presenza di spam.
 
 Messenger ha un meccanismo di "retry" per i casi in cui si verifichi un'eccezione durante la gestione di un messaggio:
 
