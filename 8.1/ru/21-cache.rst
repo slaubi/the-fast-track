@@ -23,17 +23,24 @@ HTTP-кеширование — отличный способ увеличить
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -29,7 +29,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
 
-Метод ``setSharedMaxAge()`` устанавливает срок действия кеша для обратных прокси-серверов. Используйте метод ``setMaxAge()``, чтобы управлять кешем браузера. Время указывается в секундах (1 час = 60 минут = 3600 секунд).
+Атрибут ``#[Cache]`` устанавливает срок действия кеша для обратных прокси-серверов через свой аргумент ``smaxage``; используйте ``maxage``, чтобы управлять кешем браузера. Время указывается в секундах (1 час = 60 минут = 3600 секунд). И, как и в случае с маршрутизацией или ограничением частоты запросов, политика кеширования объявляется именно там, где она применяется: на контроллере.
 
 Кеширование страницы конференции является менее тривиальной задачей, поскольку данные на ней более динамичны. В любой момент любой желающий может добавить комментарий, и никто не хочет ждать целый час, чтобы его увидеть на сайте. В таких случаях используйте *валидацию кеширования HTTP*.
 
@@ -111,7 +118,7 @@ HTTP-кеширование — отличный способ увеличить
     single: HTTP Cache;ESI
     single: ESI
 
-Обработчик ``TwigEventSubscriber`` внедряет глобальную переменную в Twig для всех объектов конференции. Это происходит для каждой отдельной страницы сайта. Вероятно, это отличное место для оптимизации.
+Обработчик ``TwigEventListener`` внедряет глобальную переменную в Twig для всех объектов конференции. Это происходит для каждой отдельной страницы сайта. Вероятно, это отличное место для оптимизации.
 
 Вы не добавляете новые конференции каждый день, однако код запрашивает одни и те же данные из базы снова и снова.
 
@@ -126,8 +133,8 @@ HTTP-кеширование — отличный способ увеличить
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -32,6 +32,14 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
@@ -138,9 +145,9 @@ HTTP-кеширование — отличный способ увеличить
     +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(
-             Request $request,
 
 Создайте соответствующий шаблон:
 
@@ -265,15 +272,14 @@ Symfony автоматически активирует поддержку ESI, 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -37,7 +37,7 @@ final class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/conference_header', name: 'conference_header')]
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
 
 Кеширование теперь включено для обоих запросов:
 
@@ -306,7 +312,7 @@ Symfony автоматически активирует поддержку ESI, 
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Очистка HTTP-кеша для тестирования
 ------------------------------------------------------------
@@ -386,6 +392,27 @@ Symfony автоматически активирует поддержку ESI, 
 
     Контроллер не имеет имени маршрута, так как он никогда не будет использован в коде.
 
+Отключение HTTP-кеша в режиме разработки
+----------------------------------------
+
+HTTP-кеш отлично помог нам проверить заголовки кеширования и научиться удалять устаревшие записи. Но держать обратный прокси включённым в окружении разработки необычно, и он быстро начинает мешать: пока вы работаете над кодом, ответы отдаются из кеша, а некоторые сторонние ресурсы и вовсе отдаются с пустым телом из-за давнего ограничения HttpCache при работе с файловыми ответами.
+
+Теперь, когда всё проверено, отключите его; в продакшене эту роль возьмёт на себя Varnish:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,7 +14,3 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Группировка схожих маршрутов по префиксу
 ----------------------------------------------------------------------------
 
@@ -446,14 +473,13 @@ Symfony автоматически активирует поддержку ESI, 
 
     use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
     #[AsCommand('app:step:info')]
-    class StepInfoCommand extends Command
+    class StepInfoCommand
     {
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
@@ -464,51 +490,34 @@ Symfony автоматически активирует поддержку ESI, 
     }
 
 .. index::
-    single: Command;make:command
-
-.. note::
-
-    Вы можете выполнить ``make:command`` для создания команды:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
-
-.. index::
     single: Cache
     single: Components;Cache
 
 Как насчёт того, чтобы закешировать результат на несколько минут? Установите Symfony-компонент Cache.
 
-А затем оберните код логикой кеширования:
+Symfony внедряет сервисы, указанные в типах параметров метода ``__invoke()`` команды, так же, как и для аргументов контроллеров. Оберните код логикой кеширования:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Command/StepInfoCommand.php
     +++ w/src/Command/StepInfoCommand.php
-    @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
      #[AsCommand('app:step:info')]
-     class StepInfoCommand extends Command
+     class StepInfoCommand
      {
-    +    public function __construct(
-    +         private CacheInterface $cache,
-    +    ) {
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
@@ -553,7 +562,7 @@ Symfony автоматически активирует поддержку ESI, 
              type: postgresql:16
 
     +    varnish:
-    +        type: varnish:7.6
+    +        type: varnish:9.0
     +        relationships:
     +            application: 'app:http'
     +        configuration:
