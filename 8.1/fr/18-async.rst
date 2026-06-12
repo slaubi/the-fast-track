@@ -4,7 +4,7 @@ Faire de l'asynchrone
 .. index::
     single: Async
 
-Vérifier la présence de spam pendant le traitement de la soumission du formulaire peut entraîner certains problèmes. Si l'API d'Akismet devient lente, notre site web sera également lent pour les internautes. Mais pire encore, si nous atteignons le délai d'attente maximal ou si l'API d'Akismet n'est pas disponible, nous pourrions perdre des commentaires.
+Vérifier la présence de spam pendant le traitement de la soumission du formulaire peut entraîner certains problèmes. Si le modèle d'IA devient lent, notre site web sera également lent pour les internautes. Mais pire encore, si nous atteignons le délai d'attente maximal ou si le modèle n'est pas disponible, nous pourrions perdre des commentaires.
 
 Idéalement, nous devrions stocker les données soumises, sans les publier, et renvoyer une réponse immédiatement. La vérification du spam pourra être faite par la suite.
 
@@ -114,7 +114,7 @@ Modifiez la configuration d'EasyAdmin pour voir l'état du commentaire :
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-N'oubliez pas de modifier les tests en renseignant le ``state`` dans les fixtures :
+N'oubliez pas de modifier également les factories de test : les commentaires créés par ``CommentFactory`` doivent être publiés par défaut afin d'apparaître sur les pages des conférences (un test peut toujours surcharger l'état lorsqu'il a besoin d'un commentaire en cours de modération) :
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Cette commande devrait immédiatement consommer le message envoyé pour le comme
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-L'activité du consumer de messages est enregistrée dans les logs, mais vous pouvez avoir un affichage instantané dans la console en passant l'option ``-vv``. Vous devriez même voir l'appel vers l'API d'Akismet.
+L'activité du consumer de messages est enregistrée dans les logs, mais vous pouvez avoir un affichage instantané dans la console en passant l'option ``-vv``. Vous devriez même voir l'appel vers l'API d'OpenAI.
 
 Pour arrêter le consumer, appuyez sur ``Ctrl+C``.
 
@@ -453,7 +453,7 @@ Pour arrêter un worker, arrêtez le serveur web ou tuez le PID (identifiant du 
 Renvoyer des messages ayant échoué
 ------------------------------------
 
-Que faire si Akismet est en panne alors qu'un message est en train d'être consommé ? Il n'y a aucun impact pour les personnes qui soumettent des commentaires, mais le message est perdu et le spam n'est pas vérifié.
+Que faire si la base de données est en panne alors qu'un message est en train d'être consommé ? Il n'y a aucun impact pour les personnes qui soumettent des commentaires, mais le message échoue et le spam n'est pas vérifié.
 
 Messenger dispose d'un mécanisme de relance lorsqu'une exception se produit lors du traitement d'un message :
 

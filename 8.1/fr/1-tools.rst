@@ -81,11 +81,6 @@ Si vous ne connaissez pas Composer, prenez le temps de vous familiariser avec ce
 
     Vous n'avez pas besoin de taper le nom complet des commandes : ``composer req`` fait la même chose que ``composer require``, utilisez ``composer rem`` au lieu de ``composer remove``, etc.
 
-NodeJS
-------
-
-Nous n'écrirons pas beaucoup de code JavaScript, mais nous utiliserons les outils JavaScript/NodeJS pour gérer nos assets. Vérifiez que vous avez installé `NodeJS`_.
-
 Docker et Docker Compose
 ------------------------
 
@@ -133,7 +128,6 @@ De plus, la commande ``symfony`` sélectionne automatiquement la "meilleure" ver
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Installez-les`: https://docs.docker.com/install/
 .. _`commande symfony`: https://symfony.com/download
 .. _`installer une autorité de certification`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

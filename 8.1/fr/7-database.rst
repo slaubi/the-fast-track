@@ -268,9 +268,9 @@ Vous ne vous en êtes peut-être pas encore rendu compte, mais le fait que l'inf
 
     * `Documentation PostgreSQL`_ ;
 
-    * `docker-compose commands`_.
+    * les `commandes Docker Compose`_.
 
 .. _`Services Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Tunnel Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Documentation PostgreSQL`: https://www.postgresql.org/docs/
-.. _`docker-compose commands`: https://docs.docker.com/compose/reference/
+.. _`commandes Docker Compose`: https://docs.docker.com/reference/cli/docker/compose/

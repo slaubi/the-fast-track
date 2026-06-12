@@ -13,6 +13,10 @@ Et il ne s'agit pas seulement de nouvelles façons de faire, mais aussi de nouve
 
 Je ressens aussi le besoin d'écrire un nouveau livre, car le web a beaucoup évolué. Des sujets comme les `APIs`_, les `SPAs`_, la `conteneurisation`_, le `déploiement continu`_ et bien d'autres encore devraient être abordés dès maintenant.
 
+Un livre vaut-il encore votre temps, maintenant qu'un LLM peut écrire le code à votre place ? Je me suis posé la question en travaillant sur cette édition. Ma réponse est un oui retentissant. J'utilise des outils d'IA tous les jours, et ils écrivent désormais la quasi-totalité de mon code ; mais ils n'ont pas changé l'essentiel. Vous devez toujours comprendre l'architecture de votre application, décider quoi construire, relire le code généré et repérer ce qui est subtilement faux. On ne peut pas relire du code que l'on ne comprend pas ; et on ne peut pas guider un outil vers une architecture que l'on n'arrive pas à se représenter. Lire des livres relève du discernement, pas de la nostalgie.
+
+Le discernement demande de la compréhension, et c'est exactement ce que ce livre construit : un modèle mental complet d'une application Symfony, du premier commit à la mise en production. Avec ce modèle en tête, la prochaine fois qu'un LLM générera un contrôleur ou un gestionnaire Messenger à votre place, vous saurez s'il est correct, et pourquoi. Nous en mettrons même un au travail au sein de l'application, pour modérer les commentaires.
+
 Votre temps est précieux. Ne vous attendez pas à de longs paragraphes, ni à de longues explications sur les concepts fondamentaux. Le livre traite plutôt du voyage. Par où commencer. Quel code écrire. Quand. Comment. Je vais essayer d'attirer votre attention sur des sujets importants et vous laisser décider si vous souhaitez creuser davantage.
 
 Je ne veux pas non plus dupliquer la documentation existante, qui est d'une excellente qualité. Je la citerai de manière extensive dans la section "Aller plus loin" à la fin de chaque étape/chapitre. Considérez ce livre comme une liste de liens menant à d'autres ressources.
