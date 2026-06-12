@@ -288,7 +288,7 @@ Profiler les ressources de l'API
 .. index::
     single: Profiling;API
 
-Le profilage de l'API ou de la SPA est plus efficace en ligne de commande, en utilisant l'outil Blackfire CLI que vous avez installé précédemment :
+Le profilage de l'API est plus efficace en ligne de commande, en utilisant l'outil Blackfire CLI que vous avez installé précédemment :
 
 .. code-block:: terminal
     :class: ignore

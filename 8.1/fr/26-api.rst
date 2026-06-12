@@ -238,7 +238,7 @@ Configurer le CORS
 
 Par défaut, la politique de sécurité de même origine des clients HTTP modernes interdit d'appeler l'API depuis un autre domaine. Le paquet CORS, installé par défaut avec ``composer req api``, envoie des en-têtes de *Cross-Origin Resource Sharing* en fonction de la variable d'environnement ``CORS_ALLOW_ORIGIN``.
 
-Par défaut, sa valeur, définie par le fichier ``.env``, autorise les requêtes HTTP depuis ``localhost`` et ``127.0.0.1`` sur n'importe quel port. C'est exactement ce dont nous avons besoin pour la prochaine étape, car nous allons créer une SPA qui aura son propre serveur web et qui appellera l'API.
+Par défaut, sa valeur, définie par le fichier ``.env``, autorise les requêtes HTTP depuis ``localhost`` et ``127.0.0.1`` sur n'importe quel port. Adaptez-la lorsqu'une application hébergée sur un autre domaine, comme une application mobile ou un front-end externe, doit appeler l'API.
 
 .. sidebar:: Aller plus loin
 

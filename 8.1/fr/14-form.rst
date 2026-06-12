@@ -334,6 +334,8 @@ Nous devrions maintenant nous occuper de la soumission du formulaire et de la pe
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+Notez que l'objet ``Request`` est désormais injecté dans le contrôleur, car le formulaire en a besoin pour inspecter les données soumises via ``handleRequest()``.
+
 Lorsque le formulaire est soumis, l'objet ``Comment`` est mis à jour en fonction des données soumises.
 
 La conférence doit être la même que celle de l'URL (nous l'avons supprimée du formulaire).
