@@ -115,8 +115,8 @@ BlackfireエージェントサービスはDocker Composeで既に有効になっ
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Blackfire のインストール失敗を修正する
 ----------------------------------------------------

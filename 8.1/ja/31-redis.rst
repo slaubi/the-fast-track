@@ -73,8 +73,8 @@ Redisサービスを追加するために、Dockerを"再起動"します:
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 ブラウザでWebサイトを表示して、ローカルでテストします。以前と同じくすべての機能が使えます。
 

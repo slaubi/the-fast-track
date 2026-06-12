@@ -80,7 +80,7 @@ Imagine で画像を最適化する
         private const MAX_WIDTH = 200;
         private const MAX_HEIGHT = 150;
 
-        private $imagine;
+        private readonly Imagine $imagine;
 
         public function __construct()
         {
@@ -89,7 +89,7 @@ Imagine で画像を最適化する
 
         public function resize(string $filename): void
         {
-            list($iwidth, $iheight) = getimagesize($filename);
+            [$iwidth, $iheight] = getimagesize($filename);
             $ratio = $iwidth / $iheight;
             $width = self::MAX_WIDTH;
             $height = self::MAX_HEIGHT;

@@ -64,18 +64,18 @@ Docker Compose をバックグラウンドで起動します (``-d``):
 .. code-block:: terminal
     :class: hide
 
-    $ docker-compose down --remove-orphans
+    $ docker compose down --remove-orphans
 
 .. code-block:: terminal
 
-    $ docker-compose up -d --remove-orphans
+    $ docker compose up -d --remove-orphans
 
 データベースが起動するのを待って、すべて正しく動いているかチェックしましょう:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ Docker Compose をバックグラウンドで起動します (``-d``):
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 ローカルのデータベースへのアクセス
 ---------------------------------------------------
@@ -114,7 +114,7 @@ Symfony CLI は自動的にプロジェクトで実行されている Docker サ
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 データベースのダンプとリストア
 ---------------------------------------------
