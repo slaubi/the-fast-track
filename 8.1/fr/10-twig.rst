@@ -360,7 +360,7 @@ Pour gérer la pagination dans le template, transmettez à Twig le Doctrine Pagi
          }
      }
 
-Le contrôleur récupère la valeur du décalage (``offset``) depuis les paramètres de l'URL (``$request->query``) sous forme d'entier (``getInt()``). Par défaut, sa valeur sera 0 si le paramètre n'est pas défini.
+L'attribut ``#[MapQueryParameter]`` associe le paramètre ``offset`` de la chaîne de requête à l'argument ``$offset`` du contrôleur, avec ``0`` comme valeur par défaut si le paramètre n'est pas défini. Comme le décalage vient du client, nous le bornons pour éviter les valeurs négatives.
 
 Les décalages ``précédent`` et ``suivant`` sont calculés sur la base de toutes les informations que nous avons reçues du paginateur.
 
