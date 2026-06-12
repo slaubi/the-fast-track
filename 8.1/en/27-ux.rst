@@ -1,0 +1,158 @@
+Making the Website Feel Like an SPA
+===================================
+
+.. index::
+    single: Symfony UX
+    single: Turbo
+    single: Stimulus
+
+The website is fast, but every click still reloads a full HTML page. The traditional answer is to build a *Single-Page Application* (SPA): a JavaScript application, written in another stack, that talks to the API. That means a second application to develop, secure, deploy, and keep in sync with the main one.
+
+Symfony has a different answer. *Symfony UX* is an initiative that brings the SPA experience to server-rendered applications: keep writing Twig templates and Symfony controllers, and sprinkle JavaScript only where it adds value.
+
+Discovering Symfony UX
+----------------------
+
+The good news? We have been using Symfony UX since the very first step of this book. The webapp skeleton ships with two of its packages: ``symfony/stimulus-bundle`` and ``symfony/ux-turbo``. Have a look at ``importmap.php``:
+
+.. code-block:: php
+    :class: ignore
+
+    return [
+        'app' => ['path' => './assets/app.js', 'entrypoint' => true],
+        '@hotwired/stimulus' => ['version' => '3.2.2'],
+        '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
+        '@hotwired/turbo' => ['version' => '8.0.23'],
+    ];
+
+`Stimulus`_ is a small JavaScript framework that connects JavaScript *controllers* to HTML elements via ``data-`` attributes. The ``assets/stimulus_bootstrap.js`` file starts the Stimulus application and automatically registers any controller stored in the ``assets/controllers/`` directory.
+
+`Turbo`_ builds on this foundation to make navigation instant.
+
+Navigating Instantly with Turbo
+-------------------------------
+
+.. index::
+    single: Turbo;Drive
+
+Turbo *Drive* has been silently at work all along: it intercepts every link click and form submission, fetches the page in the background, and swaps the ``<body>`` without a full page reload. The browser keeps the same JavaScript and CSS alive, so navigation feels immediate.
+
+Open the browser developer tools, switch to the "Network" tab, and click through the website: page changes are ``fetch`` requests, not full document loads.
+
+Turbo only asks one thing in return: proper HTTP semantics for forms. A successful submission must redirect (ours does, thanks to ``redirectToRoute()``), and a failed one must use a ``4xx`` status code. Symfony handles the latter automatically: when a submitted form is invalid, ``render()`` responds with a ``422 Unprocessable Entity`` status code.
+
+Updating Part of a Page with Turbo Frames
+-----------------------------------------
+
+.. index::
+    single: Turbo;Frame
+
+Turbo Drive avoids full page reloads. Turbo *Frames* go one step further: they let a fragment of the page navigate independently from the rest of it.
+
+The comments list is a perfect candidate. When browsing comment pages via the "Previous" and "Next" links, only the list should change; re-rendering the header, the form, and the footer is wasted work. Wrap the comments in a frame:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
+    @@ -17,3 +17,4 @@
+         <div class="row">
+             <div class="col-12 col-lg-8">
+    +            <turbo-frame id="comments" data-turbo-action="advance">
+                 {% if comments|length > 0 %}
+    @@ -56,5 +57,6 @@
+                     No comments have been posted yet for this conference.
+                 </div>
+             {% endif %}
+    +            </turbo-frame>
+             </div>
+             <div class="col-12 col-lg-4">
+
+Links inside a ``<turbo-frame>`` element only update that frame: when clicking on "Next", Turbo fetches the page in the background and swaps the matching frame, leaving the rest of the page untouched.
+
+The ``data-turbo-action="advance"`` attribute promotes the frame navigation to a full visit: the URL in the address bar is updated (including the ``offset`` query parameter), so paginated comments remain shareable and the browser back button works as expected.
+
+Previewing the Comment Photo with Stimulus
+------------------------------------------
+
+.. index::
+    single: Stimulus;Controller
+
+Time to write our first lines of JavaScript of the whole book. Attendees submitting a photo cannot see it before posting the comment. Let's display a preview when they select a file.
+
+Create a Stimulus controller (the file name determines the controller name, ``photo-preview``):
+
+.. code-block:: javascript
+    :caption: assets/controllers/photo_preview_controller.js
+
+    import { Controller } from '@hotwired/stimulus';
+
+    export default class extends Controller {
+        show() {
+            const [photo] = this.element.files;
+            if (!photo) {
+                this.preview?.remove();
+                this.preview = null;
+
+                return;
+            }
+
+            if (!this.preview) {
+                this.preview = document.createElement('img');
+                this.preview.className = 'img-thumbnail mt-2';
+                this.preview.style.maxHeight = '150px';
+                this.element.insertAdjacentElement('afterend', this.preview);
+            }
+
+            this.preview.src = URL.createObjectURL(photo);
+        }
+    }
+
+That's all the JavaScript we need. Stimulus discovers and registers the controller automatically. Connect it to the photo field of the comment form via ``data-`` attributes:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
+    @@ -26,6 +26,10 @@ class CommentType extends AbstractType
+                 ->add('photo', FileType::class, [
+                     'required' => false,
+                     'mapped' => false,
+    +                'attr' => [
+    +                    'data-controller' => 'photo-preview',
+    +                    'data-action' => 'change->photo-preview#show',
+    +                ],
+                     'constraints' => [
+                         new Image(maxSize: '1024k')
+                     ],
+
+The ``data-controller`` attribute binds the controller to the file input, and ``data-action`` calls its ``show()`` method whenever the input value changes. Select a photo on a conference page and enjoy the preview.
+
+Stimulus controllers work hand in hand with Turbo: because Drive and Frames update the page without reloading it, controllers are automatically connected and disconnected as elements enter and leave the DOM.
+
+What about Mobile Applications?
+-------------------------------
+
+We got the SPA experience without building a second application: no separate JavaScript stack, no second web server, no CORS configuration, nothing new to deploy.
+
+And if you ever need a *native* mobile application, the API created in the previous step is the right entry point: it is public, documented, and framework-agnostic. The website and the mobile application can evolve independently while sharing the same backend.
+
+.. sidebar:: Going Further
+
+    * The `Symfony UX initiative`_;
+
+    * The `Turbo Handbook`_ and the `Stimulus Handbook`_;
+
+    * The `Symfony UX Turbo docs`_, including Turbo *Streams*, which broadcast page updates to all connected users via Mercure;
+
+    * `Live Components`_, to build dynamic interfaces with no custom JavaScript at all.
+
+.. _`Stimulus`: https://stimulus.hotwired.dev/
+.. _`Turbo`: https://turbo.hotwired.dev/
+.. _`Symfony UX initiative`: https://ux.symfony.com/
+.. _`Turbo Handbook`: https://turbo.hotwired.dev/handbook/introduction
+.. _`Stimulus Handbook`: https://stimulus.hotwired.dev/handbook/introduction
+.. _`Symfony UX Turbo docs`: https://symfony.com/bundles/ux-turbo/current/index.html
+.. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html

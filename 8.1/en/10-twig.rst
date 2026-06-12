@@ -27,14 +27,12 @@ All pages on the website will share the same *layout*. When installing Twig, a `
         <head>
             <meta charset="UTF-8">
             <title>{% block title %}Welcome!{% endblock %}</title>
-            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-            {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
             {% block stylesheets %}
-                {{ encore_entry_link_tags('app') }}
             {% endblock %}
 
             {% block javascripts %}
-                {{ encore_entry_script_tags('app') }}
+                {% block importmap %}{{ importmap('app') }}{% endblock %}
             {% endblock %}
         </head>
         <body>
@@ -334,23 +332,22 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -6,7 +6,8 @@ use App\Entity\Conference;
-     use App\Repository\CommentRepository;
-     use App\Repository\ConferenceRepository;
+    @@ -8,6 +8,7 @@ use App\Repository\ConferenceRepository;
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
+
     @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
     -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-    +        $offset = max(0, $request->query->getInt('offset', 0));
+    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
@@ -363,7 +360,7 @@ To manage the pagination in the template, pass the Doctrine Paginator instead of
          }
      }
 
-The controller gets the ``offset`` from the Request query string (``$request->query``) as an integer (``getInt()``), defaulting to 0 if not available.
+The ``#[MapQueryParameter]`` attribute maps the ``offset`` query string parameter to the ``$offset`` controller argument, defaulting to ``0`` when it is not set. As the offset comes from the client, we clamp it to avoid negative values.
 
 The ``previous`` and ``next`` offsets are computed based on all the information we have from the paginator.
 
@@ -424,8 +421,8 @@ You might have noticed that both methods in ``ConferenceController`` take a Twig
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
     @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
     -use Twig\Environment;
 
@@ -443,10 +440,10 @@ You might have noticed that both methods in ``ConferenceController`` take a Twig
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [

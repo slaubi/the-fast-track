@@ -10,7 +10,7 @@ It might be nice if the project was somehow related to Symfony and its community
 
 We have it. The project is all about getting feedback on conferences: a list of conferences on the homepage, a page for each conference, full of nice comments. A comment is composed of some small text and an optional photo taken during the conference. I suppose I have just written down all the specifications we need to get started.
 
-The *project* will contain several *applications*. A traditional web application with an HTML frontend, an API, and an SPA for mobile phones. How does that sound?
+The *project* will contain several *applications*. A traditional web application with an HTML frontend that feels as snappy as an SPA, and an API ready to power mobile applications. How does that sound?
 
 Learning is Doing
 -----------------
@@ -60,11 +60,11 @@ Clone the `guestbook repository`_ somewhere on your local machine:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=7.4-1 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 This repository contains all the code of the book.
 
-Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-7.4-1``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
+Note that we are using ``symfony new`` instead of ``git clone`` as the command does more than just cloning the repository (hosted on Github under the ``the-fast-track`` organization: ``https://github.com/the-fast-track/book-8.1-1``). It also starts the web server, the containers, migrates the database, loads fixtures, ... After running the command, the website should be up and running, ready to be used.
 
 The code is 100% guaranteed to be synchronized with the code in the book (use the exact repository URL listed above). Trying to manually synchronize changes from the book with the source code in the repository is almost impossible. I tried in the past. I failed. It is just impossible. Especially for books like the ones I write: books that tells you a story about developing a website. As each chapter depends on the previous ones, a change might have consequences in all following chapters.
 
@@ -123,4 +123,4 @@ You can also browse diffs, tags, and commits directly on GitHub. This is a great
 
 .. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
 .. _`guestbook`: https://en.wikipedia.org/wiki/Guestbook
-.. _`guestbook repository`: https://github.com/the-fast-track/book-7.4-1
+.. _`guestbook repository`: https://github.com/the-fast-track/book-8.1-1

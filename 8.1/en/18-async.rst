@@ -4,7 +4,7 @@ Going Async
 .. index::
     single: Async
 
-Checking for spam during the handling of the form submission might lead to some problems. If the Akismet API becomes slow, our website will also be slow for users. But even worse, if we hit a timeout or if the Akismet API is unavailable, we might lose comments.
+Checking for spam during the handling of the form submission might lead to some problems. If the AI model becomes slow, our website will also be slow for users. But even worse, if we hit a timeout or if the model is unavailable, we might lose comments.
 
 Ideally, we should store the submitted data without publishing it, and immediately return a response. Checking for spam can then be done out of band.
 
@@ -114,30 +114,21 @@ Update the EasyAdmin configuration to be able to see the comment's state:
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Don't forget to also update the tests by setting the ``state`` of the fixtures:
+Don't forget to also update the test factories: comments created by ``CommentFactory`` should be published by default so that they show up on the conference pages (a test can always override the state when it needs a moderated comment):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/src/DataFixtures/AppFixtures.php
-    +++ w/src/DataFixtures/AppFixtures.php
-    @@ -35,8 +35,16 @@ class AppFixtures extends Fixture
-             $comment1->setAuthor('Fabien');
-             $comment1->setEmail('fabien@example.com');
-             $comment1->setText('This was a great conference.');
-    +        $comment1->setState('published');
-             $manager->persist($comment1);
-
-    +        $comment2 = new Comment();
-    +        $comment2->setConference($amsterdam);
-    +        $comment2->setAuthor('Lucas');
-    +        $comment2->setEmail('lucas@example.com');
-    +        $comment2->setText('I think this one is going to be moderated.');
-    +        $manager->persist($comment2);
-    +
-             $admin = new Admin();
-             $admin->setRoles(['ROLE_ADMIN']);
-             $admin->setUsername('admin');
+    --- i/src/Factory/CommentFactory.php
+    +++ w/src/Factory/CommentFactory.php
+    @@ -38,6 +38,7 @@ final class CommentFactory extends PersistentObjectFactory
+                 'conference' => ConferenceFactory::new(),
+                 'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+                 'email' => self::faker()->email(),
+    +            'state' => 'published',
+                 'text' => self::faker()->text(),
+             ];
+         }
 
 .. index::
     single: Test;Container
@@ -150,16 +141,16 @@ For the controller tests, simulate the validation:
 
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
-    @@ -2,6 +2,8 @@
+    @@ -4,6 +4,8 @@ namespace App\Tests\Controller;
 
-     namespace App\Tests\Controller;
-
+     use App\Factory\CommentFactory;
+     use App\Factory\ConferenceFactory;
     +use App\Repository\CommentRepository;
     +use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-     class ConferenceControllerTest extends WebTestCase
-    @@ -22,10 +24,16 @@ class ConferenceControllerTest extends WebTestCase
+     use Zenstruck\Foundry\Test\Factories;
+     use Zenstruck\Foundry\Test\ResetDatabase;
+    @@ -33,10 +35,16 @@ class ConferenceControllerTest extends WebTestCase
              $client->submitForm('Submit', [
                  'comment[author]' => 'Fabien',
                  'comment[text]' => 'Some feedback from an automated functional test',
@@ -255,7 +246,7 @@ Create a ``CommentMessageHandler`` class under a new ``App\MessageHandler`` name
         ) {
         }
 
-        public function __invoke(CommentMessage $message)
+        public function __invoke(CommentMessage $message): void
         {
             $comment = $this->commentRepository->find($message->getId());
             if (!$comment) {
@@ -281,7 +272,7 @@ Update the controller to use the new system:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -5,21 +5,23 @@ namespace App\Controller;
+    @@ -5,23 +5,25 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -295,6 +286,8 @@ Update the controller to use the new system:
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
     +use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Routing\Attribute\Route;
 
@@ -306,13 +299,14 @@ Update the controller to use the new system:
          ) {
          }
 
-    @@ -35,8 +37,7 @@ final class ConferenceController extends AbstractController
+    @@ -35,9 +37,8 @@ final class ConferenceController extends AbstractController
              Request $request,
              #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -50,6 +51,7 @@ final class ConferenceController extends AbstractController
@@ -391,12 +385,12 @@ It should immediately consume the message dispatched for the submitted comment:
      // Quit the worker with CONTROL-C.
 
     11:30:20 INFO      [messenger] Received message App\Message\CommentMessage ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
-    11:30:20 INFO      [http_client] Request: "POST https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
-    11:30:20 INFO      [http_client] Response: "200 https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
+    11:30:20 INFO      [http_client] Request: "POST https://api.openai.com/v1/responses"
+    11:30:20 INFO      [http_client] Response: "200 https://api.openai.com/v1/responses"
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-The message consumer activity is logged, but you get instant feedback on the console by passing the ``-vv`` flag. You should even be able to spot the call to the Akismet API.
+The message consumer activity is logged, but you get instant feedback on the console by passing the ``-vv`` flag. You should even be able to spot the call to the OpenAI API.
 
 To stop the consumer, press ``Ctrl+C``.
 
@@ -459,7 +453,7 @@ To stop a worker, stop the web server or kill the PID given by the ``server:stat
 Retrying Failed Messages
 ------------------------
 
-What if Akismet is down while consuming a message? There is no impact for people submitting comments, but the message is lost and spam is not checked.
+What if the database is down while consuming a message? There is no impact for people submitting comments, but the message fails and spam is not checked.
 
 Messenger has a retry mechanism for when an exception occurs while handling a message:
 

@@ -47,10 +47,10 @@ As we only have two controllers, you *might* do the following (do not apply the 
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
              return $this->render('conference/show.html.twig', [
@@ -80,59 +80,54 @@ Another built-in example of events and listeners in action is the lifecycle of a
 
 Any package or bundle can also dispatch their own events to make their code extensible.
 
-To avoid having a configuration file that describes which events a listener wants to listen to, create a *subscriber*. A subscriber is a listener with a static ``getSubscribedEvents()`` method that returns its configuration. This allows subscribers to be registered in the Symfony dispatcher automatically.
+To avoid having a configuration file that describes which events a listener wants to listen to, add the ``#[AsEventListener]`` attribute on the listener class or method. This allows listeners to be registered in the Symfony dispatcher automatically.
 
-Implementing a Subscriber
--------------------------
+Implementing a Listener
+-----------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-You know the song by heart now, use the maker bundle to generate a subscriber:
+You know the song by heart now, use the maker bundle to generate a listener:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
-    $ symfony console make:subscriber TwigEventSubscriber
+    $ symfony console make:listener TwigEventListener
 
-The command asks you about which event you want to listen to. Choose the ``Symfony\Component\HttpKernel\Event\ControllerEvent`` event, which is dispatched just before the controller is called. It is the best time to inject the ``conferences`` global variable so that Twig will have access to it when the controller renders the template. Update your subscriber as follows:
+The command asks you about which event you want to listen to. Choose the ``Symfony\Component\HttpKernel\Event\ControllerEvent`` event, which is dispatched just before the controller is called. It is the best time to inject the ``conferences`` global variable so that Twig will have access to it when the controller renders the template. Update your listener as follows:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/src/EventSubscriber/TwigEventSubscriber.php
-    +++ w/src/EventSubscriber/TwigEventSubscriber.php
-    @@ -2,14 +2,25 @@
+    --- i/src/EventListener/TwigEventListener.php
+    +++ w/src/EventListener/TwigEventListener.php
+    @@ -2,14 +2,22 @@
 
-     namespace App\EventSubscriber;
+     namespace App\EventListener;
 
     +use App\Repository\ConferenceRepository;
-     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+     use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
      use Symfony\Component\HttpKernel\Event\ControllerEvent;
     +use Twig\Environment;
 
-     class TwigEventSubscriber implements EventSubscriberInterface
+     final class TwigEventListener
      {
-    +    private $twig;
-    +    private $conferenceRepository;
-    +
-    +    public function __construct(Environment $twig, ConferenceRepository $conferenceRepository)
-    +    {
-    +        $this->twig = $twig;
-    +        $this->conferenceRepository = $conferenceRepository;
+    +    public function __construct(
+    +        private Environment $twig,
+    +        private ConferenceRepository $conferenceRepository,
+    +    ) {
     +    }
     +
+         #[AsEventListener]
          public function onControllerEvent(ControllerEvent $event): void
          {
     -        // ...
     +        $this->twig->addGlobal('conferences', $this->conferenceRepository->findAll());
          }
-
-         public static function getSubscribedEvents(): array
+     }
 
 Now, you can add as many controllers as you want: the ``conferences`` variable will always be available in Twig.
 

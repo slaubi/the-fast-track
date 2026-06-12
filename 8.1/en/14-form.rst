@@ -47,7 +47,7 @@ The ``App\Form\CommentType`` class defines a form for the ``App\Entity\Comment``
 
     class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('author')
@@ -59,7 +59,7 @@ The ``App\Form\CommentType`` class defines a form for the ``App\Entity\Comment``
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Comment::class,
@@ -93,12 +93,12 @@ To display the form to the user, create the form in the controller and pass it t
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
+         public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
@@ -289,15 +289,17 @@ We should now handle the form submission and the persistence of its information 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,7 +7,8 @@ use App\Entity\Conference;
+    @@ -7,8 +7,10 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
+    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
     @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
@@ -310,7 +312,12 @@ We should now handle the form submission and the persistence of its information 
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -27,6 +33,15 @@ final class ConferenceController extends AbstractController
+    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
+         }
+
+         #[Route('/conference/{slug}', name: 'conference')]
+    -    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -324,8 +331,10 @@ We should now handle the form submission and the persistence of its information 
     +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
     +        }
 
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
+
+Note that the ``Request`` object is now injected in the controller, as the form needs it to inspect the submitted data via ``handleRequest()``.
 
 When the form is submitted, the ``Comment`` object is updated according to the submitted data.
 
@@ -378,11 +387,11 @@ Now, we have everything we need to know to implement the logic needed to store t
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
-    @@ -29,13 +30,23 @@ final class ConferenceController extends AbstractController
+    @@ -29,13 +30,24 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     -    {
     +    public function show(
     +        Request $request,
@@ -390,6 +399,7 @@ Now, we have everything we need to know to implement the logic needed to store t
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
+    +        #[MapQueryParameter] int $offset = 0,
     +    ): Response {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);

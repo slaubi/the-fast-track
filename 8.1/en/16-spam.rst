@@ -1,103 +1,61 @@
-Preventing Spam with an API
-===========================
+Preventing Spam with AI
+=======================
 
 .. index::
     single: Spam
 
 Anyone can submit a feedback. Even robots, spammers, and more. We could add some "captcha" to the form to somehow be protected from robots, or we can use some third-party APIs.
 
-I have decided to use the free `Akismet`_ service to demonstrate how to call an API and how to make the call "out of band".
+I have decided to use a Large Language Model to decide whether a comment is spam, to demonstrate how to use AI in a Symfony application and how to make such expensive calls "out of band".
 
-Signing up on Akismet
+Getting an AI API Key
 ---------------------
 
 .. index::
-    single: Akismet
+    single: AI
+    single: OpenAI
 
-Sign-up for a free account on `akismet.com`_ and get the Akismet API key.
+Symfony AI supports many model providers: OpenAI, Anthropic, Google Gemini, Mistral, and even local models via Ollama. This chapter uses OpenAI: sign-up on `platform.openai.com`_ and create an API key. If you prefer another provider, the code stays the same; only the configuration changes.
 
-Depending on Symfony HTTPClient Component
------------------------------------------
+Depending on the Symfony AI Bundle
+----------------------------------
 
 .. index::
-    single: Components;HTTP Client
-    single: HTTP Client
+    single: Components;AI
+    single: AI;Agent
+    single: AI;Platform
 
-Instead of using a library that abstracts the Akismet API, we will do all the API calls directly. Doing the HTTP calls ourselves is more efficient (and allows us to benefit from all the Symfony debugging tools like the integration with the Symfony Profiler).
+Instead of calling the model's HTTP API ourselves, we will use the Symfony AI Bundle. It provides a *platform* abstraction for the model providers (each provider comes as its own bridge package) and an *agent* that wraps a model to make calls; and it benefits from all the Symfony debugging tools like the integration with the Symfony Profiler:
 
-Designing a Spam Checker Class
-------------------------------
+.. code-block:: terminal
 
-Create a new class under ``src/`` named ``SpamChecker`` to wrap the logic of calling the Akismet API and interpreting its responses:
+    $ symfony composer req symfony/ai-bundle symfony/ai-agent symfony/ai-open-ai-platform
 
-.. code-block:: php
-    :emphasize-lines: 14,24
-    :caption: src/SpamChecker.php
+.. note::
 
-    namespace App;
+    Symfony AI is a young set of components and still experimental: its APIs may evolve faster than the rest of Symfony.
 
-    use App\Entity\Comment;
-    use Symfony\Contracts\HttpClient\HttpClientInterface;
+The OpenAI bridge recipe has already configured the platform for us; it references an ``OPENAI_API_KEY`` environment variable (and added an empty default for it in ``.env``):
 
-    class SpamChecker
-    {
-        private $endpoint;
+.. code-block:: yaml
+    :caption: config/packages/ai_open_ai_platform.yaml
+    :class: ignore
 
-        public function __construct(
-            private HttpClientInterface $client,
-            string $akismetKey,
-        ) {
-            $this->endpoint = sprintf('https://%s.rest.akismet.com/1.1/comment-check', $akismetKey);
-        }
+    ai:
+        platform:
+            openai:
+                api_key: '%env(OPENAI_API_KEY)%'
 
-        /**
-         * @return int Spam score: 0: not spam, 1: maybe spam, 2: blatant spam
-         *
-         * @throws \RuntimeException if the call did not work
-         */
-        public function getSpamScore(Comment $comment, array $context): int
-        {
-            $response = $this->client->request('POST', $this->endpoint, [
-                'body' => array_merge($context, [
-                    'blog' => 'https://guestbook.example.com',
-                    'comment_type' => 'comment',
-                    'comment_author' => $comment->getAuthor(),
-                    'comment_author_email' => $comment->getEmail(),
-                    'comment_content' => $comment->getText(),
-                    'comment_date_gmt' => $comment->getCreatedAt()->format('c'),
-                    'blog_lang' => 'en',
-                    'blog_charset' => 'UTF-8',
-                    'is_test' => true,
-                ]),
-            ]);
+Configure a default *agent* on top of it:
 
-            $headers = $response->getHeaders();
-            if ('discard' === ($headers['x-akismet-pro-tip'][0] ?? '')) {
-                return 2;
-            }
+.. code-block:: yaml
+    :caption: config/packages/ai.yaml
 
-            $content = $response->getContent();
-            if (isset($headers['x-akismet-debug-help'][0])) {
-                throw new \RuntimeException(sprintf('Unable to check for spam: %s (%s).', $content, $headers['x-akismet-debug-help'][0]));
-            }
-
-            return 'true' === $content ? 1 : 0;
-        }
-    }
-
-The HTTP client ``request()`` method submits a POST request to the Akismet URL (``$this->endpoint``) and passes an array of parameters.
-
-The ``getSpamScore()`` method returns 3 values depending on the API call response:
-
-* ``2``: if the comment is a "blatant spam";
-
-* ``1``: if the comment might be spam;
-
-* ``0``: if the comment is not spam (ham).
-
-.. tip::
-
-    Use the special ``akismet-guaranteed-spam@example.com`` email address to force the result of the call to be spam.
+    ai:
+        agent:
+            default:
+                platform: 'ai.platform.openai'
+                model: 'gpt-5-mini'
 
 Using Environment Variables
 ---------------------------
@@ -107,32 +65,7 @@ Using Environment Variables
     single: .env
     single: .env.local
 
-The ``SpamChecker`` class relies on an ``$akismetKey`` argument. Like for the upload directory, we can inject it via an ``Autowire`` annotation:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/src/SpamChecker.php
-    +++ w/src/SpamChecker.php
-    @@ -3,6 +3,7 @@
-     namespace App;
-
-     use App\Entity\Comment;
-    +use Symfony\Component\DependencyInjection\Attribute\Autowire;
-     use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-     class SpamChecker
-    @@ -11,7 +12,7 @@ class SpamChecker
-
-         public function __construct(
-             private HttpClientInterface $client,
-    -        string $akismetKey,
-    +        #[Autowire('%env(AKISMET_KEY)%')] string $akismetKey,
-         ) {
-             $this->endpoint = sprintf('https://%s.rest.akismet.com/1.1/comment-check', $akismetKey);
-         }
-
-We certainly don't want to hard-code the value of the Akismet key in the code, so we are using an environment variable instead (``AKISMET_KEY``).
+We certainly don't want to hard-code the key's value in the configuration; that's why it is read from the ``OPENAI_API_KEY`` environment variable.
 
 It is then up to each developer to set a "real" environment variable or to store the value in a ``.env.local`` file:
 
@@ -140,7 +73,7 @@ It is then up to each developer to set a "real" environment variable or to store
     :caption: .env.local
     :class: ignore
 
-    AKISMET_KEY=abcdef
+    OPENAI_API_KEY=sk-...
 
 For production, a "real" environment variable should be defined.
 
@@ -158,12 +91,12 @@ Instead of using many environment variables, Symfony can manage a *vault* where 
 
 Secrets are environment variables in disguise.
 
-Add the Akismet key in the vault:
+Add the OpenAI API key in the vault:
 
 .. code-block:: terminal
-    :class: answers(AKISMET_KEY_VALUE)
+    :class: answers(OPENAI_API_KEY_VALUE)
 
-    $ symfony console secrets:set AKISMET_KEY
+    $ symfony console secrets:set OPENAI_API_KEY
 
 .. code-block:: text
     :class: ignore
@@ -171,13 +104,104 @@ Add the Akismet key in the vault:
      Please type the secret value:
      >
 
-     [OK] Secret "AKISMET_KEY" encrypted in "config/secrets/dev/"; you can commit it.
+     [OK] Secret "OPENAI_API_KEY" encrypted in "config/secrets/dev/"; you can commit it.
 
-Because this is the first time we have run this command, it generated two keys into the ``config/secret/dev/`` directory. It then stored the ``AKISMET_KEY`` secret in that same directory.
+Because this is the first time we have run this command, it generated two keys into the ``config/secret/dev/`` directory. It then stored the ``OPENAI_API_KEY`` secret in that same directory.
 
 For development secrets, you can decide to commit the vault and the keys that have been generated in the ``config/secret/dev/`` directory.
 
 Secrets can also be overridden by setting an environment variable of the same name.
+
+.. index::
+    single: Command;secrets:reveal
+
+To read a secret back from the vault, use ``secrets:reveal``:
+
+.. code-block:: terminal
+
+    $ symfony console secrets:reveal OPENAI_API_KEY
+
+Designing a Spam Checker Class
+------------------------------
+
+.. index::
+    single: AI;Prompt
+
+Create a new class under ``src/`` named ``SpamChecker`` to wrap the logic of asking the model whether a comment is spam:
+
+.. code-block:: php
+    :caption: src/SpamChecker.php
+
+    namespace App;
+
+    use App\Entity\Comment;
+    use Symfony\AI\Agent\AgentInterface;
+    use Symfony\AI\Platform\Exception\ExceptionInterface;
+    use Symfony\AI\Platform\Message\Message;
+    use Symfony\AI\Platform\Message\MessageBag;
+
+    class SpamChecker
+    {
+        public function __construct(
+            private AgentInterface $agent,
+        ) {
+        }
+
+        /**
+         * @return int Spam score: 0: not spam, 1: maybe spam, 2: blatant spam
+         */
+        public function getSpamScore(Comment $comment, array $context): int
+        {
+            $messages = new MessageBag(
+                Message::forSystem(<<<PROMPT
+                    You moderate comments submitted to a conference guestbook.
+                    Classify the comment as "ham", "maybe spam", or "blatant spam".
+                    Only answer with the classification.
+                    PROMPT),
+                Message::ofUser(sprintf(<<<COMMENT
+                    IP: %s
+                    User agent: %s
+                    Author: %s (%s)
+                    Comment: %s
+                    COMMENT,
+                    $context['user_ip'] ?? '',
+                    $context['user_agent'] ?? '',
+                    $comment->getAuthor(),
+                    $comment->getEmail(),
+                    $comment->getText(),
+                )),
+            );
+
+            try {
+                $answer = strtolower($this->agent->call($messages)->getContent());
+            } catch (ExceptionInterface) {
+                // when the model cannot answer, let a human moderate the comment
+                return 1;
+            }
+
+            return match (true) {
+                str_contains($answer, 'blatant spam') => 2,
+                str_contains($answer, 'maybe spam') => 1,
+                default => 0,
+            };
+        }
+    }
+
+The *system prompt* tells the model its role and constrains its answers; the *user message* contains the comment and its submission context (IP address, user agent).
+
+The ``getSpamScore()`` method returns 3 values depending on the model's answer:
+
+* ``2``: if the comment is a "blatant spam";
+
+* ``1``: if the comment might be spam, or when the model cannot be reached;
+
+* ``0``: if the comment is not spam (ham).
+
+A model's output is free text, even when the prompt constrains it: parse it liberally (lowercase it, use ``str_contains()``). And when the model cannot answer at all, fall back to human moderation instead of failing: AI should help the admin, never block the guestbook.
+
+.. tip::
+
+    Try submitting a comment that looks blatantly spammy, like "Buy cheap watches at http://example.com/!!!", to see the model at work.
 
 Checking Comments for Spam
 --------------------------
@@ -198,13 +222,14 @@ One simple way to check for spam when a new comment is submitted is to call the 
      use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-    @@ -34,7 +35,8 @@ final class ConferenceController extends AbstractController
+    @@ -34,8 +35,9 @@ final class ConferenceController extends AbstractController
              Request $request,
              #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -48,6 +50,17 @@ final class ConferenceController extends AbstractController
@@ -228,6 +253,87 @@ One simple way to check for spam when a new comment is submitted is to call the 
 
 Check that it works fine.
 
+Rate Limiting Comment Submissions
+---------------------------------
+
+.. index::
+    single: Rate Limiter
+    single: Components;RateLimiter
+
+Detecting spam protects the website against sophisticated spammers. A complementary and much cheaper protection is to limit how fast the same client can submit comments: nobody legitimately posts dozens of comments per hour on a guestbook.
+
+Add the Symfony Rate Limiter component:
+
+.. code-block:: terminal
+
+    $ symfony composer req rate-limiter
+
+Configure a limiter that accepts at most 5 comments per hour from the same client:
+
+.. code-block:: yaml
+    :caption: config/packages/rate_limiter.yaml
+
+    framework:
+        rate_limiter:
+            comment_submission:
+                policy: 'fixed_window'
+                limit: 5
+                interval: '1 hour'
+
+    when@test:
+        framework:
+            rate_limiter:
+                comment_submission:
+                    limit: 1000
+
+Automated tests legitimately submit many comments in a short period of time, so the limit is raised for the ``test`` environment.
+
+Enforce the limiter on comment submissions with the ``#[RateLimit]`` attribute; by default, it identifies clients by their IP address:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+    +use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Routing\Attribute\Route;
+
+     final class ConferenceController extends AbstractController
+    @@ -31,6 +32,7 @@ final class ConferenceController extends AbstractController
+             ]);
+         }
+
+    +    #[RateLimit('comment_submission', methods: ['POST'])]
+         #[Route('/conference/{slug}', name: 'conference')]
+         public function show(
+             Request $request,
+
+Note the ``methods`` argument: browsing a conference page is a ``GET`` request and must not be limited; only comment submissions (``POST`` requests) are.
+
+When the limit is reached, Symfony automatically returns a ``429 Too Many Requests`` response with a ``Retry-After`` HTTP header telling the client when it can retry.
+
+The same component also protects the admin login form against brute-force attacks; enabling *login throttling* on the firewall takes one line:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -19,6 +19,7 @@ security:
+             main:
+                 lazy: true
+                 provider: app_user_provider
+    +            login_throttling: ~
+                 form_login:
+                     login_path: app_login
+                     check_path: app_login
+
+By default, Symfony blocks an IP after 5 failed login attempts on the same username within a minute (a successful login resets the counter). Use the ``max_attempts`` and ``interval`` options to tune the policy.
+
 Managing Secrets in Production
 ------------------------------
 
@@ -242,7 +348,7 @@ For production, Upsun supports setting *sensitive environment variables*:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:AKISMET_KEY --value=abcdef
+    $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:OPENAI_API_KEY --value=sk-abcdef
 
 But as discussed above, using Symfony secrets might be better. Not in terms of security, but in terms of secret management for the project's team. All secrets are stored in the repository and the only environment variable you need to manage for production is the decryption key. That makes it possible for anyone in the team to add production secrets even if they don't have access to production servers. The setup is a bit more involved though.
 
@@ -267,12 +373,12 @@ First, generate a pair of keys for production use:
 .. index::
     single: Command;secrets:set
 
-Re-add the Akismet secret in the production vault but with its production value:
+Re-add the OpenAI API key secret in the production vault but with its production value:
 
 .. code-block:: terminal
-    :class: answers(abcdef)
+    :class: answers(sk-abcdef)
 
-    $ symfony console secrets:set AKISMET_KEY --env=prod
+    $ symfony console secrets:set OPENAI_API_KEY --env=prod
 
 The last step is to send the decryption key to Upsun by setting a sensitive variable:
 
@@ -288,14 +394,13 @@ You can add and commit all files; the decryption key has been added in ``.gitign
 
 .. sidebar:: Going Further
 
-    * The `HttpClient component docs`_;
+    * The `Symfony AI documentation`_;
 
     * The `Environment Variable Processors`_;
 
-    * The `Symfony HttpClient Cheat Sheet`_.
+    * `How to Keep Sensitive Information Secret`_.
 
-.. _`Akismet`: https://akismet.com
-.. _`akismet.com`: https://akismet.com
-.. _`HttpClient component docs`: https://symfony.com/doc/current/components/http_client.html
+.. _`platform.openai.com`: https://platform.openai.com
+.. _`Symfony AI documentation`: https://symfony.com/doc/current/ai/index.html
 .. _`Environment Variable Processors`: https://symfony.com/doc/current/configuration/env_var_processors.html
-.. _`Symfony HttpClient Cheat Sheet`: https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/httpclient_en_43.pdf
+.. _`How to Keep Sensitive Information Secret`: https://symfony.com/doc/current/configuration/secrets.html

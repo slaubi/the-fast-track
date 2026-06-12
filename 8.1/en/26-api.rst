@@ -238,7 +238,7 @@ Configuring CORS
 
 By default, the same-origin security policy of modern HTTP clients make calling the API from another domain forbidden. The CORS bundle, installed as part of ``composer req api``, sends Cross-Origin Resource Sharing headers based on the ``CORS_ALLOW_ORIGIN`` environment variable.
 
-By default, its value, defined in ``.env``, allows HTTP requests from ``localhost`` and ``127.0.0.1`` on any port. That's exactly what we need as for the next step as we will create an SPA that will have its own web server that will call the API.
+By default, its value, defined in ``.env``, allows HTTP requests from ``localhost`` and ``127.0.0.1`` on any port. Adapt it when an application hosted on another domain, like a mobile application or an external front-end, needs to call the API.
 
 .. sidebar:: Going Further
 

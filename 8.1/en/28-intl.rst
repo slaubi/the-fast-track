@@ -22,10 +22,10 @@ Use the special ``_locale`` route parameter to reference the locale in routes:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/', name: 'homepage')]
     +    #[Route('/{_locale}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -42,10 +42,10 @@ As you will probably not be able to translate the content in all valid locales, 
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale}/', name: 'homepage')]
     +    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -70,10 +70,10 @@ As we will use the same requirement in almost all routes, let's move it to a con
          # default configuration for services in *this* file
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -27,7 +27,7 @@ final class ConferenceController extends AbstractController
-         ) {
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
     +    #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -89,19 +89,20 @@ Add the same locale route prefix to the other URLs:
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -35,7 +35,7 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -38,7 +38,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/conference_header', name: 'conference_header')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference_header', name: 'conference_header')]
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -43,8 +43,8 @@ final class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -46,9 +46,9 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
+         #[RateLimit('comment_submission', methods: ['POST'])]
     -    #[Route('/conference/{slug}', name: 'conference')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
          public function show(
@@ -126,9 +127,9 @@ We are almost done. We don't have a route that matches ``/`` anymore. Let's add 
     +        return $this->redirectToRoute('homepage', ['_locale' => 'en']);
     +    }
     +
+         #[Cache(smaxage: 3600)]
          #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
-         {
 
 Now that all main routes are locale aware, notice that generated URLs on the pages take the current locale into account automatically.
 
@@ -479,8 +480,8 @@ Don't forget to update the functional tests to take URLs and content changes int
 
     --- i/tests/Controller/ConferenceControllerTest.php
     +++ w/tests/Controller/ConferenceControllerTest.php
-    @@ -11,7 +11,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testIndex()
+    @@ -16,7 +16,7 @@ class ConferenceControllerTest extends WebTestCase
+         public function testIndex(): void
          {
              $client = static::createClient();
     -        $client->request('GET', '/');
@@ -488,25 +489,25 @@ Don't forget to update the functional tests to take URLs and content changes int
 
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
-    @@ -20,7 +20,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testCommentSubmission()
-         {
-             $client = static::createClient();
-    -        $client->request('GET', '/conference/amsterdam-2019');
-    +        $client->request('GET', '/en/conference/amsterdam-2019');
+    @@ -29,7 +29,7 @@ class ConferenceControllerTest extends WebTestCase
+             $berlin = ConferenceFactory::createOne(['city' => 'Berlin', 'year' => '2021', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $berlin]);
+
+    -        $client->request('GET', '/conference/berlin-2021');
+    +        $client->request('GET', '/en/conference/berlin-2021');
              $client->submitForm('Submit', [
                  'comment[author]' => 'Fabien',
                  'comment[text]' => 'Some feedback from an automated functional test',
-    @@ -41,7 +41,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testConferencePage()
-         {
-             $client = static::createClient();
+    @@ -50,7 +50,7 @@ class ConferenceControllerTest extends WebTestCase
+             ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $amsterdam]);
+
     -        $crawler = $client->request('GET', '/');
     +        $crawler = $client->request('GET', '/en/');
 
              $this->assertCount(2, $crawler->filter('h4'));
 
-    @@ -50,6 +50,6 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -59,6 +59,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertPageTitleContains('Amsterdam');
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Amsterdam 2019');
