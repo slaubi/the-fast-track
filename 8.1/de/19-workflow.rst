@@ -78,9 +78,8 @@ Der Kommentar-Workflow kann in der Datei ``config/packages/workflow.yaml`` defin
 Erzeuge eine Visualisierung, um den Workflow zu überprüfen:
 
 .. code-block:: terminal
-    :class: ignore
 
-    $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
+    $ symfony console workflow:dump comment --dump-format=mermaid
 
 .. image:: images/workflow.png
     :align: center
