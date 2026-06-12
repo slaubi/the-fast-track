@@ -78,9 +78,8 @@ Il workflow dei commenti può essere descritto nel file ``config/packages/workfl
 Per convalidare il workflow, generiamo una rappresentazione visiva:
 
 .. code-block:: terminal
-    :class: ignore
 
-    $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
+    $ symfony console workflow:dump comment --dump-format=mermaid
 
 .. image:: images/workflow.png
     :align: center

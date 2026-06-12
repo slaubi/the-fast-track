@@ -364,7 +364,7 @@ Symfony ha delle asserzioni che facilitano tali test, qui è riportato un esempi
 .. code-block:: php
     :class: ignore
 
-    public function testMailerAssertions()
+    public function testMailerAssertions(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');

@@ -73,8 +73,8 @@ Riavviare Docker per far partire il servizio Redis:
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Testare localmente visitando il sito web; tutto dovrebbe funzionare come prima.
 

@@ -64,18 +64,18 @@ Avviare Docker Compose in background (``-d``):
 .. code-block:: terminal
     :class: hide
 
-    $ docker-compose down --remove-orphans
+    $ docker compose down --remove-orphans
 
 .. code-block:: terminal
 
-    $ docker-compose up -d --remove-orphans
+    $ docker compose up -d --remove-orphans
 
 Attendere un po' per far partire il database e verificare che tutto funzioni correttamente:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ Se non ci sono container in esecuzione o se la  colonna ``State`` non mostra la 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 Accesso al database locale
 --------------------------
@@ -114,7 +114,7 @@ Grazie a queste convenzioni, l'accesso al database tramite ``symfony run`` è mo
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 Esportare e importare dati dal database
 ---------------------------------------
