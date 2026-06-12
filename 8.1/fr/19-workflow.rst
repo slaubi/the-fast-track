@@ -75,18 +75,16 @@ Le workflow de commentaires peut être décrit dans le fichier ``config/packages
 .. index::
     single: Command;workflow:dump
 
-Pour valider le workflow, générez une représentation visuelle :
+Pour valider le workflow, générez une représentation visuelle au format Mermaid :
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Collez la sortie dans le `Mermaid Live Editor`_ pour en obtenir le rendu ; GitHub et GitLab affichent aussi nativement les diagrammes Mermaid dans les fichiers Markdown :
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    La commande ``dot`` fait partie de l'utilitaire `Graphviz`_.
 
 Utiliser un workflow
 --------------------
@@ -230,6 +228,6 @@ Remarquez le choix ``8``, ``Symfony\Component\Workflow\WorkflowInterface $commen
 
     * La `documentation du composant Symfony Workflow`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`Mermaid Live Editor`: https://mermaid.live/
 .. _`Workflows et State Machines`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`documentation du composant Symfony Workflow`: https://symfony.com/doc/current/workflow.html
