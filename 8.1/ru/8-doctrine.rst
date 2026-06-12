@@ -186,12 +186,13 @@ Docker Compose и Upsun отлично работают с Symfony благод�
     #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
     class Conference
     {
-        #[ORM\Column(type: 'integer')]
-        #[ORM\Id, ORM\GeneratedValue()]
-        private $id;
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column]
+        private ?int $id = null;
 
-        #[ORM\Column(type: 'string', length: 255)]
-        private $city;
+        #[ORM\Column(length: 255)]
+        private ?string $city = null;
 
         // ...
 
@@ -200,7 +201,7 @@ Docker Compose и Upsun отлично работают с Symfony благод�
             return $this->city;
         }
 
-        public function setCity(string $city): self
+        public function setCity(string $city): static
         {
             $this->city = $city;
 
@@ -333,18 +334,18 @@ Doctrine добавила свойство ``id`` для хранения пер
 
     --- i/src/Entity/Comment.php
     +++ w/src/Entity/Comment.php
-    @@ -36,6 +36,12 @@ class Comment
-          */
-         private $createdAt;
+    @@ -23,6 +23,10 @@ class Comment
+         #[ORM\Column]
+         private ?\DateTimeImmutable $createdAt = null;
 
     +    #[ORM\ManyToOne(inversedBy: 'comments')]
     +    #[ORM\JoinColumn(nullable: false)]
-    +    private Conference $conference;
+    +    private ?Conference $conference = null;
     +
          public function getId(): ?int
          {
              return $this->id;
-    @@ -88,4 +94,16 @@ class Comment
+    @@ -88,4 +92,16 @@ class Comment
 
              return $this;
          }
@@ -354,7 +355,7 @@ Doctrine добавила свойство ``id`` для хранения пер
     +        return $this->conference;
     +    }
     +
-    +    public function setConference(?Conference $conference): self
+    +    public function setConference(?Conference $conference): static
     +    {
     +        $this->conference = $conference;
     +
@@ -372,12 +373,15 @@ Doctrine добавила свойство ``id`` для хранения пер
      use Doctrine\ORM\Mapping as ORM;
 
      /**
-    @@ -31,6 +33,16 @@ class Conference
-          */
-         private $isInternational;
+    @@ -20,6 +22,19 @@ class Conference
+         #[ORM\Column]
+         private ?bool $isInternational = null;
 
-    +    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: "conference", orphanRemoval: true)]
-    +    private $comments;
+    +    /**
+    +     * @var Collection<int, Comment>
+    +     */
+    +    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'conference', orphanRemoval: true)]
+    +    private Collection $comments;
     +
     +    public function __construct()
     +    {
@@ -400,20 +404,19 @@ Doctrine добавила свойство ``id`` для хранения пер
     +        return $this->comments;
     +    }
     +
-    +    public function addComment(Comment $comment): self
+    +    public function addComment(Comment $comment): static
     +    {
     +        if (!$this->comments->contains($comment)) {
-    +            $this->comments[] = $comment;
+    +            $this->comments->add($comment);
     +            $comment->setConference($this);
     +        }
     +
     +        return $this;
     +    }
     +
-    +    public function removeComment(Comment $comment): self
+    +    public function removeComment(Comment $comment): static
     +    {
-    +        if ($this->comments->contains($comment)) {
-    +            $this->comments->removeElement($comment);
+    +        if ($this->comments->removeElement($comment)) {
     +            // set the owning side to null (unless already changed)
     +            if ($comment->getConference() === $this) {
     +                $comment->setConference(null);

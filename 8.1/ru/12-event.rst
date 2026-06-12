@@ -47,10 +47,10 @@
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
              return $this->render('conference/show.html.twig', [
@@ -97,42 +97,39 @@
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
-    $ symfony console make:subscriber TwigEventSubscriber
+    $ symfony console make:listener TwigEventListener
 
 Команда спросит вас о том, какое событие вы хотите обрабатывать. Выберите событие ``Symfony\Component\HttpKernel\Event\ControllerEvent``, отправляемое непосредственно перед вызовом контроллера. Самое время для определения глобальной переменной ``conferences``, чтобы Twig имел к ней доступ во время отрисовки шаблона контроллером. Обновите вашего подписчика следующим образом:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- i/src/EventSubscriber/TwigEventSubscriber.php
-    +++ w/src/EventSubscriber/TwigEventSubscriber.php
-    @@ -2,14 +2,25 @@
+    --- i/src/EventListener/TwigEventListener.php
+    +++ w/src/EventListener/TwigEventListener.php
+    @@ -2,14 +2,22 @@
 
-     namespace App\EventSubscriber;
+     namespace App\EventListener;
 
     +use App\Repository\ConferenceRepository;
-     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+     use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
      use Symfony\Component\HttpKernel\Event\ControllerEvent;
     +use Twig\Environment;
 
-     class TwigEventSubscriber implements EventSubscriberInterface
+     final class TwigEventListener
      {
-    +    private $twig;
-    +    private $conferenceRepository;
-    +
-    +    public function __construct(Environment $twig, ConferenceRepository $conferenceRepository)
-    +    {
-    +        $this->twig = $twig;
-    +        $this->conferenceRepository = $conferenceRepository;
+    +    public function __construct(
+    +        private Environment $twig,
+    +        private ConferenceRepository $conferenceRepository,
+    +    ) {
     +    }
     +
+         #[AsEventListener]
          public function onControllerEvent(ControllerEvent $event): void
          {
     -        // ...
     +        $this->twig->addGlobal('conferences', $this->conferenceRepository->findAll());
          }
-
-         public static function getSubscribedEvents(): array
+     }
 
 Теперь вы можете добавить сколько угодно контроллеров: переменная ``conferences`` всегда будет доступна в Twig.
 

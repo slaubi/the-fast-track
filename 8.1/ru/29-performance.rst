@@ -115,8 +115,8 @@ Blackfire состоит из нескольких частей:
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Исправление неработающей установки Blackfire
 ----------------------------------------------------------------------------

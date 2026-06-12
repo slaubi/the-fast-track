@@ -64,18 +64,18 @@
 .. code-block:: terminal
     :class: hide
 
-    $ docker-compose down --remove-orphans
+    $ docker compose down --remove-orphans
 
 .. code-block:: terminal
 
-    $ docker-compose up -d --remove-orphans
+    $ docker compose up -d --remove-orphans
 
 Подождите немного, пока база данных запустится, а затем проверьте, что всё работает нормально:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 Обращение к локальной базе данных
 --------------------------------------------------------------
@@ -114,7 +114,7 @@ Symfony CLI автоматически обнаруживает сервисы D
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 Резервное копирование и восстановление базы данных
 -----------------------------------------------------------------------------------------------
