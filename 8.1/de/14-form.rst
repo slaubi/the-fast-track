@@ -334,6 +334,8 @@ Wir sollten nun im Controller die Übermittlung des Formulars verarbeiten und di
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+Beachte, dass das ``Request``-Objekt jetzt in den Controller injiziert wird, da das Formular es braucht, um die übermittelten Daten über ``handleRequest()`` zu inspizieren.
+
 Beim Absenden des Formulars wird das ``Comment``-Objekt entsprechend der übermittelten Daten aktualisiert.
 
 Wir erzwingen, dass die Konferenz die gleiche ist, wie die aus der URL (wir haben sie aus dem Formular entfernt).

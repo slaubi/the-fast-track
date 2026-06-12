@@ -213,7 +213,7 @@ Der generierte Code sieht wie folgt aus (nur ein kleiner Teil der Datei wird hie
 
 Beachte, dass die Klasse selbst eine einfache PHP-Klasse ohne Anzeichen von Doctrine ist. Mittels Attributen werden Metadaten hinzugefügt, die Doctrine verwendet, um die Klasse der zugehörigen Datenbanktabelle zuzuordnen.
 
-Doctrine hat ein ``id``-Property/Spalte hinzugefügt, um den Primärschlüssel der Zeile in der Datenbanktabelle zu speichern. Dieser Schlüssel (``ORM\Id()``) wird abhängig vom verwendeten Datenbanksystem automatisch generiert (``ORM\GeneratedValue()``).
+Doctrine hat ein ``id``-Property/Spalte hinzugefügt, um den Primärschlüssel der Zeile in der Datenbanktabelle zu speichern. Dieser Schlüssel (``#[ORM\Id]``) wird abhängig vom verwendeten Datenbanksystem automatisch generiert (``#[ORM\GeneratedValue]``).
 
 .. index::
     single: Command;make:entity

@@ -75,18 +75,16 @@ Der Kommentar-Workflow kann in der Datei ``config/packages/workflow.yaml`` defin
 .. index::
     single: Command;workflow:dump
 
-Erzeuge eine Visualisierung, um den Workflow zu überprüfen:
+Erzeuge eine Visualisierung im Mermaid-Format, um den Workflow zu überprüfen:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Füge die Ausgabe in den `Mermaid Live Editor`_ ein, um sie zu rendern; GitHub und GitLab rendern Mermaid-Diagramme in Markdown-Dateien ebenfalls nativ:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    Der ``dot``-Befehl ist Teil des `Graphviz`_ -Dienstprogramms.
 
 Einen Workflow verwenden
 ------------------------
@@ -230,6 +228,6 @@ Siehst Du die Option ``8``? ``Symfony\Component\Workflow\WorkflowInterface $comm
 
     * Die `Symfony Workflow Dokumentation`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`Mermaid Live Editor`: https://mermaid.live/
 .. _`Workflows und Zustandsmaschinen`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Symfony Workflow Dokumentation`: https://symfony.com/doc/current/workflow.html

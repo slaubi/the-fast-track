@@ -80,26 +80,24 @@ Ein weiteres eingebautes Beispiel für Events und Listener ist der Lifecycle ein
 
 Jedes Paket oder Bundle kann auch eigene Events auslösen, um seinen Code erweiterbar zu machen.
 
-Damit du nicht alle Events und Listener in einer Konfigurationsdatei beschreiben musst, kannst du einen *Subscriber* erstellen. Ein Subscriber ist ein Listener mit einer statischen ``getSubscribedEvents()``-Methode, die seine Konfiguration zurückgibt. Dadurch können Subscriber automatisch im Symfony Dispatcher registriert werden und Events abonnieren.
+Damit du nicht alle Events und Listener in einer Konfigurationsdatei beschreiben musst, kannst du das ``#[AsEventListener]``-Attribut an der Klasse oder Methode des Listeners hinzufügen. Dadurch können Listener automatisch im Symfony Dispatcher registriert werden.
 
-Einen Subscriber implementieren
--------------------------------
+Einen Listener implementieren
+-----------------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Du kennst das Lied bestimmt schon auswendig, verwende das Maker-Bundle, um einen Subscriber zu generieren:
+Du kennst das Lied bestimmt schon auswendig, verwende das Maker-Bundle, um einen Listener zu generieren:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:listener TwigEventListener
 
-Der Befehl fragt Dich, über welches Event Du informiert werden möchtest. Wähle das ``Symfony\Component\HttpKernel\Event\ControllerEvent``-Event, welches kurz vor dem Aufruf eines Controllers ausgelöst wird. Dies ist der beste Zeitpunkt, die globale ``conferences``-Variable einzuspeisen, damit Twig Zugriff darauf hat, wenn der Controller das Template rendert. Passe Deinen Subscriber wie folgt an:
+Der Befehl fragt Dich, über welches Event Du informiert werden möchtest. Wähle das ``Symfony\Component\HttpKernel\Event\ControllerEvent``-Event, welches kurz vor dem Aufruf eines Controllers ausgelöst wird. Dies ist der beste Zeitpunkt, die globale ``conferences``-Variable einzuspeisen, damit Twig Zugriff darauf hat, wenn der Controller das Template rendert. Passe Deinen Listener wie folgt an:
 
 .. code-block:: diff
     :caption: patch_file

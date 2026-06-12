@@ -268,9 +268,9 @@ Du hast es vielleicht noch nicht gemerkt, aber es ist sehr hilfreich die Infrast
 
     * `PostgreSQL-Dokumentation`_;
 
-    * `docker-compose commands`_.
+    * die `Docker-Compose-Befehle`_.
 
 .. _`Upsun-Dienste`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Upsun-Tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL-Dokumentation`: https://www.postgresql.org/docs/
-.. _`docker-compose commands`: https://docs.docker.com/compose/reference/
+.. _`Docker-Compose-Befehle`: https://docs.docker.com/reference/cli/docker/compose/

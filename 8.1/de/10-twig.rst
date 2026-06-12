@@ -360,7 +360,7 @@ Um die Seitenzahlen im Template zu verwalten, übergebe Twig den Doctrine Pagina
          }
      }
 
-Der Controller bekommt ``offset`` aus dem Request-Query-String (``$request->query``) als Ganzzahl (``getInt()``) und setzt es standardmäßig auf 0, wenn dieser Parameter nicht verfügbar ist.
+Das ``#[MapQueryParameter]``-Attribut mappt den Query-String-Parameter ``offset`` auf das Controller-Argument ``$offset``, mit ``0`` als Standardwert, wenn der Parameter nicht gesetzt ist. Da der Offset vom Client kommt, begrenzen wir ihn, um negative Werte zu vermeiden.
 
 Die ``zurück``- und ``weiter``-Offsets werden basierend auf allen Informationen, die wir vom Paginator haben, berechnet.
 

@@ -4,7 +4,7 @@ Asynchrone Verarbeitung
 .. index::
     single: Async
 
-Die Überprüfung auf Spam während der Bearbeitung des übermittelten Formulars kann zu Problemen führen. Wenn die Akismet-API langsam ist, wird unsere Website auch für Benutzer*innen langsam. Aber noch schlimmer: Wir könnten Kommentare verlieren, falls wir in einen Timeout laufen oder die Akismet-API nicht verfügbar ist.
+Die Überprüfung auf Spam während der Bearbeitung des übermittelten Formulars kann zu Problemen führen. Wenn das KI-Modell langsam ist, wird unsere Website auch für Benutzer*innen langsam. Aber noch schlimmer: Wir könnten Kommentare verlieren, falls wir in einen Timeout laufen oder das Modell nicht verfügbar ist.
 
 Im Idealfall sollten wir die übermittelten Daten speichern, ohne sie zu veröffentlichen, und sofort eine Response zurückliefern. Die Überprüfung auf Spam kann dann unabhängig davon durchgeführt werden.
 
@@ -114,7 +114,7 @@ Aktualisiere die EasyAdmin-Konfiguration, um den Zustand des Kommentars zu sehen
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Denk daran, auch die Tests zu aktualisieren, indem Du ``state`` zu den Fixtures hinzufügst:
+Denk daran, auch die Test-Factories zu aktualisieren: Kommentare, die von der ``CommentFactory`` erstellt werden, sollten standardmäßig veröffentlicht sein, damit sie auf den Konferenzseiten erscheinen (ein Test kann den Status jederzeit überschreiben, wenn er einen moderierten Kommentar braucht):
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Er sollte die für den eingereichten Kommentar versendete Message sofort verarbe
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-Die Aktivität des Message Consumers wird geloggt, aber Du erhältst sofortiges Feedback auf der Konsole, indem Du das ``-vv`` Flag übergibst. Du solltest sogar den Aufruf der Akismet-API sehen können.
+Die Aktivität des Message Consumers wird geloggt, aber Du erhältst sofortiges Feedback auf der Konsole, indem Du das ``-vv`` Flag übergibst. Du solltest sogar den Aufruf der OpenAI-API sehen können.
 
 Drücke ``Ctrl+C``, um den Consumer zu stoppen.
 
@@ -453,7 +453,7 @@ Um einen Worker zu stoppen, stoppe den Webserver oder beende die PID, die durch 
 Fehlgeschlagene Messages erneut verarbeiten
 -------------------------------------------
 
-Was passiert, wenn Akismet während des Verarbeitens einer Message ausgefallen ist? Es gibt keine Auswirkungen für Personen, die Kommentare abgeben, aber die Nachricht geht verloren und Spam wird nicht überprüft.
+Was passiert, wenn die Datenbank während des Verarbeitens einer Message ausgefallen ist? Es gibt keine Auswirkungen für Personen, die Kommentare abgeben, aber die Nachricht schlägt fehl und Spam wird nicht überprüft.
 
 Der Messenger hat einen Wiederholungsmechanismus, wenn beim Verarbeiten einer Message ein Fehler auftritt:
 
