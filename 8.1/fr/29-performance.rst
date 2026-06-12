@@ -115,8 +115,8 @@ Vous pouvez maintenant lancer le nouveau conteneur :
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Réparer une installation Blackfire en panne
 --------------------------------------------

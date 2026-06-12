@@ -60,7 +60,7 @@ Clonez le `dépôt du livre d'or`_ quelque part sur votre machine :
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=7.4-1 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 Ce dépôt contient tout le code source du livre.
 

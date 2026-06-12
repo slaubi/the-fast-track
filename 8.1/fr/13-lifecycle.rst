@@ -45,7 +45,7 @@ Lorsque le comportement n'a besoin d'aucun service et ne doit être appliqué qu
          }
 
     +    #[ORM\PrePersist]
-    +    public function setCreatedAtValue()
+    +    public function setCreatedAtValue(): void
     +    {
     +        $this->createdAt = new \DateTimeImmutable();
     +    }
@@ -207,7 +207,7 @@ Dans la classe ``Conference``, ajoutez une méthode ``computeSlug()``, qui calcu
              return $this->id;
          }
 
-    +    public function computeSlug(SluggerInterface $slugger)
+    +    public function computeSlug(SluggerInterface $slugger): void
     +    {
     +        if (!$this->slug || '-' === $this->slug) {
     +            $this->slug = (string) $slugger->slug((string) $this)->lower();
@@ -238,7 +238,8 @@ Créez plutôt un listener d'entité Doctrine :
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\Persistence\Event\LifecycleEventArgs;
+    use Doctrine\ORM\Event\PrePersistEventArgs;
+    use Doctrine\ORM\Event\PreUpdateEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
@@ -248,12 +249,12 @@ Créez plutôt un listener d'entité Doctrine :
         ) {
         }
 
-        public function prePersist(Conference $conference, LifecycleEventArgs $event)
+        public function prePersist(Conference $conference, PrePersistEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
 
-        public function preUpdate(Conference $conference, LifecycleEventArgs $event)
+        public function preUpdate(Conference $conference, PreUpdateEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
@@ -283,13 +284,14 @@ Dans ce cas précis, puisque notre classe n'implémente aucune interface et n'é
 
     --- i/src/EntityListener/ConferenceEntityListener.php
     +++ w/src/EntityListener/ConferenceEntityListener.php
-    @@ -3,9 +3,13 @@
+    @@ -3,10 +3,14 @@
      namespace App\EntityListener;
 
      use App\Entity\Conference;
     +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+     use Doctrine\ORM\Event\PrePersistEventArgs;
+     use Doctrine\ORM\Event\PreUpdateEventArgs;
     +use Doctrine\ORM\Events;
-     use Doctrine\Persistence\Event\LifecycleEventArgs;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
     +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]
@@ -325,11 +327,11 @@ La dernière modification consiste à mettre à jour les contrôleurs et les mod
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
     --- i/templates/base.html.twig
     +++ w/templates/base.html.twig
     @@ -16,7 +16,7 @@

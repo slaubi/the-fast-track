@@ -17,7 +17,7 @@ Créez un nouveau projet Symfony avec la commande ``symfony`` que nous avons ins
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=7.4 --php=8.5 --webapp --docker --upsun
+    $ symfony new guestbook --version=8.1 --php=8.5 --webapp --docker --upsun
     $ cd guestbook
 
 Cette commande est une mince surcouche de ``Composer`` qui facilite la création de projets Symfony. Elle utilise un `squelette de projet`_ qui inclut uniquement les composants Symfony requis par presque tous les projets : un outil console et l'abstraction HTTP nécessaire pour créer des applications web.

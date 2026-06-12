@@ -64,8 +64,8 @@ Pour forcer Docker Compose à prendre en compte le conteneur RabbitMQ, arrêter 
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d --remove-orphans
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 .. code-block:: terminal
     :class: hide
