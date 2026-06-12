@@ -81,11 +81,6 @@ Composer
 
     Можно использовать сокращённые имена команд: ``composer req`` вместо ``composer require``, ``composer rem`` вместо ``composer remove`` и т. д.
 
-NodeJS
-------
-
-Мы не будем писать много JavaScript-кода, но всё же воспользуемся инструментами JavaScript/NodeJS для управления нашими ресурсами. Проверьте, что у вас установлен `NodeJS`_.
-
 Docker и Docker Compose
 ------------------------
 
@@ -133,7 +128,6 @@ Symfony CLI
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Установите их`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
 .. _`установив центр сертификации (certificate authority, CA)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

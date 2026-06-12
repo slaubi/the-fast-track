@@ -75,18 +75,16 @@
 .. index::
     single: Command;workflow:dump
 
-Чтобы убедиться в правильности построения этого бизнес-процесса, давайте отобразим его визуально:
+Чтобы убедиться в правильности построения этого бизнес-процесса, давайте отобразим его визуально в формате Mermaid:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Вставьте вывод в `Mermaid Live Editor`_, чтобы увидеть диаграмму; GitHub и GitLab также отображают диаграммы Mermaid в Markdown-файлах нативно:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    Команда ``dot``  является частью утилиты `Graphviz`_.
 
 Использование бизнес-процессов
 ----------------------------------------------------------
@@ -230,6 +228,6 @@
 
     * `Документация по Symfony Workflow`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`Mermaid Live Editor`: https://mermaid.live/
 .. _`Бизнес-процессы и конечные автоматы`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Документация по Symfony Workflow`: https://symfony.com/doc/current/workflow.html
