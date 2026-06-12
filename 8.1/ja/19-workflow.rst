@@ -75,18 +75,16 @@
 .. index::
     single: Command;workflow:dump
 
-ワークフローをバリデートするために、視覚的な表現を生成します:
+ワークフローをバリデートするために、Mermaid 形式で視覚的な表現を生成します:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+出力を `Mermaid Live Editor`_ に貼り付けるとレンダリングできます。GitHub や GitLab も、Markdown ファイル内の Mermaid ダイアグラムをネイティブにレンダリングします:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    ``dot`` コマンドは、 `Graphviz`_ ユーティリティの一部です。
 
 ワークフローを使用する
 ---------------------------------
@@ -230,6 +228,6 @@ DIを使う際、インターフェースや場合によっては具体的な実
 
     * `Symfony ワークフローのドキュメント`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`Mermaid Live Editor`: https://mermaid.live/
 .. _`ワークフローとステートマシーン`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Symfony ワークフローのドキュメント`: https://symfony.com/doc/current/workflow.html
