@@ -1,10 +1,10 @@
-Cron-Jobs ausführen
-====================
+Aufgaben planen
+===============
 
 .. index::
     single: Cron
 
-Cron-Jobs sind nützlich, um Wartungsarbeiten durchzuführen. Im Gegensatz zu Workern laufen sie gemäß einem Zeitplan für einen kurzen Zeitraum.
+Manche Wartungsaufgaben müssen nach einem Zeitplan laufen. Im Gegensatz zu Workern, die kontinuierlich laufen, werden geplante Aufgaben periodisch für einen kurzen Zeitraum ausgeführt.
 
 Kommentare bereinigen
 ---------------------
@@ -102,38 +102,25 @@ Erstelle einen CLI-Befehl ``app:comment:cleanup``, indem Du eine ``src/Command/C
 
     use App\Repository\CommentRepository;
     use Symfony\Component\Console\Attribute\AsCommand;
+    use Symfony\Component\Console\Attribute\Option;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\InputOption;
-    use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Console\Style\SymfonyStyle;
 
     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
-    class CommentCleanupCommand extends Command
+    class CommentCleanupCommand
     {
-        public function __construct(
-            private CommentRepository $commentRepository,
-        ) {
-            parent::__construct();
-        }
-
-        protected function configure()
-        {
-            $this
-                ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run')
-            ;
-        }
-
-        protected function execute(InputInterface $input, OutputInterface $output): int
-        {
-            $io = new SymfonyStyle($input, $output);
-
-            if ($input->getOption('dry-run')) {
+        public function __invoke(
+            SymfonyStyle $io,
+            CommentRepository $commentRepository,
+            #[Option(description: 'Dry run')]
+            bool $dryRun = false,
+        ): int {
+            if ($dryRun) {
                 $io->note('Dry mode enabled');
 
-                $count = $this->commentRepository->countOldRejected();
+                $count = $commentRepository->countOldRejected();
             } else {
-                $count = $this->commentRepository->deleteOldRejected();
+                $count = $commentRepository->deleteOldRejected();
             }
 
             $io->success(sprintf('Deleted "%d" old rejected/spam comments.', $count));
@@ -144,7 +131,7 @@ Erstelle einen CLI-Befehl ``app:comment:cleanup``, indem Du eine ``src/Command/C
 
 Alle Anwendungsbefehle werden parallel zu den in Symfony eingebauten Befehlen registriert und sind über  ``symfony console`` erreichbar. Da die Anzahl der verfügbaren Befehle groß sein kann, solltest Du ihnen einen Namespace geben. Nach Konvention sollten die Anwendungsbefehle unter dem ``app``-Namespace abgelegt werden. Du kannst beliebig viele Sub-Namespaces hinzufügen, indem Du diese durch einen Doppelpunkt (``:``) trennst.
 
-Ein Befehl erhält die *Eingabe* (Input; Argumente und Optionen, die an den Befehl übergeben wurden) und Du kannst die *Ausgabe* (Output) verwenden, um Information in der Konsole auszugeben.
+Ein Befehl deklariert seine *Argumente* und *Optionen* mit den Attributen ``#[Argument]`` und ``#[Option]`` an den Parametern von ``__invoke()`` (der Parameter ``$dryRun`` wird zur Option ``--dry-run``). Symfony injiziert die anderen Parameter anhand ihres Typs: ``SymfonyStyle``, um schön formatierte Ausgaben in die Konsole zu schreiben, und jeden beliebigen Service, wie das Kommentar-Repository, genauso wie bei Controller-Argumenten.
 
 Bereinige die Datenbank, indem Du diesen Befehl ausführst:
 
@@ -152,50 +139,91 @@ Bereinige die Datenbank, indem Du diesen Befehl ausführst:
 
     $ symfony console app:comment:cleanup
 
-Einen Cron-Job bei Upsun einrichten
------------------------------------------
+Den Befehl planen
+-----------------
 
 .. index::
-    single: Upsun;Cron
-    single: Upsun;Croncape
+    single: Scheduler
+    single: Components;Scheduler
+    single: Attributes;AsCronTask
 
-Das Schöne an Upsun ist, dass der Großteil der Konfiguration in einer Datei gespeichert ist: ``.upsun/config.yaml``. Der Webcontainer, die Worker und die Cron-Jobs werden gemeinsam definiert, um die Wartung zu erleichtern:
+Den Befehl von Hand auszuführen funktioniert, aber er sollte jede Nacht laufen. Die Symfony-Scheduler-Komponente erzeugt Messages nach einem Zeitplan; sie werden dann von einem Worker konsumiert, wie jede andere Messenger-Message.
+
+Füge die Scheduler-Komponente hinzu, zusammen mit der Bibliothek, die Cron-Ausdrücke parst:
+
+.. code-block:: terminal
+
+    $ symfony composer req scheduler dragonmantank/cron-expression
+
+Plane den Befehl mit dem ``#[AsCronTask]``-Attribut:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Command/CommentCleanupCommand.php
+    +++ w/src/Command/CommentCleanupCommand.php
+    @@ -7,8 +7,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Attribute\Option;
+     use Symfony\Component\Console\Command\Command;
+     use Symfony\Component\Console\Style\SymfonyStyle;
+    +use Symfony\Component\Scheduler\Attribute\AsCronTask;
+
+     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
+    +#[AsCronTask('50 23 * * *')]
+     class CommentCleanupCommand
+     {
+         public function __invoke(
+
+Das Attribut registriert den Befehl im Standard-*Schedule* mit einem Cron-Ausdruck: jede Nacht um 23:50 Uhr (UTC). Überprüfe es:
+
+.. code-block:: terminal
+
+    $ symfony console debug:scheduler
+
+Ein Schedule wird als gewöhnlicher Messenger-Transport mit seinem Namen bereitgestellt; konsumiere ihn wie jeden anderen Transport:
+
+.. code-block:: terminal
+
+    $ symfony run -d symfony console messenger:consume scheduler_default -vv
+
+Den Schedule deployen
+---------------------
+
+.. index::
+    single: Upsun;Workers
+
+Auf Upsun konsumiert der Worker nur den ``async``-Transport. Lass ihn auch den Schedule konsumieren:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/.upsun/config.yaml
     +++ w/.upsun/config.yaml
-    @@ -83,5 +83,13 @@ applications:
-                     spec: '17,47 * * * *'
-                     commands:
-                         start: croncape php-session-clean
-    +            comment_cleanup:
-    +                # Cleanup every night at 11.50 pm (UTC).
-    +                spec: '50 23 * * *'
-    +                commands:
-    +                    start: |
-    +                        if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                            croncape symfony console app:comment:cleanup
-    +                        fi
+    @@ -87,4 +87,4 @@ applications:
+             messenger:
+                 commands:
+                     # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+    -                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+    +                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async scheduler_default
 
-             workers:
+Mehr braucht es nicht: kein Crontab, kein zusätzlicher Prozess; der Zeitplan lebt im PHP-Code, direkt neben der Aufgabe, die er auslöst, und wird wie der Rest der Anwendung deployt und versioniert.
 
-Der ``crons``-Abschnitt definiert alle Cron-Jobs. Jeder Cron-Job läuft nach einem ``spec``-Zeitplan.
-
-Das ``croncape``-Dienstprogramm überwacht die Ausführung des Befehls und sendet eine E-Mail an die in der Environment-Variable ``MAILTO`` definierten Adressen, wenn der Befehl einen anderen Exit-Code als ``0`` hat.
+Was ist mit System-Crons?
+-------------------------
 
 .. index::
-    single: Symfony CLI;cloud:variable:create
-    single: Symfony CLI;cron
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Konfiguriere die Environment-Variable ``MAILTO``:
+Upsun unterstützt auch Cron-Jobs auf Betriebssystemebene, die in ``.upsun/config.yaml`` neben dem Web-Container und den Workern beschrieben werden; die Standardkonfiguration definiert bereits einen, der abgelaufene PHP-Sessions bereinigt. System-Crons eignen sich gut für Aufgaben, die nicht in PHP implementiert sind.
+
+Das vom Standard-Cron verwendete ``croncape``-Dienstprogramm überwacht die Ausführung des Befehls und sendet eine E-Mail an die Adressen, die in der ``MAILTO``-Environment-Variable definiert sind, falls der Befehl einen anderen Exit-Code als ``0`` zurückgibt:
 
 .. code-block:: terminal
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Beachte, dass Cron-Jobs auf allen Upsun-Branches eingerichtet sind. Überprüfe die Environment-Variable ``$PLATFORM_ENVIRONMENT_TYPE`` wenn Du keine Cron-Jobs in Nicht-Production-Environments ausführen möchtest:
+Beachte, dass Cron-Jobs auf allen Upsun-Branches eingerichtet werden. Wenn Du manche davon nicht in Nicht-Produktionsumgebungen ausführen möchtest, überprüfe die ``$PLATFORM_ENVIRONMENT_TYPE``-Environment-Variable:
 
 .. code-block:: bash
     :class: ignore
@@ -206,6 +234,8 @@ Beachte, dass Cron-Jobs auf allen Upsun-Branches eingerichtet sind. Überprüfe 
 
 .. sidebar:: Weiterführendes
 
+    * Die `Scheduler-Komponenten-Dokumentation`_;
+
     * `Cron-Jobs/Crontab-Syntax`_;
 
     * `Croncape-Repository`_;
@@ -214,6 +244,7 @@ Beachte, dass Cron-Jobs auf allen Upsun-Branches eingerichtet sind. Überprüfe 
 
     * Der `Symfony Console Cheat Sheet`_.
 
+.. _`Scheduler-Komponenten-Dokumentation`: https://symfony.com/doc/current/scheduler.html
 .. _`Cron-Jobs/Crontab-Syntax`: https://en.wikipedia.org/wiki/Cron
 .. _`Croncape-Repository`: https://github.com/symfonycorp/croncape
 .. _`Symfony Console Befehle`: https://symfony.com/doc/current/console.html
