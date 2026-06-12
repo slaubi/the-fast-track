@@ -27,7 +27,7 @@ guide provides the definitive introduction to modern Symfony
 applications.
 
 Learn how to combine Symfony with Docker, APIs, notifications, queues &
-asynchronous tasks, Webpack, Single-Page Applications, and other
+asynchronous tasks, Symfony UX, and other
 powerful tools. By the end of this book, you'll have the confidence,
 understanding and a clear path to dive in and start building your next
 application with Symfony.
