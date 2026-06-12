@@ -288,7 +288,7 @@ API-Ressourcen analysieren
 .. index::
     single: Profiling;API
 
-Die Analyse der API oder der SPA erfolgt besser in der CLI über das Blackfire CLI Tool, das Du zuvor installiert hast:
+Die Analyse der API erfolgt besser in der CLI über das Blackfire CLI Tool, das Du zuvor installiert hast:
 
 .. code-block:: terminal
     :class: ignore

@@ -13,6 +13,10 @@ Es geht nicht nur um neue Wege, die Dinge anzugehen, sondern auch um neue Kompon
 
 Ich halte ein neues Buch auch für notwendig, da sich das Web stark weiterentwickelt hat. Themen wie `APIs`_, `SPAs`_, `Containerisierung`_, `Continuous Deployment`_ und viele andere sollten jetzt diskutiert werden.
 
+Ist ein Buch Deine Zeit noch wert, jetzt, wo ein LLM den Code für Dich schreiben kann? Ich habe mir diese Frage gestellt, während ich an dieser Ausgabe gearbeitet habe. Meine Antwort ist ein klares Ja. Ich nutze KI-Werkzeuge jeden Tag, und sie schreiben inzwischen fast meinen gesamten Code; aber sie haben nicht verändert, worauf es ankommt. Du musst immer noch die Architektur Deiner Anwendung verstehen, entscheiden, was gebaut werden soll, den generierten Code überprüfen und erkennen, was auf subtile Weise falsch ist. Du kannst keinen Code überprüfen, den Du nicht verstehst; und Du kannst ein Werkzeug nicht auf eine Architektur ausrichten, die Du Dir nicht vorstellen kannst. Bücher zu lesen ist eine Frage des Urteilsvermögens, nicht der Nostalgie.
+
+Urteilsvermögen braucht Verständnis, und Verständnis ist genau das, was dieses Buch aufbaut: ein vollständiges mentales Modell einer Symfony-Anwendung, vom ersten Commit bis zur Produktion. Mit diesem Modell im Kopf wirst Du beim nächsten Mal, wenn ein LLM einen Controller oder einen Messenger-Handler für Dich generiert, wissen, ob er richtig ist, und warum. Wir werden sogar eines davon innerhalb der Anwendung selbst einsetzen, um Kommentare zu moderieren.
+
 Deine Zeit ist kostbar. Erwarte keine langen Absätze und keine langen Erklärungen zu den Kernkonzepten. Dieses Buch handelt eher von der Reise: Wo soll ich anfangen? Welchen Code soll ich schreiben? Wann? Wie? Ich werde versuchen, etwas Interesse an wichtigen Themen zu wecken und Dich entscheiden zu lassen, ob Du mehr lernen und Deine Kenntnisse weiter vertiefen möchtest.
 
 Ich möchte auch die Inhalte der Symfony-Dokumentation nicht wiederholen. Sie ist ausgezeichnet und ich werde entsprechende Kapitel im Abschnitt "Weiterführendes" am Ende jedes Schrittes verlinken. Betrachte dieses Buch als eine Liste von Hinweisen auf mehr Lernmaterial.

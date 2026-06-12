@@ -238,7 +238,7 @@ CORS konfigurieren
 
 Standardmäßig ist der Aufruf der API von einer anderen Domain aus aufgrund der Same-Origin Sicherheitsrichtlinie moderner HTTP-Clients verboten. Das CORS-Bundle, das als Teil von ``composer req api`` installiert wurde, sendet Cross-Origin-Resource-Sharing-Header basierend auf der Environment-Variable ``CORS_ALLOW_ORIGIN``.
 
-Standardmäßig erlaubt sind HTTP-Anfragen von ``localhost`` und ``127.0.0.1`` auf jedem Port (in ``.env`` definiert). Das ist genau das, was wir für den nächsten Schritt benötigen, denn wir werden eine SPA (Single-Page Web Application) erstellen, welche über einen eigenen Webserver verfügt, der die API aufruft.
+Standardmäßig erlaubt sind HTTP-Anfragen von ``localhost`` und ``127.0.0.1`` auf jedem Port (in ``.env`` definiert). Passe sie an, wenn eine auf einer anderen Domain gehostete Anwendung, etwa eine mobile App oder ein externes Frontend, die API aufrufen muss.
 
 .. sidebar:: Weiterführendes
 
