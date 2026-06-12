@@ -4,7 +4,7 @@
 .. index::
     single: Async
 
-フォーム投稿時にスパムの判定をするのには多少問題があります。例えば、 Akismet API に遅延の問題があったときに、私たちの Web サイトも遅くなってしまいます。さらに、タイムアウトされてしまったり、Akismet API に問題があったときには、コメントを失ってしまうかもしれません。
+フォーム投稿時にスパムの判定をするのには多少問題があります。例えば、 AI モデルに遅延の問題があったときに、私たちの Web サイトも遅くなってしまいます。さらに、タイムアウトされてしまったり、モデルに問題があったときには、コメントを失ってしまうかもしれません。
 
 公開することなく投稿されたデータを保存して、レスポンスを早く返すことが理想とするところです。そのためにスパムのチェックとは独立して実行します。
 
@@ -114,7 +114,7 @@ EasyAdmin の設定を変更してコメントの状態(state)を見ることが
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-フィクスチャに ``state`` をセットして、テストコードを修正しましょう:
+テストのファクトリーも修正しましょう。 ``CommentFactory`` で作成されるコメントは、カンファレンスページに表示されるように、デフォルトで公開済みにしておきます（モデレート中のコメントが必要なテストでは、いつでも state を上書きできます）:
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Symfony で非同期処理を管理するために、メッセンジャーコン
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-メッセージ取得実行の処理がログに書かれますが、 ``--vv`` フラグを渡すことでコンソールに即時的なフィードバックを得ることができます。さらに、Akismet Akismet API の呼び出しを探すこともできます。
+メッセージ取得実行の処理がログに書かれますが、 ``--vv`` フラグを渡すことでコンソールに即時的なフィードバックを得ることができます。さらに、OpenAI API の呼び出しを探すこともできます。
 
 メッセージの取得実行は、``Ctrl+C`` でストップします。
 
@@ -453,7 +453,7 @@ Symfony CLI は、 ``run`` コマンドに ``-d`` フラグを付けることで
 メッセージの失敗をリトライする
 ---------------------------------------------
 
-メッセージ取得実行の際に、Akismet が落ちていたらどうしますか？コメントの投稿者には何も影響はありませんが、メッセージを失うことになり、スパムはチェックされません。
+メッセージ取得実行の際に、データベースが落ちていたらどうしますか？コメントの投稿者には何も影響はありませんが、メッセージは失敗し、スパムはチェックされません。
 
 メッセンジャーには、メッセージのハンドリングで例外になったらリトライする機構があります:
 

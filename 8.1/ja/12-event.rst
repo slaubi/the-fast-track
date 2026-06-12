@@ -80,19 +80,17 @@ Symfony は Event Dispatcher コンポーネントがビルトインされてい
 
 パッケージやバンドルはコードを拡張しやすいように自らのイベントをディスパッチすることもできます。
 
-どのイベントをリッスンするかを説明する設定ファイルを作らなくても良いように *サブスクライバー* を作りましょう。サブスクライバーは、 static メソッドの ``getSubscribedEvents()`` で設定を返すことができるリスナーです。こうやってSymfony ディスパッチャーを自動的に登録することができます。
+どのイベントをリッスンするかを説明する設定ファイルを作らなくても良いように、リスナーのクラスまたはメソッドに ``#[AsEventListener]`` アトリビュートを追加しましょう。こうやってリスナーを Symfony ディスパッチャーに自動的に登録することができます。
 
-サブスクライバーを実装する
+リスナーを実装する
 ---------------------------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Maker バンドルを使ってサブスクライバーを生成しましょう:
+Maker バンドルを使ってリスナーを生成しましょう:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)

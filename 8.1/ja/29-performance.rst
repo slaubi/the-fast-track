@@ -288,7 +288,7 @@ API のリソースをプロファイルする
 .. index::
     single: Profiling;API
 
-API や SPA のプロファイリングは、先程インストールした Blackfire CLI ツールから行った方がベターです:
+API のプロファイリングは、先程インストールした Blackfire CLI ツールから行った方がベターです:
 
 .. code-block:: terminal
     :class: ignore

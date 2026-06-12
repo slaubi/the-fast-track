@@ -268,9 +268,9 @@ PostgreSQL が Docker 経由のローカルと、 Upsun の本番で動いてい
 
     * `PostgreSQL のドキュメント`_;
 
-    * `docker-compose commands`_.
+    * `Docker Compose コマンド`_.
 
 .. _`Upsun サービス`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Upsun トンネル`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL のドキュメント`: https://www.postgresql.org/docs/
-.. _`docker-compose commands`: https://docs.docker.com/compose/reference/
+.. _`Docker Compose コマンド`: https://docs.docker.com/reference/cli/docker/compose/

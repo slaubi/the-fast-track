@@ -334,6 +334,8 @@ cURL などの HTTP クライアントを使用するなどして HTML バリデ
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+フォームが投稿された内容を ``handleRequest()`` で調べるために、 ``Request`` オブジェクトがコントローラーにインジェクトされるようになったことに注意してください。
+
 フォームを投稿すると、投稿された内容で ``Comment`` オブジェクトが更新されます。
 
 フォームからは取り除きましたが、カンファレンスは、URL で既に決まっています。

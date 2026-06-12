@@ -1,722 +1,158 @@
-SPAサイトをビルドする
-==============================
+Web サイトを SPA のような体験にする
+===================================
 
 .. index::
-    single: SPA
-    single: Mobile
+    single: Symfony UX
+    single: Turbo
+    single: Stimulus
 
-コメントのほとんどはカンファレンスの開催中に投稿されでしょう。参加者がノートパソコンを持ってきていなくてもスマートフォンは持っているでしょうから、そこから投稿することがあります。カンファレンスのコメントをチェックするモバイルアプリを作成してみましょう。
+Web サイトは高速ですが、クリックするたびに HTML ページ全体がリロードされています。伝統的な答えは、 *シングルページアプリケーション* （SPA）を構築することです。SPA は、別のスタックで書かれ、API と通信する JavaScript アプリケーションです。つまり、開発し、セキュリティを確保し、デプロイし、メインのアプリケーションと同期を保つべき 2 つ目のアプリケーションが必要になるということです。
 
-モバイルアプリを作成するのに JavaScript で SPA サイトを作ることがあります。 SPA はローカルで動き、ローカルストレージの使用、リモート HTTP API の呼び出し、そして、ネイティブに近いサービスワーカーの恩恵を受けることができます。
+Symfony には別の答えがあります。 *Symfony UX* は、サーバーサイドでレンダリングされるアプリケーションに SPA の体験をもたらすイニシアチブです。Twig テンプレートと Symfony コントローラーを書き続けながら、価値を生む場所にだけ JavaScript を振りかけます。
 
-アプリケーションを作成する
----------------------------------------
+Symfony UX を発見する
+---------------------
 
-`Preact`_ と **Symfony Encore** を使用して、モバイルアプリケーションを作成します。**Preact** は小さく効率的な出発点で、ゲストブックSPAに最適です。
+良いニュースがあります。私たちは、この書籍の最初のステップから Symfony UX を使ってきました。webapp スケルトンには、Symfony UX のパッケージが 2 つ入っています。 ``symfony/stimulus-bundle`` と ``symfony/ux-turbo`` です。 ``importmap.php`` を見てみてください:
 
-Webサイトと SPA の整合性を保つために、Webサイトの Sass スタイルシートをモバイルアプリケーションにも再利用します。
-
-``spa`` ディレクトリ以下にSPA アプリケーションを作成し、Webサイトのスタイルシートをコピーしてください:
-
-.. code-block:: terminal
-
-    $ mkdir -p spa/src spa/public spa/assets/styles
-    $ cp assets/styles/*.scss spa/assets/styles/
-    $ cd spa
-
-.. note::
-
-    既に、SPA にブラウザから主に参照される ``public`` ディレクトリを作成してありますが、モバイルアプリケーションのみ用でしたら、 ``build`` と名前を変えることもできます。
-
-さらに、 ``.gitignore`` も追加しておきましょう:
-
-.. code-block:: text
-    :caption: .gitignore
-
-    /node_modules/
-    /public/
-    /npm-debug.log
-    # used later by Cordova
-    /app/
-
-``package.json`` ファイルを初期化してください（ ``composer.json`` の JavaScript 版のようなものです ）:
-
-.. code-block:: terminal
-
-    $ npm init -y
-    $ npm pkg delete type
-
-ここで必要な依存パッケージを追加しましょう:
-
-.. code-block:: terminal
-
-    $ npm install @symfony/webpack-encore @babel/core @babel/preset-env babel-preset-preact preact html-webpack-plugin bootstrap
-
-最後のステップとして、 Webpack  の Encore の設定を作成しておきます:
-
-.. code-block:: javascript
-    :caption: webpack.config.js
-    :emphasize-lines: 8,11
-
-    const Encore = require('@symfony/webpack-encore');
-    const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-    Encore
-        .setOutputPath('public/')
-        .setPublicPath('/')
-        .cleanupOutputBeforeBuild()
-        .addEntry('app', './src/app.js')
-        .enablePreactPreset()
-        .enableSingleRuntimeChunk()
-        .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-    ;
-
-    module.exports = Encore.getWebpackConfig();
-
-SPAのメインテンプレートを作成する
-------------------------------------------------
-
-Preact がアプリケーションをレンダリングする最初のテンプレートを作成しましょう:
-
-.. code-block:: html
-    :caption: src/index.ejs
-    :emphasize-lines: 12
-
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-
-        <title>Conference Guestbook application</title>
-    </head>
-    <body>
-        <div id="app"></div>
-    </body>
-    </html>
-
-アプリケーションが入ることになる ``<div>`` タグは、JavaScript によって表示されます。これが "Hello World" と表示するコードの最初のバージョンです:
-
-.. code-block:: text
-    :caption: src/app.js
-    :emphasize-lines: 3,11
-
-    import {h, render} from 'preact';
-
-    function App() {
-        return (
-            <div>
-                Hello world!
-            </div>
-        )
-    }
-
-    render(<App />, document.getElementById('app'));
-
-最後の行で、HTML ページの ``#app`` 要素に ``App()`` 関数を登録します。
-
-これで準備ができました！
-
-SPA サイトをブラウザで動かす
-----------------------------------------
-
-.. index::
-    single: Symfony CLI;server:start
-    single: Symfony CLI;server:stop
-
-このアプリケーションはメインのWebサイトには依存していないので、別の Webサーバーで動かす必要があります:
-
-.. code-block:: terminal
-    :class: hide
-
-    $ symfony server:stop
-
-.. code-block:: terminal
-
-    $ symfony server:start -d --passthru=index.html
-
-``--passthru`` フラグを付けて、すべての HTTP リクエストを ``public/index.html`` ファイルへ渡すように Webサーバーに伝えます（``public/`` はWebサーバーのデフォルトの Webルートディレクトリです）。このページは、 Preact アプリケーションによって管理され、 "ブラウザ" の履歴からページをレンダリングします。
-
-``npm`` を実行してCSS と **JavaScript** ファイルをコンパイルしてください:
-
-.. code-block:: terminal
-
-    $ ./node_modules/.bin/encore dev
-
-SPAサイトをブラウザで開いてください:
-
-.. code-block:: terminal
+.. code-block:: php
     :class: ignore
 
-    $ symfony open:local
-
-そして、hello world SPA と見えるか確認してください:
-
-.. figure:: screenshots/spa.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-状態をハンドルするルーターを追加する
-------------------------------------------------------
-
-まだ、SPA は異なるページを扱うことができません。複数のページを実装するには、 Symfony のようなルーター機能が必要です。 **preact-router** を使用することにしましょう。 入力から URL を受け取り、 対応する Preact コンポーネントを表示します。
-
-preact-router をインストールしてください:
-
-.. code-block:: terminal
-
-    $ npm install preact-router
-
-*Preact コンポーネント* のホームページ用のページを作成してください:
-
-.. code-block:: text
-    :caption: src/pages/home.js
-
-    import {h} from 'preact';
-
-    export default function Home() {
-        return (
-            <div>Home</div>
-        );
-    };
-
-カンファレンスページも作成してください:
-
-.. code-block:: text
-    :caption: src/pages/conference.js
-
-    import {h} from 'preact';
-
-    export default function Conference() {
-        return (
-            <div>Conference</div>
-        );
-    };
-
-"Hello World" の ``div`` を ``Router`` コンポーネントに書き換えてください:
-
-.. code-block:: diff
-    :caption: patch_file
-    :emphasize-lines: 15,17,20-23
-
-    --- i/src/app.js
-    +++ w/src/app.js
-    @@ -1,9 +1,22 @@
-     import {h, render} from 'preact';
-    +import {Router, Link} from 'preact-router';
-    +
-    +import Home from './pages/home';
-    +import Conference from './pages/conference';
-
-     function App() {
-         return (
-             <div>
-    -            Hello world!
-    +            <header>
-    +                <Link href="/">Home</Link>
-    +                <br />
-    +                <Link href="/conference/amsterdam2019">Amsterdam 2019</Link>
-    +            </header>
-    +
-    +            <Router>
-    +                <Home path="/" />
-    +                <Conference path="/conference/:slug" />
-    +            </Router>
-             </div>
-         )
-     }
-
-アプリケーションをリビルドしてください:
-
-.. code-block:: terminal
-
-    $ ./node_modules/.bin/encore dev
-
-ブラウザでアプリケーションを再読み込みすると、 "Home" とカンファレンスへのリンクをクリックできるようになっています。ブラウザの URL を確認して、ブラウザの 戻る／進むボタンが動くか確認してください。
-
-SPA サイトをスタイルする
-----------------------------------
-
-Webサイトに Sass ローダーを追加しましょう:
-
-.. code-block:: terminal
-
-    $ npm install sass sass-loader
-
-Webpack で Sass ローダーを有効化し、スタイルシートへの参照を追加してください:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/src/app.js
-    +++ w/src/app.js
-    @@ -1,3 +1,5 @@
-    +import '../assets/styles/app.scss';
-    +
-     import {h, render} from 'preact';
-     import {Router, Link} from 'preact-router';
-
-    --- i/webpack.config.js
-    +++ w/webpack.config.js
-    @@ -7,6 +7,7 @@ Encore
-         .cleanupOutputBeforeBuild()
-         .addEntry('app', './src/app.js')
-         .enablePreactPreset()
-    +    .enableSassLoader()
-         .enableSingleRuntimeChunk()
-         .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-     ;
-
-これでスタイルシートを使うため、アプリケーションを更新できるようになりました:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/src/app.js
-    +++ w/src/app.js
-    @@ -9,10 +9,20 @@ import Conference from './pages/conference';
-     function App() {
-         return (
-             <div>
-    -            <header>
-    -                <Link href="/">Home</Link>
-    -                <br />
-    -                <Link href="/conference/amsterdam2019">Amsterdam 2019</Link>
-    +            <header className="header">
-    +                <nav className="navbar navbar-light bg-light">
-    +                    <div className="container">
-    +                        <Link className="navbar-brand mr-4 pr-2" href="/">
-    +                            &#128217; Guestbook
-    +                        </Link>
-    +                    </div>
-    +                </nav>
-    +
-    +                <nav className="bg-light border-bottom text-center">
-    +                    <Link className="nav-conference" href="/conference/amsterdam2019">
-    +                        Amsterdam 2019
-    +                    </Link>
-    +                </nav>
-                 </header>
-
-                 <Router>
-
-もう一度アプリケーションをリビルドしてください:
-
-.. code-block:: terminal
-
-    $ ./node_modules/.bin/encore dev
-
-これで完全にスタイルされた SPAサイトができました:
-
-.. figure:: screenshots/spa-home.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-API からデータを取得する
-----------------------------------
-
-Preact アプリケーションの構築はこれで終わりです。これで、Preact ルーターは、カンファレンスのスラッグのプレースホルダーも含めページの状態を扱えるようになり、メインアプリケーションのスタイルシートは、SPAのスタイルに使用されるようになりました。
-
-SPA を動的にするには、 HTTP 呼び出しで API からデータを取得する必要があります。
-
-Webpack を設定して、 API のエンドポイントの環境変数を公開してください:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/webpack.config.js
-    +++ w/webpack.config.js
-    @@ -1,3 +1,4 @@
-    +const webpack = require('webpack');
-     const Encore = require('@symfony/webpack-encore');
-     const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-    @@ -10,6 +11,9 @@ Encore
-         .enableSassLoader()
-         .enableSingleRuntimeChunk()
-         .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-    +    .addPlugin(new webpack.DefinePlugin({
-    +        'ENV_API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
-    +    }))
-     ;
-
-     module.exports = Encore.getWebpackConfig();
-
-環境変数 ``API_ENDPOINT`` は、 ``/api`` 以下のAPIのエンドポイントのWebサーバーを指しています。後に ``npm`` で実行して正しく設定できるようにします。
-
-API からのデータ取得を行う ``api.js`` ファイルを作成してください:
-
-.. code-block:: text
-    :caption: src/api/api.js
-
-    function fetchCollection(path) {
-        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['member']);
-    }
-
-    export function findConferences() {
-        return fetchCollection('api/conferences');
-    }
-
-    export function findComments(conference) {
-        return fetchCollection('api/comments?conference='+conference.id);
-    }
-
-これでヘッダーとホームのコンポーネントに適応できるようになりました:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/src/app.js
-    +++ w/src/app.js
-    @@ -2,11 +2,23 @@ import '../assets/styles/app.scss';
-
-     import {h, render} from 'preact';
-     import {Router, Link} from 'preact-router';
-    +import {useState, useEffect} from 'preact/hooks';
-
-    +import {findConferences} from './api/api';
-     import Home from './pages/home';
-     import Conference from './pages/conference';
-
-     function App() {
-    +    const [conferences, setConferences] = useState(null);
-    +
-    +    useEffect(() => {
-    +        findConferences().then((conferences) => setConferences(conferences));
-    +    }, []);
-    +
-    +    if (conferences === null) {
-    +        return <div className="text-center pt-5">Loading...</div>;
-    +    }
-    +
-         return (
-             <div>
-                 <header className="header">
-    @@ -19,15 +31,17 @@ function App() {
-                     </nav>
-
-                     <nav className="bg-light border-bottom text-center">
-    -                    <Link className="nav-conference" href="/conference/amsterdam2019">
-    -                        Amsterdam 2019
-    -                    </Link>
-    +                    {conferences.map((conference) => (
-    +                        <Link className="nav-conference" href={'/conference/'+conference.slug}>
-    +                            {conference.city} {conference.year}
-    +                        </Link>
-    +                    ))}
-                     </nav>
-                 </header>
-
-                 <Router>
-    -                <Home path="/" />
-    -                <Conference path="/conference/:slug" />
-    +                <Home path="/" conferences={conferences} />
-    +                <Conference path="/conference/:slug" conferences={conferences} />
-                 </Router>
-             </div>
-         )
-    --- i/src/pages/home.js
-    +++ w/src/pages/home.js
-    @@ -1,7 +1,28 @@
-     import {h} from 'preact';
-    +import {Link} from 'preact-router';
-    +
-    +export default function Home({conferences}) {
-    +    if (!conferences) {
-    +        return <div className="p-3 text-center">No conferences yet</div>;
-    +    }
-
-    -export default function Home() {
-         return (
-    -        <div>Home</div>
-    +        <div className="p-3">
-    +            {conferences.map((conference)=> (
-    +                <div className="card border shadow-sm lift mb-3">
-    +                    <div className="card-body">
-    +                        <div className="card-title">
-    +                            <h4 className="font-weight-light">
-    +                                {conference.city} {conference.year}
-    +                            </h4>
-    +                        </div>
-    +
-    +                        <Link className="btn btn-sm btn-primary stretched-link" href={'/conference/'+conference.slug}>
-    +                            View
-    +                        </Link>
-    +                    </div>
-    +                </div>
-    +            ))}
-    +        </div>
-         );
-    -};
-    +}
-
-最後に Preact ルーターは、 "slug" のプレースホルダーを Conference コンポーネントにプロパティとして渡します。このプロパティを使ってAPIでカンファレンスとそのコメントが正しく表示されるようにしてください。そして、API のデータを使ってレンダリングをします:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/src/pages/conference.js
-    +++ w/src/pages/conference.js
-    @@ -1,7 +1,48 @@
-     import {h} from 'preact';
-    +import {findComments} from '../api/api';
-    +import {useState, useEffect} from 'preact/hooks';
-    +
-    +function Comment({comments}) {
-    +    if (comments !== null && comments.length === 0) {
-    +        return <div className="text-center pt-4">No comments yet</div>;
-    +    }
-    +
-    +    if (!comments) {
-    +        return <div className="text-center pt-4">Loading...</div>;
-    +    }
-
-    -export default function Conference() {
-         return (
-    -        <div>Conference</div>
-    +        <div className="pt-4">
-    +            {comments.map(comment => (
-    +                <div className="shadow border rounded-3 p-3 mb-4">
-    +                    <div className="comment-img mr-3">
-    +                        {!comment.photoFilename ? '' : (
-    +                            <a href={ENV_API_ENDPOINT+'uploads/photos/'+comment.photoFilename} target="_blank">
-    +                                <img src={ENV_API_ENDPOINT+'uploads/photos/'+comment.photoFilename} />
-    +                            </a>
-    +                        )}
-    +                    </div>
-    +
-    +                    <h5 className="font-weight-light mt-3 mb-0">{comment.author}</h5>
-    +                    <div className="comment-text">{comment.text}</div>
-    +                </div>
-    +            ))}
-    +        </div>
-         );
-    -};
-    +}
-    +
-    +export default function Conference({conferences, slug}) {
-    +    const conference = conferences.find(conference => conference.slug === slug);
-    +    const [comments, setComments] = useState(null);
-    +
-    +    useEffect(() => {
-    +        findComments(conference).then(comments => setComments(comments));
-    +    }, [slug]);
-    +
-    +    return (
-    +        <div className="p-3">
-    +            <h4>{conference.city} {conference.year}</h4>
-    +            <Comment comments={comments} />
-    +        </div>
-    +    );
-    +}
-
-これでSPAは、環境変数 ``API_ENDOPOINT`` からAPIのURLを知る必要があります。APIのWebサーバーのURLをセットしてください（ ``..`` ディレクトリで実行します）:
-
-.. code-block:: terminal
-
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` ./node_modules/.bin/encore dev
-
-これでバックグラウンドでも実行できるようになったはずです:
-
-.. code-block:: terminal
-
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` symfony run -d --watch=webpack.config.js ./node_modules/.bin/encore dev --watch
-
-これで、ブラウザ内のアプリケーションをが正しく動くのを確認できるはずです:
-
-.. figure:: screenshots/spa-home-final.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-.. figure:: screenshots/spa-conference-final.png
-    :alt: /conference/amsterdam-2019
-    :align: center
-    :figclass: with-browser spa
-
-できましたね！ルーターも実際のデータもちゃんと機能する SPA が完成しました。 Preact アプリをさらに整理することもできますが、ここではこのくらいにしておきましょう。
-
-本番に SPA サイトをデプロイする
---------------------------------------------
+    return [
+        'app' => ['path' => './assets/app.js', 'entrypoint' => true],
+        '@hotwired/stimulus' => ['version' => '3.2.2'],
+        '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
+        '@hotwired/turbo' => ['version' => '8.0.23'],
+    ];
+
+`Stimulus`_ は、 ``data-`` 属性を通じて JavaScript の *コントローラー* を HTML 要素に接続する、小さな JavaScript フレームワークです。 ``assets/stimulus_bootstrap.js`` ファイルが Stimulus アプリケーションを起動し、 ``assets/controllers/`` ディレクトリに格納されたコントローラーを自動的に登録します。
+
+`Turbo`_ は、この基盤の上に構築されており、ナビゲーションを瞬時にします。
+
+Turbo で瞬時にナビゲートする
+----------------------------
 
 .. index::
-    single: Upsun;Multi-Applications
+    single: Turbo;Drive
 
-Upsun では、各プロジェクト毎に複数のアプリケーションをデプロイすることができます。プロジェクトのルートディレクトリに戻り、``spa/`` ディレクトリをルートとする ``spa`` という名前の2つ目のアプリケーションを ``.upsun/config.yaml`` に追加します:
+Turbo *Drive* は、最初からずっと静かに働いていました。すべてのリンクのクリックとフォームの送信をインターセプトし、バックグラウンドでページを取得して、ページ全体をリロードすることなく ``<body>`` を入れ替えます。ブラウザは同じ JavaScript と CSS を保持し続けるので、ナビゲーションは瞬時に感じられます。
 
-.. code-block:: terminal
+ブラウザの開発者ツールを開き、"Network" タブに切り替えて、Web サイト内をクリックしてみてください。ページの遷移は ``fetch`` リクエストであり、ドキュメント全体のロードではありません。
 
-    $ cd ../
+Turbo が見返りに求めるのは 1 つだけです。フォームに対する正しい HTTP セマンティクスです。送信が成功したらリダイレクトしなければなりません（私たちのフォームは ``redirectToRoute()`` のおかげでそうなっています）。そして、失敗した送信は ``4xx`` ステータスコードを使わなければなりません。後者は Symfony が自動的に処理してくれます。送信されたフォームが無効な場合、 ``render()`` は ``422 Unprocessable Entity`` ステータスコードでレスポンスを返します。
 
-.. code-block:: diff
-    :caption: patch_file
-
-    --- i/.upsun/config.yaml
-    +++ w/.upsun/config.yaml
-    @@ -19,6 +19,36 @@ services:
-             type: network-storage:2.0
-
-     applications:
-    +    spa:
-    +        source:
-    +            root: "/spa"
-    +
-    +        type: nodejs:24
-    +
-    +        size: S
-    +
-    +        build:
-    +            flavor: none
-    +
-    +        web:
-    +            commands:
-    +                start: sleep
-    +            locations:
-    +                "/":
-    +                    root: "public"
-    +                    index:
-    +                        - "index.html"
-    +                    scripts: false
-    +                    expires: 10m
-    +
-    +        hooks:
-    +            build: |
-    +                set -x -e
-    +
-    +                curl -fs https://get.symfony.com/cloud/configurator | bash
-    +
-    +                NODE_VERSION=24 assets-build
-    +
-         app:
-             source:
-                 root: "/"
-
-.. index::
-    single: Upsun;Routes
-
-``.upsun/config.yaml`` ファイルを編集して、``spa.`` サブドメインを ``spa`` アプリケーションにルーティングしてください:
-
-.. code-block:: diff
-    :caption: patch_file
-    :emphasize-lines: 5,6
-
-    --- i/.upsun/config.yaml
-    +++ w/.upsun/config.yaml
-    @@ -2,6 +2,9 @@ routes:
-         "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-         "http://{all}/": { type: redirect, to: "https://{all}/" }
-
-    +    "https://spa.{all}/": { type: upstream, upstream: "spa:http" }
-    +    "http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
-    +
-     services:
-
-SPA サイトの CORS を設定する
+Turbo Frames でページの一部を更新する
 -------------------------------------
 
 .. index::
-    single: CORS
-    single: Cross-Origin Resource Sharing
+    single: Turbo;Frame
 
-コードをデプロイしても、API リクエストがブラウザからブロックされるので動作しません。SPA が API にアクセスできるように明示する必要があります。アプリケーションに現在のドメイン名をアタッチしてください:
+Turbo Drive はページ全体のリロードを避けます。Turbo *Frames* はさらに一歩進んで、ページの一部分を残りの部分から独立してナビゲートできるようにします。
 
-.. code-block:: terminal
+コメント一覧は完璧な候補です。"Previous" と "Next" リンクでコメントページを移動するときに変わるべきなのは一覧だけです。ヘッダーやフォーム、フッターを再レンダリングするのは無駄な仕事です。コメントをフレームで囲みましょう:
 
-    $ symfony cloud:env:url --pipe --primary
+.. code-block:: diff
+    :caption: patch_file
 
-``CORS_ALLOW_ORIGIN`` 環境変数を定義してください:
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
+    @@ -17,3 +17,4 @@
+         <div class="row">
+             <div class="col-12 col-lg-8">
+    +            <turbo-frame id="comments" data-turbo-action="advance">
+                 {% if comments|length > 0 %}
+    @@ -56,5 +57,6 @@
+                     No comments have been posted yet for this conference.
+                 </div>
+             {% endif %}
+    +            </turbo-frame>
+             </div>
+             <div class="col-12 col-lg-4">
 
-.. code-block:: terminal
+``<turbo-frame>`` 要素の内側にあるリンクは、そのフレームだけを更新します。"Next" をクリックすると、Turbo はバックグラウンドでページを取得し、対応するフレームを入れ替え、ページの残りの部分には手を付けません。
 
-    $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:CORS_ALLOW_ORIGIN --value="^`symfony cloud:env:url --pipe --primary | sed 's#/$##' | sed 's#https://#https://spa.#'`$"
+``data-turbo-action="advance"`` 属性は、フレームのナビゲーションをページ全体の訪問へと昇格させます。アドレスバーの URL が（クエリーパラメータの ``offset`` も含めて）更新されるので、ページネーションされたコメントは共有可能なままですし、ブラウザの戻るボタンも期待通りに動作します。
 
-ドメインが、 ``https://master-5szvwec-hzhac461b3a6o.eu-5.platformsh.site/`` であったなら、 ``sed`` コマンドで ``https://spa.master-5szvwec-hzhac461b3a6o.eu-5.platformsh.site`` と変換しましょう。
-
-環境変数 ``API_ENDPOINT`` をセットする必要もあります:
-
-.. code-block:: terminal
-
-    $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:API_ENDPOINT --value=`symfony cloud:env:url --pipe --primary`
-
-コミットしてデプロイしてください:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ git add .
-    $ git commit -a -m'Add the SPA application'
-    $ symfony cloud:push
-
-アプリケーションをフラグで指定して、ブラウザで SPA にアクセスしてください:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ symfony cloud:url -1 --app=spa
-
-Cordova を使用して、スマートフォンアプリケーションをビルドする
------------------------------------------------------------------------------------------
+Stimulus でコメントの写真をプレビューする
+-----------------------------------------
 
 .. index::
-    single: SPA;Cordova
-    single: Apache Cordova
-    single: Cordova
+    single: Stimulus;Controller
 
-**Apache Cordova** は、クロスプラットフォームでスマートフォンアプリケーションをビルドすることができるツールです。 今作成した SPA にも使うことができます。
+この書籍全体で初めての JavaScript を書くときが来ました。写真を投稿する参加者は、コメントを投稿する前に写真を確認できません。ファイルを選択したときにプレビューを表示しましょう。
 
-インストールしてみましょう:
+Stimulus コントローラーを作成してください（ファイル名がコントローラー名 ``photo-preview`` を決めます）:
 
-.. code-block:: terminal
+.. code-block:: javascript
+    :caption: assets/controllers/photo_preview_controller.js
 
-    $ cd spa
-    $ npm install cordova
+    import { Controller } from '@hotwired/stimulus';
 
-.. note::
+    export default class extends Controller {
+        show() {
+            const [photo] = this.element.files;
+            if (!photo) {
+                this.preview?.remove();
+                this.preview = null;
 
-    Android SDK もインストールする必要があります。このセクションでは、 Android しか触れませんが、Cordova を使用すれば、iOS などの他のモバイルプラットフォームでも動きます。
+                return;
+            }
 
-アプリケーションのディレクトリ構造を作成してください:
+            if (!this.preview) {
+                this.preview = document.createElement('img');
+                this.preview.className = 'img-thumbnail mt-2';
+                this.preview.style.maxHeight = '150px';
+                this.element.insertAdjacentElement('afterend', this.preview);
+            }
 
-.. code-block:: terminal
-    :class: answers(n)
+            this.preview.src = URL.createObjectURL(photo);
+        }
+    }
 
-    $ ./node_modules/.bin/cordova create app
+必要な JavaScript はこれだけです。Stimulus はコントローラーを自動的に発見し、登録します。 ``data-`` 属性を通じて、コメントフォームの写真フィールドにコントローラーを接続してください:
 
-さらに、Android アプリケーションを生成してください:
+.. code-block:: diff
+    :caption: patch_file
 
-.. code-block:: terminal
-    :class: ignore
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
+    @@ -26,6 +26,10 @@ class CommentType extends AbstractType
+                 ->add('photo', FileType::class, [
+                     'required' => false,
+                     'mapped' => false,
+    +                'attr' => [
+    +                    'data-controller' => 'photo-preview',
+    +                    'data-action' => 'change->photo-preview#show',
+    +                ],
+                     'constraints' => [
+                         new Image(maxSize: '1024k')
+                     ],
 
-    $ cd app
-    $ ~/.npm/bin/cordova platform add android
-    $ cd ..
+``data-controller`` 属性がコントローラーをファイル入力フィールドにバインドし、 ``data-action`` が入力値が変わるたびに ``show()`` メソッドを呼び出します。カンファレンスページで写真を選択して、プレビューを楽しんでください。
 
-これだけです。これで、本番ファイルをビルドして、 Cordova にそのファイルを移動することができるようになりました:
+Stimulus コントローラーは Turbo と手を取り合って動作します。Drive と Frames はページをリロードせずに更新するので、要素が DOM に入ったり出たりするのに合わせて、コントローラーは自動的に接続・切断されます。
 
-.. code-block:: terminal
+モバイルアプリケーションはどうするのか？
+----------------------------------------
 
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` ./node_modules/.bin/encore production
-    $ rm -rf app/www
-    $ mkdir -p app/www
-    $ cp -R public/ app/www
+私たちは、2 つ目のアプリケーションを構築することなく SPA の体験を手に入れました。別の JavaScript スタックも、2 つ目の Web サーバーも、CORS の設定も、新しくデプロイするものも何もありません。
 
-スマートフォンかエミュレーターでアプリケーションを実行してください:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ ./node_modules/.bin/cordova run android
+そして、いつか *ネイティブ* モバイルアプリケーションが必要になったら、前のステップで作成した API が正しい入り口です。API は公開されていて、ドキュメント化されていて、フレームワークに依存しません。Web サイトとモバイルアプリケーションは、同じバックエンドを共有しながら独立して進化できます。
 
 .. sidebar:: より深く学ぶために
 
-    * `Preact の公式サイト`_;
+    * `Symfony UX イニシアチブ`_;
 
-    * `Cordova の公式サイト`_.
+    * `Turbo ハンドブック`_ と `Stimulus ハンドブック`_;
 
-.. _`Preact`: https://preactjs.com/
-.. _`Preact の公式サイト`: https://preactjs.com/
-.. _`Cordova の公式サイト`: https://cordova.apache.org/
+    * `Symfony UX Turbo のドキュメント`_ 。Mercure 経由で接続中の全ユーザーにページ更新をブロードキャストする Turbo *Streams* も含まれます;
+
+    * カスタム JavaScript をまったく書かずに動的なインターフェイスを構築できる `Live Components`_.
+
+.. _`Stimulus`: https://stimulus.hotwired.dev/
+.. _`Turbo`: https://turbo.hotwired.dev/
+.. _`Symfony UX イニシアチブ`: https://ux.symfony.com/
+.. _`Turbo ハンドブック`: https://turbo.hotwired.dev/handbook/introduction
+.. _`Stimulus ハンドブック`: https://stimulus.hotwired.dev/handbook/introduction
+.. _`Symfony UX Turbo のドキュメント`: https://symfony.com/bundles/ux-turbo/current/index.html
+.. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
