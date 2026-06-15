@@ -64,7 +64,7 @@ Sklonuj (ang. clone) `repozytorium księgi gości`_ na swój komputer:
 
 To repozytorium zawiera cały kod tej książki.
 
-Zauważ, że używamy ``symfony new`` zamiast ``git clone``. Polecenie ``symfony new`` robi więcej niż tylko klonowanie repozytorium (hostowanego na GitHubie w ramach organizacji ``the-fast-track``: ``https://github.com/the-fast-track/book-6.2-1``). Uruchamia również serwer WWW, kontenery, migruje bazę danych, uzupełnia bazę testowymi danymi (ang. fixtures), itp. Po uruchomieniu tego polecenia, strona internetowa powinna być uruchomiona i gotowa do użycia.
+Zauważ, że używamy ``symfony new`` zamiast ``git clone``. Polecenie ``symfony new`` robi więcej niż tylko klonowanie repozytorium (hostowanego na GitHubie w ramach organizacji ``the-fast-track``: ``https://github.com/the-fast-track/book-8.1-1``). Uruchamia również serwer WWW, kontenery, migruje bazę danych, uzupełnia bazę testowymi danymi (ang. fixtures), itp. Po uruchomieniu tego polecenia, strona internetowa powinna być uruchomiona i gotowa do użycia.
 
 Kod z repozytorium jest identyczny z kodem w książce (użyj dokładnego adresu URL repozytorium podanego powyżej). Ręczne wprowadzanie zmian opisywanych w kolejnych rozdziałach do kodu źródłowego w repozytorium jest prawie niemożliwe. Próbowałem tego w przeszłości, ale nie udało mi się. Tak się po prostu nie da. Szczególnie w przypadku książek, które opowiadają historię tworzenia strony internetowej. Ponieważ każdy rozdział zależy od poprzednich, zmiana może wpłynąć na wszystkie kolejne rozdziały.
 
