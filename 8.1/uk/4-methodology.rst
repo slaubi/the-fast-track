@@ -54,4 +54,4 @@
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push

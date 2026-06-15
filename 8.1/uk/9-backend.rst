@@ -23,7 +23,7 @@
 
 .. code-block:: terminal
 
-    $ symfony composer req "admin:^4"
+    $ symfony composer req "easycorp/easyadmin-bundle:^5"
 
 ``admin`` є псевдонімом для пакета ``easycorp/easyadmin-bundle``.
 
@@ -55,17 +55,15 @@ EasyAdmin автоматично генерує панель керування 
 
     namespace App\Controller\Admin;
 
+    use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
     use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Annotation\Route;
 
+    #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
     class DashboardController extends AbstractDashboardController
     {
-        /**
-         * @Route("/admin", name="admin")
-         */
         public function index(): Response
         {
             return parent::index();
@@ -80,7 +78,7 @@ EasyAdmin автоматично генерує панель керування 
         public function configureMenuItems(): iterable
         {
             yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-            // yield MenuItem::linkToCrud('The Label', 'icon class', EntityClass::class);
+            // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
         }
     }
 
@@ -151,26 +149,17 @@ EasyAdmin автоматично генерує панель керування 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/DashboardController.php
-    +++ b/src/Controller/Admin/DashboardController.php
-    @@ -2,6 +2,8 @@
-
-     namespace App\Controller\Admin;
-
-    +use App\Entity\Comment;
-    +use App\Entity\Conference;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-     use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-     use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-    @@ -40,7 +42,8 @@ class DashboardController extends AbstractDashboardController
+    --- i/src/Controller/Admin/DashboardController.php
+    +++ w/src/Controller/Admin/DashboardController.php
+    @@ -44,7 +44,8 @@ class DashboardController extends AbstractDashboardController
 
          public function configureMenuItems(): iterable
          {
     -        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-    -        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
-    +        yield MenuItem::linktoRoute('Back to the website', 'fas fa-home', 'homepage');
-    +        yield MenuItem::linkToCrud('Conferences', 'fas fa-map-marker-alt', Conference::class);
-    +        yield MenuItem::linkToCrud('Comments', 'fas fa-comments', Comment::class);
+    -        // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
+    +        yield MenuItem::linkToRoute('Back to the website', 'fas fa-home', 'homepage');
+    +        yield MenuItem::linkTo(ConferenceCrudController::class, 'Conferences', 'fas fa-map-marker-alt');
+    +        yield MenuItem::linkTo(CommentCrudController::class, 'Comments', 'fas fa-comments');
          }
      }
 
@@ -183,18 +172,18 @@ EasyAdmin надає API для полегшення зв'язування з CR
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/DashboardController.php
-    +++ b/src/Controller/Admin/DashboardController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    --- i/src/Controller/Admin/DashboardController.php
+    +++ w/src/Controller/Admin/DashboardController.php
+    @@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
      use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
      use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
     +use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
 
+     #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
     @@ -15,7 +16,10 @@ class DashboardController extends AbstractDashboardController
-         #[Route('/admin', name: 'admin')]
+     {
          public function index(): Response
          {
     -        return parent::index();
@@ -211,9 +200,9 @@ EasyAdmin надає API для полегшення зв'язування з CR
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
-    @@ -32,6 +32,11 @@ class Conference
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
+    @@ -35,6 +35,11 @@ class Conference
              $this->comments = new ArrayCollection();
          }
 
@@ -248,9 +237,9 @@ EasyAdmin надає API для полегшення зв'язування з CR
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
-    @@ -3,7 +3,15 @@
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -3,10 +3,17 @@
      namespace App\Controller\Admin;
 
      use App\Entity\Comment;
@@ -260,13 +249,15 @@ EasyAdmin надає API для полегшення зв'язування з CR
     +use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
     +use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
     +use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
     +use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-    +use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
     +use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 
      class CommentCrudController extends AbstractCrudController
      {
-    @@ -12,14 +20,44 @@ class CommentCrudController extends AbstractCrudController
+    @@ -15,14 +22,43 @@ class CommentCrudController extends AbstractCrudController
              return Comment::class;
          }
 

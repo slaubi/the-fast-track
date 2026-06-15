@@ -10,8 +10,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/workflow.yaml
-    +++ b/config/packages/workflow.yaml
+    --- i/config/packages/workflow.yaml
+    +++ w/config/packages/workflow.yaml
     @@ -16,6 +16,7 @@ framework:
                      - potential_spam
                      - spam
@@ -63,7 +63,7 @@
 
 .. code-block:: terminal
 
-    $ symfony composer req "imagine/imagine:^1.2"
+    $ symfony composer req "imagine/imagine:^1.5"
 
 Зміну розміру зображення можна здійснити за допомогою наступного сервісного класу:
 
@@ -80,7 +80,7 @@
         private const MAX_WIDTH = 200;
         private const MAX_HEIGHT = 150;
 
-        private $imagine;
+        private readonly Imagine $imagine;
 
         public function __construct()
         {
@@ -89,7 +89,7 @@
 
         public function resize(string $filename): void
         {
-            list($iwidth, $iheight) = getimagesize($filename);
+            [$iwidth, $iheight] = getimagesize($filename);
             $ratio = $iwidth / $iheight;
             $width = self::MAX_WIDTH;
             $height = self::MAX_HEIGHT;
@@ -114,8 +114,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -2,6 +2,7 @@
 
      namespace App\MessageHandler;
@@ -167,33 +167,33 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
-    @@ -11,3 +11,7 @@ varnish:
-             vcl: !include
-                 type: string
-                 path: config.vcl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -15,6 +15,9 @@ services:
+                     type: string
+                     path: config.vcl
+
+    +    files:
+    +        type: network-storage:2.0
     +
-    +files:
-    +    type: network-storage:2.0
-    +    disk: 256
+     applications:
 
 Використовуйте його для каталогу завантаження фотографій:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -35,7 +35,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -54,7 +54,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    -            "/public/uploads": { source: storage, source_path: uploads }
+    +            "/public/uploads": { source: service, service: files, source_path: uploads }
 
-     mounts:
-         "/var": { source: local, source_path: var }
-    -    "/public/uploads": { source: local, source_path: uploads }
-    +    "/public/uploads": { source: service, service: files, source_path: uploads }
-         
 
-     relationships:
+             relationships:
 
 Цього має бути достатньо для того, щоб функція працювала в продакшн.
 

@@ -31,8 +31,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -39,8 +39,8 @@ class Comment
          #[ORM\Column(length: 255, nullable: true)]
          private ?string $photoFilename = null;
@@ -59,8 +59,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
+    --- i/migrations/Version00000000000000.php
+    +++ w/migrations/Version00000000000000.php
     @@ -21,6 +21,7 @@ final class Version00000000000000 extends AbstractMigration
          {
              // this up() migration is auto-generated, please modify it to your needs
@@ -85,9 +85,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -29,7 +29,9 @@ class CommentRepository extends ServiceEntityRepository
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -24,7 +24,9 @@ class CommentRepository extends ServiceEntityRepository
          {
              $query = $this->createQueryBuilder('c')
                  ->andWhere('c.conference = :conference')
@@ -95,7 +95,7 @@
                  ->setParameter('conference', $conference)
     +            ->setParameter('state', 'published')
                  ->orderBy('c.createdAt', 'DESC')
-                 ->setMaxResults(self::PAGINATOR_PER_PAGE)
+                 ->setMaxResults(self::COMMENTS_PER_PAGE)
                  ->setFirstResult($offset)
 
 Оновіть конфігурацію EasyAdmin, щоб мати можливість бачити стан коментарів:
@@ -103,9 +103,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
-    @@ -51,6 +51,7 @@ class CommentCrudController extends AbstractCrudController
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -53,6 +53,7 @@ class CommentCrudController extends AbstractCrudController
                  ->setLabel('Photo')
                  ->onlyOnIndex()
              ;
@@ -119,25 +119,16 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
-    @@ -35,8 +35,16 @@ class AppFixtures extends Fixture
-             $comment1->setAuthor('Fabien');
-             $comment1->setEmail('fabien@example.com');
-             $comment1->setText('This was a great conference.');
-    +        $comment1->setState('published');
-             $manager->persist($comment1);
-
-    +        $comment2 = new Comment();
-    +        $comment2->setConference($amsterdam);
-    +        $comment2->setAuthor('Lucas');
-    +        $comment2->setEmail('lucas@example.com');
-    +        $comment2->setText('I think this one is going to be moderated.');
-    +        $manager->persist($comment2);
-    +
-             $admin = new Admin();
-             $admin->setRoles(['ROLE_ADMIN']);
-             $admin->setUsername('admin');
+    --- i/src/Factory/CommentFactory.php
+    +++ w/src/Factory/CommentFactory.php
+    @@ -38,6 +38,7 @@ final class CommentFactory extends PersistentObjectFactory
+                 'conference' => ConferenceFactory::new(),
+                 'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+                 'email' => self::faker()->email(),
+    +            'state' => 'published',
+                 'text' => self::faker()->text(),
+             ];
+         }
 
 .. index::
     single: Test;Container
@@ -148,24 +139,24 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
-    @@ -2,6 +2,8 @@
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
+    @@ -4,6 +4,8 @@ namespace App\Tests\Controller;
 
-     namespace App\Tests\Controller;
-
+     use App\Factory\CommentFactory;
+     use App\Factory\ConferenceFactory;
     +use App\Repository\CommentRepository;
     +use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-     class ConferenceControllerTest extends WebTestCase
-    @@ -22,10 +24,16 @@ class ConferenceControllerTest extends WebTestCase
+     use Zenstruck\Foundry\Test\Factories;
+     use Zenstruck\Foundry\Test\ResetDatabase;
+    @@ -33,10 +35,16 @@ class ConferenceControllerTest extends WebTestCase
              $client->submitForm('Submit', [
-                 'comment_form[author]' => 'Fabien',
-                 'comment_form[text]' => 'Some feedback from an automated functional test',
-    -            'comment_form[email]' => 'me@automat.ed',
-    +            'comment_form[email]' => $email = 'me@automat.ed',
-                 'comment_form[photo]' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
+                 'comment[author]' => 'Fabien',
+                 'comment[text]' => 'Some feedback from an automated functional test',
+    -            'comment[email]' => 'me@automat.ed',
+    +            'comment[email]' => $email = 'me@automat.ed',
+                 'comment[photo]' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
              ]);
              $this->assertResponseRedirects();
     +
@@ -255,7 +246,7 @@
         ) {
         }
 
-        public function __invoke(CommentMessage $message)
+        public function __invoke(CommentMessage $message): void
         {
             $comment = $this->commentRepository->find($message->getId());
             if (!$comment) {
@@ -279,9 +270,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -5,21 +5,23 @@ namespace App\Controller;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -5,23 +5,25 @@ namespace App\Controller;
      use App\Entity\Comment;
      use App\Entity\Conference;
      use App\Form\CommentType;
@@ -290,15 +281,17 @@
      use App\Repository\ConferenceRepository;
     -use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\DependencyInjection\Attribute\Autowire;
-     use Symfony\Component\HttpFoundation\File\Exception\FileException;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
     +use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          public function __construct(
              private EntityManagerInterface $entityManager,
@@ -306,15 +299,17 @@
          ) {
          }
 
-    @@ -36,7 +38,6 @@ class ConferenceController extends AbstractController
+    @@ -35,9 +37,8 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
-    @@ -55,6 +56,7 @@ class ConferenceController extends AbstractController
+    @@ -50,6 +51,7 @@ final class ConferenceController extends AbstractController
                  }
 
                  $this->entityManager->persist($comment);
@@ -322,7 +317,7 @@
 
                  $context = [
                      'user_ip' => $request->getClientIp(),
-    @@ -62,11 +64,7 @@ class ConferenceController extends AbstractController
+    @@ -57,11 +59,7 @@ final class ConferenceController extends AbstractController
                      'referrer' => $request->headers->get('referer'),
                      'permalink' => $request->getUri(),
                  ];
@@ -348,9 +343,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
-    @@ -21,4 +21,4 @@ framework:
+    --- i/config/packages/messenger.yaml
+    +++ w/config/packages/messenger.yaml
+    @@ -26,4 +26,4 @@ framework:
                  Symfony\Component\Notifier\Message\SmsMessage: async
 
                  # Route your messages to the transports
@@ -390,8 +385,8 @@
      // Quit the worker with CONTROL-C.
 
     11:30:20 INFO      [messenger] Received message App\Message\CommentMessage ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
-    11:30:20 INFO      [http_client] Request: "POST https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
-    11:30:20 INFO      [http_client] Response: "200 https://80cea32be1f6.rest.akismet.com/1.1/comment-check"
+    11:30:20 INFO      [http_client] Request: "POST https://api.openai.com/v1/responses"
+    11:30:20 INFO      [http_client] Response: "200 https://api.openai.com/v1/responses"
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
@@ -414,7 +409,7 @@ Symfony CLI може керувати такими фоновими команд
 
 .. code-block:: terminal
 
-    $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async -vv
+    $ symfony run -d --watch=config,src,templates,vendor/composer/installed.json symfony console messenger:consume async -vv
 
 Параметр ``--watch`` вказує Symfony, що команда має бути перезапущена щоразу, коли відбувається зміна файлової системи в каталогах ``config/``, ``src/``, ``templates/`` чи ``vendor/``.
 
@@ -477,7 +472,7 @@ Messenger має механізм для повторної відправки �
                     dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                     options:
                         use_notify: true
-                        check_delayed_interval: 60000
+                        check_delayed_interval: 1000
                     retry_strategy:
                         max_retries: 3
                         multiplier: 2
@@ -509,7 +504,7 @@ Messenger має механізм для повторної відправки �
 Щоб опрацьовувати повідомлення з PostgreSQL, нам потрібно постійно виконувати команду ``messenger:consume``. У Platform.sh цю роль виконує *воркер*:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1,5
     :class: ignore
 

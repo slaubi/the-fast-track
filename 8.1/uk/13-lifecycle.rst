@@ -19,33 +19,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
-     use Doctrine\ORM\Mapping as ORM;
-
-     #[ORM\Entity(repositoryClass: CommentRepository::class)]
-    +#[ORM\HasLifecycleCallbacks]
-     class Comment
-     {
-         #[ORM\Id]
-    @@ -91,6 +92,12 @@ class Comment
-             return $this;
-         }
-
-    +    #[ORM\PrePersist]
-    +    public function setCreatedAtValue()
-    +    {
-    +        $this->createdAt = new \DateTimeImmutable();
-    +    }
-    +
-         public function getConference(): ?Conference
-         {
-             return $this->conference;
-
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
-    @@ -56,8 +56,6 @@ class CommentCrudController extends AbstractCrudController
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -57,8 +57,6 @@ class CommentCrudController extends AbstractCrudController
              ]);
              if (Crud::PAGE_EDIT === $pageName) {
                  yield $createdAt->setFormTypeOption('disabled', true);
@@ -54,6 +30,29 @@
              }
          }
      }
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
+    @@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
+     use Doctrine\ORM\Mapping as ORM;
+
+     #[ORM\Entity(repositoryClass: CommentRepository::class)]
+    +#[ORM\HasLifecycleCallbacks]
+     class Comment
+     {
+         #[ORM\Id]
+    @@ -86,6 +87,12 @@ class Comment
+             return $this;
+         }
+
+    +    #[ORM\PrePersist]
+    +    public function setCreatedAtValue(): void
+    +    {
+    +        $this->createdAt = new \DateTimeImmutable();
+    +    }
+    +
+         public function getConference(): ?Conference
+         {
+             return $this->conference;
 
 *Подія* ``ORM\PrePersist`` оголошується тоді, коли об'єкт вперше зберігається у базі даних. Коли це трапляється, викликається метод ``setCreatedAtValue()`` який використовує поточні дату й час як значення для властивості ``createdAt``.
 
@@ -98,8 +97,8 @@ URL-адреси для конференцій не несуть в собі с�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
+    --- i/migrations/Version00000000000000.php
+    +++ w/migrations/Version00000000000000.php
     @@ -20,7 +20,9 @@ final class Version00000000000000 extends AbstractMigration
          public function up(Schema $schema): void
          {
@@ -138,8 +137,8 @@ URL-адреси для конференцій не несуть в собі с�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -6,8 +6,10 @@ use App\Repository\ConferenceRepository;
      use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
@@ -151,8 +150,8 @@ URL-адреси для конференцій не несуть в собі с�
      class Conference
      {
          #[ORM\Id]
-    @@ -27,7 +29,7 @@ class Conference
-         #[ORM\OneToMany(mappedBy: 'conference', targetEntity: Comment::class, orphanRemoval: true)]
+    @@ -30,7 +32,7 @@ class Conference
+         #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'conference', orphanRemoval: true)]
          private Collection $comments;
 
     -    #[ORM\Column(length: 255)]
@@ -194,8 +193,8 @@ URL-адреси для конференцій не несуть в собі с�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
@@ -204,11 +203,11 @@ URL-адреси для конференцій не несуть в собі с�
 
      #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
      #[UniqueEntity('slug')]
-    @@ -47,6 +48,13 @@ class Conference
+    @@ -50,6 +51,13 @@ class Conference
              return $this->id;
          }
 
-    +    public function computeSlug(SluggerInterface $slugger)
+    +    public function computeSlug(SluggerInterface $slugger): void
     +    {
     +        if (!$this->slug || '-' === $this->slug) {
     +            $this->slug = (string) $slugger->slug((string) $this)->lower();
@@ -239,7 +238,8 @@ URL-адреси для конференцій не несуть в собі с�
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\Persistence\Event\LifecycleEventArgs;
+    use Doctrine\ORM\Event\PrePersistEventArgs;
+    use Doctrine\ORM\Event\PreUpdateEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
@@ -249,12 +249,12 @@ URL-адреси для конференцій не несуть в собі с�
         ) {
         }
 
-        public function prePersist(Conference $conference, LifecycleEventArgs $event)
+        public function prePersist(Conference $conference, PrePersistEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
 
-        public function preUpdate(Conference $conference, LifecycleEventArgs $event)
+        public function preUpdate(Conference $conference, PreUpdateEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
@@ -282,15 +282,16 @@ URL-адреси для конференцій не несуть в собі с�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/EntityListener/ConferenceEntityListener.php
-    +++ b/src/EntityListener/ConferenceEntityListener.php
-    @@ -3,9 +3,13 @@
+    --- i/src/EntityListener/ConferenceEntityListener.php
+    +++ w/src/EntityListener/ConferenceEntityListener.php
+    @@ -3,10 +3,14 @@
      namespace App\EntityListener;
 
      use App\Entity\Conference;
     +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+     use Doctrine\ORM\Event\PrePersistEventArgs;
+     use Doctrine\ORM\Event\PreUpdateEventArgs;
     +use Doctrine\ORM\Events;
-     use Doctrine\Persistence\Event\LifecycleEventArgs;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
     +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]
@@ -319,20 +320,21 @@ URL-адреси для конференцій не несуть в собі с�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -20,7 +20,7 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -18,7 +18,7 @@
+             $offset = max(0, $offset);
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -16,7 +16,7 @@
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
                  <ul>
                  {% for conference in conferences %}
@@ -341,8 +343,8 @@ URL-адреси для конференцій не несуть в собі с�
                  {% endfor %}
                  </ul>
                  <hr />
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -352,8 +354,8 @@ URL-адреси для конференцій не несуть в собі с�
              </p>
          {% endfor %}
      {% endblock %}
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -22,10 +22,10 @@
              {% endfor %}
 

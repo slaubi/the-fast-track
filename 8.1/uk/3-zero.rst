@@ -17,7 +17,7 @@
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=8.1 --php=8.5 --webapp --docker --upsun
     $ cd guestbook
 
 Ця команда є тонкою обгорткою над ``Composer``, яка полегшує створення проектів Symfony. Вона використовує `скелет проекту`_, що включає мінімальний набір залежностей; компоненти Symfony, які необхідні практично для будь-якого проекту: консольний інструмент і абстракція HTTP, які необхідні для створення веб-застосунків.
@@ -75,7 +75,7 @@
 .. code-block:: terminal
 
     $ mkdir public/images/
-    $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
+    $ php -r "copy('https://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
 
 Запуск локального веб-сервера
 -------------------------------------------------------
@@ -170,7 +170,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Код розгортається автоматично, кожен раз, коли ви відправляєте зміни до Git-репозиторія. Після виконання команди, проект буде доступний за унікальним доменним іменем, яке можна використовувати для доступу до нього.
 

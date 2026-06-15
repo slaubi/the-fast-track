@@ -19,57 +19,53 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -14,6 +14,7 @@ runtime:
-             - iconv
-             - mbstring
-             - pdo_pgsql
-    +        - redis
-             - sodium
-             - xsl
-             
-    @@ -40,6 +41,7 @@ mounts:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -37,6 +37,7 @@ applications:
+                     - iconv
+                     - mbstring
+                     - pdo_pgsql
+    +                - redis
+                     - sodium
+                     - xsl
 
-     relationships:
-         database: "database:postgresql"
-    +    redis: "rediscache:redis"
-         
-     hooks:
-         build: |
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
-    @@ -15,3 +15,6 @@ varnish:
-     files:
-         type: network-storage:2.0
-         disk: 256
+    @@ -62,6 +63,7 @@ applications:
+
+             relationships:
+                 database: "database:postgresql"
+    +            redis: "rediscache:redis"
+
+             hooks:
+                 build: |
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -21,3 +21,6 @@ services:
+                 type: network-storage:2.0
+
+    +    rediscache:
+    +        type: redis:8.0
     +
-    +rediscache:
-    +    type: redis:5.0
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: '%env(resolve:DATABASE_URL)%'
-    +        handler_id: '%env(REDIS_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
-    --- a/docker-compose.yml
-    +++ b/docker-compose.yml
-    @@ -15,6 +15,10 @@ services:
+     applications:
+    --- i/compose.yaml
+    +++ w/compose.yaml
+    @@ -14,6 +14,10 @@ services:
            # - ./docker/db/data:/var/lib/postgresql/data:rw
      ###< doctrine/doctrine-bundle ###
 
     +  redis:
-    +    image: redis:5-alpine
+    +    image: redis:8.0-alpine
     +    ports: [6379]
     +
      volumes:
      ###> doctrine/doctrine-bundle ###
-       db-data:
+       database_data:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -4,3 +4,3 @@ framework:
+         # Note that the session will be started ONLY if you read or write from it.
+         session:
+    -        handler_id: '%env(resolve:DATABASE_URL)%'
+    +        handler_id: '%env(REDIS_URL)%'
 
 Хіба це не *прекрасно*?
 
@@ -77,8 +73,8 @@
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Протестуйте локально, переглядаючи веб-сайт; все має працювати як і раніше.
 
@@ -87,7 +83,7 @@
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 .. sidebar:: Йдемо далі
 

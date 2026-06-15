@@ -20,12 +20,12 @@
     :caption: patch_file
     :emphasize-lines: 8
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
-         ) {
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/', name: 'homepage')]
     +    #[Route('/{_locale}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -40,12 +40,12 @@
     :caption: patch_file
     :emphasize-lines: 8
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
-         ) {
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale}/', name: 'homepage')]
     +    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -59,22 +59,21 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -9,6 +9,7 @@ parameters:
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
+    @@ -9,5 +9,6 @@ parameters:
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
          default_base_url: 'http://127.0.0.1'
-         router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
     +    app.supported_locales: 'en|fr'
 
      services:
          # default configuration for services in *this* file
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
-         ) {
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -28,7 +28,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/{_locale<en|fr>}/', name: 'homepage')]
     +    #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
@@ -88,25 +87,27 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -36,7 +36,7 @@ class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -38,7 +38,7 @@ final class ConferenceController extends AbstractController
          }
 
+         #[Cache(smaxage: 3600)]
     -    #[Route('/conference_header', name: 'conference_header')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference_header', name: 'conference_header')]
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -44,7 +44,7 @@ class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    @@ -46,9 +46,9 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
+         #[RateLimit('comment_submission', methods: ['POST'])]
     -    #[Route('/conference/{slug}', name: 'conference')]
     +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
          public function show(
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
 
 Ми вже майже завершили. У нас більше немає маршруту, який збігається з ``/``. Додаймо його назад і зробімо перенаправлення на ``/en/``:
@@ -114,9 +115,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,6 +28,12 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -27,6 +27,12 @@ final class ConferenceController extends AbstractController
          ) {
          }
 
@@ -126,9 +127,9 @@
     +        return $this->redirectToRoute('homepage', ['_locale' => 'en']);
     +    }
     +
+         #[Cache(smaxage: 3600)]
          #[Route('/{_locale<%app.supported_locales%>}/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
-         {
 
 Тепер, коли всі основні маршрути враховують особливості локалі, зверніть увагу, що створені URL-адреси на сторінках автоматично враховують поточну локаль.
 
@@ -144,8 +145,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -34,6 +34,16 @@
                                          Admin
                                      </a>
@@ -175,8 +176,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -37,7 +37,7 @@
      <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
@@ -204,8 +205,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -37,7 +37,7 @@
      <li class="nav-item dropdown">
          <a class="nav-link dropdown-toggle" href="#" id="dropdown-language" role="button"
@@ -236,8 +237,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
     @@ -20,7 +20,7 @@
                  <nav class="navbar navbar-expand-xl navbar-light bg-light">
                      <div class="container mt-4 mb-3">
@@ -247,8 +248,8 @@
                          </a>
 
                          <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#header-menu" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Show/Hide navigation">
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -4,7 +4,7 @@
 
      {% block body %}
@@ -316,8 +317,8 @@
     :caption: patch_file
     :class: ignore
 
-    --- a/translations/messages+intl-icu.fr.xlf
-    +++ b/translations/messages+intl-icu.fr.xlf
+    --- i/translations/messages+intl-icu.fr.xlf
+    +++ w/translations/messages+intl-icu.fr.xlf
     @@ -7,15 +7,15 @@
          <body>
            <trans-unit id="eOy4.6V" resname="Conference Guestbook">
@@ -415,8 +416,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -44,7 +44,7 @@
                              </div>
                          </div>
@@ -434,8 +435,8 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/translations/messages+intl-icu.fr.xlf
-    +++ b/translations/messages+intl-icu.fr.xlf
+    --- i/translations/messages+intl-icu.fr.xlf
+    +++ w/translations/messages+intl-icu.fr.xlf
     @@ -17,6 +17,10 @@
              <source>Conference Guestbook</source>
              <target>Livre d'Or pour Conferences</target>
@@ -477,10 +478,10 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
-    @@ -11,7 +11,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testIndex()
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
+    @@ -16,7 +16,7 @@ class ConferenceControllerTest extends WebTestCase
+         public function testIndex(): void
          {
              $client = static::createClient();
     -        $client->request('GET', '/');
@@ -488,25 +489,25 @@
 
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
-    @@ -20,7 +20,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testCommentSubmission()
-         {
-             $client = static::createClient();
-    -        $client->request('GET', '/conference/amsterdam-2019');
-    +        $client->request('GET', '/en/conference/amsterdam-2019');
+    @@ -29,7 +29,7 @@ class ConferenceControllerTest extends WebTestCase
+             $berlin = ConferenceFactory::createOne(['city' => 'Berlin', 'year' => '2021', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $berlin]);
+
+    -        $client->request('GET', '/conference/berlin-2021');
+    +        $client->request('GET', '/en/conference/berlin-2021');
              $client->submitForm('Submit', [
-                 'comment_form[author]' => 'Fabien',
-                 'comment_form[text]' => 'Some feedback from an automated functional test',
-    @@ -41,7 +41,7 @@ class ConferenceControllerTest extends WebTestCase
-         public function testConferencePage()
-         {
-             $client = static::createClient();
+                 'comment[author]' => 'Fabien',
+                 'comment[text]' => 'Some feedback from an automated functional test',
+    @@ -50,7 +50,7 @@ class ConferenceControllerTest extends WebTestCase
+             ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+             CommentFactory::createOne(['conference' => $amsterdam]);
+
     -        $crawler = $client->request('GET', '/');
     +        $crawler = $client->request('GET', '/en/');
 
              $this->assertCount(2, $crawler->filter('h4'));
 
-    @@ -50,6 +50,6 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -59,6 +59,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertPageTitleContains('Amsterdam');
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Amsterdam 2019');

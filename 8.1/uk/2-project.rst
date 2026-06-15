@@ -60,7 +60,7 @@
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=6.2-1 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 У цьому репозиторії міститься весь код, який зустрічається у цій книзі.
 
