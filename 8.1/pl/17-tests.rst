@@ -28,51 +28,50 @@ Pisanie testów jednostkowych
 
     $ symfony console make:test TestCase SpamCheckerTest
 
-Testowanie SpamCheckera jest niemałym wyzwaniem, ponieważ nie chcemy się łączyć z prawdziwym API Akismet. Będziemy musieli stworzyć *atrapę* (ang. mock).
+Testowanie SpamCheckera jest niemałym wyzwaniem, ponieważ z pewnością nie chcemy łączyć się z API OpenAI: byłoby to wolne, kosztowne, a odpowiedzi nie byłyby nawet deterministyczne. Zastąpimy *platformę* atrapą.
 
 .. index::
     single: Mock
 
-Napiszmy nasz pierwszy test dla przypadku, kiedy API zwraca błąd w odpowiedzi:
+Napiszmy nasz pierwszy test dla przypadku, gdy model jest nieosiągalny:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/SpamCheckerTest.php
-    +++ b/tests/SpamCheckerTest.php
-    @@ -2,12 +2,26 @@
+    --- i/tests/SpamCheckerTest.php
+    +++ w/tests/SpamCheckerTest.php
+    @@ -2,12 +2,25 @@
 
      namespace App\Tests;
 
     +use App\Entity\Comment;
     +use App\SpamChecker;
      use PHPUnit\Framework\TestCase;
-    +use Symfony\Component\HttpClient\MockHttpClient;
-    +use Symfony\Component\HttpClient\Response\MockResponse;
-    +use Symfony\Contracts\HttpClient\ResponseInterface;
+    +use Symfony\AI\Agent\Agent;
+    +use Symfony\AI\Platform\Exception\RuntimeException;
+    +use Symfony\AI\Platform\Test\InMemoryPlatform;
 
      class SpamCheckerTest extends TestCase
      {
     -    public function testSomething(): void
-    +    public function testSpamScoreWithInvalidRequest(): void
+    +    public function testSpamScoreWhenTheModelIsDown(): void
          {
     -        $this->assertTrue(true);
     +        $comment = new Comment();
-    +        $comment->setCreatedAtValue();
-    +        $context = [];
+    +        $comment->setAuthor('Fabien');
+    +        $comment->setEmail('fabien@example.com');
+    +        $comment->setText('Such a nice conference!');
     +
-    +        $client = new MockHttpClient([new MockResponse('invalid', ['response_headers' => ['x-akismet-debug-help: Invalid key']])]);
-    +        $checker = new SpamChecker($client, 'abcde');
+    +        $platform = new InMemoryPlatform(fn () => throw new RuntimeException('The model is down.'));
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-5-mini'));
     +
-    +        $this->expectException(\RuntimeException::class);
-    +        $this->expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
-    +        $checker->getSpamScore($comment, $context);
+    +        $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
      }
 
-Klasa ``MockHttpClient`` pozwala na stworzenie atrapy (ang. "mock") dla dowolnego serwera HTTP. Jako argument przyjmuje ona tablicę instancji ``MockResponse`` z oczekiwaną odpowiedzią i nagłówkami.
+Klasa ``InMemoryPlatform`` implementuje interfejs platformy bez wywoływania żadnego zewnętrznego API. Na podstawie obiektu wywoływalnego (ang. callable) może symulować dowolne zachowanie, w tym błędy. Opakowujemy ją w prawdziwego ``Agent``, aby logika ``SpamChecker`` była testowana naprawdę.
 
-Następnie wywołujemy ``getSpamScore()`` i przez metodę ``expectException()`` w PHPUnit sprawdzamy, czy otrzymaliśmy wyjątek.
+Gdy model jest niedostępny, komentarze muszą trafić do moderatora-człowieka: oczekiwany wynik to ``1``.
 
 Uruchom testy, by sprawdzić, czy wykonują się poprawnie:
 
@@ -83,46 +82,47 @@ Uruchom testy, by sprawdzić, czy wykonują się poprawnie:
 .. index::
     single: PHPUnit;Data Provider
     single: Data Provider
-    single: Attributes;@dataProvider
+    single: Attributes;DataProvider
 
 Dodajmy testy dla przypadku, gdy wszystko przejdzie bezbłędnie (tzw. happy path):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/SpamCheckerTest.php
-    +++ b/tests/SpamCheckerTest.php
-    @@ -24,4 +24,32 @@ class SpamCheckerTest extends TestCase
-             $this->expectExceptionMessage('Unable to check for spam: invalid (Invalid key).');
-             $checker->getSpamScore($comment, $context);
+    --- i/tests/SpamCheckerTest.php
+    +++ w/tests/SpamCheckerTest.php
+    @@ -4,6 +4,7 @@ namespace App\Tests;
+
+     use App\Entity\Comment;
+     use App\SpamChecker;
+    +use PHPUnit\Framework\Attributes\DataProvider;
+     use PHPUnit\Framework\TestCase;
+     use Symfony\AI\Agent\Agent;
+     use Symfony\AI\Platform\Exception\RuntimeException;
+    @@ -23,4 +24,25 @@ class SpamCheckerTest extends TestCase
+
+             $this->assertSame(1, $checker->getSpamScore($comment, []));
          }
     +
-    +    /**
-    +     * @dataProvider provideComments
-    +     */
-    +    public function testSpamScore(int $expectedScore, ResponseInterface $response, Comment $comment, array $context)
+    +    #[DataProvider('provideComments')]
+    +    public function testSpamScore(int $expectedScore, string $answer): void
     +    {
-    +        $client = new MockHttpClient([$response]);
-    +        $checker = new SpamChecker($client, 'abcde');
+    +        $comment = new Comment();
+    +        $comment->setAuthor('Fabien');
+    +        $comment->setEmail('fabien@example.com');
+    +        $comment->setText('Such a nice conference!');
     +
-    +        $score = $checker->getSpamScore($comment, $context);
-    +        $this->assertSame($expectedScore, $score);
+    +        $platform = new InMemoryPlatform($answer);
+    +        $checker = new SpamChecker(new Agent($platform, 'gpt-5-mini'));
+    +
+    +        $this->assertSame($expectedScore, $checker->getSpamScore($comment, []));
     +    }
     +
     +    public static function provideComments(): iterable
     +    {
-    +        $comment = new Comment();
-    +        $comment->setCreatedAtValue();
-    +        $context = [];
-    +
-    +        $response = new MockResponse('', ['response_headers' => ['x-akismet-pro-tip: discard']]);
-    +        yield 'blatant_spam' => [2, $response, $comment, $context];
-    +
-    +        $response = new MockResponse('true');
-    +        yield 'spam' => [1, $response, $comment, $context];
-    +
-    +        $response = new MockResponse('false');
-    +        yield 'ham' => [0, $response, $comment, $context];
+    +        yield 'blatant_spam' => [2, 'blatant spam'];
+    +        yield 'maybe_spam' => [1, 'Maybe spam.'];
+    +        yield 'ham' => [0, 'ham'];
     +    }
      }
 
@@ -150,7 +150,7 @@ Stwórz test funkcjonalny dla kontrolera Conference:
 
     class ConferenceControllerTest extends WebTestCase
     {
-        public function testIndex()
+        public function testIndex(): void
         {
             $client = static::createClient();
             $client->request('GET', '/');
@@ -196,12 +196,12 @@ Domyślnie, PHPUnit w środowisku Symfony o nazwie ``test``, tak jak zostało to
 
 .. index:: Command;secrets:set
 
-Aby nasz test zadziałał, musimy ustawić poufny klucz ``AKISMET_KEY`` dla środowiska ``test``:
+Aby nasz test zadziałał, musimy ustawić poufny klucz ``OPENAI_API_KEY`` dla środowiska ``test``:
 
 .. code-block:: terminal
-    :class: answers(AKISMET_KEY_VALUE)
+    :class: answers(OPENAI_API_KEY_VALUE)
 
-    $ symfony console secrets:set AKISMET_KEY --env=test
+    $ symfony console secrets:set OPENAI_API_KEY --env=test
 
 Praca z testową bazą danych
 -----------------------------
@@ -252,130 +252,78 @@ Jeżeli teraz uruchomisz testy, PHPUnit nie będzie używał Twojej deweloperski
 
     Kiedy test kończy się niepowodzeniem, przydatny może okazać się wgląd do obiektu Response. Możesz się do niego dostać przez ``$client->getResponse()`` i użyć ``echo`` by sprawdzić jak on wygląda.
 
-Definiowanie danych testowych (ang. fixtures)
----------------------------------------------
+Definiowanie fabryk (ang. factories)
+------------------------------------
 
 .. index::
-    single: Doctrine;Fixtures
+    single: Foundry
     single: Fixtures
+    single: Test;Factories
+    single: Command;make:factory
 
-Aby móc przetestować listę komentarzy, stronicowanie i wysyłanie formularza, musimy wypełnić bazę danych jakimiś danymi. Dodatkowo chcemy, aby te dane były niezmienne pomiędzy poszczególnymi testami. Dane testowe (ang. fixtures) są dokładnie tym, czego potrzebujemy.
+Aby móc przetestować listę komentarzy, stronicowanie i wysyłanie formularza, musimy wypełnić bazę danych jakimiś danymi. A żeby testy były od siebie niezależne, każdy test powinien tworzyć dokładnie taki zestaw danych, jakiego potrzebuje. *Fabryki obiektów* (ang. object factories) są do tego idealnym narzędziem.
 
-Zainstaluj Doctrine Fixtures Bundle:
+Zainstaluj Zenstruck Foundry:
 
 .. code-block:: terminal
 
-    $ symfony composer req orm-fixtures --dev
+    $ symfony composer req foundry --dev
 
-Podczas instalacji został utworzony nowy folder ``src/DataFixtures/`` z przykładową klasą, gotową do zmodyfikowania. Dodajmy dwie konferencje i jeden komentarz:
+Wygeneruj fabrykę dla każdej encji, której potrzebują testy:
+
+.. code-block:: terminal
+
+    $ symfony console make:factory Conference
+
+.. code-block:: terminal
+
+    $ symfony console make:factory Comment
+
+Fabryka opisuje, jak zbudować poprawną encję: dla każdej właściwości generowana jest wartość domyślna dzięki bibliotece Faker. Utworzenie obiektu za pomocą fabryki również go zapisuje. Dostosuj wartości domyślne konferencji, aby były bardziej realistyczne:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
-    @@ -2,6 +2,8 @@
-
-     namespace App\DataFixtures;
-
-    +use App\Entity\Comment;
-    +use App\Entity\Conference;
-     use Doctrine\Bundle\FixturesBundle\Fixture;
-     use Doctrine\Persistence\ObjectManager;
-
-    @@ -9,8 +11,24 @@ class AppFixtures extends Fixture
+    --- i/src/Factory/ConferenceFactory.php
+    +++ w/src/Factory/ConferenceFactory.php
+    @@ -34,9 +34,9 @@ final class ConferenceFactory extends PersistentObjectFactory
+     protected function defaults(): array|callable
      {
-         public function load(ObjectManager $manager): void
-         {
-    -        // $product = new Product();
-    -        // $manager->persist($product);
-    +        $amsterdam = new Conference();
-    +        $amsterdam->setCity('Amsterdam');
-    +        $amsterdam->setYear('2019');
-    +        $amsterdam->setIsInternational(true);
-    +        $manager->persist($amsterdam);
-    +
-    +        $paris = new Conference();
-    +        $paris->setCity('Paris');
-    +        $paris->setYear('2020');
-    +        $paris->setIsInternational(false);
-    +        $manager->persist($paris);
-    +
-    +        $comment1 = new Comment();
-    +        $comment1->setConference($amsterdam);
-    +        $comment1->setAuthor('Fabien');
-    +        $comment1->setEmail('fabien@example.com');
-    +        $comment1->setText('This was a great conference.');
-    +        $manager->persist($comment1);
-
-             $manager->flush();
-         }
-
-W trakcie ładowania danych testowych wszystkie dotychczasowe dane są usuwane. Aby uniknąć usunięcia konta administracyjnego, musimy dodać je do naszych danych testowych (ang. fixtures):
-
-.. code-block:: diff
-
-    --- a/src/DataFixtures/AppFixtures.php
-    +++ b/src/DataFixtures/AppFixtures.php
-    @@ -2,13 +2,20 @@
-
-     namespace App\DataFixtures;
-
-    +use App\Entity\Admin;
-     use App\Entity\Comment;
-     use App\Entity\Conference;
-     use Doctrine\Bundle\FixturesBundle\Fixture;
-     use Doctrine\Persistence\ObjectManager;
-    +use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-
-     class AppFixtures extends Fixture
-     {
-    +    public function __construct(
-    +        private PasswordHasherFactoryInterface $passwordHasherFactory,
-    +    ) {
-    +    }
-    +
-         public function load(ObjectManager $manager): void
-         {
-             $amsterdam = new Conference();
-    @@ -30,6 +37,12 @@ class AppFixtures extends Fixture
-             $comment1->setText('This was a great conference.');
-             $manager->persist($comment1);
-
-    +        $admin = new Admin();
-    +        $admin->setRoles(['ROLE_ADMIN']);
-    +        $admin->setUsername('admin');
-    +        $admin->setPassword($this->passwordHasherFactory->getPasswordHasher(Admin::class)->hash('admin'));
-    +        $manager->persist($admin);
-    +
-             $manager->flush();
-         }
+         return [
+    -        'city' => self::faker()->text(255),
+    +        'city' => self::faker()->city(),
+             'isInternational' => self::faker()->boolean(),
+    -        'slug' => self::faker()->text(255),
+    -        'year' => self::faker()->text(4),
+    +        'slug' => '-',
+    +        'year' => self::faker()->year(),
+         ];
      }
 
-.. index::
-    single: Command;debug:autowiring
-    single: Debug;Container
-    single: Container;Debug
+Ustawienie sluga na ``-`` pozwala nasłuchiwaczowi encji, który napisaliśmy przy dodawaniu slugów, obliczyć prawdziwą wartość: konferencja utworzona z miastem ``Amsterdam`` i rokiem ``2019`` automatycznie otrzymuje slug ``amsterdam-2019``.
 
-.. tip::
+Zrób to samo dla komentarzy:
 
-    Jeśli nie pamiętasz, którego serwisu musisz użyć do danego zadania, użyj ``debug:autowiring`` ze słowami kluczowymi:
+.. code-block:: diff
+    :caption: patch_file
 
-    .. code-block:: terminal
+    --- i/src/Factory/CommentFactory.php
+    +++ w/src/Factory/CommentFactory.php
+    @@ -34,10 +34,10 @@ final class CommentFactory extends PersistentObjectFactory
+     protected function defaults(): array|callable
+     {
+         return [
+    -        'author' => self::faker()->text(255),
+    +        'author' => self::faker()->name(),
+             'conference' => ConferenceFactory::new(),
+             'createdAt' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+    -        'email' => self::faker()->text(255),
+    +        'email' => self::faker()->email(),
+             'text' => self::faker()->text(),
+         ];
+     }
 
-        $ symfony console debug:autowiring hasher
-
-Ładowanie danych testowych (ang. fixtures)
--------------------------------------------
-
-.. index:: ! Command;doctrine:fixtures:load
-
-Załaduj dane testowe dla środowiska/bazy danych ``test``:
-
-.. code-block:: terminal
-    :class: answers(y)
-
-    $ symfony console doctrine:fixtures:load --env=test
+Zwróć uwagę na domyślną wartość ``conference``: gdy komentarz jest tworzony bez jawnej konferencji, Foundry tworzy ją w locie.
 
 Przeszukiwanie (ang. crawling) strony w testach funkcjonalnych
 --------------------------------------------------------------
@@ -393,16 +341,39 @@ Dodaj nowy test, który kliknie w odnośnik do strony konferencji na stronie gł
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
-    @@ -14,4 +14,19 @@ class ConferenceControllerTest extends WebTestCase
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
+    @@ -2,10 +2,17 @@
+
+     namespace App\Tests\Controller;
+
+    +use App\Factory\CommentFactory;
+    +use App\Factory\ConferenceFactory;
+     use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+    +use Zenstruck\Foundry\Test\Factories;
+    +use Zenstruck\Foundry\Test\ResetDatabase;
+
+     class ConferenceControllerTest extends WebTestCase
+     {
+    +    use Factories;
+    +    use ResetDatabase;
+    +
+         public function testIndex(): void
+         {
+             $client = static::createClient();
+    @@ -14,4 +21,24 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertResponseIsSuccessful();
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
     +
-    +    public function testConferencePage()
+    +    public function testConferencePage(): void
     +    {
     +        $client = static::createClient();
+    +
+    +        $amsterdam = ConferenceFactory::createOne(['city' => 'Amsterdam', 'year' => '2019', 'isInternational' => true]);
+    +        ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+    +        CommentFactory::createOne(['conference' => $amsterdam]);
+    +
     +        $crawler = $client->request('GET', '/');
     +
     +        $this->assertCount(2, $crawler->filter('h4'));
@@ -416,7 +387,11 @@ Dodaj nowy test, który kliknie w odnośnik do strony konferencji na stronie gł
     +    }
      }
 
+Cecha (ang. trait) ``Factories`` włącza fabryki w testach, a ``ResetDatabase`` resetuje bazę danych na początku każdego uruchomienia testów.
+
 Opiszmy prostymi słowami, co się dzieje w tym teście:
+
+* Test tworzy dokładnie taki zestaw danych, jakiego potrzebuje: dwie konferencje i jeden komentarz, za pomocą fabryk;
 
 * Tak jak w pierwszym teście, otwieramy stronę główną;
 
@@ -451,22 +426,26 @@ Chcesz wejść na wyższy poziom? Spróbuj dodać nowy komentarz ze zdjęciem pr
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
-    @@ -29,4 +29,19 @@ class ConferenceControllerTest extends WebTestCase
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
+    @@ -41,4 +41,23 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertSelectorTextContains('h2', 'Amsterdam 2019');
              $this->assertSelectorExists('div:contains("There are 1 comments")');
          }
     +
-    +    public function testCommentSubmission()
+    +    public function testCommentSubmission(): void
     +    {
     +        $client = static::createClient();
-    +        $client->request('GET', '/conference/amsterdam-2019');
+    +
+    +        $berlin = ConferenceFactory::createOne(['city' => 'Berlin', 'year' => '2021', 'isInternational' => false]);
+    +        CommentFactory::createOne(['conference' => $berlin]);
+    +
+    +        $client->request('GET', '/conference/berlin-2021');
     +        $client->submitForm('Submit', [
-    +            'comment_form[author]' => 'Fabien',
-    +            'comment_form[text]' => 'Some feedback from an automated functional test',
-    +            'comment_form[email]' => 'me@automat.ed',
-    +            'comment_form[photo]' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
+    +            'comment[author]' => 'Fabien',
+    +            'comment[text]' => 'Some feedback from an automated functional test',
+    +            'comment[email]' => 'me@automat.ed',
+    +            'comment[photo]' => dirname(__DIR__, 2).'/public/images/under-construction.gif',
     +        ]);
     +        $this->assertResponseRedirects();
     +        $client->followRedirect();
@@ -495,18 +474,13 @@ Jeżeli chcesz sprawdzić wyniki w przeglądarce, zatrzymaj serwer WWW i uruchom
     :align: center
     :figclass: with-browser
 
-Ponowne ładowanie danych testowych (ang. fixtures)
----------------------------------------------------
+Ponowne uruchamianie testów
+---------------------------
 
-.. index::
-    single: Command;doctrine:fixtures:load
-
-Jeśli uruchomisz testy drugi raz, powinny one zakończyć się niepowodzeniem. Ponieważ w bazie danych znajduje się teraz więcej komentarzy, asercja sprawdzająca liczbę komentarzy nie będzie działać poprawnie. Musimy zresetować stan bazy danych pomiędzy każdym uruchomieniem poprzez załadowanie danych testowych (ang. fixtures):
+Jeśli uruchomisz testy drugi raz, nadal przechodzą: cecha ``ResetDatabase`` resetuje bazę danych na początku każdego uruchomienia testów, a każdy test tworzy dokładnie taki zestaw danych, jakiego potrzebuje. Nie ma współdzielonego stanu ani pozostałości z poprzedniego uruchomienia:
 
 .. code-block:: terminal
-    :class: answers(y)
 
-    $ symfony console doctrine:fixtures:load --env=test
     $ symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
 Automatyzacja pracy (ang. workflow) z pomocą pliku Makefile
@@ -515,10 +489,7 @@ Automatyzacja pracy (ang. workflow) z pomocą pliku Makefile
 .. index::
     single: Makefile
 
-Zapamiętywanie sekwencji poleceń do przeprowadzenia testów jest irytujące. Jednym z rozwiązań może być spisanie ich, jednak dokumentacja powinna być ostatecznością. Może zamiast tego powinniśmy zautomatyzować tę codzienną czynność? Byłaby to forma dokumentacji oraz ułatwienie i przyspieszenie pracy dla innych.
-
-.. index::
-    single: Command;doctrine:fixtures:load
+Zapamiętywanie sekwencji poleceń do przeprowadzenia testów jest irytujące. Jednym z rozwiązań może być spisanie ich, jednak dokumentacja powinna być ostatecznością. Może zamiast tego powinniśmy zautomatyzować tę codzienną czynność? Byłaby to forma dokumentacji oraz ułatwienie i przyspieszenie pracy dla innych.
 
 Używanie ``Makefile`` jest jednym ze sposobów zautomatyzowania poleceń:
 
@@ -531,7 +502,6 @@ Używanie ``Makefile`` jest jednym ze sposobów zautomatyzowania poleceń:
     	symfony console doctrine:database:drop --force --env=test || true
     	symfony console doctrine:database:create --env=test
     	symfony console doctrine:migrations:migrate -n --env=test
-    	symfony console doctrine:fixtures:load -n --env=test
     	symfony php bin/phpunit $(MAKECMDGOALS)
     .PHONY: tests
 
@@ -539,7 +509,7 @@ Używanie ``Makefile`` jest jednym ze sposobów zautomatyzowania poleceń:
 
     Wcięcia w regułach pliku Makefile **muszą** składać się z pojedynczego znaku tabulacji zamiast spacji.
 
-Zwróć uwagę na flagę ``-n`` przy poleceniu Doctrine; jest to globalna flaga dla poleceń Symfony, która sprawia, że nie są one interaktywne.
+Zwróć uwagę na flagę ``-n`` przy poleceniu Doctrine; jest to globalna flaga dla poleceń Symfony, która sprawia, że nie są one interaktywne.
 
 Kiedykolwiek będziesz chciał uruchomić testy, użyj ``make tests``:
 
@@ -560,15 +530,20 @@ Przenieś test ``testConferencePage`` tak, by znajdował się za testem ``testCo
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
-    @@ -15,21 +15,6 @@ class ConferenceControllerTest extends WebTestCase
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
+    @@ -22,26 +22,6 @@ class ConferenceControllerTest extends WebTestCase
              $this->assertSelectorTextContains('h2', 'Give your feedback');
          }
 
-    -    public function testConferencePage()
+    -    public function testConferencePage(): void
     -    {
     -        $client = static::createClient();
+    -
+    -        $amsterdam = ConferenceFactory::createOne(['city' => 'Amsterdam', 'year' => '2019', 'isInternational' => true]);
+    -        ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+    -        CommentFactory::createOne(['conference' => $amsterdam]);
+    -
     -        $crawler = $client->request('GET', '/');
     -
     -        $this->assertCount(2, $crawler->filter('h4'));
@@ -581,17 +556,23 @@ Przenieś test ``testConferencePage`` tak, by znajdował się za testem ``testCo
     -        $this->assertSelectorExists('div:contains("There are 1 comments")');
     -    }
     -
-         public function testCommentSubmission()
+         public function testCommentSubmission(): void
          {
              $client = static::createClient();
-    @@ -44,4 +29,19 @@ class ConferenceControllerTest extends WebTestCase
+    @@ -41,5 +22,25 @@ class ConferenceControllerTest extends WebTestCase
+             $this->assertResponseRedirects();
              $client->followRedirect();
              $this->assertSelectorExists('div:contains("There are 2 comments")');
          }
     +
-    +    public function testConferencePage()
+    +    public function testConferencePage(): void
     +    {
     +        $client = static::createClient();
+    +
+    +        $amsterdam = ConferenceFactory::createOne(['city' => 'Amsterdam', 'year' => '2019', 'isInternational' => true]);
+    +        ConferenceFactory::createOne(['city' => 'Paris', 'year' => '2020', 'isInternational' => false]);
+    +        CommentFactory::createOne(['conference' => $amsterdam]);
+    +
     +        $crawler = $client->request('GET', '/');
     +
     +        $this->assertCount(2, $crawler->filter('h4'));
@@ -619,7 +600,7 @@ Aby resetować bazę danych pomiędzy testami, zainstaluj Doctrine Test Bundle:
 
 .. code-block:: terminal
 
-    $ symfony composer req "dama/doctrine-test-bundle:^7" --dev
+    $ symfony composer req "dama/doctrine-test-bundle:^8" --dev
 
 Będziesz musiał potwierdzić wykonanie przepisu (ang. recipe), ponieważ nie jest to "oficjalnie" obsługiwany pakiet (ang. bundle):
 
@@ -664,8 +645,8 @@ Następnie możesz pisać testy z użyciem prawdziwego Google Chrome z następuj
 .. code-block:: diff
     :class: ignore
 
-    --- a/tests/Controller/ConferenceControllerTest.php
-    +++ b/tests/Controller/ConferenceControllerTest.php
+    --- i/tests/Controller/ConferenceControllerTest.php
+    +++ w/tests/Controller/ConferenceControllerTest.php
     @@ -2,13 +2,13 @@
 
      namespace App\Tests\Controller;
@@ -676,7 +657,7 @@ Następnie możesz pisać testy z użyciem prawdziwego Google Chrome z następuj
     -class ConferenceControllerTest extends WebTestCase
     +class ConferenceControllerTest extends PantherTestCase
      {
-         public function testIndex()
+         public function testIndex(): void
          {
     -        $client = static::createClient();
     +        $client = static::createPantherClient(['external_base_uri' => rtrim($_SERVER['SYMFONY_PROJECT_DEFAULT_ROUTE_URL'], '/')]);
@@ -707,11 +688,11 @@ Maker bundle umożliwia generowanie następujących typów testów, w zależnoś
 
 * ``KernelTestCase``: Podstawowe testy, które mają dostęp do usług Symfony;
 
-* `WebTestCase``: Aby uruchomić scenariusze oparte o zachowanie przeglądarki, ale które nie wykonują kodu JavaScript;
+* ``WebTestCase``: Aby uruchomić scenariusze oparte o zachowanie przeglądarki, ale które nie wykonują kodu JavaScript;
 
 * ``ApiTestCase``: Aby uruchomić scenariusze testów oparte o API;
 
-* `PantherTestCase``: Aby uruchomić scenariusze e2e, używając prawdziwej przeglądarki lub klienta HTTP i prawdziwego serwera WWW.
+* ``PantherTestCase``: Aby uruchomić scenariusze e2e, używając prawdziwej przeglądarki lub klienta HTTP i prawdziwego serwera WWW.
 
 Uruchamianie czarnoskrzynkowych testów funkcjonalnych (ang. black box) przy użyciu Blackfire
 ----------------------------------------------------------------------------------------------
@@ -724,7 +705,9 @@ Aby dowiedzieć się więcej, zapoznaj się z rozdziałem :doc:`Wydajność <29-
 
     * `Lista asercji definiowanych przez Symfony`_ dla testów funkcjonalnych;
 
-    * `Dokumentacja PHPUnit`_
+    * `Dokumentacja PHPUnit`_;
+
+    * `Dokumentacja Foundry`_;
 
     * `Biblioteka Faker`_ do generowania danych testowych;
 
@@ -737,6 +720,7 @@ Aby dowiedzieć się więcej, zapoznaj się z rozdziałem :doc:`Wydajność <29-
 .. _`Blackfire player`: https://blackfire.io/player
 .. _`Lista asercji definiowanych przez Symfony`: https://symfony.com/doc/current/testing/functional_tests_assertions.html
 .. _`Dokumentacja PHPUnit`: https://phpunit.de/documentation.html
+.. _`Dokumentacja Foundry`: https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html
 .. _`Biblioteka Faker`: https://github.com/FakerPHP/Faker
 .. _`Dokumentacja komponentu CssSelector`: https://symfony.com/doc/current/components/css_selector.html
 .. _`Symfony Panther`: https://github.com/symfony/panther
