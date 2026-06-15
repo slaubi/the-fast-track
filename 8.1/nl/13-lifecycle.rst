@@ -315,7 +315,7 @@ Probeer meer conferenties toe te voegen in de backend en verander de stad of het
     single: Twig;path
     single: Attributes;Route
 
-De laatste wijziging is het bijwerken van de controllers en de templates om de ``slug`` van de conferentie te gebruiken voor routes, in plaats van het ``id`` van de conferentie:
+De laatste wijziging is het bijwerken van de controllers en de templates om de ``slug`` van de conferentie te gebruiken voor routes, in plaats van het ``id`` van de conferentie. Omdat de route-parameter niet langer de primaire sleutel van de entity is, vertel je ``#[MapEntity]`` welke eigenschap het moet matchen door een expliciete ``mapping`` mee te geven:
 
 .. code-block:: diff
     :caption: patch_file

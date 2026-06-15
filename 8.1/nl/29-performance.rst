@@ -288,7 +288,7 @@ API-resources profileren
 .. index::
     single: Profiling;API
 
-Het profileren van de API of de SPA kan beter vanaf de CLI worden gedaan via de Blackfire CLI Tool die je eerder hebt geïnstalleerd:
+Het profileren van de API kan beter vanaf de CLI worden gedaan via de Blackfire CLI Tool die je eerder hebt geïnstalleerd:
 
 .. code-block:: terminal
     :class: ignore

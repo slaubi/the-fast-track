@@ -26,26 +26,28 @@ Als een eerste stap, zullen we gebruikers na hun inzending direct in de browser 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
-     use Symfony\Component\HttpFoundation\Request;
-     use Symfony\Component\HttpFoundation\Response;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
      use Symfony\Component\Messenger\MessageBusInterface;
     +use Symfony\Component\Notifier\Notification\Notification;
     +use Symfony\Component\Notifier\NotifierInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
-    @@ -46,6 +48,7 @@ class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
+    @@ -45,8 +47,9 @@ final class ConferenceController extends AbstractController
              Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,
              #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
          ): Response {
              $comment = new Comment();
-    @@ -74,9 +77,15 @@ class ConferenceController extends AbstractController
+    @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
                  ];
                  $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
@@ -58,7 +60,7 @@ Als een eerste stap, zullen we gebruikers na hun inzending direct in de browser 
     +            $notifier->send(new Notification('Can you check your submission? There are some problems with it.', ['browser']));
     +        }
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 De notifier *stuurt* een *notificatie* naar de *ontvangers* via een *kanaal*.
@@ -77,8 +79,8 @@ De browsernotificatie maakt gebruik van *flash messages* via de *notification* s
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -3,6 +3,13 @@
      {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
@@ -122,8 +124,8 @@ In plaats van een e-mail te sturen via de ``MailerInterface``, om de admin op de
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -4,15 +4,15 @@ namespace App\MessageHandler;
 
      use App\ImageOptimizer;
@@ -173,9 +175,9 @@ De ``getAdminRecipients()`` method retourneert de admin-ontvangers zoals geconfi
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/notifier.yaml
-    +++ b/config/packages/notifier.yaml
-    @@ -13,4 +13,4 @@ framework:
+    --- i/config/packages/notifier.yaml
+    +++ w/config/packages/notifier.yaml
+    @@ -9,4 +9,4 @@ framework:
                  medium: ['email']
                  low: ['email']
              admin_recipients:
@@ -275,31 +277,13 @@ Doe hetzelfde voor productie:
 
     $ symfony console secrets:set SLACK_DSN --env=prod
 
-Activeer de chatter Slack support:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/notifier.yaml
-    +++ b/config/packages/notifier.yaml
-    @@ -1,7 +1,7 @@
-     framework:
-         notifier:
-    -        #chatter_transports:
-    -        #    slack: '%env(SLACK_DSN)%'
-    +        chatter_transports:
-    +            slack: '%env(SLACK_DSN)%'
-             #    telegram: '%env(TELEGRAM_DSN)%'
-             #texter_transports:
-             #    twilio: '%env(TWILIO_DSN)%'
-
 Werk de Notification class bij om berichten te routeren, afhankelijk van de tekst in de reactie (met een eenvoudige reguliere expressie):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -7,6 +7,7 @@ use Symfony\Component\Notifier\Message\EmailMessage;
      use Symfony\Component\Notifier\Notification\EmailNotificationInterface;
      use Symfony\Component\Notifier\Notification\Notification;
@@ -334,8 +318,8 @@ Net zoals voor e-mail kun je de ``ChatNotificationInterface`` implementeren om d
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,13 +3,18 @@
      namespace App\Notification;
 
@@ -393,8 +377,8 @@ Wijzig de notificatie om de review-URL te accepteren en voeg twee knoppen toe aa
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,6 +3,7 @@
      namespace App\Notification;
 
@@ -428,8 +412,8 @@ Het is nu een kwestie van wijzigingen in omgekeerde volgorde te doorlopen. Werk 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -49,7 +49,8 @@ class CommentMessageHandler
                  $this->entityManager->flush();
                  $this->bus->dispatch($message);
@@ -446,8 +430,8 @@ Zoals je kunt zien moet de review-URL onderdeel zijn van het bericht, laten we d
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Message/CommentMessage.php
-    +++ b/src/Message/CommentMessage.php
+    --- i/src/Message/CommentMessage.php
+    +++ w/src/Message/CommentMessage.php
     @@ -6,10 +6,16 @@ class CommentMessage
      {
          public function __construct(
@@ -471,12 +455,12 @@ Werk tot slot de controllers bij om de review-URL te genereren en geef deze door
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
      use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
      use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
@@ -491,17 +475,17 @@ Werk tot slot de controllers bij om de review-URL te genereren en geef deze door
              }
 
              return new Response($this->twig->render('admin/review.html.twig', [
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -18,6 +18,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -17,6 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Notifier\Notification\Notification;
      use Symfony\Component\Notifier\NotifierInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
-    @@ -75,7 +76,8 @@ class ConferenceController extends AbstractController
+    @@ -70,7 +71,8 @@ final class ConferenceController extends AbstractController
                      'referrer' => $request->headers->get('referer'),
                      'permalink' => $request->getUri(),
                  ];

@@ -75,18 +75,16 @@ De reactie-workflow kan in het ``config/packages/workflow.yaml`` bestand worden 
 .. index::
     single: Command;workflow:dump
 
-Om de workflow te valideren, genereer je een visuele weergave:
+Om de workflow te valideren, genereer je een visuele weergave in het Mermaid-formaat:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Plak de output in de `Mermaid Live Editor`_ om hem te renderen; GitHub en GitLab renderen Mermaid-diagrammen ook automatisch in Markdown-bestanden:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    Het ``dot`` command is een onderdeel van de `Graphviz`_ utility.
 
 Een workflow gebruiken
 ----------------------
@@ -230,6 +228,6 @@ Let op keuze ``8``, ``Symfony\Component\Workflow\WorkflowInterface $commentState
 
     * De `Symfony Workflow documentatie`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`Mermaid Live Editor`: https://mermaid.live/
 .. _`Workflows en State Machines`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Symfony Workflow documentatie`: https://symfony.com/doc/current/workflow.html

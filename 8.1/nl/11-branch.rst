@@ -68,47 +68,24 @@ Verander de ``session.handler_id`` configuratie en verwijs naar de database DSN 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: null
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -3,7 +3,8 @@ framework:
+         secret: '%env(APP_SECRET)%'
+
+         # Note that the session will be started ONLY if you read or write from it.
+    -    session: true
+    +    session:
     +        handler_id: '%env(resolve:DATABASE_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
+
+         #esi: true
+         #fragments: true
 
 We moeten een ``sessions`` tabel toevoegen om de gegevens in de database op te slaan. Dit doen we middels een Doctrine migratie:
 
 .. code-block:: terminal
 
     $ symfony console make:migration
-
-Wijzig het bestand en voeg de code toe om de database tabel te creëren in de ``up()`` methode:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
-    @@ -21,6 +21,15 @@ final class Version00000000000000 extends AbstractMigration
-         {
-             // this up() migration is auto-generated, please modify it to your needs
-
-    +        $this->addSql('
-    +            CREATE TABLE sessions (
-    +                sess_id VARCHAR(128) NOT NULL PRIMARY KEY,
-    +                sess_data BYTEA NOT NULL,
-    +                sess_lifetime INTEGER NOT NULL,
-    +                sess_time INTEGER NOT NULL
-    +            )
-    +        ');
-    +        $this->addSql('CREATE INDEX expiry ON sessions (sess_lifetime)');
-         }
-
-         public function down(Schema $schema): void
 
 Migreer de database:
 
@@ -122,23 +99,6 @@ Test lokaal door naar de website te surfen. Omdat er geen visuele veranderingen 
 .. note::
 
     We hebben stappen 3 t/m 5 hier niet nodig omdat we de database hergebruiken als session-storage. Het hoofdstuk over Redis laat zien hoe eenvoudig het is om nieuwe services toe te voegen, te testen en te deployen in zowel Docker als Upsun.
-
-Omdat de nieuwe tabel niet "gemanaged" is door Docker, zullen we in de Docker migratie aan moeten geven dat deze niet verwijderd moet worden in de volgende database migratie:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/doctrine.yaml
-    +++ b/config/packages/doctrine.yaml
-    @@ -5,6 +5,8 @@ doctrine:
-             # IMPORTANT: You MUST configure your server version,
-             # either here or in the DATABASE_URL env var (see .env file)
-             #server_version: '14'
-    +
-    +        schema_filter: ~^(?!session)~
-         orm:
-             auto_generate_proxy_classes: true
-             naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
 
 Commit je wijzigingen in de nieuwe branch:
 
@@ -169,7 +129,7 @@ Laten we nu een *Upsun-omgeving* maken op basis van de *Git branch*:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Dit commando creëert vervolgens een nieuwe omgeving:
 
@@ -264,7 +224,7 @@ En deploy:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Bij de deployment worden enkel de code en wijzigingen in de infrastructuur naar Upsun gepusht; de data wordt op geen enkele wijze beïnvloed.
 

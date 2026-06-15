@@ -334,6 +334,8 @@ We moeten het indienen van het formulier en het opslaan in de database afhandele
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+Merk op dat het ``Request``-object nu in de controller wordt geïnjecteerd, omdat het formulier dit nodig heeft om de ingediende gegevens te inspecteren via ``handleRequest()``.
+
 Wanneer het formulier wordt ingediend, wordt het ``Comment``-object bijgewerkt aan de hand van de ingediende gegevens.
 
 De conferentie moet dezelfde zijn als die van de URL (we hebben deze uit het formulier verwijderd).
@@ -501,7 +503,7 @@ De laatste stap is het opslaan van de geüploade bestanden op productieservers. 
 
 Niet alles is alleen-lezen in een Symfony project. Symfony doet zijn best om zoveel mogelijk cache te genereren bij het opbouwen van de container (tijdens de cache warmup fase), maar Symfony moet nog steeds de gebruikerscache kunnen schrijven, de logs, de sessies (als ze op het filesystem worden opgeslagen) en meer.
 
-Bekijk ``.platform.app.yaml``, er is al een schrijfbare *mount* voor de ``var/`` map. De ``var/`` map is de enige map waar Symfony schrijft (caches, logs, ....).
+Bekijk ``.upsun/config.yaml``, er is al een schrijfbare *mount* voor de ``var/`` map. De ``var/`` map is de enige map waar Symfony schrijft (caches, logs, ....).
 
 We maken een nieuwe mount voor geüploade foto's:
 

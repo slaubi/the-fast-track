@@ -238,7 +238,7 @@ CORS configureren
 
 Het is standaard niet mogelijk om de API aan te roepen vanaf een ander domein, vanwege het "same-origin" beveiligingsbeleid van moderne HTTP-clients. De CORS-bundle, die geïnstalleerd wordt als deel van ``composer req api``, stuurt Cross-Origin Resource Sharing-headers gebaseerd op de omgevingsvariabele ``CORS_ALLOW_ORIGIN``.
 
-Standaard laat de waarde daarvan, gedefinieerd in ``.env``, HTTP-requests toe vanaf ``localhost`` en ``127.0.0.1``. Dat is precies wat we nodig hebben voor de volgende stap, want we gaan een SPA creëren die een eigen webserver gaat hebben om de API aan te roepen.
+Standaard laat de waarde daarvan, gedefinieerd in ``.env``, HTTP-requests toe vanaf ``localhost`` en ``127.0.0.1``. Pas dit aan wanneer een applicatie die op een ander domein wordt gehost, zoals een mobiele applicatie of een externe front-end, de API moet aanroepen.
 
 .. sidebar:: Verder gaan
 

@@ -80,26 +80,24 @@ Een ander ingebouwd voorbeeld van events en listeners in actie is de levenscyclu
 
 Elke package of bundle kan ook zijn eigen events afvuren om de code uitbreidbaar te maken.
 
-Om te voorkomen dat je een configuratiebestand hebt dat beschrijft naar welke events een listener wil luisteren, maak je een *subscriber* aan. Een subscriber is een listener met een statische ``getSubscribedEvents()`` methode die zijn configuratie terugstuurt. Hierdoor kunnen subscribers automatisch geregistreerd  worden in de Symfony dispatcher.
+Om te voorkomen dat je een configuratiebestand hebt dat beschrijft naar welke events een listener wil luisteren, voeg je het ``#[AsEventListener]`` attribuut toe op de listener-class of -methode. Hierdoor kunnen listeners automatisch geregistreerd worden in de Symfony dispatcher.
 
-Een subscriber implementeren
-----------------------------
+Een listener implementeren
+--------------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Dit moet nu gesneden koek zijn, gebruik de maker bundle om een subscriber te genereren:
+Dit moet nu gesneden koek zijn, gebruik de maker bundle om een listener te genereren:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:listener TwigEventListener
 
-Het commando vraagt je naar welk event je wil luisteren. Kies het ``Symfony\Component\HttpKernel\Event\ControllerEvent`` event, dat wordt afgevuurd vlak voordat de controller wordt opgeroepen. Het is het beste moment om de ``conferences`` globale variabele te injecteren zodat Twig er toegang toe heeft wanneer de controller de template zal renderen. Werk jouw subscriber als volgt bij:
+Het commando vraagt je naar welk event je wil luisteren. Kies het ``Symfony\Component\HttpKernel\Event\ControllerEvent`` event, dat wordt afgevuurd vlak voordat de controller wordt opgeroepen. Het is het beste moment om de ``conferences`` globale variabele te injecteren zodat Twig er toegang toe heeft wanneer de controller de template rendert. Werk jouw listener als volgt bij:
 
 .. code-block:: diff
     :caption: patch_file

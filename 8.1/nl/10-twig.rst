@@ -159,7 +159,7 @@ Voeg een ``show()`` methode toe aan ``src/Controller/ConferenceController.php`` 
     +    }
      }
 
-Deze methode heeft bijzonder gedrag dat we nog niet gezien hebben. We vragen om een ``Conference`` instantie in de methode te injecteren. Maar er kunnen er veel van deze in de database staan. Symfony is in staat om te bepalen welke je wil op basis van het ``{id}`` dat is doorgegeven in het urlpad (de primaire sleutel van de ``conference`` tabel in de database).
+Deze methode heeft bijzonder gedrag dat we nog niet gezien hebben. We vragen om een ``Conference`` instantie in de methode te injecteren. Maar er kunnen er veel van deze in de database staan. Het ``#[MapEntity]`` attribuut vertelt Symfony om de juiste op te halen op basis van het ``{id}`` dat is doorgegeven in het urlpad (de primaire sleutel van de ``conference`` tabel in de database).
 
 Het opvragen van de reacties met betrekking tot de conferentie kan worden gedaan via de ``findBy()`` methode met als eerste argument het criterium.
 
@@ -360,7 +360,7 @@ Om de paginering in de template te beheren, geef je de Doctrine Paginator in pla
          }
      }
 
-De controller krijgt de ``offset`` uit de Request query string ( ``$request->query`` ) als een heel getal ( ``getInt()`` ), deze is standaard 0 als deze niet beschikbaar is.
+Het ``#[MapQueryParameter]`` attribuut koppelt de ``offset`` query string-parameter aan het ``$offset`` controller-argument, met standaardwaarde ``0`` als deze niet is ingesteld. Omdat de offset van de client komt, begrenzen we deze om negatieve waarden te voorkomen.
 
 De ``previous`` en ``next`` waarden worden berekend op basis van alle informatie die we hebben in de paginator.
 

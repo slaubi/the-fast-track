@@ -38,8 +38,8 @@ Naast het genereren van de ``Admin``-entity, heeft het commando ook de securityc
     :class: ignore
     :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -5,14 +5,18 @@ security:
              Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
          # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -82,10 +82,10 @@ We zullen geen eigen systeem ontwikkelen voor het aanmaken van admin accounts. W
 .. index::
     single: Command;security:hash-password
 
-Selecteer ``App\Entity\Admin``, kies vervolgens wat je wil gebruiken als wachtwoord en voer het volgende commando uit om de hash van het wachtwoord te genereren:
+Kies wat je wil gebruiken als wachtwoord en voer het volgende commando uit om de hash van het wachtwoord te genereren:
 
 .. code-block:: terminal
-    :class: answers(0||admin)
+    :class: answers(admin)
 
     $ symfony console security:hash-password
 
@@ -131,7 +131,7 @@ De beveiligingsauthenticatie configureren
 -----------------------------------------
 
 .. index::
-    single: Command;make:auth
+    single: Command;make:security:form-login
     single: Security;Authenticator
     single: Security;Form Login
     single: Login
@@ -139,14 +139,14 @@ De beveiligingsauthenticatie configureren
 
 Nu we een admin gebruiker hebben, kunnen we de admin backend beveiligen. Symfony ondersteunt verschillende authenticatiestrategieën. We kiezen voor de populaire klassieker *formulier authenticatie systeem*.
 
-Draai ``make:auth`` om de beveiligingsconfiguratie bij te werken, een login template te genereren en een *authenticator* te maken:
+Draai ``make:security:form-login`` om de beveiligingsconfiguratie bij te werken, een login template te genereren en een *authenticator* te maken:
 
 .. code-block:: terminal
-    :class: answers(1||AppAuthenticator||SecurityController||yes)
+    :class: answers(SecurityController||yes)
 
-    $ symfony console make:auth
+    $ symfony console make:security:form-login
 
-Selecteer ``1`` om een inlogformulier-authenticator te genereren, noem de authenticator class ``AppAuthenticator``, de controller ``SecurityController`` en genereer een ``/logout`` URL ( ``yes`` ).
+Noem de controller ``SecurityController`` en genereer een ``/logout`` URL ( ``yes`` ).
 
 Het commando heeft de securityconfiguratie bijgewerkt om de gegenereerde classes te koppelen:
 
@@ -154,13 +154,18 @@ Het commando heeft de securityconfiguratie bijgewerkt om de gegenereerde classes
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -17,6 +17,11 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -15,7 +15,15 @@ security:
+                 security: false
              main:
                  lazy: true
-                 provider: app_user_provider
-    +            custom_authenticator: App\Security\AppAuthenticator
+    -            provider: users_in_memory
+    +            provider: app_user_provider
+    +            form_login:
+    +                login_path: app_login
+    +                check_path: app_login
+    +                enable_csrf: true
     +            logout:
     +                path: app_logout
     +                # where to redirect after logout
@@ -168,24 +173,6 @@ Het commando heeft de securityconfiguratie bijgewerkt om de gegenereerde classes
 
                  # activate different ways to authenticate
                  # https://symfony.com/doc/current/security.html#the-firewall
-
-Zoals voorgesteld door het commando, moeten we de route in de ``onAuthenticationSuccess()`` methode aanpassen om de gebruiker om te leiden wanneer hij zich succesvol aanmeldt:
-
-.. code-block:: diff
-
-    --- a/src/Security/AppAuthenticator.php
-    +++ b/src/Security/AppAuthenticator.php
-    @@ -46,9 +46,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
-                 return new RedirectResponse($targetPath);
-             }
-
-    -        // For example:
-    -        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-    -        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    +        return new RedirectResponse($this->urlGenerator->generate('admin'));
-         }
-
-         protected function getLoginUrl(Request $request): string
 
 .. index::
     single: Command;debug:router
@@ -212,9 +199,9 @@ Een securitysysteem bestaat uit twee delen: *authenticatie* en *autorisatie*. Bi
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -31,7 +31,7 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used
          access_control:
