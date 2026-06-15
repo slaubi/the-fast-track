@@ -51,7 +51,7 @@ Kroki niezbędne do urzeczywistnienia tej koncepcji są typowe:
 #. Update the PHP configuration if needed (like adding the PostgreSQL PHP
    extension);
 
-#. Zaktualizuj infrastrukturę w Dockerze i Platform.sh jeżeli jest potrzeba (dodaj usługę PostgreSQL);
+#. Zaktualizuj infrastrukturę w Dockerze i Upsun jeżeli jest potrzeba (dodaj usługę PostgreSQL);
 
 #. Przetestuj lokalnie;
 
@@ -121,7 +121,7 @@ Przetestuj lokalnie, poprzez przeglądanie strony internetowej. Ponieważ nie ma
 
 .. note::
 
-    Nie potrzebujemy tutaj kroków od 3 do 5, ponieważ ponownie używamy bazy danych jako magazynu sesji, ale rozdział o korzystaniu z Redisa pokazuje, jak proste jest dodawanie, testowanie i wdrażanie nowej usługi zarówno w Dockerze, jak i Platform.sh.
+    Nie potrzebujemy tutaj kroków od 3 do 5, ponieważ ponownie używamy bazy danych jako magazynu sesji, ale rozdział o korzystaniu z Redisa pokazuje, jak proste jest dodawanie, testowanie i wdrażanie nowej usługi zarówno w Dockerze, jak i Upsun.
 
 Ponieważ nowa tabela nie jest „zarządzana” przez Doctrine, musimy skonfigurować Doctrine tak, aby nie usuwał jej podczas następnej migracji bazy danych:
 
@@ -152,7 +152,7 @@ Wdrażanie gałęzi
 -------------------
 
 .. index::
-    single: Platform.sh;Environment
+    single: Upsun;Environment
 
 Przed wdrożeniem (ang. deploy) na produkcję powinniśmy przetestować gałąź na tej samej infrastrukturze, co infrastruktura produkcyjna. Powinniśmy również sprawdzić, czy wszystko działa dobrze dla środowiska ``prod`` Symfony (lokalna strona internetowa korzystała ze środowiska ``dev`` Symfony).
 
@@ -160,7 +160,7 @@ Przed wdrożeniem (ang. deploy) na produkcję powinniśmy przetestować gałąź
     single: Symfony CLI;cloud:env:delete
     single: Symfony CLI;cloud:env:create
 
-Teraz stwórzmy *środowisko Platform.sh* oparte na *gałęzi Git* :
+Teraz stwórzmy *środowisko Upsun* oparte na *gałęzi Git* :
 
 .. code-block:: terminal
     :class: hide
@@ -193,7 +193,7 @@ Po zakończeniu wdrożenia otwórz nową gałąź w przeglądarce:
 
     $ symfony cloud:url -1
 
-Zauważ, że wszystkie polecenia Platform.sh działają na bieżącej gałęzi Git. Spowoduje to otwarcie adresu URL dla gałęzi ``sessions-in-db`` - adres URL będzie wyglądał tak: ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
+Zauważ, że wszystkie polecenia Upsun działają na bieżącej gałęzi Git. Spowoduje to otwarcie adresu URL dla gałęzi ``sessions-in-db`` - adres URL będzie wyglądał tak: ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
 
 Przetestuj stronę internetową na tym nowym środowisku, powinny być widoczne wszystkie dane, które zostały stworzone w środowisku głównym (ang. master).
 
@@ -215,9 +215,9 @@ Debugowanie wdrożeń produkcyjnych przed właściwym wdrożeniem
 -----------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Debugging
+    single: Upsun;Debugging
 
-Domyślnie wszystkie środowiska Platform.sh używają tych samych ustawień, co środowisko ``master`` / ``prod`` (znane również jako środowisko ``prod`` Symfony). Pozwala to na przetestowanie aplikacji w rzeczywistych warunkach. Daje to poczucie rozwoju i testowania bezpośrednio na serwerach produkcyjnych, ale bez związanego z tym ryzyka. Przypomina mi to dawne dobre czasy, kiedy wdrożenia robiliśmy przez FTP.
+Domyślnie wszystkie środowiska Upsun używają tych samych ustawień, co środowisko ``master`` / ``prod`` (znane również jako środowisko ``prod`` Symfony). Pozwala to na przetestowanie aplikacji w rzeczywistych warunkach. Daje to poczucie rozwoju i testowania bezpośrednio na serwerach produkcyjnych, ale bez związanego z tym ryzyka. Przypomina mi to dawne dobre czasy, kiedy wdrożenia robiliśmy przez FTP.
 
 .. index::
     single: Symfony CLI;cloud:env:debug
@@ -266,7 +266,7 @@ I wdróż:
 
     $ symfony cloud:deploy
 
-Podczas wdrażania, tylko kod i zmiany w infrastrukturze są przekazywane do Platform.sh; dane nie są w żaden sposób naruszone.
+Podczas wdrażania, tylko kod i zmiany w infrastrukturze są przekazywane do Upsun; dane nie są w żaden sposób naruszone.
 
 Sprzątanie
 -----------
@@ -275,7 +275,7 @@ Sprzątanie
     single: Symfony CLI;env:delete
     single: Git;branch
 
-W końcu posprzątaj, usuwając gałąź Git i środowisko Platform.sh:
+W końcu posprzątaj, usuwając gałąź Git i środowisko Upsun:
 
 .. code-block:: terminal
 

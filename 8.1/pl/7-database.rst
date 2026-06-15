@@ -133,13 +133,13 @@ I przywróć bazę:
 
     $ symfony run psql < dump.sql
 
-Dodawanie PostgreSQL do Platform.sh
+Dodawanie PostgreSQL do Upsun
 -----------------------------------
 
 .. index::
-    single: Platform.sh;PostgreSQL
+    single: Upsun;PostgreSQL
 
-W przypadku infrastruktury produkcyjnej na Platform.sh, dodanie usługi takiej jak PostgreSQL powinno być wykonane w pliku ``.platform/services.yaml``, który został utworzony za pomocą przepisu z pakietu ``webapp``:
+W przypadku infrastruktury produkcyjnej na Upsun, dodanie usługi takiej jak PostgreSQL powinno być wykonane w pliku ``.platform/services.yaml``, który został utworzony za pomocą przepisu z pakietu ``webapp``:
 
 .. code-block:: yaml
     :caption: .platform/services.yaml
@@ -174,21 +174,21 @@ Sprawdź czy rozszerzenie ``pdo_pgsql`` jest już zainstalowane dla środowiska 
             - pdo_pgsql
             # other extensions
 
-Dostęp do bazy danych w Platform.sh
+Dostęp do bazy danych w Upsun
 ------------------------------------
 
-PostgreSQL działa teraz zarówno lokalnie poprzez Dockera, jak i na produkcji w Platform.sh.
+PostgreSQL działa teraz zarówno lokalnie poprzez Dockera, jak i na produkcji w Upsun.
 
 Jak właśnie widzieliśmy, uruchamianie ``symfony run psql`` automatycznie łączy się z bazą danych hostowaną przez Dockera dzięki zmiennym środowiskowym udostępnionym przez ``symfony run``.
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;var:expose-from-tunnel
     single: Symfony CLI;run psql
 
-Jeśli chcesz się połączyć z PostgreSQL hostowanym w kontenerach produkcyjnych, możesz otworzyć tunel SSH pomiędzy lokalnym komputerem a infrastrukturą Platform.sh:
+Jeśli chcesz się połączyć z PostgreSQL hostowanym w kontenerach produkcyjnych, możesz otworzyć tunel SSH pomiędzy lokalnym komputerem a infrastrukturą Upsun:
 
 .. code-block:: terminal
     :class: ignore
@@ -196,7 +196,7 @@ Jeśli chcesz się połączyć z PostgreSQL hostowanym w kontenerach produkcyjny
     $ symfony cloud:tunnel:open
     $ symfony var:expose-from-tunnel
 
-Domyślnie usługi Platform.sh nie są udostępniane jako zmienne środowiskowe na lokalnym komputerze. Musisz to zrobić samodzielnie, korzystając z flagi ``--expose-env-vars``. Dlaczego? Podłączenie do produkcyjnej bazy danych jest niebezpieczną operacją. Możesz w ten sposób namieszać z *prawdziwymi* danymi.
+Domyślnie usługi Upsun nie są udostępniane jako zmienne środowiskowe na lokalnym komputerze. Musisz to zrobić samodzielnie, korzystając z flagi ``--expose-env-vars``. Dlaczego? Podłączenie do produkcyjnej bazy danych jest niebezpieczną operacją. Możesz w ten sposób namieszać z *prawdziwymi* danymi.
 
 Połącz się teraz ze zdalną bazą danych PostgreSQL korzystając z ``symfony run psql``, jak poprzednio:
 
@@ -220,10 +220,10 @@ Udostępnianie zmiennych środowiskowych
 ----------------------------------------
 
 .. index::
-    single: Platform.sh;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-Docker Compose i Platform.sh dobrze współpracują z Symfony dzięki zmiennym środowiskowym.
+Docker Compose i Upsun dobrze współpracują z Symfony dzięki zmiennym środowiskowym.
 
 Sprawdź wszystkie zmienne środowiskowe udostępnione przez ``symfony`` poprzez wykonanie polecenia ``symfony var:export``:
 
@@ -241,7 +241,7 @@ Sprawdź wszystkie zmienne środowiskowe udostępnione przez ``symfony`` poprzez
 
 Zmienne środowiskowe ``PG*`` są odczytywane przez narzędzie ``psql``. A co z innymi?
 
-Kiedy tunel jest zestawiony z Platform.sh z ``var:expose-from-tunnel``, polecenie ``var:export`` zwraca również zdalne zmienne środowiskowe:
+Kiedy tunel jest zestawiony z Upsun z ``var:expose-from-tunnel``, polecenie ``var:export`` zwraca również zdalne zmienne środowiskowe:
 
 .. code-block:: terminal
     :class: ignore
@@ -254,19 +254,19 @@ Kiedy tunel jest zestawiony z Platform.sh z ``var:expose-from-tunnel``, poleceni
 Opisywanie infrastruktury
 -------------------------
 
-Być może jeszcze nie zdawałeś sobie z tego sprawy, ale posiadanie infrastruktury przechowywanej w plikach wraz z kodem bardzo pomaga. Docker i Platform.sh używają plików konfiguracyjnych do opisania infrastruktury projektu. Gdy nowa funkcja wymaga dodatkowej usługi, zmiany kodu i zmiany infrastruktury są częścią tej samej poprawki.
+Być może jeszcze nie zdawałeś sobie z tego sprawy, ale posiadanie infrastruktury przechowywanej w plikach wraz z kodem bardzo pomaga. Docker i Upsun używają plików konfiguracyjnych do opisania infrastruktury projektu. Gdy nowa funkcja wymaga dodatkowej usługi, zmiany kodu i zmiany infrastruktury są częścią tej samej poprawki.
 
 .. sidebar:: Idąc dalej
 
-    * `Usługi Platform.sh`_;
+    * `Usługi Upsun`_;
 
-    * `Tunel Platform.sh`_;
+    * `Tunel Upsun`_;
 
     * `Dokumentacja PostgreSQL`_;
 
     * `Polecenia docker-compose`_
 
-.. _`Usługi Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
-.. _`Tunel Platform.sh`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
+.. _`Usługi Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
+.. _`Tunel Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Dokumentacja PostgreSQL`: https://www.postgresql.org/docs/
 .. _`Polecenia docker-compose`: https://docs.docker.com/compose/reference/

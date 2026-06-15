@@ -41,7 +41,7 @@ Miło byłoby przenieść repozytorium na serwer Git. Dobrym wyborem będzie Git
 
 .. note::
 
-    Jeśli korzystasz z Platform.sh, masz już kopię repozytorium Git, ponieważ wykorzystuje on Git w tle, gdy używasz ``cloud:deploy``. Ale nie należy jej traktować jako kopii zapasowej projektu. Jest wykorzystywana tylko w procesie wdrażania.
+    Jeśli korzystasz z Upsun, masz już kopię repozytorium Git, ponieważ wykorzystuje on Git w tle, gdy używasz ``cloud:deploy``. Ale nie należy jej traktować jako kopii zapasowej projektu. Jest wykorzystywana tylko w procesie wdrażania.
 
 Wdrażanie na środowisko produkcyjne w sposób ciągły
 --------------------------------------------------------

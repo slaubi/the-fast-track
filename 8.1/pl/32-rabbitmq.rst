@@ -103,7 +103,7 @@ Wdrażanie RabbitMQ
 -------------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Aby dodać RabbitMQ do serwerów produkcyjnych, dodaj go do listy usług:
@@ -148,7 +148,7 @@ Dodaj odniesienie do RabbitMQ w konfiguracji kontenera oraz włącz rozszerzenie
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

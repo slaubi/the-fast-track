@@ -28,7 +28,7 @@ Ponieważ tworzymy w pełni funkcjonalną aplikację internetową, dodaliśmy ki
 
 * ``--docker``: Na komputerze lokalnym użyjemy Dockera do zarządzania usługami takimi, jak PostgreSQL. Ta opcja uruchamia wsparcie dla Dockera, dzięki czemu Symfony automatycznie doda usługi Dockera w oparciu o wymagane pakiety (na przykład usługa PostgreSQL podczas dodawania ORM lub mail catcher podczas dodawania Symfony Mailer).
 
-* ``--cloud``: Jeśli chcesz wdrożyć swój projekt na Platform.sh, ta opcja automatycznie generuje potrzebną konfigurację Platform.sh. Wykorzystanie Platform.sh jest najprostszym i preferowanym sposobem wdrażania środowisk testowych, wstępnych i produkcyjnych projektu Symfony w chmurze.
+* ``--cloud``: Jeśli chcesz wdrożyć swój projekt na Upsun, ta opcja automatycznie generuje potrzebną konfigurację Upsun. Wykorzystanie Upsun jest najprostszym i preferowanym sposobem wdrażania środowisk testowych, wstępnych i produkcyjnych projektu Symfony w chmurze.
 
 Jeśli spojrzysz na repozytorium GitHub szkieletu, zauważysz, że jest prawie puste. Zawiera tylko plik ``composer.json``, ale katalog ``guestbook`` jest pełen plików. Jak to w ogóle możliwe? Odpowiedź znajduje się w pakiecie ``symfony/flex``. Symfony Flex jest wtyczką narzędzia Composer, która podpina się do procesu instalacji. Kiedy wykryje pakiet, na który ma *przepis* (ang. recipe), wykonuje go.
 
@@ -132,18 +132,18 @@ Przygotowanie do wdrożenia dla środowiska produkcyjnego
 ---------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Initialization
+    single: Upsun;Initialization
 
 A co z wdrożeniem naszej pracy w środowisku produkcyjnym? Wiem, że nie mamy jeszcze nawet odpowiedniej strony HTML, aby powitać naszych gości, ale możliwość zobaczenia małego obrazka "w budowie" na serwerze produkcyjnym byłaby wielkim krokiem naprzód. I znasz motto: "*Wdrażaj wcześnie i często*".
 
 Możesz umieścić tę aplikację na hostingu dowolnego dostawcy wspierającego PHP... co oznacza prawie wszystkich dostępnych dostawców usług hostingowych. Sprawdź jednak kilka rzeczy: chcemy mieć najnowszą wersję PHP i możliwość hostowania usług takich jak baza danych, kolejka itp.
 
-Ja wybrałem `Platform.sh`_. Dostarcza nam wszystkiego, czego potrzebujemy, i pomaga finansować rozwój Symfony.
+Ja wybrałem `Upsun`_. Dostarcza nam wszystkiego, czego potrzebujemy, i pomaga finansować rozwój Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-Ponieważ użyliśmy opcji ``--cloud`` podczas tworzenia projektu, Platform.sh został już zainicjowany z kilkoma wymaganymi plikami, a mianowicie: ``.platform/services.yaml``, ``. platform/routes.yaml`` i ``.platform.app.yaml``.
+Ponieważ użyliśmy opcji ``--cloud`` podczas tworzenia projektu, Upsun został już zainicjowany z kilkoma wymaganymi plikami, a mianowicie: ``.platform/services.yaml``, ``. platform/routes.yaml`` i ``.platform.app.yaml``.
 
 Idziemy na produkcję
 ---------------------
@@ -154,7 +154,7 @@ Idziemy na produkcję
 
 Wdrażamy?
 
-Stwórz nowy projekt zdalny Platform.sh:
+Stwórz nowy projekt zdalny Upsun:
 
 .. code-block:: terminal
 
@@ -162,9 +162,9 @@ Stwórz nowy projekt zdalny Platform.sh:
 
 To polecenie wykonuje szereg operacji:
 
-* Uwierzytelnia Cię przy jego pierwszym uruchomieniu, używając danych do logowania serwisu Platform.sh.
+* Uwierzytelnia Cię przy jego pierwszym uruchomieniu, używając danych do logowania serwisu Upsun.
 
-* Tworzy nowy projekt na Platform.sh. Hosting pierwszego projektu, który stworzysz na platformie Platform.sh jest *bezpłatny* przez pierwsze 30 dni.
+* Tworzy nowy projekt na Upsun. Hosting pierwszego projektu, który stworzysz na platformie Upsun jest *bezpłatny* przez pierwsze 30 dni.
 
 Zatem wdrażajmy:
 
@@ -186,14 +186,14 @@ Sprawdź, czy wszystko poszło dobrze:
 
 Powinna pojawić się strona błędu 404, ale przejście pod adres: ``/images/under-construction.gif`` powinno pokazać, co do tej pory zrobiliśmy.
 
-Zauważ, że nie otrzymujesz pięknej, domyślnej strony Symfony na Platform.sh. Dlaczego? Wkrótce dowiesz się, że Symfony obsługuje kilka środowisk i Platform.sh automatycznie wdrożył kod w środowisku produkcyjnym.
+Zauważ, że nie otrzymujesz pięknej, domyślnej strony Symfony na Upsun. Dlaczego? Wkrótce dowiesz się, że Symfony obsługuje kilka środowisk i Upsun automatycznie wdrożył kod w środowisku produkcyjnym.
 
 .. index::
     single: Symfony CLI;cloud:project:delete
 
 .. tip::
 
-    Jeśli chcesz usunąć projekt na Platform.sh, użyj polecenia ``cloud:project:delete``.
+    Jeśli chcesz usunąć projekt na Upsun, użyj polecenia ``cloud:project:delete``.
 
 .. sidebar:: Idąc dalej
 
@@ -201,12 +201,12 @@ Zauważ, że nie otrzymujesz pięknej, domyślnej strony Symfony na Platform.sh.
 
     * `Lokalny serwer WWW Symfony`_;
 
-    * `Dokumentacja Platform.sh`_.
+    * `Dokumentacja Upsun`_.
 
 .. _`tego`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`szkielet projektu`: https://github.com/symfony/skeleton
-.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`oficjalnych przepisów Symfony`: https://github.com/symfony/recipes
 .. _`przepisów przekazanych przez społeczność`: https://github.com/symfony/recipes-contrib
 .. _`Lokalny serwer WWW Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Dokumentacja Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Dokumentacja Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

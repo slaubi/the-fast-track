@@ -165,7 +165,7 @@ Zdefiniuj nazwę domeny i protokół do użycia:
      services:
          # default configuration for services in *this* file
 
-Zmienna środowiskowa ``SYMFONY_DEFAULT_ROUTE_HOST`` jest lokalnie automatycznie ustawiana podczas korzystania z ``symfony`` CLI i ustalana na podstawie konfiguracji na Platform.sh.
+Zmienna środowiskowa ``SYMFONY_DEFAULT_ROUTE_HOST`` jest lokalnie automatycznie ustawiana podczas korzystania z ``symfony`` CLI i ustalana na podstawie konfiguracji na Upsun.
 
 Wiązanie trasy (ang. route) z kontrolerem
 ------------------------------------------
@@ -365,16 +365,16 @@ Symfony dostarcza asercje (ang. assertions), które ułatwiają takie testy. Prz
 
 Asercje (ang. assertions) te działają zarówno dla e-maili wysyłanych synchronicznie jak i asynchronicznie.
 
-Wysyłanie wiadomości e-mail poprzez Platform.sh
+Wysyłanie wiadomości e-mail poprzez Upsun
 -------------------------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Nie ma konfiguracji przeznaczonej dla Platform.sh. Wszystkie konta posiadają domyślnie konto Sendgrid, które jest automatycznie używane do wysyłania wiadomości e-mail.
+Nie ma konfiguracji przeznaczonej dla Upsun. Wszystkie konta posiadają domyślnie konto Sendgrid, które jest automatycznie używane do wysyłania wiadomości e-mail.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -397,11 +397,11 @@ Nie ma konfiguracji przeznaczonej dla Platform.sh. Wszystkie konta posiadają do
 
     * `Dokumentacja Symfony Framework Mailer`_;
 
-    * `Dokumentacja Platform.sh dotycząca e-maili`_.
+    * `Dokumentacja Upsun dotycząca e-maili`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Samouczek SymfonyCasts Mailer`: https://symfonycasts.com/screencast/mailer
 .. _`Dokumentacja szablonów Inky;`: https://get.foundation/emails/docs/inky.html
 .. _`Procesory zmiennych środowiskowych`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Dokumentacja Symfony Framework Mailer`: https://symfony.com/doc/current/mailer.html
-.. _`Dokumentacja Platform.sh dotycząca e-maili`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Dokumentacja Upsun dotycząca e-maili`: https://symfony.com/doc/current/cloud/services/emails.html

@@ -543,9 +543,9 @@ Wdrażanie SPA w środowisku produkcyjnym
 -----------------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh pozwala na wdrażanie wielu aplikacji w jednym projekcie. Dodanie kolejnej aplikacji można wykonać poprzez utworzenie pliku ``.platform.app.yaml`` w dowolnym podkatalogu. Utwórz taki plik w katalogu ``spa/`` o nazwie ``spa``:
+Upsun pozwala na wdrażanie wielu aplikacji w jednym projekcie. Dodanie kolejnej aplikacji można wykonać poprzez utworzenie pliku ``.platform.app.yaml`` w dowolnym podkatalogu. Utwórz taki plik w katalogu ``spa/`` o nazwie ``spa``:
 
 .. code-block:: yaml
     :caption: .platform.app.yaml
@@ -580,7 +580,7 @@ Platform.sh pozwala na wdrażanie wielu aplikacji w jednym projekcie. Dodanie ko
             NODE_VERSION=18 node-build
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Edytuj plik ``.platform/routes.yaml`` w celu przekierowania subdomeny ``spa.`` do aplikacji ``spa`` przechowywanej w katalogu głównym projektu:
 

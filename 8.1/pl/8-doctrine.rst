@@ -27,9 +27,9 @@ Zrozumienie konwencji zmiennych środowiskowych w Symfony
 
 Możesz zdefiniować zmienną środowiskową ``DATABASE_URL`` ręcznie w pliku ``.env`` lub ``.env.local``. Dzięki przepisowi (ang. recipe) pakietu, możesz bazować na przykładowej wartości zmiennej środowiskowej ``DATABASE_URL`` już wpisanej w pliku ``.env``. Pojawia się jednak problem uciążliwej ręcznej aktualizacji wpisu po każdej zmianie portu bazy danych PostgreSQL udostępnionego przez Dockera.  Lepiej więc podejść do sprawy w inny sposób.
 
-Zamiast dokonywać sztywnego ustawienia zmiennej środowiskowej ``DATABASE_URL`` w pliku, możesz poprzedzać wszystkie polecenia słowem ``symfony``. Dzięki temu wszystkie usługi działające w kontenerze Docker i/lub Platform.sh (wyłącznie jeśli mamy otwarty tunel z Platform.sh) będą automatycznie ustawione jako zmienne środowiskowe.
+Zamiast dokonywać sztywnego ustawienia zmiennej środowiskowej ``DATABASE_URL`` w pliku, możesz poprzedzać wszystkie polecenia słowem ``symfony``. Dzięki temu wszystkie usługi działające w kontenerze Docker i/lub Upsun (wyłącznie jeśli mamy otwarty tunel z Upsun) będą automatycznie ustawione jako zmienne środowiskowe.
 
-Dzięki zmiennym środowiskowym integracja Symfony z Docker Compose i Platform.sh jest bezproblemowa.
+Dzięki zmiennym środowiskowym integracja Symfony z Docker Compose i Upsun jest bezproblemowa.
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Możesz sprawdzić aktualne zmienne środowiskowe w konsoli poprzez użycie pole
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Pamiętasz *nazwę usługi* ``database``, której użyliśmy w konfiguracji Docker i Platform.sh? Nazwy usług są używane jako prefiksy do definiowania zmiennych środowiskowych, takich jak ``DATABASE_URL``. Jeśli twoje usługi są nazwane zgodnie z konwencjami Symfony, żadna dodatkowa konfiguracja nie jest potrzebna.
+Pamiętasz *nazwę usługi* ``database``, której użyliśmy w konfiguracji Docker i Upsun? Nazwy usług są używane jako prefiksy do definiowania zmiennych środowiskowych, takich jak ``DATABASE_URL``. Jeśli twoje usługi są nazwane zgodnie z konwencjami Symfony, żadna dodatkowa konfiguracja nie jest potrzebna.
 
 .. note::
 
@@ -512,7 +512,7 @@ Aktualizacja produkcyjnej bazy danych
 
 Kroki potrzebne do wykonania migracji na produkcyjnej bazie danych są takie same jak te, które już znasz: zatwierdź zmiany (ang. commit) i wdrażaj.
 
-Podczas wdrażania projektu, Platform.sh oprócz aktualizacji kodu uruchamia także migrację bazy danych, jeśli taka istnieje (wykrywa, czy istnieje polecenie ``doctrine:migrations:migrate``).
+Podczas wdrażania projektu, Upsun oprócz aktualizacji kodu uruchamia także migrację bazy danych, jeśli taka istnieje (wykrywa, czy istnieje polecenie ``doctrine:migrations:migrate``).
 
 .. sidebar:: Idąc dalej
 

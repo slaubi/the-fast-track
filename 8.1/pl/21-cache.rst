@@ -536,12 +536,12 @@ Konfiguracja  zwrotnego serwera pośredniczącego pamięci podręcznej (ang. rev
 
 .. index::
     single: HTTP Cache;Varnish
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 Zamiast używać zwrotnego proxy Symfony na produkcji, użyjemy bardziej "wydajnego" zwrotnego proxy Varnish.
 
-Dodaj Varnish do usług Platform.sh:
+Dodaj Varnish do usług Upsun:
 
 .. code-block:: diff
     :caption: patch_file
@@ -563,7 +563,7 @@ Dodaj Varnish do usług Platform.sh:
     +            path: config.vcl
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Użyj serwera Varnish jako głównego punktu wejścia na trasach:
 
@@ -654,7 +654,7 @@ Adresy URL wyglądają nieco dziwnie, ponieważ adresy zwracane przez ``env:url`
 
     * `Model walidacji pamięci podręcznej HTTP`_;
 
-    * `Pamięć podręczna HTTP (ang. HTTP cache) w Platform.sh`_.
+    * `Pamięć podręczna HTTP (ang. HTTP cache) w Upsun`_.
 
 .. _`Blackfire`: https://blackfire.io/
 .. _`dokumentacji Varnish`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
@@ -664,4 +664,4 @@ Adresy URL wyglądają nieco dziwnie, ponieważ adresy zwracane przez ``env:url`
 .. _`Specyfikacja ESI`: https://www.w3.org/TR/esi-lang
 .. _`zasoby programistów ESI`: https://www.akamai.com/us/en/support/esi.jsp
 .. _`Model walidacji pamięci podręcznej HTTP`: https://symfony.com/doc/current/http_cache/validation.html
-.. _`Pamięć podręczna HTTP (ang. HTTP cache) w Platform.sh`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
+.. _`Pamięć podręczna HTTP (ang. HTTP cache) w Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html

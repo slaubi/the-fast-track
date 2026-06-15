@@ -152,14 +152,14 @@ Wyczyść bazę danych uruchamiając polecenie:
 
     $ symfony console app:comment:cleanup
 
-Konfigurowanie harmonogramu zadań w usłudze Platform.sh
+Konfigurowanie harmonogramu zadań w usłudze Upsun
 ---------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Jedną z zalet Platform.sh jest to, że większość konfiguracji jest przechowywana w jednym pliku: ``.platform.app.yaml``. Kontenery serwisów, robotnicy czy zadania z harmonogramu są opisane razem, aby ułatwić zarządzanie nimi:
+Jedną z zalet Upsun jest to, że większość konfiguracji jest przechowywana w jednym pliku: ``.platform.app.yaml``. Kontenery serwisów, robotnicy czy zadania z harmonogramu są opisane razem, aby ułatwić zarządzanie nimi:
 
 .. code-block:: diff
     :caption: patch_file
@@ -196,7 +196,7 @@ Skonfiguruj zmienną środowiskową ``MAILTO``:
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Zauważ, że harmonogramy zadań są ustawione na wszystkich gałęziach Platform.sh. Jeśli nie chcesz uruchamiać niektórych z nich na środowiskach nieprodukcyjnych, sprawdź zmienną środowiskową ``$PLATFORM_ENVIRONMENT_TYPE``:
+Zauważ, że harmonogramy zadań są ustawione na wszystkich gałęziach Upsun. Jeśli nie chcesz uruchamiać niektórych z nich na środowiskach nieprodukcyjnych, sprawdź zmienną środowiskową ``$PLATFORM_ENVIRONMENT_TYPE``:
 
 .. code-block:: bash
     :class: ignore

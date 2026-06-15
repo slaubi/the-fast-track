@@ -156,9 +156,9 @@ Konfigurowanie Blackfire w środowisku produkcyjnym
 ---------------------------------------------------
 
 .. index::
-    single: Platform.sh;Blackfire
+    single: Upsun;Blackfire
 
-Blackfire jest domyślnie włączony dla wszystkich projektów Platform.sh.
+Blackfire jest domyślnie włączony dla wszystkich projektów Upsun.
 
 Ustaw dane uwierzytelniające *serwera* jako poufne dane **produkcyjne**:
 
@@ -192,7 +192,7 @@ Konfigurowanie serwera Varnish dla Blackfire
 --------------------------------------------
 
 .. index::
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
 
 Zanim będziesz w stanie wykonać wdrożenie potrzebne do rozpoczęcia profilowania, potrzebujesz sposobu na ominięcie pamięci podręcznej Varnish HTTP. W innym przypadku, Blackfire nigdy nie odpyta aplikacji PHP. Będziesz autoryzować tylko prośby o profilowanie pochodzące z twojej lokalnej maszyny.
 
@@ -407,7 +407,7 @@ Zarządzanie wydajnością polega nie tylko na poprawie wydajności istniejąceg
 
 Scenariusz napisany w poprzedniej sekcji może być uruchamiany automatycznie w trybie ciągłej integracji (ang. continuous integration) lub w środowisku produkcyjnym w regularnych odstępach.
 
-Platform.sh pozwala również na `uruchamianie scenariuszy`_, gdy tworzysz nową gałąź lub wdrażasz w środowisku produkcyjnym, aby automatycznie sprawdzić wydajność nowego kodu.
+Upsun pozwala również na `uruchamianie scenariuszy`_, gdy tworzysz nową gałąź lub wdrażasz w środowisku produkcyjnym, aby automatycznie sprawdzić wydajność nowego kodu.
 
 .. sidebar:: Idąc dalej
 

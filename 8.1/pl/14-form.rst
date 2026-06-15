@@ -497,7 +497,7 @@ Nie zatwierdzaj (ang. commit) jeszcze zmian! Nie chcemy przechowywać przesłany
 Przechowywanie przesłanych plików na serwerach produkcyjnych
 --------------------------------------------------------------
 
-Ostatnim zagadnieniem jest przechowywanie przesłanych plików na serwerach produkcyjnych. Dlaczego mielibyśmy robić coś specjalnego? Ponieważ większość nowoczesnych platform chmurowych używa – z różnych powodów – kontenerów tylko do odczytu. Platform.sh nie jest wyjątkiem.
+Ostatnim zagadnieniem jest przechowywanie przesłanych plików na serwerach produkcyjnych. Dlaczego mielibyśmy robić coś specjalnego? Ponieważ większość nowoczesnych platform chmurowych używa – z różnych powodów – kontenerów tylko do odczytu. Upsun nie jest wyjątkiem.
 
 Nie wszystko jest w trybie tylko do odczytu w projekcie Symfony. Bardzo staramy się umieścić jak najwięcej rzeczy w pamięci podręcznej podczas budowania kontenera (podczas fazy rozgrzewania <ang. warmup>), ale Symfony nadal musi być w stanie zapisać gdzieś zrzuty pamięci podręcznej użytkownika, logi, sesje, jeśli są one przechowywane w systemie plików, i wiele więcej.
 

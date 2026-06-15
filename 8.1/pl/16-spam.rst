@@ -230,12 +230,12 @@ Zarządzanie poufnymi danymi w środowisku produkcyjnym
 -------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-W środowisku produkcyjnym, Platform.sh obsługuje ustawianie *poufnych zmiennych środowiskowych*:
+W środowisku produkcyjnym, Upsun obsługuje ustawianie *poufnych zmiennych środowiskowych*:
 
 .. code-block:: terminal
     :class: ignore
@@ -272,7 +272,7 @@ Ponownie wprowadź klucz do API Akismet w sejfie produkcyjnym, ale z wartością
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-Ostatnim krokiem jest wysłanie klucza odszyfrowującego do Platform.sh poprzez ustawienie poufnej zmiennej:
+Ostatnim krokiem jest wysłanie klucza odszyfrowującego do Upsun poprzez ustawienie poufnej zmiennej:
 
 .. code-block:: terminal
 

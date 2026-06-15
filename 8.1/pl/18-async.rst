@@ -494,14 +494,14 @@ Przejrzyj nieudane wiadomości, a następnie ponów przetwarzanie za pomocą nas
 
     $ symfony console messenger:failed:retry
 
-Uruchamianie robotników na Platform.sh
+Uruchamianie robotników na Upsun
 ---------------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-Aby przetwarzać wiadomości od PostgreSQL, musimy bezustannie uruchamiać polecenie ``messenger:consume``. Na Platform.sh jest to rola *robotnika* (ang. worker):
+Aby przetwarzać wiadomości od PostgreSQL, musimy bezustannie uruchamiać polecenie ``messenger:consume``. Na Upsun jest to rola *robotnika* (ang. worker):
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -514,7 +514,7 @@ Aby przetwarzać wiadomości od PostgreSQL, musimy bezustannie uruchamiać polec
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Podobnie jak Symfony CLI, Platform.sh zarządza restartami i logami.
+Podobnie jak Symfony CLI, Upsun zarządza restartami i logami.
 
 .. index::
     single: Symfony CLI;cloud:logs

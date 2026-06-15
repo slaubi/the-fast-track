@@ -40,7 +40,7 @@ Jedną z największych korzyści płynących z zastosowania frameworka jest niew
 
 * 20 linii konfiguracji infrastruktury lokalnej (Docker);
 
-* 100 linii konfiguracji infrastruktury produkcyjnej (Platform.sh);
+* 100 linii konfiguracji infrastruktury produkcyjnej (Upsun);
 
 * 5 zdefiniowanych zmiennych środowiskowych.
 

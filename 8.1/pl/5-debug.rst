@@ -68,7 +68,7 @@ Na przykład wszystkie narzędzia do debugowania są włączone w środowisku ``
 
 Przełączanie się z jednego środowiska do drugiego można wykonać poprzez zmianę zmiennej środowiskowej ``APP_ENV``.
 
-Po wdrożeniu na platformę Platform.sh, środowisko (przechowywane w ``APP_ENV``) jest automatycznie przełączane na ``prod``.
+Po wdrożeniu na platformę Upsun, środowisko (przechowywane w ``APP_ENV``) jest automatycznie przełączane na ``prod``.
 
 Zarządzanie konfiguracjami środowisk
 --------------------------------------
@@ -130,8 +130,8 @@ Debugowanie w środowisku produkcyjnym
 --------------------------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 

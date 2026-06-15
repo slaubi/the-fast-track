@@ -95,7 +95,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Wreszcie, co nie mniej ważne, wykorzystamy ``symfony`` CLI, aby zwiększyć naszą produktywność. Od uruchomienia lokalnego serwera WWW, po pełną integrację Dockera i obsługę chmurowego rozwiązania poprzez Platform.sh - oszczędzimy mnóstwo czasu.
+Wreszcie, co nie mniej ważne, wykorzystamy ``symfony`` CLI, aby zwiększyć naszą produktywność. Od uruchomienia lokalnego serwera WWW, po pełną integrację Dockera i obsługę chmurowego rozwiązania poprzez Upsun - oszczędzimy mnóstwo czasu.
 
 Zainstaluj `Symfony CLI`_.
 

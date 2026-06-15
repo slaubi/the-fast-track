@@ -176,7 +176,7 @@ Wygenerowany formularz logowania jest teraz ostylowany, a Maker Bundle używa do
     :align: center
     :figclass: with-browser
 
-W środowisku produkcyjnym Platform.sh automatycznie wykrywa, że używasz Encore i kompiluje zasoby za Ciebie podczas fazy budowania aplikacji.
+W środowisku produkcyjnym Upsun automatycznie wykrywa, że używasz Encore i kompiluje zasoby za Ciebie podczas fazy budowania aplikacji.
 
 .. sidebar:: Idąc dalej
 
