@@ -536,12 +536,12 @@ HTTP-виклик заголовка конференції на даний мо
 
 .. index::
     single: HTTP Cache;Varnish
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 Замість використання зворотного проксі Symfony у середовищі розробки ми збираємося використовувати "надійніший" зворотний проксі Varnish.
 
-Додайте Varnish у сервіси Platform.sh:
+Додайте Varnish у сервіси Upsun:
 
 .. code-block:: diff
     :caption: patch_file
@@ -563,7 +563,7 @@ HTTP-виклик заголовка конференції на даний мо
     +            path: config.vcl
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Використовуйте Varnish у якості основної точки входу в маршрути:
 
@@ -654,7 +654,7 @@ URL-адреси виглядають дещо дивно через те, що 
 
     * `Модель валідації HTTP-кешу`_;
 
-    * `HTTP-Кеш у Platform.sh`_.
+    * `HTTP-Кеш у Upsun`_.
 
 .. _`Blackfire`: https://blackfire.io/
 .. _`документації по Varnish`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
@@ -664,4 +664,4 @@ URL-адреси виглядають дещо дивно через те, що 
 .. _`Специфікація ESI`: https://www.w3.org/TR/esi-lang
 .. _`ресурси ESI для розробників`: https://www.akamai.com/us/en/support/esi.jsp
 .. _`Модель валідації HTTP-кешу`: https://symfony.com/doc/current/http_cache/validation.html
-.. _`HTTP-Кеш у Platform.sh`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
+.. _`HTTP-Кеш у Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html

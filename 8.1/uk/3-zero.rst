@@ -28,7 +28,7 @@
 
 * ``--docker``: ми будемо використовувати Docker на вашому локальному комп'ютері для управління сервісами, як-от PostgreSQL. Цей параметр умикає Docker, щоб Symfony автоматично додавав сервіси Docker на основі необхідних пакетів (як-от сервіс PostgreSQL під час додавання ORM чи засіб перехоплення пошти під час додавання Symfony Mailer).
 
-* ``--cloud``: якщо ви хочете розгорнути свій проект у Platform.sh, цей параметр автоматично генерує розумну конфігурацію Platform.sh. Platformm.sh є кращим і найпростішим способом розгортання тестових, проміжних і продакшн середовищ Symfony у хмарі.
+* ``--cloud``: якщо ви хочете розгорнути свій проект у Upsun, цей параметр автоматично генерує розумну конфігурацію Upsun. Platformm.sh є кращим і найпростішим способом розгортання тестових, проміжних і продакшн середовищ Symfony у хмарі.
 
 Якщо ви поглянете на репозиторій проекту skeleton на GitHub, то помітите, що він майже порожній. Просто файл ``composer.json``. Але у каталозі ``гостьової книги`` повно файлів. Як це можливо? Відповідь знаходиться у пакеті ``symfony/flex``. Symfony Flex — це плагін Composer, який підключається до процесу встановлення. Коли він виявляє пакет, для якого у нього є *рецепт*, він виконує його.
 
@@ -132,18 +132,18 @@
 ------------------------------------------
 
 .. index::
-    single: Platform.sh;Initialization
+    single: Upsun;Initialization
 
 Як щодо розгортання нашої роботи у продакшн? Я знаю, у нас ще навіть немає відповідної HTML-сторінки, для того щоб вітати наших користувачів. Але мати можливість побачити невелике зображення з надписом "Under construction", на продакшн-сервері, було б значним кроком вперед. Ви знаєте цей девіз: *розгортайте якомога раніше і частіше*.
 
 Ви можете розмістити цей застосунок у будь-якого провайдера, що підтримує PHP... тобто, майже у всіх хостинг-провайдерів. Однак перевірте кілька речей: нам потрібна остання версія PHP і можливість розміщення сервісів, таких як база даних, черга тощо.
 
-Я зробив свій вибір, це буде `Platform.sh`_. Він забезпечує всім необхідним, і допомагає фінансувати розробку Symfony.
+Я зробив свій вибір, це буде `Upsun`_. Він забезпечує всім необхідним, і допомагає фінансувати розробку Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-Оскільки ми використовували параметр ``--cloud`` під час створення проекту, Platform.sh вже було ініціалізовано кількома файлами, необхідними для Platform.sh, а саме ``.platform/services.yaml``, ``. platform/routes.yaml`` і ``.platform.app.yaml``.
+Оскільки ми використовували параметр ``--cloud`` під час створення проекту, Upsun вже було ініціалізовано кількома файлами, необхідними для Upsun, а саме ``.platform/services.yaml``, ``. platform/routes.yaml`` і ``.platform.app.yaml``.
 
 Перехід до продакшн
 ------------------------------------
@@ -154,7 +154,7 @@
 
 Час розгортати?
 
-Створіть новий віддалений проект у Platform.sh:
+Створіть новий віддалений проект у Upsun:
 
 .. code-block:: terminal
 
@@ -162,9 +162,9 @@
 
 Ця команда робить дуже багато:
 
-* При першому запуску цієї команди, виконайте аутентифікацію за допомогою облікового запису Platform.sh, якщо це ще не зроблено.
+* При першому запуску цієї команди, виконайте аутентифікацію за допомогою облікового запису Upsun, якщо це ще не зроблено.
 
-* Це розмістить новий проект у Platform.sh (ви отримуєте 30 днів *безкоштовно* для першого створеного проекту).
+* Це розмістить новий проект у Upsun (ви отримуєте 30 днів *безкоштовно* для першого створеного проекту).
 
 Нарешті, розгортаємо:
 
@@ -186,14 +186,14 @@
 
 Ви маєте отримати помилку 404, але переглядаючи ``/images/under-construction.gif``, ви побачите результат нашої роботи.
 
-Зверніть увагу, що ви не побачите гарну, стандартну сторінку Symfony в Platform.sh. Чому? Незабаром ви дізнаєтеся, що Symfony підтримує кілька середовищ, а Platform.sh автоматично розгортає код у продакшн-середовищі.
+Зверніть увагу, що ви не побачите гарну, стандартну сторінку Symfony в Upsun. Чому? Незабаром ви дізнаєтеся, що Symfony підтримує кілька середовищ, а Upsun автоматично розгортає код у продакшн-середовищі.
 
 .. index::
     single: Symfony CLI;cloud:project:delete
 
 .. tip::
 
-    Якщо ви хочете видалити проект у Platform.sh, використовуйте команду ``cloud:project:delete``.
+    Якщо ви хочете видалити проект у Upsun, використовуйте команду ``cloud:project:delete``.
 
 .. sidebar:: Йдемо далі
 
@@ -201,12 +201,12 @@
 
     * `Локальний веб-сервер Symfony`_;
 
-    * `Документація по Platform.sh`_.
+    * `Документація по Upsun`_.
 
 .. _`те`: http://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`скелет проекту`: https://github.com/symfony/skeleton
-.. _`Platform.sh`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`офіційних рецептів Symfony`: https://github.com/symfony/recipes
 .. _`рецептів, що надаються спільнотою`: https://github.com/symfony/recipes-contrib
 .. _`Локальний веб-сервер Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Документація по Platform.sh`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Документація по Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

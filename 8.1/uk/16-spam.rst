@@ -230,12 +230,12 @@
 ------------------------------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-Для продакшн Platform.sh підтримує налаштування *чутливих змінних середовища*:
+Для продакшн Upsun підтримує налаштування *чутливих змінних середовища*:
 
 .. code-block:: terminal
     :class: ignore
@@ -272,7 +272,7 @@
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-Останній крок полягає в тому, щоб відправити ключ дешифрування у Platform.sh, встановивши чутливу змінну:
+Останній крок полягає в тому, щоб відправити ключ дешифрування у Upsun, встановивши чутливу змінну:
 
 .. code-block:: terminal
 

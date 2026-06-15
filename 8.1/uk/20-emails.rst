@@ -165,7 +165,7 @@
      services:
          # default configuration for services in *this* file
 
-Змінна середовища ``SYMFONY_DEFAULT_ROUTE_URL`` автоматично встановлюються локально під час використання ``symfony`` CLI й визначаються на основі конфігурації у Platform.sh.
+Змінна середовища ``SYMFONY_DEFAULT_ROUTE_URL`` автоматично встановлюються локально під час використання ``symfony`` CLI й визначаються на основі конфігурації у Upsun.
 
 Підключення маршруту до контролера
 -----------------------------------------------------------------
@@ -365,16 +365,16 @@ Symfony постачається із твердженнями що полегш
 
 Ці твердження працюють, коли електронні листи відправляються синхронно або асинхронно.
 
-Відправка електронних листів у Platform.sh
+Відправка електронних листів у Upsun
 ---------------------------------------------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Для Platform.sh немає конкретної конфігурації. Всі облікові записи поставляються з обліковим записом SendGrid, який автоматично використовується для відправки електронних листів.
+Для Upsun немає конкретної конфігурації. Всі облікові записи поставляються з обліковим записом SendGrid, який автоматично використовується для відправки електронних листів.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -397,11 +397,11 @@ Symfony постачається із твердженнями що полегш
 
     * `Документація по Symfony Framework Mailer`_;
 
-    * `Документація по роботі з електронною поштою у Platform.sh`_.
+    * `Документація по роботі з електронною поштою у Upsun`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Навчальний посібник SymfonyCasts: Mailer`: https://symfonycasts.com/screencast/mailer
 .. _`Документація по шаблонізатору Inky`: https://get.foundation/emails/docs/inky.html
 .. _`Процесори змінних середовища`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Документація по Symfony Framework Mailer`: https://symfony.com/doc/current/mailer.html
-.. _`Документація по роботі з електронною поштою у Platform.sh`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Документація по роботі з електронною поштою у Upsun`: https://symfony.com/doc/current/cloud/services/emails.html
