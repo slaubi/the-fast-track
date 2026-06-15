@@ -38,8 +38,8 @@
     :class: ignore
     :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -5,14 +5,18 @@ security:
              Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
          # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -82,10 +82,10 @@
 .. index::
     single: Command;security:hash-password
 
-Виберіть ``App\Entity\Admin``, а потім виберіть потрібний пароль і виконайте наступну команду, щоб згенерувати хеш пароля:
+Виберіть потрібний пароль і виконайте наступну команду, щоб згенерувати хеш пароля:
 
 .. code-block:: terminal
-    :class: answers(0||admin)
+    :class: answers(admin)
 
     $ symfony console security:hash-password
 
@@ -131,7 +131,7 @@
 -----------------------------------------------------
 
 .. index::
-    single: Command;make:auth
+    single: Command;make:security:form-login
     single: Security;Authenticator
     single: Security;Form Login
     single: Login
@@ -139,14 +139,14 @@
 
 Тепер, коли у нас є адміністратор, ми можемо захистити панель керування. Symfony підтримує декілька стратегій аутентифікації. Використовуймо класичну й популярну *систему аутентифікації за допомогою форми*.
 
-Виконайте команду ``make:auth``, щоб оновити конфігурацію безпеки, згенерувати шаблон форми входу та *аутентифікатор*:
+Виконайте команду ``make:security:form-login``, щоб оновити конфігурацію безпеки, згенерувати шаблон форми входу та *аутентифікатор*:
 
 .. code-block:: terminal
-    :class: answers(1||AppAuthenticator||SecurityController||yes)
+    :class: answers(SecurityController||yes)
 
-    $ symfony console make:auth
+    $ symfony console make:security:form-login
 
-Виберіть ``1``, щоб згенерувати аутентифікатор форми входу, назвіть клас аутентифікатора — ``AppAuthenticator``, контролер — ``SecurityController`` і згенеруйте URL-адресу ``/logout`` (``yes``).
+Назвіть контролер — ``SecurityController`` і згенеруйте URL-адресу ``/logout`` (``yes``).
 
 Команда оновила конфігурацію безпеки для налаштування згенерованих класів:
 
@@ -154,13 +154,18 @@
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -17,6 +17,11 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -15,7 +15,15 @@ security:
+                 security: false
              main:
                  lazy: true
-                 provider: app_user_provider
-    +            custom_authenticator: App\Security\AppAuthenticator
+    -            provider: users_in_memory
+    +            provider: app_user_provider
+    +            form_login:
+    +                login_path: app_login
+    +                check_path: app_login
+    +                enable_csrf: true
     +            logout:
     +                path: app_logout
     +                # where to redirect after logout
@@ -168,24 +173,6 @@
 
                  # activate different ways to authenticate
                  # https://symfony.com/doc/current/security.html#the-firewall
-
-Завдяки підказці, що з'явилася після виконання команди, можна зрозуміти, що нам потрібно налаштувати маршрут у методі ``onAuthenticationSuccess()``, щоб переспрямувати користувача після успішного входу в систему:
-
-.. code-block:: diff
-
-    --- a/src/Security/AppAuthenticator.php
-    +++ b/src/Security/AppAuthenticator.php
-    @@ -46,9 +46,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
-                 return new RedirectResponse($targetPath);
-             }
-
-    -        // For example:
-    -        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-    -        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    +        return new RedirectResponse($this->urlGenerator->generate('admin'));
-         }
-
-         protected function getLoginUrl(Request $request): string
 
 .. index::
     single: Command;debug:router
@@ -212,9 +199,9 @@
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -31,7 +31,7 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used
          access_control:

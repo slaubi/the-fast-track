@@ -21,19 +21,26 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -30,7 +30,7 @@ class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
 
-Метод ``setSharedMaxAge()`` встановлює термін дії кешу для зворотних проксі. Використовуйте ``setMaxAge()``, щоб контролювати кеш браузера. Час встановлюється у секундах (1 година = 60 хвилин = 3600 секунд).
+Атрибут ``#[Cache]`` встановлює термін дії кешу для зворотних проксі за допомогою аргументу ``smaxage``; використовуйте ``maxage``, щоб контролювати кеш браузера. Час встановлюється у секундах (1 година = 60 хвилин = 3600 секунд). І, як і у випадку з маршрутизацією чи обмеженням частоти запитів, політика кешування оголошується саме там, де вона застосовується: у контролері.
 
 Кешувати сторінку конференції складніше, оскільки вона більш динамічна. В будь-який момент хтось може додати коментар, і ніхто не захоче чекати одну годину, щоб побачити його на сайті. В таких випадках, використовуйте стратегію *HTTP-валідації*.
 
@@ -48,9 +55,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -23,3 +23,7 @@ when@test:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -22,3 +22,7 @@ when@test:
              test: true
              session:
                  storage_factory_id: session.storage.factory.mock_file
@@ -111,7 +118,7 @@
     single: HTTP Cache;ESI
     single: ESI
 
-Слухач ``TwigEventSubscriber`` впроваджує глобальну змінну в Twig для всіх об'єктів конференції. Це відбувається для кожної окремої сторінки веб-сайту. Мабуть, це прекрасне місце для оптимізації.
+Слухач ``TwigEventListener`` впроваджує глобальну змінну в Twig для всіх об'єктів конференції. Це відбувається для кожної окремої сторінки веб-сайту. Мабуть, це прекрасне місце для оптимізації.
 
 Ви не будете додавати нові конференції щодня, тому код запитує одні й ті ж дані з бази даних знову і знову.
 
@@ -124,10 +131,10 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -33,6 +33,14 @@ class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
@@ -138,9 +145,9 @@
     +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(
-             Request $request,
 
 Створіть відповідний шаблон:
 
@@ -164,9 +171,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,11 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,11 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -197,11 +204,11 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -13,7 +13,7 @@ framework:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -12,7 +12,7 @@ framework:
+             cookie_secure: auto
              cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
 
     -    #esi: true
     +    esi: true
@@ -218,9 +225,9 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,7 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,7 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -263,17 +270,16 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -38,7 +38,7 @@ class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/conference_header', name: 'conference_header')]
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
 
 Кеш тепер увімкнено для обох запитів:
 
@@ -306,7 +312,7 @@ HTTP-виклик заголовка конференції на даний мо
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Очищення HTTP-кешу для тестування
 ----------------------------------------------------------
@@ -327,19 +333,19 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -17,6 +17,8 @@ security:
-                 lazy: true
-                 provider: app_user_provider
-                 custom_authenticator: App\Security\AppAuthenticator
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -20,6 +20,8 @@ security:
+                     login_path: app_login
+                     check_path: app_login
+                     enable_csrf: true
     +            http_basic: { realm: Admin Area }
-    +            entry_point: App\Security\AppAuthenticator
+    +            entry_point: form_login
                  logout:
                      path: app_logout
                      # where to redirect after logout
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
@@ -347,7 +353,7 @@ HTTP-виклик заголовка конференції на даний мо
     +use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
     +use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
      use Symfony\Component\Workflow\WorkflowInterface;
     @@ -47,4 +49,16 @@ class AdminController extends AbstractController
                  'comment' => $comment,
@@ -386,6 +392,27 @@ HTTP-виклик заголовка конференції на даний мо
 
     Контролер не має імені маршруту, оскільки він ніколи не буде згадуватися в коді.
 
+Вимкнення HTTP-кешу в середовищі розробки
+-----------------------------------------
+
+HTTP-кеш був чудовим для перевірки наших заголовків кешування й для розуміння того, як очищати застарілі записи. Але мати ввімкнений зворотний проксі в середовищі розробки незвично, і він швидко починає заважати: відповіді віддаються з кешу, поки ви працюєте над кодом, а деякі ресурси вендорів навіть віддаються з порожнім тілом через давнє обмеження HttpCache щодо файлових відповідей.
+
+Тепер, коли все перевірено, вимкніть його; у продакшені цим займеться Varnish:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,7 +14,3 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Групування подібних маршрутів за префіксом
 --------------------------------------------------------------------------------
 
@@ -397,9 +424,9 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
-    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
+    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
      use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
 
@@ -446,14 +473,13 @@ HTTP-виклик заголовка конференції на даний мо
 
     use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
     #[AsCommand('app:step:info')]
-    class StepInfoCommand extends Command
+    class StepInfoCommand
     {
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
@@ -464,51 +490,34 @@ HTTP-виклик заголовка конференції на даний мо
     }
 
 .. index::
-    single: Command;make:command
-
-.. note::
-
-    Ви могли б використовувати ``make:command``, щоб створити команду:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
-
-.. index::
     single: Cache
     single: Components;Cache
 
 Що робити, якщо ми хочемо закешувати вивід на декілька хвилин? Використовуйте кеш Symfony.
 
-І оберніть код логікою кешу:
+Symfony впроваджує сервіси, для яких у методі ``__invoke()`` команди вказано тип, так само, як і для аргументів контролера. Оберніть код логікою кешу:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Command/StepInfoCommand.php
-    +++ b/src/Command/StepInfoCommand.php
-    @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    --- i/src/Command/StepInfoCommand.php
+    +++ w/src/Command/StepInfoCommand.php
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
      #[AsCommand('app:step:info')]
-     class StepInfoCommand extends Command
+     class StepInfoCommand
      {
-    +    public function __construct(
-    +         private CacheInterface $cache,
-    +    ) {
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
@@ -546,21 +555,22 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
-    @@ -2,3 +2,12 @@
-     database:
-         type: postgresql:14
-         disk: 1024
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -6,6 +6,15 @@ services:
+         database:
+             type: postgresql:16
+
+    +    varnish:
+    +        type: varnish:9.0
+    +        relationships:
+    +            application: 'app:http'
+    +        configuration:
+    +            vcl: !include
+    +                type: string
+    +                path: config.vcl
     +
-    +varnish:
-    +    type: varnish:6.0
-    +    relationships:
-    +        application: 'app:http'
-    +    configuration:
-    +        vcl: !include
-    +            type: string
-    +            path: config.vcl
+     applications:
 
 .. index::
     single: Upsun;Routes
@@ -570,12 +580,13 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/routes.yaml
-    +++ b/.platform/routes.yaml
-    @@ -1,2 +1,2 @@
-    -"https://{all}/": { type: upstream, upstream: "app:http" }
-    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -1,5 +1,5 @@
+     routes:
+    -    "https://{all}/": { type: upstream, upstream: "app:http" }
+    +    "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 Нарешті, створіть файл ``config.vcl``, щоб налаштувати Varnish:
 
@@ -616,8 +627,8 @@ HTTP-виклик заголовка конференції на даний мо
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/config.vcl
-    +++ b/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();

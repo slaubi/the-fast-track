@@ -1,10 +1,10 @@
-Виконання завдань cron
-======================================
+Планування завдань
+==================
 
 .. index::
     single: Cron
 
-Завдання cron корисні для виконання завдань з технічного обслуговування. На відміну від воркерів, вони працюють за розкладом, протягом короткого періоду часу.
+Деякі завдання з технічного обслуговування мають виконуватися за розкладом. На відміну від воркерів, які працюють безперервно, заплановані завдання виконуються періодично, протягом короткого періоду часу.
 
 Очищування коментарів
 -----------------------------------------
@@ -16,26 +16,28 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -6,6 +6,7 @@ use App\Entity\Comment;
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -5,7 +5,9 @@ namespace App\Repository;
+     use App\Entity\Comment;
      use App\Entity\Conference;
      use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    +use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Persistence\ManagerRegistry;
     +use Doctrine\ORM\QueryBuilder;
      use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-    @@ -18,6 +19,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
+    @@ -13,6 +15,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
       */
      class CommentRepository extends ServiceEntityRepository
      {
     +    private const DAYS_BEFORE_REJECTED_REMOVAL = 7;
     +
-         public const PAGINATOR_PER_PAGE = 2;
+         public const COMMENTS_PER_PAGE = 2;
 
          public function __construct(ManagerRegistry $registry)
-    @@ -25,6 +28,29 @@ class CommentRepository extends ServiceEntityRepository
+    @@ -20,6 +24,27 @@ class CommentRepository extends ServiceEntityRepository
              parent::__construct($registry, Comment::class);
          }
 
@@ -54,11 +56,9 @@
     +        return $this->createQueryBuilder('c')
     +            ->andWhere('c.state = :state_rejected or c.state = :state_spam')
     +            ->andWhere('c.createdAt < :date')
-    +            ->setParameters([
-    +                'state_rejected' => 'rejected',
-    +                'state_spam' => 'spam',
-    +                'date' => new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'),
-    +            ])
+    +            ->setParameter('state_rejected', 'rejected')
+    +            ->setParameter('state_spam', 'spam')
+    +            ->setParameter('date', new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'))
     +        ;
     +    }
     +
@@ -102,38 +102,25 @@
 
     use App\Repository\CommentRepository;
     use Symfony\Component\Console\Attribute\AsCommand;
+    use Symfony\Component\Console\Attribute\Option;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\InputOption;
-    use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Console\Style\SymfonyStyle;
 
     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
-    class CommentCleanupCommand extends Command
+    class CommentCleanupCommand
     {
-        public function __construct(
-            private CommentRepository $commentRepository,
-        ) {
-            parent::__construct();
-        }
-
-        protected function configure()
-        {
-            $this
-                ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run')
-            ;
-        }
-
-        protected function execute(InputInterface $input, OutputInterface $output): int
-        {
-            $io = new SymfonyStyle($input, $output);
-
-            if ($input->getOption('dry-run')) {
+        public function __invoke(
+            SymfonyStyle $io,
+            CommentRepository $commentRepository,
+            #[Option(description: 'Dry run')]
+            bool $dryRun = false,
+        ): int {
+            if ($dryRun) {
                 $io->note('Dry mode enabled');
 
-                $count = $this->commentRepository->countOldRejected();
+                $count = $commentRepository->countOldRejected();
             } else {
-                $count = $this->commentRepository->deleteOldRejected();
+                $count = $commentRepository->deleteOldRejected();
             }
 
             $io->success(sprintf('Deleted "%d" old rejected/spam comments.', $count));
@@ -144,7 +131,7 @@
 
 Усі команди застосунку реєструються разом із вбудованими командами Symfony, і всі вони доступні за допомогою ``symfony console``. Оскільки кількість доступних команд може бути великою, вам слід групувати їх, використовуючи простори імен. За домовленістю, команди застосунку мають зберігатися в просторі імен ``app``. Додайте будь-яку кількість підпросторів імен, відокремивши їх двокрапкою (``:``).
 
-Команда отримує *input* (аргументи й параметри, передані команді), а ви можете використовувати *output*, щоб писати в консоль.
+Команда оголошує свої *аргументи* та *параметри* за допомогою атрибутів ``#[Argument]`` і ``#[Option]`` на параметрах методу ``__invoke()`` (параметр ``$dryRun`` стає параметром ``--dry-run``). Symfony впроваджує інші параметри на основі їхнього типу: ``SymfonyStyle`` для запису гарно відформатованого виводу в консоль, а також будь-який сервіс, як-от репозиторій коментарів, так само, як і для аргументів контролера.
 
 Очистьте базу даних, виконавши команду:
 
@@ -152,45 +139,85 @@
 
     $ symfony console app:comment:cleanup
 
-Налаштування cron у Upsun
---------------------------------------------
+Планування команди
+------------------
+
+.. index::
+    single: Scheduler
+    single: Components;Scheduler
+    single: Attributes;AsCronTask
+
+Запуск команди вручну працює, але вона має виконуватися щоночі. Компонент Symfony Scheduler генерує повідомлення за розкладом; потім вони споживаються воркером, як і будь-які інші повідомлення Messenger.
+
+Додайте компонент Scheduler разом із бібліотекою, що парсить вирази cron:
+
+.. code-block:: terminal
+
+    $ symfony composer req scheduler dragonmantank/cron-expression
+
+Заплануйте команду за допомогою атрибута ``#[AsCronTask]``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Command/CommentCleanupCommand.php
+    +++ w/src/Command/CommentCleanupCommand.php
+    @@ -7,8 +7,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Attribute\Option;
+     use Symfony\Component\Console\Command\Command;
+     use Symfony\Component\Console\Style\SymfonyStyle;
+    +use Symfony\Component\Scheduler\Attribute\AsCronTask;
+
+     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
+    +#[AsCronTask('50 23 * * *')]
+     class CommentCleanupCommand
+     {
+         public function __invoke(
+
+Атрибут реєструє команду в розкладі за замовчуванням із виразом cron: щоночі о 23:50 (UTC). Перевірте це:
+
+.. code-block:: terminal
+
+    $ symfony console debug:scheduler
+
+Розклад надається як звичайний транспорт Messenger з тією ж назвою; споживайте його, як і будь-який інший транспорт:
+
+.. code-block:: terminal
+
+    $ symfony run -d symfony console messenger:consume scheduler_default -vv
+
+Розгортання розкладу
+--------------------
+
+.. index::
+    single: Upsun;Workers
+
+На Upsun воркер споживає лише транспорт ``async``. Зробіть так, щоб він споживав і розклад:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -87,4 +87,4 @@ applications:
+             messenger:
+                 commands:
+                     # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+    -                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+    +                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async scheduler_default
+
+Це все, що потрібно: жодного crontab, жодного додаткового процесу; розклад живе в PHP-коді, поруч із завданням, яке він запускає, і розгортається та версіонується, як і решта застосунку.
+
+Що щодо системних cron?
+-----------------------
 
 .. index::
     single: Upsun;Cron
     single: Upsun;Croncape
 
-Однією з приємних особливостей Upsun є те, що більша частина конфігурації зберігається в одному файлі: ``.platform.app.yaml``. Веб-контейнер, воркери й завдання cron описані разом, щоб полегшити обслуговування:
+Upsun також підтримує завдання cron на рівні операційної системи, описані у ``.upsun/config.yaml`` поруч із веб-контейнером і воркерами; конфігурація за замовчуванням уже визначає одне, яке очищає застарілі сесії PHP. Системні cron добре підходять для завдань, які не реалізовані в PHP.
 
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -61,6 +61,14 @@ crons:
-             spec: '50 23 * * *'
-             cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape php-security-checker; fi
-
-    +    comment_cleanup:
-    +        # Cleanup every night at 11.50 pm (UTC).
-    +        spec: '50 23 * * *'
-    +        cmd: |
-    +            if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                croncape symfony console app:comment:cleanup
-    +            fi
-    +
-     workers:
-         messenger:
-             commands:
-
-Секція ``crons`` визначає всі завдання cron. Кожне завдання виконується за ``spec`` графіком.
-
-Утиліта ``croncape`` відстежує виконання команди й відправляє електронний лист на адреси, визначені в змінній середовища ``MAILTO``, якщо команда повертає будь-який код виходу, відмінний від ``0``.
-
-.. index::
-    single: Symfony CLI;cloud:variable:create
-    single: Symfony CLI;cron
-
-Налаштуйте змінну середовища ``MAILTO``:
+Утиліта ``croncape``, що використовується cron за замовчуванням, відстежує виконання команди й відправляє електронний лист на адреси, визначені в змінній середовища ``MAILTO``, якщо команда повертає будь-який код виходу, відмінний від ``0``:
 
 .. code-block:: terminal
 
@@ -207,6 +234,8 @@
 
 .. sidebar:: Йдемо далі
 
+    * `Документація компонента Scheduler`_;
+
     * `Синтаксис сron/сrontab`_;
 
     * `Репозиторій Croncape`_;
@@ -215,6 +244,7 @@
 
     * `Шпаргалка по Symfony Console`_.
 
+.. _`Документація компонента Scheduler`: https://symfony.com/doc/current/scheduler.html
 .. _`Синтаксис сron/сrontab`: https://en.wikipedia.org/wiki/Cron
 .. _`Репозиторій Croncape`: https://github.com/symfonycorp/croncape
 .. _`Команди Symfony Console`: https://symfony.com/doc/current/console.html

@@ -75,18 +75,16 @@
 .. index::
     single: Command;workflow:dump
 
-Для перевірки робочого процесу згенеруйте візуальне представлення:
+Для перевірки робочого процесу згенеруйте візуальне представлення у форматі Mermaid:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Вставте результат у `редактор Mermaid Live`_, щоб відобразити його; GitHub і GitLab також відображають діаграми Mermaid нативно у файлах Markdown:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    Команда ``dot`` є частиною утиліти `Graphviz`_.
 
 Використання робочого процесу
 --------------------------------------------------------
@@ -230,6 +228,6 @@
 
     * `Документація по Symfony Workflow`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`редактор Mermaid Live`: https://mermaid.live/
 .. _`Робочі процеси і скінченні автомати`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Документація по Symfony Workflow`: https://symfony.com/doc/current/workflow.html
