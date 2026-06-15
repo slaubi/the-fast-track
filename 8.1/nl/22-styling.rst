@@ -130,9 +130,9 @@ We zijn nu klaar om de applicatie te stylen. Download de zip in de root van het 
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.2.zip', 'guestbook-6.2.zip');"
-    $ unzip -o guestbook-6.2.zip
-    $ rm guestbook-6.2.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-8.1.zip', 'guestbook-8.1.zip');"
+    $ unzip -o guestbook-8.1.zip
+    $ rm guestbook-8.1.zip
 
 Neem eens een kijkje in de templates, misschien leer je nog een paar handige Twig-trucjes.
 

@@ -64,7 +64,7 @@ Clone het `gastenboek repository`_ ergens op jouw lokale machine:
 
 Deze repository bevat alle code van het boek.
 
-Let wel dat we ``symfony new`` gebruiken in plaats van ``git clone``, omdat dat laatste commando niets meer doet dan alleen het klonen van de repository (gehost op Github onder de ``the-fast-track-organisatie``: ``https://github.com/the-fast-track/book-6.2-1`` ). Het start ook de webserver, de containers, migreert de database, laadt de fixtures, ... Na het uitvoeren van het commando zou de website operationeel moeten zijn, klaar voor gebruik.
+Let wel dat we ``symfony new`` gebruiken in plaats van ``git clone``, omdat dat laatste commando niets meer doet dan alleen het klonen van de repository (gehost op Github onder de ``the-fast-track-organisatie``: ``https://github.com/the-fast-track/book-8.1-1`` ). Het start ook de webserver, de containers, migreert de database, laadt de fixtures, ... Na het uitvoeren van het commando zou de website operationeel moeten zijn, klaar voor gebruik.
 
 De code is 100% gegarandeerd synchroon met de code in het boek (gebruik de exacte repository-URL zoals hierboven vermeld). Proberen om handmatig wijzigingen uit het boek te synchroniseren met de broncode in de repository is bijna onmogelijk. Ik heb het in het verleden geprobeerd. Ik heb gefaald. Het is simpelweg onmogelijk. Zeker voor het soort boeken dat ik schrijf: boeken die een verhaal vertellen over het ontwikkelen van een website. Aangezien elk hoofdstuk afhankelijk is van de vorige, kan een wijziging gevolgen hebben voor alle volgende hoofdstukken.
 
