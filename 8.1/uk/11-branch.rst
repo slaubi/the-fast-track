@@ -68,47 +68,24 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: null
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -3,7 +3,8 @@ framework:
+         secret: '%env(APP_SECRET)%'
+
+         # Note that the session will be started ONLY if you read or write from it.
+    -    session: true
+    +    session:
     +        handler_id: '%env(resolve:DATABASE_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
+
+         #esi: true
+         #fragments: true
 
 Щоб зберігати сесії в базі даних, нам потрібно створити таблицю ``sessions``. Зробіть це за допомогою міграції Doctrine:
 
 .. code-block:: terminal
 
     $ symfony console make:migration
-
-Відредагуйте файл, щоб додати створення таблиці в методі ``up()``:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
-    @@ -21,6 +21,15 @@ final class Version00000000000000 extends AbstractMigration
-         {
-             // this up() migration is auto-generated, please modify it to your needs
-
-    +        $this->addSql('
-    +            CREATE TABLE sessions (
-    +                sess_id VARCHAR(128) NOT NULL PRIMARY KEY,
-    +                sess_data BYTEA NOT NULL,
-    +                sess_lifetime INTEGER NOT NULL,
-    +                sess_time INTEGER NOT NULL
-    +            )
-    +        ');
-    +        $this->addSql('CREATE INDEX expiry ON sessions (sess_lifetime)');
-         }
-
-         public function down(Schema $schema): void
 
 Виконайте міграцію бази даних:
 
@@ -122,23 +99,6 @@
 .. note::
 
     Тут нам не потрібні кроки 3-5, оскільки ми повторно використовуємо базу даних у якості сховища сесій, але розділ про використання Redis показує, наскільки просто додати, протестувати і розгорнути новий сервіс як у Docker, так і в Upsun.
-
-Оскільки нова таблиця не "управляється" Doctrine, ми маємо налаштувати Doctrine так, щоб таблиця не видалялася під час наступної міграції бази даних:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/doctrine.yaml
-    +++ b/config/packages/doctrine.yaml
-    @@ -5,6 +5,8 @@ doctrine:
-             # IMPORTANT: You MUST configure your server version,
-             # either here or in the DATABASE_URL env var (see .env file)
-             #server_version: '14'
-    +
-    +        schema_filter: ~^(?!session)~
-         orm:
-             auto_generate_proxy_classes: true
-             naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
 
 Зафіксуйте свої зміни в новій гілці:
 
@@ -169,7 +129,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Ця команда створює нове середовище наступним чином:
 
@@ -264,7 +224,7 @@
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Під час розгортання у Upsun публікуються лише зміни коду й інфраструктури; на дані жодним чином це не впливає.
 
