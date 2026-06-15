@@ -548,7 +548,7 @@ De SPA naar productie deployen
 Upsun maakt het mogelijk om meerdere applicaties per project te deployen. Het toevoegen van een andere toepassing kan gedaan worden door een ``.platform.app.yaml`` bestand aan te maken in een subdirectory. Maak er een aan onder de ``spa/`` directory met de naam ``spa``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1
 
     name: spa

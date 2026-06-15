@@ -19,7 +19,7 @@ PostgreSQL aan Docker Compose toevoegen
 Op onze lokale machine gebruiken we Docker om onze services te beheren. Het gegenereerde ``docker-compose.yml`` bestand bevat reeds PostgreSQL als service:
 
 .. code-block:: yaml
-    :caption: docker-compose.yml
+    :caption: compose.yaml
     :emphasize-lines: 2,3
     :class: ignore
 
@@ -42,7 +42,7 @@ Dit zal een PostgreSQL server installeren en een aantal omgevingsvariabelen conf
 We zetten ook de PostgreSQL-poort (``5432``) van de container open voor de lokale host. Dat zal ons toegang geven tot de database vanaf onze machine:
 
 .. code-block:: yaml
-    :caption: docker-compose.override.yml
+    :caption: compose.override.yaml
     :emphasize-lines: 4
     :class: ignore
 
@@ -142,7 +142,7 @@ PostgreSQL toevoegen aan Upsun
 Voor de productie infrastructuur op Upsun, zou je een service zoals PostgreSQL moeten toevoegen in het ``.platform/services.yaml`` bestand, wat reeds gedaan werd door het recept van de ``webapp`` package:
 
 .. code-block:: yaml
-    :caption: .platform/services.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     database:
@@ -154,7 +154,7 @@ De ``database`` service is een PostgreSQL database (dezelfde versie als we in Do
 We moeten de DB ook "koppelen" aan de applicatie-container die beschreven staat in ``.platform.app.yaml``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     relationships:
@@ -165,7 +165,7 @@ In de applicatie-container wordt er aan de ``database`` service van het type ``p
 Controleer of de ``pdo_pgsql`` extensie reeds geïnstalleerd is voor de PHP-runtime:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :class: ignore
 
     runtime:

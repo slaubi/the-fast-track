@@ -580,7 +580,7 @@ Gebruik Varnish als eerste toegangspunt in de routes:
 Maak ten slotte een ``config.vcl`` bestand aan om Varnish te configureren:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -592,7 +592,7 @@ ESI-ondersteuning inschakelen in Varnish
 ESI-ondersteuning in Varnish moet voor elke request expliciet worden ingeschakeld. Om dit universeel te maken, gebruikt Symfony de standaard ``Surrogate-Capability`` en ``Surrogate-Control`` headers om over de ESI-ondersteuning te onderhandelen:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();

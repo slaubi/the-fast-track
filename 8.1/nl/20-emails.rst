@@ -255,7 +255,7 @@ Een mailcatcher gebruiken
 In plaats van een "echte" SMTP-server of een service van een derde partij te gebruiken om e-mailberichten te versturen, gebruiken we een mailcatcher. Een mailcatcher biedt een SMTP-server die de e-mailberichten niet aflevert, maar ze beschikbaar stelt via een webinterface. Gelukkig heeft Symfony reeds automatisch zo'n mailcatcher voor ons geconfigureerd:
 
 .. code-block:: yaml
-    :caption: docker-compose.override.yml
+    :caption: compose.override.yaml
     :class: ignore
 
     services:
