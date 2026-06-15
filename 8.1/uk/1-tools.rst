@@ -59,7 +59,7 @@ PHP
 
 Ми будемо використовувати Docker для сервісів, але мені подобається, щоб PHP був встановлений на моєму локальному комп'ютері з причин продуктивності, стабільності та простоти. Називайте мене старомодним, якщо хочете, але поєднання локального PHP та Docker сервісів — ідеально для мене.
 
-Використовуйте PHP 8.1 і перевірте чи встановлено наступні розширення PHP, або встановіть їх зараз: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. За бажанням також встановіть ``redis``, ``curl`` і ``zip``.
+Використовуйте PHP 8.5 і перевірте чи встановлено наступні розширення PHP, або встановіть їх зараз: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``, ``iconv``. За бажанням також встановіть ``redis``, ``curl`` і ``zip``.
 
 Ви можете перевірити поточні розширення за допомогою ``php -m``.
 
@@ -77,11 +77,6 @@ Composer
 .. tip::
 
     Нема потреби вводити команди повністю: ``composer req`` робить те саме, що й ``composer require``, використовуйте ``composer rem`` замість ``composer remove``, ...
-
-NodeJS
-------
-
-Ми не будемо писати багато коду JavaScript, але ми будемо використовувати інструменти JavaScript/NodeJS, щоб управляти нашими ресурсами. Переконайтеся, що у вас встановлено `NodeJS`_.
 
 Docker та Docker Compose
 --------------------------
@@ -130,7 +125,6 @@ Symfony CLI
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Встановіть їх`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
 .. _`встановити центр сертифікації (ЦС)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

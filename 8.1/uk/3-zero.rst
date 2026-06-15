@@ -28,7 +28,7 @@
 
 * ``--docker``: ми будемо використовувати Docker на вашому локальному комп'ютері для управління сервісами, як-от PostgreSQL. Цей параметр умикає Docker, щоб Symfony автоматично додавав сервіси Docker на основі необхідних пакетів (як-от сервіс PostgreSQL під час додавання ORM чи засіб перехоплення пошти під час додавання Symfony Mailer).
 
-* ``--cloud``: якщо ви хочете розгорнути свій проект у Upsun, цей параметр автоматично генерує розумну конфігурацію Upsun. Platformm.sh є кращим і найпростішим способом розгортання тестових, проміжних і продакшн середовищ Symfony у хмарі.
+* ``--upsun``: якщо ви хочете розгорнути свій проект у Upsun, цей параметр автоматично генерує розумну конфігурацію Upsun. Upsun є кращим і найпростішим способом розгортання тестових, проміжних і продакшн середовищ Symfony у хмарі.
 
 Якщо ви поглянете на репозиторій проекту skeleton на GitHub, то помітите, що він майже порожній. Просто файл ``composer.json``. Але у каталозі ``гостьової книги`` повно файлів. Як це можливо? Відповідь знаходиться у пакеті ``symfony/flex``. Symfony Flex — це плагін Composer, який підключається до процесу встановлення. Коли він виявляє пакет, для якого у нього є *рецепт*, він виконує його.
 
@@ -143,7 +143,7 @@
 .. index::
     single: Symfony CLI;project:init
 
-Оскільки ми використовували параметр ``--cloud`` під час створення проекту, Upsun вже було ініціалізовано кількома файлами, необхідними для Upsun, а саме ``.platform/services.yaml``, ``. platform/routes.yaml`` і ``.platform.app.yaml``.
+Оскільки ми використовували параметр ``--upsun`` під час створення проекту, Upsun вже було ініціалізовано єдиним необхідним йому файлом конфігурації, а саме ``.upsun/config.yaml``.
 
 Перехід до продакшн
 ------------------------------------
@@ -203,10 +203,10 @@
 
     * `Документація по Upsun`_.
 
-.. _`те`: http://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`те`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`скелет проекту`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`офіційних рецептів Symfony`: https://github.com/symfony/recipes
 .. _`рецептів, що надаються спільнотою`: https://github.com/symfony/recipes-contrib
 .. _`Локальний веб-сервер Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Документація по Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Документація по Upsun`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
