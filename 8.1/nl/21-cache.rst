@@ -536,12 +536,12 @@ Een reverse proxy-cache configureren in productie
 
 .. index::
     single: HTTP Cache;Varnish
-    single: Platform.sh;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 In plaats van een Symfony reverse proxy te gebruiken in productie, zullen we gebruik maken de "robuustere" Varnish reverse proxy.
 
-Varnish toevoegen aan de Platform.sh-services:
+Varnish toevoegen aan de Upsun-services:
 
 .. code-block:: diff
     :caption: patch_file
@@ -563,7 +563,7 @@ Varnish toevoegen aan de Platform.sh-services:
     +            path: config.vcl
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Gebruik Varnish als eerste toegangspunt in de routes:
 
@@ -654,7 +654,7 @@ De URL's zien er een beetje vreemd uit omdat de URL's die worden teruggestuurd d
 
     * `HTTP-cache validatiemodel`_;
 
-    * `HTTP-Cache in Platform.sh`_.
+    * `HTTP-Cache in Upsun`_.
 
 .. _`Blackfire`: https://blackfire.io/
 .. _`Varnish docs`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
@@ -664,4 +664,4 @@ De URL's zien er een beetje vreemd uit omdat de URL's die worden teruggestuurd d
 .. _`ESI-specificatie`: https://www.w3.org/TR/esi-lang
 .. _`ESI-ontwikkelaarsmiddelen`: https://www.akamai.com/us/en/support/esi.jsp
 .. _`HTTP-cache validatiemodel`: https://symfony.com/doc/current/http_cache/validation.html
-.. _`HTTP-Cache in Platform.sh`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
+.. _`HTTP-Cache in Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html

@@ -165,7 +165,7 @@ Definieer het protocol en de domeinnaam dan ook expliciet:
      services:
          # default configuration for services in *this* file
 
-De ``SYMFONY_DEFAULT_ROUTE_URL`` omgevingsvariabele wordt lokaal automatisch ingesteld bij gebruik van de ``symfony`` CLI en bepaald op basis van de configuratie op Platform.sh.
+De ``SYMFONY_DEFAULT_ROUTE_URL`` omgevingsvariabele wordt lokaal automatisch ingesteld bij gebruik van de ``symfony`` CLI en bepaald op basis van de configuratie op Upsun.
 
 Een route aan een controller verbinden
 --------------------------------------
@@ -365,16 +365,16 @@ Symfony komt met assertions die dergelijke tests vereenvoudigen, hier is een tes
 
 Deze assertions werken wanneer e-mails synchroon of asynchroon worden verzonden.
 
-E-mails versturen op Platform.sh
+E-mails versturen op Upsun
 --------------------------------
 
 .. index::
-    single: Platform.sh;Emails
-    single: Platform.sh;Mailer
-    single: Platform.sh;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-Er is geen specifieke configuratie benodigd voor Platform.sh. Alle accounts worden geleverd met een Sendgrid-account dat automatisch wordt gebruikt om e-mails te versturen.
+Er is geen specifieke configuratie benodigd voor Upsun. Alle accounts worden geleverd met een Sendgrid-account dat automatisch wordt gebruikt om e-mails te versturen.
 
 .. index::
     single: Symfony CLI;cloud:env:info
@@ -397,11 +397,11 @@ Er is geen specifieke configuratie benodigd voor Platform.sh. Alle accounts word
 
     * De `Symfony Framework Mailer documentatie`_;
 
-    * De `Platform.sh-documentatie over e-mails`_.
+    * De `Upsun-documentatie over e-mails`_.
 
 .. _`Inky`: https://get.foundation/emails/docs/inky.html
 .. _`SymfonyCasts Mailer tutorial`: https://symfonycasts.com/screencast/mailer
 .. _`Inky Templating Language documentatie`: https://get.foundation/emails/docs/inky.html
 .. _`omgevingsvariabele-verwerkers`: https://symfony.com/doc/current/configuration/env_var_processors.html
 .. _`Symfony Framework Mailer documentatie`: https://symfony.com/doc/current/mailer.html
-.. _`Platform.sh-documentatie over e-mails`: https://symfony.com/doc/current/cloud/services/emails.html
+.. _`Upsun-documentatie over e-mails`: https://symfony.com/doc/current/cloud/services/emails.html

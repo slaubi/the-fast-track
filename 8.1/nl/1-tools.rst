@@ -95,7 +95,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Tenslotte zullen we de ``symfony`` CLI gebruiken om onze productiviteit te verhogen. Van de lokale webserver, tot volledige Docker-integratie en cloud ondersteuning via Platform.sh zal ons veel tijd besparen.
+Tenslotte zullen we de ``symfony`` CLI gebruiken om onze productiviteit te verhogen. Van de lokale webserver, tot volledige Docker-integratie en cloud ondersteuning via Upsun zal ons veel tijd besparen.
 
 Installeer nu de `Symfony CLI`_.
 

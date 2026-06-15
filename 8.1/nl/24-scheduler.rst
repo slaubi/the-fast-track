@@ -152,14 +152,14 @@ Ruim de database op door het command uit te voeren:
 
     $ symfony console app:comment:cleanup
 
-Het instellen van een cron op Platform.sh
+Het instellen van een cron op Upsun
 -----------------------------------------
 
 .. index::
-    single: Platform.sh;Cron
-    single: Platform.sh;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Een van de leuke dingen van Platform.sh is dat het grootste deel van de configuratie in één bestand is opgeslagen: ``.platform.app.yaml``. De webcontainer, de workers en de cronjobs worden samen beschreven om het onderhoud te vergemakkelijken:
+Een van de leuke dingen van Upsun is dat het grootste deel van de configuratie in één bestand is opgeslagen: ``.platform.app.yaml``. De webcontainer, de workers en de cronjobs worden samen beschreven om het onderhoud te vergemakkelijken:
 
 .. code-block:: diff
     :caption: patch_file
@@ -196,7 +196,7 @@ Configureer de ``MAILTO`` omgevingsvariabele:
 
     $ symfony cloud:variable:create --sensitive=1 --level=project -y --name=env:MAILTO --value=ops@example.com
 
-Merk op dat er in alle Platform.sh branches crons opgezet zijn. Als je niet wilt dat sommige crons op niet-productie omgevingen worden uitgevoerd, controleer dan de ``$PLATFORM_ENVIRONMENT_TYPE`` omgevingsvariabele:
+Merk op dat er in alle Upsun branches crons opgezet zijn. Als je niet wilt dat sommige crons op niet-productie omgevingen worden uitgevoerd, controleer dan de ``$PLATFORM_ENVIRONMENT_TYPE`` omgevingsvariabele:
 
 .. code-block:: bash
     :class: ignore

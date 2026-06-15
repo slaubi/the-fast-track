@@ -27,9 +27,9 @@ Conventies van Symfony-omgevingsvariabelen begrijpen
 
 Je kan de ``DATABASE_URL`` handmatig in het ``.env`` of ``.env.local`` bestand definiëren. Dankzij het recipe van de package zie je bijvoorbeeld ``DATABASE_URL`` in jouw ``.env`` bestand. Maar omdat Docker de lokale poort voor PostgreSQL vrij kiest, is dat hinderlijk. Er is een betere manier.
 
-In plaats van de ``DATABASE_URL`` hard te coderen in een bestand, kunnen we alle commando's met ``symfony`` prefixen. Dit zorgt ervoor dat de Docker en/of Platform.sh (wanneer de tunnel open is) services gedetecteerd worden en automatisch als omgevingsvariabele ingesteld worden.
+In plaats van de ``DATABASE_URL`` hard te coderen in een bestand, kunnen we alle commando's met ``symfony`` prefixen. Dit zorgt ervoor dat de Docker en/of Upsun (wanneer de tunnel open is) services gedetecteerd worden en automatisch als omgevingsvariabele ingesteld worden.
 
-Docker Compose en Platform.sh werken naadloos samen met Symfony dankzij deze omgevingsvariabelen.
+Docker Compose en Upsun werken naadloos samen met Symfony dankzij deze omgevingsvariabelen.
 
 .. index::
     single: Symfony CLI;var:export
@@ -46,7 +46,7 @@ Bekijk alle beschikbare omgevingsvariabelen door het uitvoeren van ``symfony var
     DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
-Herinner je je de ``database`` *servicenaam* die in de Docker en Platform.sh configuraties wordt gebruikt? De servicenamen worden gebruikt als prefix bij het definiëren van omgevingsvariabelen zoals ``DATABASE_URL``. Als services de Symfony naamgevingsconventies volgen, is er geen extra configuratie nodig.
+Herinner je je de ``database`` *servicenaam* die in de Docker en Upsun configuraties wordt gebruikt? De servicenamen worden gebruikt als prefix bij het definiëren van omgevingsvariabelen zoals ``DATABASE_URL``. Als services de Symfony naamgevingsconventies volgen, is er geen extra configuratie nodig.
 
 .. note::
 
@@ -512,7 +512,7 @@ De productiedatabase bijwerken
 
 De stappen die nodig zijn om de productiedatabase te migreren zijn dezelfde als die waarmee je al bekend bent: commit de wijzigingen en deploy deze.
 
-Bij het deployen van het project brengt Platform.sh de code up-to-date en voert ook de databasemigraties uit (indien het ``doctrine:migrations:migrate`` commando bestaat).
+Bij het deployen van het project brengt Upsun de code up-to-date en voert ook de databasemigraties uit (indien het ``doctrine:migrations:migrate`` commando bestaat).
 
 .. sidebar:: Verder gaan
 

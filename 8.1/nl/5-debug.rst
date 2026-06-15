@@ -68,7 +68,7 @@ Zo zijn bijvoorbeeld alle debugging tools ingeschakeld in de ``dev`` omgeving. I
 
 Je kan overschakelen van de ene omgeving naar de andere door de omgevingsvariabele ``APP_ENV`` aan te passen.
 
-Toen je een deployment uitvoerde naar Platform.sh, werd de omgeving (opgeslagen in ``APP_ENV`` ) automatisch overgeschakeld naar ``prod``.
+Toen je een deployment uitvoerde naar Upsun, werd de omgeving (opgeslagen in ``APP_ENV`` ) automatisch overgeschakeld naar ``prod``.
 
 Omgevingsconfiguraties beheren
 ------------------------------
@@ -130,8 +130,8 @@ Problemen oplossen in productie
 -------------------------------
 
 .. index::
-    single: Platform.sh;Remote Logs
-    single: Platform.sh;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;cloud:logs
     single: Symfony CLI;cloud:ssh
 

@@ -133,13 +133,13 @@ En zet de data terug:
 
     $ symfony run psql < dump.sql
 
-PostgreSQL toevoegen aan Platform.sh
+PostgreSQL toevoegen aan Upsun
 ------------------------------------
 
 .. index::
-    single: Platform.sh;PostgreSQL
+    single: Upsun;PostgreSQL
 
-Voor de productie infrastructuur op Platform.sh, zou je een service zoals PostgreSQL moeten toevoegen in het ``.platform/services.yaml`` bestand, wat reeds gedaan werd door het recept van de ``webapp`` package:
+Voor de productie infrastructuur op Upsun, zou je een service zoals PostgreSQL moeten toevoegen in het ``.platform/services.yaml`` bestand, wat reeds gedaan werd door het recept van de ``webapp`` package:
 
 .. code-block:: yaml
     :caption: .platform/services.yaml
@@ -174,21 +174,21 @@ Controleer of de ``pdo_pgsql`` extensie reeds geïnstalleerd is voor de PHP-runt
             - pdo_pgsql
             # other extensions
 
-Toegang tot de Platform.sh database
+Toegang tot de Upsun database
 -----------------------------------
 
-PostgreSQL draait nu zowel lokaal via Docker als in productie op Platform.sh.
+PostgreSQL draait nu zowel lokaal via Docker als in productie op Upsun.
 
 Zoals we zojuist hebben gezien kun je met het ``symfony run psql`` commando, automatisch een verbinding maken naar de database die door Docker wordt gehost, dit alles dankzij de omgevingsvariabelen die door ``symfony run`` werden ingesteld.
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;var:expose-from-tunnel
     single: Symfony CLI;run psql
 
-Als je verbinding wil maken met PostgreSQL in de containers van de productieomgeving, kun je een SSH tunnel leggen tussen de lokale machine en de Platform.sh infrastructuur:
+Als je verbinding wil maken met PostgreSQL in de containers van de productieomgeving, kun je een SSH tunnel leggen tussen de lokale machine en de Upsun infrastructuur:
 
 .. code-block:: terminal
     :class: ignore
@@ -196,7 +196,7 @@ Als je verbinding wil maken met PostgreSQL in de containers van de productieomge
     $ symfony cloud:tunnel:open
     $ symfony var:expose-from-tunnel
 
-Platform.sh services worden standaard niet via omgevingsvariabelen op de lokale machine ingesteld. Je moet dit expliciet doen door het ``var:expose-from-tunnel`` commando te draaien. Waarom? Verbinding maken met een productiedatabase is gevaarlijk. Je kan *echte* data om zeep helpen.
+Upsun services worden standaard niet via omgevingsvariabelen op de lokale machine ingesteld. Je moet dit expliciet doen door het ``var:expose-from-tunnel`` commando te draaien. Waarom? Verbinding maken met een productiedatabase is gevaarlijk. Je kan *echte* data om zeep helpen.
 
 Verbind nu met de externe PostgreSQL database via ``symfony run psql``:
 
@@ -220,10 +220,10 @@ Werken met omgevingsvariabelen
 ------------------------------
 
 .. index::
-    single: Platform.sh;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-Docker Compose en Platform.sh werken naadloos samen met Symfony dankzij het gebruik van omgevingsvariabelen.
+Docker Compose en Upsun werken naadloos samen met Symfony dankzij het gebruik van omgevingsvariabelen.
 
 Controleer alle omgevingsvariabelen die door ``symfony`` gebruikt worden via ``symfony var:export``:
 
@@ -241,7 +241,7 @@ Controleer alle omgevingsvariabelen die door ``symfony`` gebruikt worden via ``s
 
 De ``PG*`` omgevingsvariabelen worden gebruikt door het ``psql`` hulpprogramma. En de rest?
 
-Wanneer er een tunnel ligt naar Platform.sh via ``var:expose-from-tunnel``, geeft het ``var:export`` commando de externe omgevingsvariabelen weer:
+Wanneer er een tunnel ligt naar Upsun via ``var:expose-from-tunnel``, geeft het ``var:export`` commando de externe omgevingsvariabelen weer:
 
 .. code-block:: terminal
     :class: ignore
@@ -254,19 +254,19 @@ Wanneer er een tunnel ligt naar Platform.sh via ``var:expose-from-tunnel``, geef
 Je Infrastructuur omschrijven
 -----------------------------
 
-Je hebt het misschien nog niet gerealiseerd, maar het helpt veel om de infrastructuur naast de code in bestanden op te slaan. Docker en Platform.sh gebruiken configuratiebestanden om de project-infrastructuur te omschrijven. Wanneer een nieuwe functie een aanvullende service nodig heeft, veranderen de code en maken de wijzigingen in de infrastructuur deel uit van dezelfde patch.
+Je hebt het misschien nog niet gerealiseerd, maar het helpt veel om de infrastructuur naast de code in bestanden op te slaan. Docker en Upsun gebruiken configuratiebestanden om de project-infrastructuur te omschrijven. Wanneer een nieuwe functie een aanvullende service nodig heeft, veranderen de code en maken de wijzigingen in de infrastructuur deel uit van dezelfde patch.
 
 .. sidebar:: Verder gaan
 
-    * `Platform.sh diensten`_;
+    * `Upsun diensten`_;
 
-    * `Platform.sh tunnel`_;
+    * `Upsun tunnel`_;
 
     * `PostgreSQL documentatie`_;
 
     * `docker-compose commando's`_.
 
-.. _`Platform.sh diensten`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
-.. _`Platform.sh tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
+.. _`Upsun diensten`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
+.. _`Upsun tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL documentatie`: https://www.postgresql.org/docs/
 .. _`docker-compose commando's`: https://docs.docker.com/compose/reference/

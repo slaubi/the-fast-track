@@ -494,14 +494,14 @@ Inspecteer de mislukte berichten en probeer ze opnieuw aan te bieden via de volg
 
     $ symfony console messenger:failed:retry
 
-Workers draaien op Platform.sh
+Workers draaien op Upsun
 ------------------------------
 
 .. index::
-    single: Platform.sh;Workers
+    single: Upsun;Workers
     single: Workers
 
-Om berichten van PostgreSQL te consumeren, moeten we het ``messenger:consume`` commando continu uitvoeren. Op Platform.sh is dit de rol van een *worker*:
+Om berichten van PostgreSQL te consumeren, moeten we het ``messenger:consume`` commando continu uitvoeren. Op Upsun is dit de rol van een *worker*:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -514,7 +514,7 @@ Om berichten van PostgreSQL te consumeren, moeten we het ``messenger:consume`` c
                 # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
                 start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
 
-Net als bij de Symfony CLI, beheert Platform.sh de restarts en logs.
+Net als bij de Symfony CLI, beheert Upsun de restarts en logs.
 
 .. index::
     single: Symfony CLI;cloud:logs

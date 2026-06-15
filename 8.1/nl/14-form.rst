@@ -497,7 +497,7 @@ Commit dit nog niet! We willen namelijk geen geüploade afbeeldingen opslaan in 
 Het opslaan van geüploade bestanden op productieservers
 --------------------------------------------------------
 
-De laatste stap is het opslaan van de geüploade bestanden op productieservers. Maar waarom moeten we hier iets speciaals doen? Moderne cloud-platforms maken vaak gebruik van alleen-lezen containers en Platform.sh is geen uitzondering op deze regel.
+De laatste stap is het opslaan van de geüploade bestanden op productieservers. Maar waarom moeten we hier iets speciaals doen? Moderne cloud-platforms maken vaak gebruik van alleen-lezen containers en Upsun is geen uitzondering op deze regel.
 
 Niet alles is alleen-lezen in een Symfony project. Symfony doet zijn best om zoveel mogelijk cache te genereren bij het opbouwen van de container (tijdens de cache warmup fase), maar Symfony moet nog steeds de gebruikerscache kunnen schrijven, de logs, de sessies (als ze op het filesystem worden opgeslagen) en meer.
 

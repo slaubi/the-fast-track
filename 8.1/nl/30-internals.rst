@@ -128,7 +128,7 @@ In de productieomgeving zie je bijvoorbeeld dat een bestand genaamd ``.env.local
     single: Composer;Autoloader
     single: Autoloader
 
-Waar komt dit vandaan? Platform.sh doet enkele optimalisaties bij het deployen van een Symfony applicatie, zoals het optimaliseren van de Composer autoloader ( ``--optimize-autoloader --apcu-autoloader --classmap-authoritative`` ). Ook de omgevingsvariabelen die in het ``.env`` bestand zijn gedefinieerd, worden geoptimaliseerd door het ``.env.local.php`` bestand te genereren (om te voorkomen dat het bestand bij elk verzoek opnieuw wordt geparsed):
+Waar komt dit vandaan? Upsun doet enkele optimalisaties bij het deployen van een Symfony applicatie, zoals het optimaliseren van de Composer autoloader ( ``--optimize-autoloader --apcu-autoloader --classmap-authoritative`` ). Ook de omgevingsvariabelen die in het ``.env`` bestand zijn gedefinieerd, worden geoptimaliseerd door het ``.env.local.php`` bestand te genereren (om te voorkomen dat het bestand bij elk verzoek opnieuw wordt geparsed):
 
 .. code-block:: terminal
     :class: ignore

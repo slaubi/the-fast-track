@@ -41,7 +41,7 @@ Het is een goed idee om je repository ergens naar een server te pushen. GitHub, 
 
 .. note::
 
-    Als je gebruik maakt van Platform.sh heb je al een kopie van de Git-repository omdat Platform.sh achter de schermen gebuik maakt van Git wanneer je ``cloud:deploy`` gebruikt. Maar je moet niet op de Platform.sh repository vertrouwen. Deze dient enkel voor deployments en moet niet beschouwd worden als backup.
+    Als je gebruik maakt van Upsun heb je al een kopie van de Git-repository omdat Upsun achter de schermen gebuik maakt van Git wanneer je ``cloud:deploy`` gebruikt. Maar je moet niet op de Upsun repository vertrouwen. Deze dient enkel voor deployments en moet niet beschouwd worden als backup.
 
 Continu deployen naar productie
 -------------------------------

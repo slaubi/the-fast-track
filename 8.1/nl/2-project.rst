@@ -40,7 +40,7 @@ Eén van de grote voordelen van het gebruik van een framework is de kleine hoeve
 
 * 20 regels voor de configuratie van de ontwikkelingsinfrastructuur (Docker);
 
-* 100 regels voor de configuratie van de productie-infrastructuur (Platform.sh);
+* 100 regels voor de configuratie van de productie-infrastructuur (Upsun);
 
 * 5 expliciete omgevingsvariabelen.
 

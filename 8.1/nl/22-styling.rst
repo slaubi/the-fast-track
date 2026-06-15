@@ -176,7 +176,7 @@ Het gegenereerde aanmeldingsformulier is nu gestyled en de Maker-bundle maakt st
     :align: center
     :figclass: with-browser
 
-Voor productie detecteert Platform.sh automatisch dat je Encore gebruikt en stelt de assets voor je samen tijdens het genereren.
+Voor productie detecteert Upsun automatisch dat je Encore gebruikt en stelt de assets voor je samen tijdens het genereren.
 
 .. sidebar:: Verder gaan
 

@@ -543,9 +543,9 @@ De SPA naar productie deployen
 ------------------------------
 
 .. index::
-    single: Platform.sh;Multi-Applications
+    single: Upsun;Multi-Applications
 
-Platform.sh maakt het mogelijk om meerdere applicaties per project te deployen. Het toevoegen van een andere toepassing kan gedaan worden door een ``.platform.app.yaml`` bestand aan te maken in een subdirectory. Maak er een aan onder de ``spa/`` directory met de naam ``spa``:
+Upsun maakt het mogelijk om meerdere applicaties per project te deployen. Het toevoegen van een andere toepassing kan gedaan worden door een ``.platform.app.yaml`` bestand aan te maken in een subdirectory. Maak er een aan onder de ``spa/`` directory met de naam ``spa``:
 
 .. code-block:: yaml
     :caption: .platform.app.yaml
@@ -580,7 +580,7 @@ Platform.sh maakt het mogelijk om meerdere applicaties per project te deployen. 
             NODE_VERSION=18 node-build
 
 .. index::
-    single: Platform.sh;Routes
+    single: Upsun;Routes
 
 Bewerk het ``.platform/routes.yaml`` bestand om het ``spa.`` subdomein te routeren naar de ``spa`` applicatie die is opgeslagen in de hoofdmap van het project:
 

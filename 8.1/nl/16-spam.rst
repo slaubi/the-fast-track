@@ -230,12 +230,12 @@ Secrets beheren in productie
 ----------------------------
 
 .. index::
-    single: Platform.sh;Secret
-    single: Platform.sh;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;cloud:variable:create
 
-In productie ondersteunt Platform.sh het instellen van *sensitive environment variables*:
+In productie ondersteunt Upsun het instellen van *sensitive environment variables*:
 
 .. code-block:: terminal
     :class: ignore
@@ -272,7 +272,7 @@ Voeg het Akismet secret opnieuw toe in de productie vault, maar nu met de produc
 
     $ symfony console secrets:set AKISMET_KEY --env=prod
 
-Als laatste stap configureren we de decryptiesleutel op Platform.sh door het instellen van een sensitive variable:
+Als laatste stap configureren we de decryptiesleutel op Upsun door het instellen van een sensitive variable:
 
 .. code-block:: terminal
 

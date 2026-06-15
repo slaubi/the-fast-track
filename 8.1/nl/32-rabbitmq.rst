@@ -103,7 +103,7 @@ RabbitMQ deployen
 -----------------
 
 .. index::
-    single: Platform.sh;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 RabbitMQ toevoegen aan de productieservers kan, door deze toe te voegen aan de lijst met services:
@@ -148,7 +148,7 @@ Verwijs ernaar in de web container configuratie en schakel de ``amqp`` PHP-exten
                  build: |
 
 .. index::
-    single: Platform.sh;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;cloud:tunnel:open
     single: Symfony CLI;cloud:tunnel:close
     single: Symfony CLI;open:remote:rabbitmq
