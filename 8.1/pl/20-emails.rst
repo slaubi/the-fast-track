@@ -255,7 +255,7 @@ Wykorzystanie Mail Catcher
 Zamiast używać "prawdziwego" serwera SMTP lub zewnętrznego dostawcy do wysyłania wiadomości e-mail, użyjmy narzędzia Mail Catcher zapewnianego przez serwer SMTP, który wiadomości e-mail odbiera, ale nie dostarcza, tylko udostępnia poprzez interfejs WWW. Na szczęście Symfony automatycznie skonfigurowało dla nas taki łapacz poczty:
 
 .. code-block:: yaml
-    :caption: docker-compose.override.yml
+    :caption: compose.override.yaml
     :class: ignore
 
     services:

@@ -580,7 +580,7 @@ Użyj serwera Varnish jako głównego punktu wejścia na trasach:
 Na koniec, utwórz plik ``config.vcl`` do konfiguracji Varnish:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -592,7 +592,7 @@ Włączenie wsparcia ESI na serwerze Varnish
 Obsługa ESI na Varnish powinna być włączona bezpośrednio dla każdego żądania. W celu uniwersalizacji Symfony wykorzystuje standardowe nagłówki ``Surrogate-Capability`` i ``Surrogate-Control`` do negocjowania wsparcia ESI:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();

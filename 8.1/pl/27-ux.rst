@@ -548,7 +548,7 @@ Wdrażanie SPA w środowisku produkcyjnym
 Upsun pozwala na wdrażanie wielu aplikacji w jednym projekcie. Dodanie kolejnej aplikacji można wykonać poprzez utworzenie pliku ``.platform.app.yaml`` w dowolnym podkatalogu. Utwórz taki plik w katalogu ``spa/`` o nazwie ``spa``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1
 
     name: spa
