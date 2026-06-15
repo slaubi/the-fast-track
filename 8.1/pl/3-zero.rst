@@ -28,7 +28,7 @@ Ponieważ tworzymy w pełni funkcjonalną aplikację internetową, dodaliśmy ki
 
 * ``--docker``: Na komputerze lokalnym użyjemy Dockera do zarządzania usługami takimi, jak PostgreSQL. Ta opcja uruchamia wsparcie dla Dockera, dzięki czemu Symfony automatycznie doda usługi Dockera w oparciu o wymagane pakiety (na przykład usługa PostgreSQL podczas dodawania ORM lub mail catcher podczas dodawania Symfony Mailer).
 
-* ``--cloud``: Jeśli chcesz wdrożyć swój projekt na Upsun, ta opcja automatycznie generuje potrzebną konfigurację Upsun. Wykorzystanie Upsun jest najprostszym i preferowanym sposobem wdrażania środowisk testowych, wstępnych i produkcyjnych projektu Symfony w chmurze.
+* ``--upsun``: Jeśli chcesz wdrożyć swój projekt na Upsun, ta opcja automatycznie generuje potrzebną konfigurację Upsun. Wykorzystanie Upsun jest najprostszym i preferowanym sposobem wdrażania środowisk testowych, wstępnych i produkcyjnych projektu Symfony w chmurze.
 
 Jeśli spojrzysz na repozytorium GitHub szkieletu, zauważysz, że jest prawie puste. Zawiera tylko plik ``composer.json``, ale katalog ``guestbook`` jest pełen plików. Jak to w ogóle możliwe? Odpowiedź znajduje się w pakiecie ``symfony/flex``. Symfony Flex jest wtyczką narzędzia Composer, która podpina się do procesu instalacji. Kiedy wykryje pakiet, na który ma *przepis* (ang. recipe), wykonuje go.
 
@@ -143,7 +143,7 @@ Ja wybrałem `Upsun`_. Dostarcza nam wszystkiego, czego potrzebujemy, i pomaga f
 .. index::
     single: Symfony CLI;project:init
 
-Ponieważ użyliśmy opcji ``--cloud`` podczas tworzenia projektu, Upsun został już zainicjowany z kilkoma wymaganymi plikami, a mianowicie: ``.platform/services.yaml``, ``. platform/routes.yaml`` i ``.platform.app.yaml``.
+Ponieważ użyliśmy opcji ``--upsun`` podczas tworzenia projektu, Upsun został już zainicjowany jedynym wymaganym plikiem konfiguracyjnym, a mianowicie ``.upsun/config.yaml``.
 
 Idziemy na produkcję
 ---------------------
@@ -203,10 +203,10 @@ Zauważ, że nie otrzymujesz pięknej, domyślnej strony Symfony na Upsun. Dlacz
 
     * `Dokumentacja Upsun`_.
 
-.. _`tego`: http://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`tego`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`szkielet projektu`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`oficjalnych przepisów Symfony`: https://github.com/symfony/recipes
 .. _`przepisów przekazanych przez społeczność`: https://github.com/symfony/recipes-contrib
 .. _`Lokalny serwer WWW Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Dokumentacja Upsun`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Dokumentacja Upsun`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

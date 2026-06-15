@@ -13,6 +13,10 @@ I nie chodzi tu tylko o nowe sposoby tworzenia tych samych rzeczy. Chodzi równi
 
 Czuję również potrzebę wydania nowej książki, ponieważ sposób tworzenia aplikacji mocno się zmienił. Powinniśmy podejmować tematy takie jak `API`_, `SPA`_, `konteneryzacja`_, `Continuous Deployment`_ i wiele innych.
 
+Czy książka jest wciąż warta Twojego czasu teraz, gdy LLM potrafi napisać kod za Ciebie? Zadałem sobie to pytanie, pracując nad tym wydaniem. Moja odpowiedź brzmi: zdecydowanie tak. Codziennie korzystam z narzędzi AI i to one piszą teraz niemal cały mój kod; ale nie zmieniły tego, co najważniejsze. Wciąż musisz rozumieć architekturę swojej aplikacji, decydować, co zbudować, przeglądać wygenerowany kod i wychwytywać to, co jest subtelnie błędne. Nie da się przejrzeć kodu, którego się nie rozumie; ani nie da się pokierować narzędziem ku architekturze, której nie potrafisz sobie wyobrazić. Argumentem za czytaniem książek jest osąd, a nie nostalgia.
+
+Osąd wymaga zrozumienia, a zrozumienie to właśnie to, co buduje ta książka: kompletny model myślowy aplikacji Symfony, od pierwszego commita po produkcję. Mając ten model w głowie, następnym razem, gdy LLM wygeneruje dla Ciebie kontroler albo handler Messengera, będziesz wiedzieć, czy jest poprawny i dlaczego. Uruchomimy nawet jeden z nich wewnątrz samej aplikacji, aby moderował komentarze.
+
 Twój czas jest cenny. Nie oczekuj długich akapitów, ani długich wyjaśnień na temat podstawowych pojęć. Ta książka jest formą zaproszenia do podróży: od czego zacząć? który kod napisać? kiedy? jak? Postaram się wzbudzić w Tobie zainteresowanie ważnymi tematami i to Ty zdecydujesz, czy chcesz się czegoś więcej nauczyć i drążyć dalej.
 
 Nie chcę też powielać istniejącej dokumentacji, której jakość jest doskonała. W sekcji "Idąc dalej" na końcu każdego rozdziału zamieściłem obszerne odniesienia do dokumentacji. Myśl o tej książce, jako o zbiorze odnośników do większej liczby zasobów.

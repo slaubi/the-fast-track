@@ -25,8 +25,6 @@ Dodajmy EasyAdmin jako zależność do projektu:
 
     $ symfony composer req "easycorp/easyadmin-bundle:^5"
 
-``admin`` jest aliasem dla pakietu ``easycorp/easyadmin-bundle``.
-
 *Aliasy* nie są funkcją Composer, ale koncepcją dostarczoną przez Symfony, aby ułatwić Ci życie. Aliasy, to skróty do popularnych pakietów Composer. Potrzebujesz ORMa - dołącz „api”. Te aliasy automatycznie rozwiązują zależności dla pojedynczych lub też wielu zwykłych pakietów Composer. Są one ustalone przez główny zespół Symfony.
 
 Inną przydatną funkcją jest możliwość pomijania dostawcy "symfony" dla instalowanego pakietu. Dołącz ``cache`` zamiast ``symfony/cache``.
@@ -84,7 +82,7 @@ Zaakceptowanie domyślnych odpowiedzi powoduje utworzenie następującego kontro
 
 W ramach przyjętej konwencji, wszystkie kontrolery panelu administracyjnego są przechowywane w przestrzeni nazw ``App\Controller\Admin``.
 
-Wejdź do wygenerowanego panelu administracyjnego odwiedzając ``/admin`` - tak jak ustawiliśmy to w metodzie ``index()``. Możesz zmienić adres URL na jaki tylko chcesz:
+Wejdź do wygenerowanego panelu administracyjnego odwiedzając ``/admin`` - tak jak ustawiliśmy to za pomocą atrybutu ``#[AdminDashboard]``. Możesz zmienić adres URL na jaki tylko chcesz:
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -163,9 +161,9 @@ Ostatnim krokiem będzie dodanie do panelu interfejsów administracyjnych dla ko
          }
      }
 
-Nadpisaliśmy metodę ``configureMenuItems()``, aby dodać do menu pozycje z ikonami odpowiednimi dla konferencji i komentarzy, oraz  linkiem przenoszącym na stronę główną.
+Nadpisaliśmy metodę ``configureMenuItems()``, aby dodać do menu pozycje z ikonami odpowiednimi dla konferencji i komentarzy, oraz  linkiem przenoszącym na stronę główną. Klasy ``ConferenceCrudController`` i ``CommentCrudController`` znajdują się w tej samej przestrzeni nazw ``App\Controller\Admin`` co dashboard, więc nie wymagają dodatkowych instrukcji ``use``.
 
-EasyAdmin udostępnia API, aby ułatwić linkowanie CRUD-ów za pomocą metody ``MenuItem::linkToRoute()``.
+EasyAdmin udostępnia API, aby ułatwić linkowanie CRUD-ów za pomocą metody ``MenuItem::linkTo()``, która przyjmuje klasę kontrolera CRUD.
 
 Strona główna panelu administracyjnego jest obecnie pusta. Jest to miejsce, gdzie możesz wyświetlać statystyki, albo inne ważne informacje. Ponieważ nie mamy żadnych ważnych informacji do wyświetlenia, zróbmy przekierowanie na listę konferencji.
 

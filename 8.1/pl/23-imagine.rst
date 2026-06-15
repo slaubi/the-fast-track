@@ -162,7 +162,7 @@ Przechowywanie przesłanych danych w środowisku produkcyjnym
 .. index::
     single: Upsun;File Service
 
-W pliku ``.platform.app.yaml`` domyślnie mamy już skonfigurowany katalog dla przesłanych plików, jednak katalog ten jest zainstalowany (ang. mount) lokalnie. Jeśli chcemy, aby kontener i robotnik (ang. worker) odbierający polecenia mieli dostęp do tego samego katalogu, musimy utworzyć *serwis obsługi plików*:
+W pliku ``.upsun/config.yaml`` domyślnie mamy już skonfigurowany katalog dla przesłanych plików, jednak katalog ten jest zainstalowany (ang. mount) lokalnie w kontenerze aplikacji. Jeśli chcemy, aby kontener i robotnik (ang. worker) odbierający polecenia mieli dostęp do tego samego katalogu, musimy utworzyć *serwis obsługi plików*:
 
 .. code-block:: diff
     :caption: patch_file

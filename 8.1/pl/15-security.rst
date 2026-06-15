@@ -38,8 +38,8 @@ Oprócz wygenerowania encji ``Admin``, polecenie zaktualizowało również konfi
     :class: ignore
     :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
     @@ -5,14 +5,18 @@ security:
              Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
          # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
@@ -82,10 +82,10 @@ Nie stworzymy dedykowanego systemu do tworzenia kont administracyjnych. Będziem
 .. index::
     single: Command;security:hash-password
 
-Wybierz ``App\Entity\Admin``, a następnie wymyśl dowolne hasło i uruchom poniższą komendę, aby wygenerować hasha hasła:
+Wymyśl dowolne hasło i uruchom poniższą komendę, aby wygenerować hasha hasła:
 
 .. code-block:: terminal
-    :class: answers(0||admin)
+    :class: answers(admin)
 
     $ symfony console security:hash-password
 
@@ -131,7 +131,7 @@ Konfigurowanie systemu uwierzytelniania
 ---------------------------------------
 
 .. index::
-    single: Command;make:auth
+    single: Command;make:security:form-login
     single: Security;Authenticator
     single: Security;Form Login
     single: Login
@@ -139,14 +139,14 @@ Konfigurowanie systemu uwierzytelniania
 
 Teraz, gdy mamy konto administracyjne, możemy zabezpieczyć panel administracyjny. Symfony obsługuje kilka strategii uwierzytelniania. Wykorzystajmy klasyczny i popularny *system uwierzytelniania formularzem*.
 
-Uruchom polecenie ``make:auth`` aby zaktualizować konfigurację zabezpieczeń, wygenerować szablon (ang. template) logowania i utworzyć *klasę uwierzytelniania* (ang. authenticator):
+Uruchom polecenie ``make:security:form-login`` aby zaktualizować konfigurację zabezpieczeń, wygenerować szablon (ang. template) logowania i utworzyć *klasę uwierzytelniania* (ang. authenticator):
 
 .. code-block:: terminal
-    :class: answers(1||AppAuthenticator||SecurityController||yes)
+    :class: answers(SecurityController||yes)
 
-    $ symfony console make:auth
+    $ symfony console make:security:form-login
 
-Wybierz ``1`` aby wygenerować klasę uwierzytelniania dla formularza logowania (ang. form authenticator), nazwij klasę ``AppAuthenticator``, kontroler ``SecurityController`` i wygeneruj URL ``/logout`` (``yes``).
+Nazwij kontroler ``SecurityController`` i wygeneruj URL ``/logout`` (``yes``).
 
 Polecenie zaktualizowało konfigurację zabezpieczeń w celu połączenia (ang. wire) wygenerowanych klas:
 
@@ -154,13 +154,18 @@ Polecenie zaktualizowało konfigurację zabezpieczeń w celu połączenia (ang. 
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -17,6 +17,11 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -15,7 +15,15 @@ security:
+                 security: false
              main:
                  lazy: true
-                 provider: app_user_provider
-    +            custom_authenticator: App\Security\AppAuthenticator
+    -            provider: users_in_memory
+    +            provider: app_user_provider
+    +            form_login:
+    +                login_path: app_login
+    +                check_path: app_login
+    +                enable_csrf: true
     +            logout:
     +                path: app_logout
     +                # where to redirect after logout
@@ -168,24 +173,6 @@ Polecenie zaktualizowało konfigurację zabezpieczeń w celu połączenia (ang. 
 
                  # activate different ways to authenticate
                  # https://symfony.com/doc/current/security.html#the-firewall
-
-Jak wynika z wskazówki na wyjściu komendy, musimy dostosować trasę (ang. route) w metodzie ``onAuthenticationSuccess()``, aby przekierować użytkownika, gdy pomyślnie się zaloguje:
-
-.. code-block:: diff
-
-    --- a/src/Security/AppAuthenticator.php
-    +++ b/src/Security/AppAuthenticator.php
-    @@ -46,9 +46,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
-                 return new RedirectResponse($targetPath);
-             }
-
-    -        // For example:
-    -        // return new RedirectResponse($this->urlGenerator->generate('some_route'));
-    -        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    +        return new RedirectResponse($this->urlGenerator->generate('admin'));
-         }
-
-         protected function getLoginUrl(Request $request): string
 
 .. index::
     single: Command;debug:router
@@ -212,9 +199,9 @@ System bezpieczeństwa składa się z dwóch części: *uwierzytelniania* (ang. 
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -31,7 +31,7 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used
          access_control:

@@ -16,7 +16,7 @@ Dodawanie PostgreSQL do Docker Compose
 .. index::
     single: Docker;PostgreSQL
 
-Na naszej lokalnej maszynie zdecydowaliśmy się użyć Dockera do zarządzania usługami. Wygenerowany plik ``docker-compose.yml`` już zawiera PostgreSQL jako usługę:
+Na naszej lokalnej maszynie zdecydowaliśmy się użyć Dockera do zarządzania usługami. Wygenerowany plik ``compose.yaml`` już zawiera PostgreSQL jako usługę:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -25,7 +25,7 @@ Na naszej lokalnej maszynie zdecydowaliśmy się użyć Dockera do zarządzania 
 
     ###> doctrine/doctrine-bundle ###
     database:
-        image: postgres:${POSTGRES_VERSION:-14}-alpine
+        image: postgres:${POSTGRES_VERSION:-16}-alpine
         environment:
             POSTGRES_DB: ${POSTGRES_DB:-app}
             # You should definitely change the password in production
@@ -62,15 +62,20 @@ Uruchamianie Docker Compose
 Uruchom Docker Compose w tle ( ``-d`` ):
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker-compose up -d
+    $ docker compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker compose up -d --remove-orphans
 
 Poczekaj chwilę, aż baza danych się uruchomi i sprawdź, czy wszystko działa prawidłowo:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,7 +86,7 @@ Jeśli nie ma uruchomionych kontenerów lub jeśli kolumna ``State`` nie ma wart
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 Dostęp do lokalnej bazy danych
 -------------------------------
@@ -104,12 +109,12 @@ Dzięki tym zasadom dostęp do bazy danych poprzez ``symfony run``  jest znaczni
 
 .. note::
 
-    Jeśli nie masz binarnej wersji ``psql`` na swoim komputerze, możesz uruchomić go za pośrednictwem polecenia ``docker-compose``:
+    Jeśli nie masz binarnej wersji ``psql`` na swoim komputerze, możesz uruchomić go za pośrednictwem polecenia ``docker compose``:
 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 Zrzucanie i przywracanie bazy danych
 ------------------------------------
@@ -139,19 +144,18 @@ Dodawanie PostgreSQL do Upsun
 .. index::
     single: Upsun;PostgreSQL
 
-W przypadku infrastruktury produkcyjnej na Upsun, dodanie usługi takiej jak PostgreSQL powinno być wykonane w pliku ``.platform/services.yaml``, który został utworzony za pomocą przepisu z pakietu ``webapp``:
+W przypadku infrastruktury produkcyjnej na Upsun, dodanie usługi takiej jak PostgreSQL powinno być wykonane w pliku ``.upsun/config.yaml``, który został utworzony za pomocą przepisu z pakietu ``webapp``:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
     :class: ignore
 
     database:
-        type: postgresql:14
-        disk: 1024
+        type: postgresql:16
 
-Usługa ``database`` jest bazą danych PostgreSQL (w takiej wersji, jaka jest w Dockerze), którą chcemy udostępnić z dyskiem o powierzchni 1GB.
+Usługa ``database`` jest bazą danych PostgreSQL (w takiej wersji, jaka jest w Dockerze). Upsun automatycznie przydziela dysk podczas pierwszego wdrożenia; w razie potrzeby dostosuj go później za pomocą ``symfony cloud:resources:set``.
 
-Musimy również "połączyć" bazę danych z kontenerem aplikacji, który jest opisany w ``.platform.app.yaml``:
+Musimy również "połączyć" bazę danych z kontenerem aplikacji, który jest opisany w ``.upsun/config.yaml``:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -264,9 +268,9 @@ Być może jeszcze nie zdawałeś sobie z tego sprawy, ale posiadanie infrastruk
 
     * `Dokumentacja PostgreSQL`_;
 
-    * `Polecenia docker-compose`_
+    * `Polecenia Docker Compose`_
 
 .. _`Usługi Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Tunel Upsun`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`Dokumentacja PostgreSQL`: https://www.postgresql.org/docs/
-.. _`Polecenia docker-compose`: https://docs.docker.com/compose/reference/
+.. _`Polecenia Docker Compose`: https://docs.docker.com/reference/cli/docker/compose/

@@ -21,19 +21,26 @@ Zapiszmy stronę domową w pamięci podręcznej na godzinę:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -30,7 +30,7 @@ class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
+         {
 
-Metoda ``setSharedMaxAge()`` konfiguruje wygaśnięcie pamięci podręcznej dla zwrotnego serwera pośredniczącego (ang. reverse proxy). Użyj ``setMaxAge()`` do kontrolowania pamięci podręcznej przeglądarki. Czas wyrażany jest w sekundach (1 godzina = 60 minut = 3600 sekund).
+Atrybut ``#[Cache]`` konfiguruje wygaśnięcie pamięci podręcznej dla zwrotnego serwera pośredniczącego (ang. reverse proxy) za pomocą argumentu ``smaxage``; użyj ``maxage`` do kontrolowania pamięci podręcznej przeglądarki. Czas wyrażany jest w sekundach (1 godzina = 60 minut = 3600 sekund). I podobnie jak w przypadku routingu czy ograniczania liczby żądań, polityka cache'owania jest deklarowana dokładnie tam, gdzie ma zastosowanie: w kontrolerze.
 
 Buforowanie strony konferencji jest wyzwaniem, ponieważ jest ona bardzo dynamiczna. Każdy może dodać komentarz w dowolnej chwili i nikt nie chce czekać godzinę, aby zobaczyć go online. W takich przypadkach należy stosować strategię *walidacji HTTP*.
 
@@ -48,9 +55,9 @@ Aby przetestować strategię pamięci podręcznej HTTP, włącz zwrotny serwer p
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -23,3 +23,7 @@ when@test:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -22,3 +22,7 @@ when@test:
              test: true
              session:
                  storage_factory_id: session.storage.factory.mock_file
@@ -111,7 +118,7 @@ Unikanie zapytań SQL za pomocą ESI
     single: HTTP Cache;ESI
     single: ESI
 
-Nasłuchiwacz (ang. listener) ``TwigEventSubscriber`` wstrzykuje globalną zmienną do Twiga ze wszystkimi obiektami konferencji. Czyni to dla każdej strony witryny. Jest to prawdopodobnie świetne miejsce do optymalizacji.
+Nasłuchiwacz (ang. listener) ``TwigEventListener`` wstrzykuje globalną zmienną do Twiga ze wszystkimi obiektami konferencji. Czyni to dla każdej strony witryny. Jest to prawdopodobnie świetne miejsce do optymalizacji.
 
 Nie będziesz dodawał nowych konferencji codziennie, więc kod odpytuje o dokładnie te same dane z bazy danych w kółko.
 
@@ -124,10 +131,10 @@ Utwórz kontroler zwracający tylko fragment kodu HTML, który wyświetla konfer
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -33,6 +33,14 @@ class ConferenceController extends AbstractController
-             ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
@@ -138,9 +145,9 @@ Utwórz kontroler zwracający tylko fragment kodu HTML, który wyświetla konfer
     +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
          public function show(
-             Request $request,
 
 Utwórz odpowiedni szablon:
 
@@ -164,9 +171,9 @@ Czas na magiczną sztuczkę! Zaktualizuj szablon Twig, aby wywołać kontroler, 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,11 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,11 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -197,11 +204,11 @@ Po pierwsze, włącz obsługę ESI:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -13,7 +13,7 @@ framework:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -12,7 +12,7 @@ framework:
+             cookie_secure: auto
              cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
 
     -    #esi: true
     +    esi: true
@@ -218,9 +225,9 @@ Następnie użyj ``render_esi`` zamiast ``render``:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,7 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,7 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -263,17 +270,16 @@ Nie tego jednak chcemy. Zapisz stronę z nagłówkiem w pamięci podręcznej na 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -38,7 +38,7 @@ class ConferenceController extends AbstractController
-         {
-             return $this->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-    -        ]);
-    +        ])->setSharedMaxAge(3600);
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
+    +    #[Cache(smaxage: 3600)]
+         #[Route('/conference_header', name: 'conference_header')]
+         public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
+         {
 
 Pamięć podręczna jest teraz włączona dla obu żądań:
 
@@ -306,7 +312,7 @@ Usuń nasłuchiwacz (ang. listener), bo już go nie potrzebujemy:
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Oczyszczanie pamięci podręcznej HTTP na potrzeby testów
 ----------------------------------------------------------
@@ -327,19 +333,19 @@ To podejście nie działa za dobrze, jeśli chcesz tylko unieważnić niektóre 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -17,6 +17,8 @@ security:
-                 lazy: true
-                 provider: app_user_provider
-                 custom_authenticator: App\Security\AppAuthenticator
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -20,6 +20,8 @@ security:
+                     login_path: app_login
+                     check_path: app_login
+                     enable_csrf: true
     +            http_basic: { realm: Admin Area }
-    +            entry_point: App\Security\AppAuthenticator
+    +            entry_point: form_login
                  logout:
                      path: app_logout
                      # where to redirect after logout
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
     @@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Request;
@@ -347,7 +353,7 @@ To podejście nie działa za dobrze, jeśli chcesz tylko unieważnić niektóre 
     +use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
     +use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
      use Symfony\Component\Workflow\WorkflowInterface;
     @@ -47,4 +49,16 @@ class AdminController extends AbstractController
                  'comment' => $comment,
@@ -386,6 +392,27 @@ Podpolecenie ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` zwraca bie
 
     Kontroler nie posiada nazwy trasy, ponieważ nigdy nie będziemy się do niego odwoływać w kodzie.
 
+Wyłączanie pamięci podręcznej HTTP w środowisku deweloperskim
+-------------------------------------------------------------
+
+Pamięć podręczna HTTP była świetna do sprawdzenia poprawności naszych nagłówków cache i do nauki, jak usuwać nieaktualne wpisy. Ale posiadanie włączonego zwrotnego serwera pośredniczącego w środowisku deweloperskim jest nietypowe i szybko zaczyna przeszkadzać: odpowiedzi są serwowane z pamięci podręcznej podczas pracy nad kodem, a niektóre zasoby vendorów są wręcz serwowane z pustym ciałem z powodu długo utrzymującego się ograniczenia HttpCache dotyczącego odpowiedzi plikowych.
+
+Teraz, gdy wszystko jest już sprawdzone, wyłącz ją; w produkcji przejmie to Varnish:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,7 +14,3 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Grupowanie podobnych tras z użyciem prefiksu
 ---------------------------------------------
 
@@ -397,9 +424,9 @@ Dwie trasy w kontrolerze panelu administracyjnego mają ten sam prefiks ``/admin
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
-    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
+    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
      use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
 
@@ -446,14 +473,13 @@ Zaimplementuj polecenie:
 
     use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
     #[AsCommand('app:step:info')]
-    class StepInfoCommand extends Command
+    class StepInfoCommand
     {
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
@@ -464,51 +490,34 @@ Zaimplementuj polecenie:
     }
 
 .. index::
-    single: Command;make:command
-
-.. note::
-
-    Możesz użyć ``make:command`` do stworzenia polecenia:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
-
-.. index::
     single: Cache
     single: Components;Cache
 
 A jeśli chcemy przechowywać dane wyjściowe przez kilka minut? Dodaj do projektu moduł Symfony Cache.
 
-I użyj pamięci podręcznej:
+Symfony wstrzykuje usługi otypowane w metodzie ``__invoke()`` polecenia w taki sam sposób, jak robi to dla argumentów kontrolera. Owiń kod logiką pamięci podręcznej:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Command/StepInfoCommand.php
-    +++ b/src/Command/StepInfoCommand.php
-    @@ -7,15 +7,27 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    --- i/src/Command/StepInfoCommand.php
+    +++ w/src/Command/StepInfoCommand.php
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
      #[AsCommand('app:step:info')]
-     class StepInfoCommand extends Command
+     class StepInfoCommand
      {
-    +    public function __construct(
-    +         private CacheInterface $cache,
-    +    ) {
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
@@ -546,21 +555,22 @@ Dodaj Varnish do usług Upsun:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
-    @@ -2,3 +2,12 @@
-     database:
-         type: postgresql:14
-         disk: 1024
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -6,6 +6,15 @@ services:
+         database:
+             type: postgresql:16
+
+    +    varnish:
+    +        type: varnish:9.0
+    +        relationships:
+    +            application: 'app:http'
+    +        configuration:
+    +            vcl: !include
+    +                type: string
+    +                path: config.vcl
     +
-    +varnish:
-    +    type: varnish:6.0
-    +    relationships:
-    +        application: 'app:http'
-    +    configuration:
-    +        vcl: !include
-    +            type: string
-    +            path: config.vcl
+     applications:
 
 .. index::
     single: Upsun;Routes
@@ -570,12 +580,13 @@ Użyj serwera Varnish jako głównego punktu wejścia na trasach:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/routes.yaml
-    +++ b/.platform/routes.yaml
-    @@ -1,2 +1,2 @@
-    -"https://{all}/": { type: upstream, upstream: "app:http" }
-    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -1,5 +1,5 @@
+     routes:
+    -    "https://{all}/": { type: upstream, upstream: "app:http" }
+    +    "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 Na koniec, utwórz plik ``config.vcl`` do konfiguracji Varnish:
 
@@ -616,8 +627,8 @@ W każdym razie, zobaczmy jak skonfigurować serwer Varnish do unieważnienia pa
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/config.vcl
-    +++ b/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();

@@ -315,7 +315,7 @@ Spróbuj dodać kilka konferencji w panelu administracyjnym i zmienić miasto lu
     single: Twig;path
     single: Attributes;Route
 
-Ostatnią zmianą jest aktualizacja kontrolerów i szablonów, tak aby mechanizm routingu wykorzystywał ``slug`` zamiast ``id`` konferencji.
+Ostatnią zmianą jest aktualizacja kontrolerów i szablonów, tak aby mechanizm routingu wykorzystywał ``slug`` zamiast ``id`` konferencji. Ponieważ parametr trasy nie jest już kluczem podstawowym encji, wskaż atrybutowi ``#[MapEntity]``, którą właściwość ma dopasować, przekazując jawne ``mapping``:
 
 .. code-block:: diff
     :caption: patch_file

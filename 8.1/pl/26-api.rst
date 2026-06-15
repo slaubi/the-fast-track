@@ -238,7 +238,7 @@ Konfigurowanie CORS
 
 Domyślnie reguła tego samego pochodzenia (ang. same-origin security policy) nowoczesnych klientów HTTP sprawia, że wywoływanie API z innej domeny jest zabronione. Pakiet CORS, zainstalowany jako część ``composer req api``, wysyła nagłówki Cross-Origin Resource Sharing oparte na zmiennej środowiskowej ``CORS_ALLOW_ORIGIN``.
 
-Domyślnie, jego wartość zdefiniowana w ``.env`` pozwala na odbieranie żądań HTTP z ``localhost`` i ``127.0.0.1`` na dowolnym porcie. To jest dokładnie to, czego potrzebujemy w kolejnym kroku, ponieważ stworzymy aplikację jednostronicową (ang. single-page application, SPA) mającą swój własny serwer WWW, która będzie odwoływać się do API.
+Domyślnie, jego wartość zdefiniowana w ``.env`` pozwala na odbieranie żądań HTTP z ``localhost`` i ``127.0.0.1`` na dowolnym porcie. Dostosuj ją, gdy aplikacja hostowana w innej domenie, taka jak aplikacja mobilna lub zewnętrzny frontend, musi odwoływać się do API.
 
 .. sidebar:: Idąc dalej
 
