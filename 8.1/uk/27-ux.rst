@@ -548,7 +548,7 @@
 Upsun дозволяє розгортати кілька застосунків у межах одного проекту. Додати інший застосунок можна створивши файл ``.platform.app.yaml`` у будь-якому підкаталозі. Створіть його у каталозі ``spa/`` із назвою ``spa``:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 1
 
     name: spa

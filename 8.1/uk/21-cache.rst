@@ -580,7 +580,7 @@ HTTP-виклик заголовка конференції на даний мо
 Нарешті, створіть файл ``config.vcl``, щоб налаштувати Varnish:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -592,7 +592,7 @@ HTTP-виклик заголовка конференції на даний мо
 Підтримка ESI у Varnish має бути увімкнена явно для кожного запиту. Щоб охопити всі запити, Symfony використовує стандартні заголовки ``Surrogate-Capability`` та ``Surrogate-Control`` для узгодження підтримки ESI:
 
 .. code-block:: vcl
-    :caption: .platform/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
