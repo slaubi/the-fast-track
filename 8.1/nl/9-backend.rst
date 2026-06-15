@@ -25,8 +25,6 @@ Voeg EasyAdmin toe als projectdependency:
 
     $ symfony composer req "easycorp/easyadmin-bundle:^5"
 
-``admin`` is een alias voor de ``easycorp/easyadmin-bundle`` package.
-
 *Aliases* zijn geen feature van Composer, maar een concept dat door Symfony toegevoegd is om je het leven eenvoudiger te maken. Aliases geven je sneller toegang tot populaire Composer packages. Wil je een ORM voor je applicatie? Vereis dan ``orm``. Wil je een API ontwikkelen? Vereis dan ``api``. Deze aliases worden automatisch vertaald naar één of meerdere gewone Composer packages. Het zijn wel eigen keuzes die gemaakt werden door het Symfony core team.
 
 Een andere mooie feature is dat je altijd de ``symfony`` vendor kan weglaten. Vereis ``cache`` in plaats van ``symfony/cache``.
@@ -84,7 +82,7 @@ Als je de standaard antwoorden accepteert, zal de volgende controller worden aan
 
 Volgens conventie worden alle admin-controllers opgeslagen binnen hun eigen ``App\Controller\Admin`` namespace.
 
-Ga naar de gegenereerde admin-backend op ``/admin``, zoals geconfigureerd bij de ``index()`` methode. Je kunt eventueel de URL aanpassen:
+Ga naar de gegenereerde admin-backend op ``/admin``, zoals geconfigureerd door het ``#[AdminDashboard]`` attribuut. Je kunt eventueel de URL aanpassen:
 
 .. figure:: screenshots/easy-admin-empty.png
     :alt: /admin
@@ -163,9 +161,9 @@ De laatste stap is om links naar de conferentie- en reactie-admin CRUDs toe te v
          }
      }
 
-We hebben de ``configureMenuItems()`` methode overschreven om menu-items met relevante iconen voor conferenties en reacties toe te voegen en om een link terug naar de homepage toe te voegen.
+We hebben de ``configureMenuItems()`` methode overschreven om menu-items met relevante iconen voor conferenties en reacties toe te voegen en om een link terug naar de homepage toe te voegen. De classes ``ConferenceCrudController`` en ``CommentCrudController`` bevinden zich in dezelfde ``App\Controller\Admin`` namespace als het dashboard, dus ze hebben geen extra ``use``-statements nodig.
 
-EasyAdmin heeft een API om het linken naar entity CRUDs makkelijker te maken middels de ``MenuItem::linkToRoute()`` methode.
+EasyAdmin heeft een API om het linken naar entity CRUDs makkelijker te maken middels de ``MenuItem::linkTo()`` methode, die de CRUD-controller class als argument neemt.
 
 De dashboard-pagina is op dit moment nog leeg. Hier zou je statistieken of andere relevante informatie kunnen tonen. Omdat we op dit moment nog geen informatie te tonen hebben, gaan we redirecten naar de conferentie lijst:
 

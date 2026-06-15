@@ -28,7 +28,7 @@ Aangezien we een volledig uitgeruste web applicatie aan het maken zijn, hebben w
 
 * ``--docker``: Op je lokale machine gebruiken we Docker om services zoals PostgreSQL te beheren. Deze optie schakelt Docker in, zodat Symfony automatisch Docker services zal toevoegen op basis van de vereiste packages (bijvoorbeeld een PostgreSQL service wanneer de ORM wordt toegevoegd, of een mailcatcher wanneer Symfony Mailer wordt toegevoegd).
 
-* ``--cloud``: Als je je project wil deployen op Upsun zal deze optie automatisch een logische Upsun configuratie genereren. Upsun geniet de voorkeur en is de eenvoudigste manier om testing-, staging- en productieomgevingen van Symfony in de cloud te deployen.
+* ``--upsun``: Als je je project wil deployen op Upsun zal deze optie automatisch een logische Upsun configuratie genereren. Upsun geniet de voorkeur en is de eenvoudigste manier om testing-, staging- en productieomgevingen van Symfony in de cloud te deployen.
 
 Als je de GitHub-repository voor de basisstructuur bekijkt zul je merken dat deze bijna leeg is. Alleen een ``composer.json`` bestand. Maar de ``guestbook``-map zit vol met bestanden. Hoe is dat mogelijk? Het antwoord is te vinden in de ``symfony/flex``-package. Symfony Flex is een Composer-plugin die op het installatieproces is ingehaakt. Wanneer een Composer-package een *recipe* heeft, voert Symfony Flex deze uit.
 
@@ -143,7 +143,7 @@ Mijn keuze is gemaakt, het wordt `Upsun`_ . Het biedt alles wat we nodig hebben 
 .. index::
     single: Symfony CLI;project:init
 
-Aangezien we de ``--cloud`` optie gebruikt hebben bij het aanmaken van het project, is Upsun reeds geïnitialiseerd met enkele bestanden die nodig zijn voor Upsun, namelijk ``.platform/services.yaml``, ``.platform/routes.yaml`` en ``.platform.app.yaml``.
+Aangezien we de ``--upsun`` optie gebruikt hebben bij het aanmaken van het project, is Upsun reeds geïnitialiseerd met het enige configuratiebestand dat het nodig heeft, namelijk ``.upsun/config.yaml``.
 
 In productie gaan
 -----------------
@@ -203,10 +203,10 @@ Merk op dat je niet de mooie standaard Symfony-pagina te zien krijgt op Upsun. W
 
     * De `Upsun-documentatie`_.
 
-.. _`degene`: http://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`degene`: https://clipartmag.com/images/website-under-construction-image-6.gif
 .. _`project-skelet`: https://github.com/symfony/skeleton
-.. _`Upsun`:     https://platform.sh/marketplace/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
 .. _`officiële Symfony-recipes`: https://github.com/symfony/recipes
 .. _`recipes van de community`: https://github.com/symfony/recipes-contrib
 .. _`lokale webserver van Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
-.. _`Upsun-documentatie`: https://docs.platform.sh/guides/symfony.html?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`Upsun-documentatie`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

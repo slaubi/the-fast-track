@@ -59,7 +59,7 @@ PHP
 
 We zullen Docker gebruiken voor services, maar ik heb PHP graag op mijn lokale computer geïnstalleerd vanwege snelheid, stabiliteit en eenvoud. Het kan oubollig overkomen, maar de combinatie van een lokale PHP-installatie en Docker services werkt voor mij perfect.
 
-Gebruik PHP 8.1 en controleer of de volgende PHP extensions geïnstalleerd zijn, of installeer ze nu: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl`` en ``sodium``. Installeer optioneel ook de ``redis``, ``curl`` en ``zip`` extensies.
+Gebruik PHP 8.5 en controleer of de volgende PHP extensions geïnstalleerd zijn, of installeer ze nu: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium`` en ``iconv``. Installeer optioneel ook de ``redis``, ``curl`` en ``zip`` extensies.
 
 Je kunt controleren welke extensies momenteel ingeschakeld zijn door ``php -m`` uit te voeren.
 
@@ -77,11 +77,6 @@ Als je niet bekend bent met Composer, neem dan even de tijd om erover te lezen.
 .. tip::
 
     Je hoeft niet de volledige commando's in te voeren. ``composer req`` doet hetzelfde als ``composer require`` en ``composer rem`` doet bijvoorbeeld hetzelfde als ``composer remove``, ...
-
-NodeJS
-------
-
-We schrijven weinig JavaScript code, maar we zullen JavaScript/NodeJS tools gebruiken om onze assets te beheren. Controleer dat je `NodeJS`_ geïnstalleerd hebt.
 
 Docker en Docker Compose
 ------------------------
@@ -130,7 +125,6 @@ Bovendien selecteert de Symfony CLI automatisch de "best mogelijke" PHP-versie v
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Installeer ze`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
 .. _`een "certificate authority" (CA) installeren`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

@@ -4,7 +4,7 @@ Async gaan
 .. index::
     single: Async
 
-Het controleren op spam tijdens afhandelen van het formulier kan tot problemen leiden. Als de Akismet API traag wordt, dan zal onze website ook traag worden voor gebruikers. Maar erger nog, als er een time-out optreedt of als de Akismet API niet beschikbaar is, dan kunnen we reacties kwijtraken.
+Het controleren op spam tijdens afhandelen van het formulier kan tot problemen leiden. Als het AI-model traag wordt, dan zal onze website ook traag worden voor gebruikers. Maar erger nog, als er een time-out optreedt of als het model niet beschikbaar is, dan kunnen we reacties kwijtraken.
 
 Idealiter slaan we de ingediende gegevens op zonder ze te publiceren en sturen we onmiddellijk een response terug. Het controleren op spam kan dan later gebeuren.
 
@@ -114,7 +114,7 @@ Update de EasyAdmin-configuratie om de status van de reactie te kunnen zien:
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Vergeet niet om ook de tests bij te werken door de ``state`` toe te voegen aan de fixtures:
+Vergeet niet om ook de test-factories bij te werken: reacties die door ``CommentFactory`` worden aangemaakt, moeten standaard gepubliceerd zijn zodat ze op de conferentiepagina's verschijnen (een test kan de state altijd overschrijven wanneer een gemodereerde reactie nodig is):
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Het bericht van de ingevoerde reactie zou direct geconsumeerd moeten worden:
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-De activiteit van de message consumer is gelogd, maar je krijgt direct feedback in de console door de ``-vv`` flag mee te geven. Je zal zelfs de Akismet API call zien voorbijkomen.
+De activiteit van de message consumer is gelogd, maar je krijgt direct feedback in de console door de ``-vv`` flag mee te geven. Je zal zelfs de OpenAI API call zien voorbijkomen.
 
 Gebruik ``Ctrl+C`` om de consumer te stoppen.
 
@@ -453,7 +453,7 @@ Om een worker te stoppen, stop je de webserver of kill je de PID die door het ``
 Mislukte berichten opnieuw proberen
 -----------------------------------
 
-En wat als Akismet down is terwijl er een bericht wordt geconsumeerd? Er is geen impact voor mensen die een reactie geven, maar het bericht gaat verloren en spam wordt niet gecontroleerd.
+En wat als de database down is terwijl er een bericht wordt geconsumeerd? Er is geen impact voor mensen die een reactie geven, maar het bericht mislukt en spam wordt niet gecontroleerd.
 
 Messenger heeft een retry mechanisme voor het geval er een exception optreedt tijdens de afhandeling van een bericht:
 
