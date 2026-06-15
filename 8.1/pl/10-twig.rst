@@ -159,7 +159,7 @@ Dodaj metodę ``show()`` w ``src/Controller/ConferenceController.php``:
     +    }
      }
 
-Ta metoda zachowuje się w szczególny sposób, z którym jeszcze się nie spotkaliśmy. Prosimy o wstrzyknięcie do niej obiektu klasy ``Conference``. Konferencji w bazie może być wiele, ale Symfony jest w stanie określić, którą z nich chcesz pobrać, na podstawie parametru ``{id}`` podanego w ścieżce żądania (``id`` jest kluczem podstawowym tabeli ``conference`` w bazie danych).
+Ta metoda zachowuje się w szczególny sposób, z którym jeszcze się nie spotkaliśmy. Prosimy o wstrzyknięcie do niej obiektu klasy ``Conference``. Konferencji w bazie może być wiele, ale atrybut ``#[MapEntity]`` mówi Symfony, aby pobrał właściwą na podstawie parametru ``{id}`` podanego w ścieżce żądania (``id`` jest kluczem podstawowym tabeli ``conference`` w bazie danych).
 
 Pobranie komentarzy powiązanych z konferencją można wykonać za pomocą metody ``findBy()``, która przyjmuje kryteria zapytania jako pierwszy argument.
 
@@ -360,7 +360,7 @@ Aby móc zmieniać stronicowanie w szablonie, zamiast obiektu Doctrine Collectio
          }
      }
 
-Kontroler pobiera parametr ``offset`` z adresu żądania przechowywanego w obiekcie klasy Request (``$request->query``) jako liczbę całkowitą (``getInt()``). Domyślnie jest to 0, jeśli parametr ten nie został podany.
+Atrybut ``#[MapQueryParameter]`` mapuje parametr ``offset`` z query stringa na argument kontrolera ``$offset``, z wartością domyślną ``0``, gdy nie został ustawiony. Ponieważ offset pochodzi od klienta, ograniczamy go, aby uniknąć wartości ujemnych.
 
 Właściwości ``previous`` i ``next`` (przesunięcie do przodu i do tyłu) są określane na podstawie wszystkich informacji pochodzących z paginatora.
 

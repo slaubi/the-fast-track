@@ -80,26 +80,24 @@ Inny przykład użycia wbudowanego we framework mechanizmu zdarzeń i nasłuchiw
 
 Dowolny rodzaj rozszerzenia, jak paczka lub pakiet, może emitować własne typy zdarzeń, co czyni jego kod łatwo rozszerzalnym.
 
-Aby uniknąć posiadania pliku konfiguracyjnego opisującego zdarzenia, których nasłuchiwacz zdarzeń chce nasłuchiwać, utwórz *subskrybenta zdarzeń* (ang. event subscriber). Subskrybent zdarzeń jest rodzajem nasłuchiwacza zdarzeń posiadającym statyczną metodę ``getSubscribedEvents()``, która zwraca jego konfigurację. Dzięki temu subskrybent może być automatycznie zarejestrowany w dyspozytorze zdarzeń Symfony.
+Aby uniknąć posiadania pliku konfiguracyjnego opisującego zdarzenia, których nasłuchiwacz zdarzeń chce nasłuchiwać, dodaj atrybut ``#[AsEventListener]`` do klasy lub metody nasłuchiwacza. Dzięki temu nasłuchiwacze mogą być automatycznie zarejestrowane w dyspozytorze zdarzeń Symfony.
 
-Implementacja subskrybenta zdarzeń
+Implementacja nasłuchiwacza zdarzeń
 -----------------------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Znasz już tę śpiewkę – użyj Maker Bundle, aby wygenerować subskrybenta zdarzeń:
+Znasz już tę śpiewkę – użyj Maker Bundle, aby wygenerować nasłuchiwacz zdarzeń:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:listener TwigEventListener
 
-Polecenie zapyta o to, jakich zdarzeń chcesz nasłuchiwać. Wybierz zdarzenie typu ``Symfony\Component\HttpKernel\Event\ControllerEvent``, które jest emitowane tuż przed wykonaniem kodu kontrolera. Jest to najlepszy moment na wstrzyknięcie globalnej zmiennej ``conferences`` w taki sposób, aby Twig miał do niej dostęp, kiedy kontroler będzie renderował szablon. Zaktualizuj swojego subskrybenta zdarzeń w następujący sposób:
+Polecenie zapyta o to, jakich zdarzeń chcesz nasłuchiwać. Wybierz zdarzenie typu ``Symfony\Component\HttpKernel\Event\ControllerEvent``, które jest emitowane tuż przed wykonaniem kodu kontrolera. Jest to najlepszy moment na wstrzyknięcie globalnej zmiennej ``conferences`` w taki sposób, aby Twig miał do niej dostęp, kiedy kontroler renderuje szablon. Zaktualizuj swój nasłuchiwacz zdarzeń w następujący sposób:
 
 .. code-block:: diff
     :caption: patch_file

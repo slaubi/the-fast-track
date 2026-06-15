@@ -10,7 +10,7 @@ Ponieważ książka zostanie opublikowana podczas SymfonyCon Amsterdam, byłoby 
 
 Trafiony-zatopiony. Projekt będzie polegał na zbieraniu informacji na temat konferencji: lista konferencji na stronie głównej, osobna strona dla każdej konferencji, mnóstwo miłych komentarzy. Komentarz składa się z krótkiego tekstu i opcjonalnego zdjęcia wykonanego podczas konferencji. Przypuszczam, że właśnie wypisałem całą specyfikację, której potrzebujemy, aby zacząć.
 
-*Projekt* będzie zawierał kilka *aplikacji*. Klasyczna aplikacja internetowa z frontendem w HTML, API i SPA dla telefonów komórkowych. Co Ty na to?
+*Projekt* będzie zawierał kilka *aplikacji*. Klasyczna aplikacja internetowa z frontendem w HTML, który działa równie płynnie jak SPA, oraz API gotowe do zasilania aplikacji mobilnych. Co Ty na to?
 
 Nauka przez praktykę
 ---------------------

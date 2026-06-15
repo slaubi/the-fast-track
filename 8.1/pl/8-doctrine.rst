@@ -213,7 +213,7 @@ Wygenerowany kod wygląda następująco (tylko niewielka część pliku jest tu 
 
 Zauważ, że właśnie utworzona klasa jest zwykłą klasą PHP - nie ma w niej elementów Doctrine. Metadane wykorzystywane przez Doctrine do powiązania klasy z tabelą w bazie danych dodajemy, używając atrybutów.
 
-Doctrine dodał atrybut ``id``, aby zachować klucz główny w tabeli bazy danych. Ten klucz (``ORM\Id()``) jest automatycznie generowany (``ORM\GeneratedValue()``) w sposób zależny od silnika bazy danych (oparty o wzorzec strategii).
+Doctrine dodał atrybut ``id``, aby zachować klucz główny w tabeli bazy danych. Ten klucz (``#[ORM\Id]``) jest automatycznie generowany (``#[ORM\GeneratedValue]``) w sposób zależny od silnika bazy danych (oparty o wzorzec strategii).
 
 .. index::
     single: Command;make:entity

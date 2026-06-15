@@ -59,7 +59,7 @@ PHP
 
 Będziemy używać Dockera dla usług, lecz PHP lubię mieć zainstalowany na lokalnym komputerze dla wydajności, stabilności i prostoty. Nazywaj mnie staromodnym, jeśli chcesz, ale połączenie lokalnego PHP i Dockera jest dla mnie idealne.
 
-Użyj PHP 8.1 i sprawdź, czy następujące rozszerzenia PHP są zainstalowane. Jeżeli nie, zainstaluj je teraz: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``. Opcjonalnie możesz zainstalować również  ``redis``, ``curl`` i ``zip``.
+Użyj PHP 8.5 i sprawdź, czy następujące rozszerzenia PHP są zainstalowane. Jeżeli nie, zainstaluj je teraz: ``intl``, ``pdo_pgsql``, ``xsl``, ``amqp``, ``gd``, ``openssl``, ``sodium``, ``iconv``. Opcjonalnie możesz zainstalować również  ``redis``, ``curl`` i ``zip``.
 
 Możesz sprawdzić aktualnie włączone rozszerzenia poprzez ``php -m``.
 
@@ -77,11 +77,6 @@ Jeśli nie znasz narzędzia Composer, poświęć chwilę na zapoznanie się z ni
 .. tip::
 
     Nie musisz wpisywać pełnych nazw poleceń: ``composer req`` robi to samo co ``composer require``, użyj ``composer rem`` zamiast ``composer remove``, ....
-
-NodeJS
-------
-
-Co prawda nie będziemy pisali dużo kodu w JavaScript, ale będziemy używali narzędzi napisanych w JavaScript/NodeJS do zarządzania naszymi zasobami (ang. assets). Upewnij się, że masz zainstalowany `NodeJS`_.
 
 Docker i Docker Compose
 -----------------------
@@ -130,7 +125,6 @@ Ponadto, Symfony CLI automatycznie wybiera "najlepszą" możliwą wersję PHP dl
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
 .. _`Zainstaluj je`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
 .. _`zainstalować urząd certyfikacji (ang. Certificate Authority)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls

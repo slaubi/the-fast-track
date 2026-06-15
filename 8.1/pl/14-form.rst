@@ -334,6 +334,8 @@ Powinniśmy teraz zająć się przesyłaniem formularzy i zapisaniem dostarczony
              $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
+Zwróć uwagę, że obiekt ``Request`` jest teraz wstrzykiwany do kontrolera, ponieważ formularz potrzebuje go do zbadania przesłanych danych za pomocą ``handleRequest()``.
+
 Po wysłaniu formularza, obiekt ``Comment`` jest aktualizowany zgodnie z przesłanymi danymi.
 
 Konferencja musi być taka sama jak ta z adresu URL (usunęliśmy ją z formularza).
@@ -501,7 +503,7 @@ Ostatnim zagadnieniem jest przechowywanie przesłanych plików na serwerach prod
 
 Nie wszystko jest w trybie tylko do odczytu w projekcie Symfony. Bardzo staramy się umieścić jak najwięcej rzeczy w pamięci podręcznej podczas budowania kontenera (podczas fazy rozgrzewania <ang. warmup>), ale Symfony nadal musi być w stanie zapisać gdzieś zrzuty pamięci podręcznej użytkownika, logi, sesje, jeśli są one przechowywane w systemie plików, i wiele więcej.
 
-Spójrz na plik ``.platform.app.yaml``. W katalogu ``var/`` jest już zasób (ang. *mount*) z prawami zapisu. Katalog ``var/`` jest jedynym katalogiem, w którym Symfony dokonuje zapisu (zrzuty pamięci podręcznej, logi, …).
+Spójrz na plik ``.upsun/config.yaml``. W katalogu ``var/`` jest już zasób (ang. *mount*) z prawami zapisu. Katalog ``var/`` jest jedynym katalogiem, w którym Symfony dokonuje zapisu (zrzuty pamięci podręcznej, logi, …).
 
 Stwórzmy nowy zasób (ang. mount) dla przesłanych zdjęć:
 

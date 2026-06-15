@@ -288,7 +288,7 @@ Profilowanie zasobów API
 .. index::
     single: Profiling;API
 
-Profilowanie API lub SPA jest wygodniejsze z poziomu linii komend, za pomocą zainstalowanego wcześniej narzędzia Blackfire CLI:
+Profilowanie API jest wygodniejsze z poziomu linii komend, za pomocą zainstalowanego wcześniej narzędzia Blackfire CLI:
 
 .. code-block:: terminal
     :class: ignore

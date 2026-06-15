@@ -75,18 +75,16 @@ Przepływ komentarzy można opisać w pliku: ``config/packages/workflow.yaml``
 .. index::
     single: Command;workflow:dump
 
-Aby sprawdzić poprawność przepływu pracy, wygeneruj jego wizualną reprezentację:
+Aby sprawdzić poprawność przepływu pracy, wygeneruj jego wizualną reprezentację w formacie Mermaid:
 
 .. code-block:: terminal
 
     $ symfony console workflow:dump comment --dump-format=mermaid
 
+Wklej wynik do `edytora Mermaid Live`_, aby go wyrenderować; GitHub i GitLab również renderują diagramy Mermaid natywnie w plikach Markdown:
+
 .. image:: images/workflow.png
     :align: center
-
-.. note::
-
-    Polecenie ``dot`` jest częścią narzędzia `Graphviz`_.
 
 Korzystanie z przepływu pracy
 ------------------------------
@@ -230,6 +228,6 @@ Zwróć uwagę na wybór o numerze ``8`` - ``Symfony\Component\Workflow\Workflow
 
     * `Dokumentacja Symfony Workflow`_.
 
-.. _`Graphviz`: https://www.graphviz.org/
+.. _`edytora Mermaid Live`: https://mermaid.live/
 .. _`Przepływy pracy i maszyny stanu`: https://symfony.com/doc/current/workflow/workflow-and-state-machine.html
 .. _`Dokumentacja Symfony Workflow`: https://symfony.com/doc/current/workflow.html

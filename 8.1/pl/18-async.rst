@@ -4,7 +4,7 @@ Idziemy w asynchroniczność
 .. index::
     single: Async
 
-Sprawdzenie, czy komentarz nie jest spamem, podczas obsługi wysyłania formularza może prowadzić do pewnych problemów. Jeśli interfejs API Akismet stanie się powolny, nasza strona również będzie powolna dla użytkowników. Co gorsza, jeżeli przekroczymy limit czasu lub API Akismet jest niedostępne, możemy stracić komentarze.
+Sprawdzenie, czy komentarz nie jest spamem, podczas obsługi wysyłania formularza może prowadzić do pewnych problemów. Jeśli model AI stanie się powolny, nasza strona również będzie powolna dla użytkowników. Co gorsza, jeżeli przekroczymy limit czasu lub model jest niedostępny, możemy stracić komentarze.
 
 Idealnie byłoby, gdybyśmy przechowywali przesłane dane bez ich publikowania i natychmiast zwracali odpowiedź. Sprawdzenie, czy nie ma spamu, może zostać wykonane poza głównym wątkiem.
 
@@ -114,7 +114,7 @@ Zaktualizuj konfigurację EasyAdmin tak, by móc zobaczyć stan komentarza:
              $createdAt = DateTimeField::new('createdAt')->setFormTypeOptions([
                  'years' => range(date('Y'), date('Y') + 5),
 
-Nie zapomnij również zaktualizować testów poprzez ustawienie atrybutu ``state`` w danych testowych (ang. fixtures):
+Nie zapomnij również zaktualizować fabryk testowych: komentarze tworzone przez ``CommentFactory`` powinny być domyślnie opublikowane, aby pojawiały się na stronach konferencji (test zawsze może nadpisać stan, gdy potrzebuje zmoderowanego komentarza):
 
 .. code-block:: diff
     :caption: patch_file
@@ -390,7 +390,7 @@ Powinno ono natychmiast przetworzyć wiadomość wysłaną w związku z przesła
     11:30:20 INFO      [messenger] Message App\Message\CommentMessage handled by App\MessageHandler\CommentMessageHandler::__invoke ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage","handler" => "App\MessageHandler\CommentMessageHandler::__invoke"]
     11:30:20 INFO      [messenger] App\Message\CommentMessage was handled successfully (acknowledging to transport). ["message" => App\Message\CommentMessage^ { …},"class" => "App\Message\CommentMessage"]
 
-Aktywność konsumentów jest zapisywana w logach, ale możesz otrzymać natychmiastową informację zwrotną na konsoli, przekazując flagę``-vv``. Możesz dostrzec nawet połączenie do API Akismet.
+Aktywność konsumentów jest zapisywana w logach, ale możesz otrzymać natychmiastową informację zwrotną na konsoli, przekazując flagę``-vv``. Możesz dostrzec nawet połączenie do API OpenAI.
 
 Aby zatrzymać konsumenta, naciśnij ``Ctrl+C``.
 
@@ -453,7 +453,7 @@ Aby zatrzymać robotnika, zatrzymaj serwer WWW lub zabij PID podany przez polece
 Ponawianie dostarczenia niedostarczonych wiadomości
 ----------------------------------------------------
 
-A co, jeśli API Akismet nie działa podczas przetwarzania wiadomości? Twórca komentarza nie ma o tym pojęcia, ale wiadomość zostaje utracona i komentarz, którego dotyczyła, nie zostaje sprawdzony pod kątem bycia spamem.
+A co, jeśli baza danych nie działa podczas przetwarzania wiadomości? Twórca komentarza nie ma o tym pojęcia, ale wiadomość kończy się niepowodzeniem i komentarz, którego dotyczyła, nie zostaje sprawdzony pod kątem bycia spamem.
 
 Messenger posiada mechanizm ponawiania przetwarzania wiadomości w przypadku wystąpienia wyjątku podczas jej obsługi:
 
