@@ -13,6 +13,10 @@ En het gaat niet alleen om nieuwe manieren om dingen te doen. Het gaat ook om ni
 
 Ik voel ook de behoefte aan een nieuw boek omdat het web zich sterk heeft ontwikkeld. Onderwerpen zoals `API's`_ , `SPA's`_ , `containerisatie`_ , `Continuous Deployment`_ , en vele andere zouden nu moeten worden besproken.
 
+Is een boek nog wel jouw tijd waard nu een LLM de code voor je kan schrijven? Ik stelde mezelf die vraag terwijl ik aan deze editie werkte. Mijn antwoord is een volmondig ja. Ik gebruik elke dag AI-tools, en ze schrijven inmiddels bijna al mijn code; maar ze hebben niets veranderd aan wat er echt toe doet. Je moet nog steeds de architectuur van je applicatie begrijpen, beslissen wat je gaat bouwen, de gegenereerde code beoordelen en ontdekken wat subtiel verkeerd is. Je kunt geen code beoordelen die je niet begrijpt; en je kunt een tool niet sturen richting een architectuur die je je niet kunt voorstellen. De reden om boeken te lezen is oordeelsvermogen, geen nostalgie.
+
+Oordeelsvermogen vereist begrip, en begrip is precies wat dit boek opbouwt: een compleet mentaal model van een Symfony-applicatie, van de eerste commit tot productie. Met dat model in je hoofd weet je, de volgende keer dat een LLM een controller of een Messenger-handler voor je genereert, of het klopt, en waarom. We zullen er zelfs eentje aan het werk zetten binnen de applicatie zelf om reacties te modereren.
+
 Ik zal jouw kostbare tijd niet verdoen met lange paragrafen, noch lange uitleg over kernconcepten. Dit boek gaat meer over het traject. Waar te beginnen, welke code te schrijven, het wanneer en hoe. Dit met als doel jouw interesse te wekken voor belangrijke onderwerpen en jou te laten beslissen of je meer wilt leren en je verder wilt verdiepen.
 
 Ik wil de bestaande documentatie ook niet zomaar overnemen. De kwaliteit daarvan is uitstekend. Ik zal naar de documentatie verwijzen in het gedeelte "Verder Gaan" aan het einde van elke stap/hoofdstuk. Beschouw dit boek als een lijst met verwijzingen naar meer bronnen.
