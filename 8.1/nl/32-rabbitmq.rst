@@ -14,16 +14,13 @@ Om RabbitMQ te gebruiken in plaats van PostgreSQL als message-broker:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
-    @@ -5,10 +5,7 @@ framework:
+    --- i/config/packages/messenger.yaml
+    +++ w/config/packages/messenger.yaml
+    @@ -5,7 +5,7 @@ framework:
              transports:
                  # https://symfony.com/doc/current/messenger.html#transport-configuration
                  async:
     -                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
-    -                options:
-    -                    use_notify: true
-    -                    check_delayed_interval: 60000
     +                dsn: '%env(RABBITMQ_URL)%'
                      retry_strategy:
                          max_retries: 3
@@ -46,19 +43,19 @@ Zoals je misschien al geraden hebt, moeten we ook RabbitMQ toevoegen aan de Dock
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/docker-compose.yml
-    +++ b/docker-compose.yml
-    @@ -19,6 +19,10 @@ services:
-         image: redis:5-alpine
+    --- i/compose.yaml
+    +++ w/compose.yaml
+    @@ -18,6 +18,10 @@ services:
+         image: redis:8.0-alpine
          ports: [6379]
 
     +  rabbitmq:
-    +    image: rabbitmq:3-management
+    +    image: rabbitmq:4.2-management
     +    ports: [5672, 15672]
     +
      volumes:
      ###> doctrine/doctrine-bundle ###
-       db-data:
+       database_data:
 
 Docker services herstarten
 --------------------------
@@ -67,8 +64,8 @@ Om Docker Compose te dwingen rekening te houden met de RabbitMQ-container, stop 
 
 .. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 .. code-block:: terminal
     :class: hide
@@ -114,41 +111,41 @@ RabbitMQ toevoegen aan de productieservers kan, door deze toe te voegen aan de l
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/services.yaml
-    +++ b/.platform/services.yaml
-    @@ -18,3 +18,8 @@ files:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -25,4 +25,8 @@ services:
+             rediscache:
+                 type: redis:8.0
 
-     rediscache:
-         type: redis:5.0
+    +    queue:
+    +        type: rabbitmq:4.2
+    +        size: S
     +
-    +queue:
-    +    type: rabbitmq:3.7
-    +    disk: 1024
-    +    size: S
+     applications:
 
 Verwijs ernaar in de web container configuratie en schakel de ``amqp`` PHP-extensie in:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -8,6 +8,7 @@ dependencies:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -39,6 +39,7 @@ applications:
 
-     runtime:
-         extensions:
-    +        - amqp
-             - apcu
-             - blackfire
-             - ctype
-    @@ -42,6 +43,7 @@ mounts:
-     relationships:
-         database: "database:postgresql"
-         redis: "rediscache:redis"
-    +    rabbitmq: "queue:rabbitmq"
-         
-     hooks:
-         build: |
+             runtime:
+                 extensions:
+    +                - amqp
+                     - apcu
+                     - blackfire
+                     - ctype
+    @@ -72,5 +73,6 @@ applications:
+             relationships:
+                 database: "database:postgresql"
+                 redis: "rediscache:redis"
+    +            rabbitmq: "queue:rabbitmq"
+
+             hooks:
+                 build: |
 
 .. index::
     single: Platform.sh;Tunnel

@@ -54,4 +54,4 @@ Een andere goede gewoonte is om regelmatig te deployen, bijvoorbeeld aan het ein
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push

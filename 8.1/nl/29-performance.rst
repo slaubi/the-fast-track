@@ -51,8 +51,8 @@ Activeer de PHP-probe voor ons project:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/php.ini
-    +++ b/php.ini
+    --- i/php.ini
+    +++ w/php.ini
     @@ -7,3 +7,7 @@ session.use_strict_mode=On
      realpath_cache_ttl=3600
      zend.detect_unicode=Off
@@ -87,7 +87,7 @@ Het opzetten van de Blackfire Agent op Docker
 De Blackfire agent service is reeds geconfigureerd in de Docker Compose stack:
 
 .. code-block:: yaml
-    :caption: docker-compose.override.yml
+    :caption: compose.override.yaml
     :class: ignore
 
     ###> blackfireio/blackfire-symfony-meta ###
@@ -115,8 +115,8 @@ Je kan nu de nieuwe container lanceren:
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose stop
-    $ docker-compose up -d
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 Herstellen van een niet-werkende Blackfire installatie
 ------------------------------------------------------
@@ -127,8 +127,8 @@ Als je een fout krijgt tijdens het profileren, verhoog dan het Blackfire lognive
     :caption: patch_file
     :class: ignore
 
-    --- a/php.ini
-    +++ b/php.ini
+    --- i/php.ini
+    +++ w/php.ini
     @@ -10,3 +10,4 @@ zend.detect_unicode=Off
      [blackfire]
      # use php_blackfire.dll on Windows
@@ -173,7 +173,7 @@ Zet de *server* inloggegevens op als **productie** geheimen:
 De PHP probe is reeds geactiveerd, op dezelfde manier als iedere andere benodigde PHP extensie:
 
 .. code-block:: yaml
-    :caption: .platform.app.yaml
+    :caption: .upsun/config.yaml
     :emphasize-lines: 9
     :class: ignore
 
@@ -208,8 +208,8 @@ En gebruik het om Varnish te configureren:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform/config.vcl
-    +++ b/.platform/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,3 +1,11 @@
     +acl profile {
     +   # Authorize the local IP address (replace with the IP found above)
@@ -333,10 +333,10 @@ Maak een ``.blackfire.yaml`` bestand aan met de volgende inhoud:
             visit url('/fr/conference/amsterdam-2019')
                 expect status_code() == 200
             submit button("Submit")
-                param comment_form[author] 'Fabien'
-                param comment_form[email] 'me@example.com'
-                param comment_form[text] 'Such a good conference!'
-                param comment_form[photo] file(fake('simple_image', '/tmp', 400, 300, 'png', true, true), 'placeholder-image.jpg')
+                param comment[author] 'Fabien'
+                param comment[email] 'me@example.com'
+                param comment[text] 'Such a good conference!'
+                param comment[photo] file(fake('simple_image', '/tmp', 400, 300, 'png', true, true), 'placeholder-image.jpg')
                 expect status_code() == 302
             follow
                 expect status_code() == 200
@@ -378,11 +378,11 @@ Download de Blackfire-player om het scenario lokaal te kunnen uitvoeren:
 
     $ curl -OLsS https://get.blackfire.io/blackfire-player.phar
     $ chmod +x blackfire-player.phar
-    $ cp /home/fabien/Code/github/blackfireio/blackfire.io/player/blackfire-player.phar blackfire-player.phar
 
 Voer dit scenario uit in development:
 
 .. code-block:: terminal
+    :class: ignore
 
     $ ./blackfire-player.phar run --endpoint=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL` .blackfire.yaml --variable "webmail_url=`symfony var:export MAILER_WEB_URL 2>/dev/null`" --variable="env=dev" -vv
 

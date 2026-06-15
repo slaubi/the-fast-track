@@ -27,14 +27,12 @@ Alle pagina's op de website zullen dezelfde *lay-out* delen. Bij de installatie 
         <head>
             <meta charset="UTF-8">
             <title>{% block title %}Welcome!{% endblock %}</title>
-            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-            {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
             {% block stylesheets %}
-                {{ encore_entry_link_tags('app') }}
             {% endblock %}
 
             {% block javascripts %}
-                {{ encore_entry_script_tags('app') }}
+                {% block importmap %}{{ importmap('app') }}{% endblock %}
             {% endblock %}
         </head>
         <body>
@@ -82,8 +80,8 @@ Update de controller om de Twig-template weer te geven:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -2,22 +2,19 @@
 
      namespace App\Controller;
@@ -91,10 +89,10 @@ Update de controller om de Twig-template weer te geven:
     +use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(): Response
@@ -134,24 +132,25 @@ Voeg een ``show()`` methode toe aan ``src/Controller/ConferenceController.php`` 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -2,6 +2,8 @@
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -2,6 +2,9 @@
 
      namespace App\Controller;
 
     +use App\Entity\Conference;
     +use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+    +use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -17,4 +19,13 @@ class ConferenceController extends AbstractController
+    @@ -17,4 +20,13 @@ final class ConferenceController extends AbstractController
                  'conferences' => $conferenceRepository->findAll(),
              ]));
          }
     +
     +    #[Route('/conference/{id}', name: 'conference')]
-    +    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    {
     +        return new Response($twig->render('conference/show.html.twig', [
     +            'conference' => $conference,
@@ -233,8 +232,8 @@ De allerlaatste stap om onze eerste versie van de gebruikersinterface af te rond
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -7,5 +7,8 @@
 
          {% for conference in conferences %}
@@ -255,8 +254,8 @@ Gebruik in plaats daarvan de Twig *functie* ``path()`` en gebruik de *naam van d
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -283,9 +282,9 @@ Maak een ``getCommentPaginator()`` methode in de Comment Repository die een Comm
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -3,8 +3,10 @@
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -3,19 +3,37 @@
      namespace App\Repository;
 
      use App\Entity\Comment;
@@ -296,11 +295,10 @@ Maak een ``getCommentPaginator()`` methode in de Comment Repository die een Comm
 
      /**
       * @extends ServiceEntityRepository<Comment>
-    @@ -16,11 +18,27 @@ use Doctrine\Persistence\ManagerRegistry;
       */
      class CommentRepository extends ServiceEntityRepository
      {
-    +    public const PAGINATOR_PER_PAGE = 2;
+    +    public const COMMENTS_PER_PAGE = 2;
     +
          public function __construct(ManagerRegistry $registry)
          {
@@ -313,7 +311,7 @@ Maak een ``getCommentPaginator()`` methode in de Comment Repository die een Comm
     +            ->andWhere('c.conference = :conference')
     +            ->setParameter('conference', $conference)
     +            ->orderBy('c.createdAt', 'DESC')
-    +            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+    +            ->setMaxResults(self::COMMENTS_PER_PAGE)
     +            ->setFirstResult($offset)
     +            ->getQuery()
     +        ;
@@ -321,9 +319,9 @@ Maak een ``getCommentPaginator()`` methode in de Comment Repository die een Comm
     +        return new Paginator($query);
     +    }
     +
-         public function save(Comment $entity, bool $flush = false): void
-         {
-             $this->getEntityManager()->persist($entity);
+         //    /**
+         //     * @return Comment[] Returns an array of Comment objects
+         //     */
 
 We hebben het maximaal aantal reacties per pagina ingesteld op 2 om het testen te vergemakkelijken.
 
@@ -332,32 +330,32 @@ Om de paginering in de template te beheren, geef je de Doctrine Paginator in pla
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -6,6 +6,7 @@ use App\Entity\Conference;
-     use App\Repository\CommentRepository;
-     use App\Repository\ConferenceRepository;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -8,6 +8,7 @@ use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
+    +use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
-    @@ -21,11 +22,16 @@ class ConferenceController extends AbstractController
+
+    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-    +        $offset = max(0, $request->query->getInt('offset', 0));
+    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
                  'conference' => $conference,
     -            'comments' => $commentRepository->findBy(['conference' => $conference], ['createdAt' => 'DESC']),
     +            'comments' => $paginator,
-    +            'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-    +            'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+    +            'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+    +            'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
              ]));
          }
      }
@@ -374,8 +372,8 @@ Werk ten slotte de template bij om links naar de volgende en vorige pagina's toe
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -6,6 +6,8 @@
          <h2>{{ conference }} Conference</h2>
 
@@ -420,15 +418,15 @@ Je hebt misschien gemerkt dat beide methoden in ``ConferenceController`` een Twi
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
     -use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(Environment $twig, ConferenceRepository $conferenceRepository): Response
@@ -442,18 +440,18 @@ Je hebt misschien gemerkt dat beide methoden in ``ConferenceController`` een Twi
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [
     +        return $this->render('conference/show.html.twig', [
                  'conference' => $conference,
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
     -        ]));
     +        ]);
          }

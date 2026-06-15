@@ -17,7 +17,7 @@ Maak een nieuw Symfony-project met de ``symfony`` CLI tool die we reeds samen ge
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=6.2 --php=8.1 --webapp --docker --cloud
+    $ symfony new guestbook --version=8.1 --php=8.5 --webapp --docker --upsun
     $ cd guestbook
 
 Dit commando is een dun laagje bovenop ``Composer`` dat de creatie van Symfony-projecten vergemakkelijkt. Het gebruikt een `project-skelet`_ dat de minimale dependencies bevat; de Symfony-componenten die nodig zijn voor bijna elk project: een console-tool en een HTTP-abstractie die nodig is om webapplicaties te bouwen.
@@ -75,7 +75,7 @@ Download hier mijn GIF-afbeelding:
 .. code-block:: terminal
 
     $ mkdir public/images/
-    $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
+    $ php -r "copy('https://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
 
 Een lokale webserver starten
 ----------------------------
@@ -170,7 +170,7 @@ Deploy vervolgens:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 De code wordt gedeployed door naar de Git-repository te pushen. Aan het einde van het commando heeft het project een specifieke domeinnaam gekregen die je kan gebruiken om toegang te krijgen tot het project.
 
