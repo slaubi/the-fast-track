@@ -1,10 +1,10 @@
-Harmonogram zadań (ang. cron)
-==============================
+Planowanie zadań
+================
 
 .. index::
     single: Cron
 
-Harmonogram zadań jest bardzo przydatny do wykonywania cyklicznych operacji, np. zadań konserwacyjnych, ponieważ uruchamiane są one według harmonogramu i pracują przez krótki okres czasu, inaczej niż w przypadku wywoływania robotników (ang. workers).
+Niektóre zadania konserwacyjne muszą działać według harmonogramu. W przeciwieństwie do robotników (ang. workers), którzy działają nieprzerwanie, zadania zaplanowane uruchamiają się okresowo na krótki czas.
 
 Czyszczenie komentarzy
 ----------------------
@@ -16,26 +16,28 @@ W repozytorium komentarzy utwórz kilka przydatnych metod, które pozwolą nam n
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -6,6 +6,7 @@ use App\Entity\Comment;
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -5,7 +5,9 @@ namespace App\Repository;
+     use App\Entity\Comment;
      use App\Entity\Conference;
      use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+    +use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Persistence\ManagerRegistry;
     +use Doctrine\ORM\QueryBuilder;
      use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-    @@ -18,6 +19,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
+    @@ -13,6 +15,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
       */
      class CommentRepository extends ServiceEntityRepository
      {
     +    private const DAYS_BEFORE_REJECTED_REMOVAL = 7;
     +
-         public const PAGINATOR_PER_PAGE = 2;
+         public const COMMENTS_PER_PAGE = 2;
 
          public function __construct(ManagerRegistry $registry)
-    @@ -25,6 +28,29 @@ class CommentRepository extends ServiceEntityRepository
+    @@ -20,6 +24,27 @@ class CommentRepository extends ServiceEntityRepository
              parent::__construct($registry, Comment::class);
          }
 
@@ -54,11 +56,9 @@ W repozytorium komentarzy utwórz kilka przydatnych metod, które pozwolą nam n
     +        return $this->createQueryBuilder('c')
     +            ->andWhere('c.state = :state_rejected or c.state = :state_spam')
     +            ->andWhere('c.createdAt < :date')
-    +            ->setParameters([
-    +                'state_rejected' => 'rejected',
-    +                'state_spam' => 'spam',
-    +                'date' => new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'),
-    +            ])
+    +            ->setParameter('state_rejected', 'rejected')
+    +            ->setParameter('state_spam', 'spam')
+    +            ->setParameter('date', new \DateTimeImmutable(-self::DAYS_BEFORE_REJECTED_REMOVAL.' days'))
     +        ;
     +    }
     +
@@ -102,38 +102,25 @@ Utwórz komendę linii poleceń o nazwie ``app:comment:cleanup`` przez utworzeni
 
     use App\Repository\CommentRepository;
     use Symfony\Component\Console\Attribute\AsCommand;
+    use Symfony\Component\Console\Attribute\Option;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
-    use Symfony\Component\Console\Input\InputOption;
-    use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Console\Style\SymfonyStyle;
 
     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
-    class CommentCleanupCommand extends Command
+    class CommentCleanupCommand
     {
-        public function __construct(
-            private CommentRepository $commentRepository,
-        ) {
-            parent::__construct();
-        }
-
-        protected function configure()
-        {
-            $this
-                ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Dry run')
-            ;
-        }
-
-        protected function execute(InputInterface $input, OutputInterface $output): int
-        {
-            $io = new SymfonyStyle($input, $output);
-
-            if ($input->getOption('dry-run')) {
+        public function __invoke(
+            SymfonyStyle $io,
+            CommentRepository $commentRepository,
+            #[Option(description: 'Dry run')]
+            bool $dryRun = false,
+        ): int {
+            if ($dryRun) {
                 $io->note('Dry mode enabled');
 
-                $count = $this->commentRepository->countOldRejected();
+                $count = $commentRepository->countOldRejected();
             } else {
-                $count = $this->commentRepository->deleteOldRejected();
+                $count = $commentRepository->deleteOldRejected();
             }
 
             $io->success(sprintf('Deleted "%d" old rejected/spam comments.', $count));
@@ -144,7 +131,7 @@ Utwórz komendę linii poleceń o nazwie ``app:comment:cleanup`` przez utworzeni
 
 Wszystkie polecenia naszej aplikacji są zarejestrowane wraz z tymi wbudowanymi w Symfony i są dostępne poprzez ``symfony console``. Ponieważ liczba dostępnych poleceń może być duża, grupuj je w przestrzeniach nazw. Zgodnie z konwencją, polecenia aplikacji powinny być przechowywane w przestrzeni nazw ``app``. Możesz również tworzyć dowolną liczbę "podprzestrzeni" poprzez rozdzielenie ich dwukropkiem (``:``).
 
-Komenda linii poleceń dostaje *wejście* (argumenty i opcje przekazywane do komendy) oraz możesz użyć *wyjścia* w celu wyświetlenia danych w konsoli.
+Komenda deklaruje swoje *argumenty* i *opcje* za pomocą atrybutów ``#[Argument]`` i ``#[Option]`` na parametrach metody ``__invoke()`` (parametr ``$dryRun`` staje się opcją ``--dry-run``). Symfony wstrzykuje pozostałe parametry na podstawie ich typu: ``SymfonyStyle`` do zapisywania ładnie sformatowanych danych w konsoli oraz dowolną usługę, taką jak repozytorium komentarzy, w taki sam sposób, jak robi to dla argumentów kontrolera.
 
 Wyczyść bazę danych uruchamiając polecenie:
 
@@ -152,45 +139,85 @@ Wyczyść bazę danych uruchamiając polecenie:
 
     $ symfony console app:comment:cleanup
 
-Konfigurowanie harmonogramu zadań w usłudze Upsun
----------------------------------------------------------
+Planowanie komendy
+------------------
+
+.. index::
+    single: Scheduler
+    single: Components;Scheduler
+    single: Attributes;AsCronTask
+
+Uruchamianie polecenia ręcznie działa, ale powinno ono działać każdej nocy. Komponent Symfony Scheduler generuje wiadomości według harmonogramu; są one następnie konsumowane przez robotnika, tak jak każde inne wiadomości Messengera.
+
+Dodaj komponent Scheduler wraz z biblioteką, która parsuje wyrażenia cron:
+
+.. code-block:: terminal
+
+    $ symfony composer req scheduler dragonmantank/cron-expression
+
+Zaplanuj polecenie za pomocą atrybutu ``#[AsCronTask]``:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Command/CommentCleanupCommand.php
+    +++ w/src/Command/CommentCleanupCommand.php
+    @@ -7,8 +7,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Attribute\Option;
+     use Symfony\Component\Console\Command\Command;
+     use Symfony\Component\Console\Style\SymfonyStyle;
+    +use Symfony\Component\Scheduler\Attribute\AsCronTask;
+
+     #[AsCommand('app:comment:cleanup', 'Deletes rejected and spam comments from the database')]
+    +#[AsCronTask('50 23 * * *')]
+     class CommentCleanupCommand
+     {
+         public function __invoke(
+
+Atrybut rejestruje polecenie w domyślnym *harmonogramie* z wyrażeniem cron: każdej nocy o 23:50 (UTC). Sprawdź to:
+
+.. code-block:: terminal
+
+    $ symfony console debug:scheduler
+
+Harmonogram jest udostępniany jako zwykły transport Messengera o tej samej nazwie; konsumuj go jak każdy inny transport:
+
+.. code-block:: terminal
+
+    $ symfony run -d symfony console messenger:consume scheduler_default -vv
+
+Wdrażanie harmonogramu
+----------------------
+
+.. index::
+    single: Upsun;Workers
+
+Na Upsun robotnik konsumuje tylko transport ``async``. Spraw, aby konsumował również harmonogram:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -87,4 +87,4 @@ applications:
+             messenger:
+                 commands:
+                     # Consume "async" messages (as configured in the routing section of config/packages/messenger.yaml)
+    -                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async
+    +                    start: symfony console --time-limit=3600 --memory-limit=64M messenger:consume async scheduler_default
+
+To wszystko, czego potrzeba: żadnego crontaba, żadnego dodatkowego procesu; harmonogram żyje w kodzie PHP, obok zadania, które wyzwala, i jest wdrażany oraz wersjonowany jak reszta aplikacji.
+
+Co z systemowymi cronami?
+-------------------------
 
 .. index::
     single: Upsun;Cron
     single: Upsun;Croncape
 
-Jedną z zalet Upsun jest to, że większość konfiguracji jest przechowywana w jednym pliku: ``.platform.app.yaml``. Kontenery serwisów, robotnicy czy zadania z harmonogramu są opisane razem, aby ułatwić zarządzanie nimi:
+Upsun obsługuje również zadania cron na poziomie systemu operacyjnego, opisane w ``.upsun/config.yaml`` obok kontenera webowego i robotników; domyślna konfiguracja definiuje już jedno, które usuwa wygasłe sesje PHP. Systemowe crony dobrze sprawdzają się w przypadku zadań, które nie są zaimplementowane w PHP.
 
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -61,6 +61,14 @@ crons:
-             spec: '50 23 * * *'
-             cmd: if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then croncape php-security-checker; fi
-
-    +    comment_cleanup:
-    +        # Cleanup every night at 11.50 pm (UTC).
-    +        spec: '50 23 * * *'
-    +        cmd: |
-    +            if [ "$PLATFORM_ENVIRONMENT_TYPE" = "production" ]; then
-    +                croncape symfony console app:comment:cleanup
-    +            fi
-    +
-     workers:
-         messenger:
-             commands:
-
-Sekcja ``crons`` definiuje wszystkie zadania z harmonogramu. Każde zadanie działa zgodnie z planem ``spec``.
-
-Narzędzie ``croncape`` monitoruje wykonanie polecenia i wysyła wiadomość e-mail na adresy zdefiniowane w zmiennej środowiskowej ``MAILTO``, jeśli polecenie zwróci kod inny niż ``0``.
-
-.. index::
-    single: Symfony CLI;cloud:variable:create
-    single: Symfony CLI;cron
-
-Skonfiguruj zmienną środowiskową ``MAILTO``:
+Narzędzie ``croncape`` używane przez domyślny cron monitoruje wykonanie polecenia i wysyła wiadomość e-mail na adresy zdefiniowane w zmiennej środowiskowej ``MAILTO``, jeśli polecenie zwróci kod inny niż ``0``:
 
 .. code-block:: terminal
 
@@ -207,6 +234,8 @@ Zauważ, że harmonogramy zadań są ustawione na wszystkich gałęziach Upsun. 
 
 .. sidebar:: Idąc dalej
 
+    * `Dokumentacja komponentu Scheduler`_;
+
     * `Składnia cron/crontab`_;
 
     * `Repozytorium Croncape'a`_;
@@ -215,6 +244,7 @@ Zauważ, że harmonogramy zadań są ustawione na wszystkich gałęziach Upsun. 
 
     * `Ściągawka poleceń konsolowych Symfony`_.
 
+.. _`Dokumentacja komponentu Scheduler`: https://symfony.com/doc/current/scheduler.html
 .. _`Składnia cron/crontab`: https://en.wikipedia.org/wiki/Cron
 .. _`Repozytorium Croncape'a`: https://github.com/symfonycorp/croncape
 .. _`Polecenia Symfony Console`: https://symfony.com/doc/current/console.html

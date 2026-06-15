@@ -1,121 +1,51 @@
-Stylowanie interfejsu użytkownika z wykorzystaniem narzędzia Webpack
-======================================================================
+Stylizacja interfejsu użytkownika
+=================================
 
 .. index::
-    single: Encore
-    single: Webpack
-    single: Components;Encore
+    single: AssetMapper
+    single: Components;AssetMapper
     single: Stylesheet
 
-Nie poświęciliśmy zbyt wiele czasu na projektowanie interfejsu użytkownika. Aby go profesjonalnie ostylować, użyjemy nowoczesnego zestawu narzędzi, opartego na `Webpacku`_. Aby ułatwić jego integrację z naszą aplikacją, zainstalujemy *Webpack Encore*:
+Nie poświęciliśmy jeszcze czasu na wygląd interfejsu użytkownika. Aby stylizować jak profesjonalista, użyjemy nowoczesnego stosu opartego na *AssetMapperze*, komponencie Symfony, który zarządza naszymi zasobami od pierwszego kroku tej książki.
 
-.. code-block:: terminal
+AssetMapper przyjmuje nowoczesne standardy webowe: pliki JavaScript i CSS są serwowane bez zmian i łączone ze sobą za pomocą *importmapy*, pozwalając przeglądarce ładować natywne *moduły ES* bezpośrednio. Żadnego bundlera, żadnego kroku budowania, żadnego Node.js.
 
-    $ symfony composer req encore
+Zajrzyj do pliku ``importmap.php`` w katalogu głównym projektu: opisuje on pakiety JavaScript używane przez aplikację. Funkcja Twig ``importmap()`` wywoływana w ``templates/base.html.twig`` udostępnia je przeglądarce.
 
-Pełne środowisko Webpack zostało przygotowane: ``package.json`` i ``webpack.config.js`` zostały wygenerowane i zawierają dobrą domyślną konfigurację. Otwórz plik ``webpack.config.js`` – używa on abstrakcji Encore do konfiguracji Webpacka.
-
-Plik ``package.json`` definiuje kilka ciekawych poleceń, których będziemy używać przez cały czas.
-
-Katalog ``assets`` zawiera główne punkty wejścia dla zasobów projektu: ``styles/app.css`` oraz ``app.js``.
-
-Używanie Sass
---------------
-
-.. index::
-    single: Sass
-
-Zamiast używać zwykłego CSS, skorzystajmy z `Sass`_:
-
-.. code-block:: terminal
-
-    $ mv assets/styles/app.css assets/styles/app.scss
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/assets/app.js
-    +++ b/assets/app.js
-    @@ -6,7 +6,7 @@
-      */
-
-     // any CSS you import will output into a single css file (app.css in this case)
-    -import './styles/app.css';
-    +import './styles/app.scss';
-
-     // start the Stimulus application
-     import './bootstrap';
-
-Zainstaluj moduł ładowania Sass:
-
-.. code-block:: terminal
-
-    $ npm install node-sass sass-loader --save-dev
-
-I uruchom go w Webpacku:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
-    @@ -57,7 +57,7 @@ Encore
-         })
-
-         // enables Sass/SCSS support
-    -    //.enableSassLoader()
-    +    .enableSassLoader()
-
-         // uncomment if you use TypeScript
-         //.enableTypeScriptLoader()
-
-Skąd wiedziałem, które pakiety zainstalować? Gdybyśmy spróbowali zbudować nasze zasoby bez nich, Encore wyświetliłby komunikat błędu sugerujący uruchomienie polecenia ``npm install`` potrzebnego do instalacji zależności służących do ładowania plików ``.scss``.
-
-Wykorzystanie Bootstrapa
-------------------------
+Wykorzystanie Bootstrap
+-----------------------
 
 .. index::
     single: Bootstrap
 
-Potrzebujemy solidnych podstaw do zbudowania responsywnej strony internetowej. Framework CSS, taki jak `Bootstrap`_ spełnia te warunki. Zainstaluj go jako pakiet (ang. package):
+Aby zacząć od dobrych ustawień domyślnych i zbudować responsywną witrynę, framework CSS taki jak `Bootstrap`_ może bardzo pomóc. Zainstaluj go jako pakiet importmapy:
 
 .. code-block:: terminal
 
-    $ npm install bootstrap @popperjs/core bs-custom-file-input --save-dev
+    $ symfony console importmap:require bootstrap bootstrap/dist/css/bootstrap.min.css
 
-Dołącz (ang. require) Bootstrapa w pliku CSS (wyczyściliśmy również ten plik):
+Polecenie rejestruje pakiet w ``importmap.php`` i pobiera go (oraz jego zależność ``@popperjs/core``) do ``assets/vendor/``; aplikacja nie zależy od CDN-a w czasie działania.
 
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/assets/styles/app.scss
-    +++ b/assets/styles/app.scss
-    @@ -1,3 +1 @@
-    -body {
-    -    background-color: lightgray;
-    -}
-    +@import '~bootstrap/scss/bootstrap';
-
-Zrób to samo w przypadku pliku JS:
+Zaimportuj Bootstrap w głównym punkcie wejściowym JavaScript (usunęliśmy też domyślny komunikat powitalny):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/assets/app.js
-    +++ b/assets/app.js
-    @@ -7,6 +7,10 @@
-
-     // any CSS you import will output into a single css file (app.css in this case)
-     import './styles/app.scss';
+    --- i/assets/app.js
+    +++ w/assets/app.js
+    @@ -5,6 +5,6 @@ import './stimulus_bootstrap.js';
+      * This file will be included onto the page via the importmap() Twig function,
+      * which should already be in your base.html.twig.
+      */
     +import 'bootstrap';
-    +import bsCustomFileInput from 'bs-custom-file-input';
+    +import 'bootstrap/dist/css/bootstrap.min.css';
+     import './styles/app.css';
+    -
+    -console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 
-     // start the Stimulus application
-     import './bootstrap';
-    +
-    +bsCustomFileInput.init();
+Zwróć uwagę, że ``app.css`` jest importowany *po* stylach Bootstrap, aby nasze dostosowania miały pierwszeństwo.
 
-System formularzy Symfony obsługuje natywnie Bootstrapa ze specjalnym motywem, włącz go:
+System formularzy Symfony obsługuje Bootstrap natywnie za pomocą specjalnego motywu, włącz go:
 
 .. code-block:: yaml
     :caption: config/packages/twig.yaml
@@ -123,10 +53,10 @@ System formularzy Symfony obsługuje natywnie Bootstrapa ze specjalnym motywem, 
     twig:
         form_themes: ['bootstrap_5_layout.html.twig']
 
-Stylowanie HTML
+Stylizacja HTML
 ---------------
 
-Jesteśmy teraz gotowi do stylowania aplikacji. Pobierz i rozpakuj archiwum w katalogu głównym projektu:
+Jesteśmy teraz gotowi, aby ostylować aplikację. Pobierz i rozpakuj archiwum w katalogu głównym projektu:
 
 .. code-block:: terminal
 
@@ -134,30 +64,17 @@ Jesteśmy teraz gotowi do stylowania aplikacji. Pobierz i rozpakuj archiwum w ka
     $ unzip -o guestbook-8.1.zip
     $ rm guestbook-8.1.zip
 
-Spójrz na szablony Twig, znajdziesz w nich kilka ciekawych rozwiązań.
+Zajrzyj do szablonów, możesz nauczyć się jednej czy dwóch sztuczek dotyczących Twiga.
 
-Budowanie zasobów (ang. assets)
---------------------------------
+Serwowanie zasobów
+------------------
 
 .. index::
-    single: Symfony CLI;run
+    single: AssetMapper;asset-map:compile
 
-Jedną z głównych różnic w korzystaniu z Webpacka jest to, że pliki CSS i JS nie mogą być wykorzystywane bezpośrednio przez aplikację. Najpierw trzeba je "skompilować".
+Nie ma nic do zbudowania: odśwież stronę, a zmiany są widoczne na żywo. W środowisku deweloperskim AssetMapper serwuje pliki zasobów bezpośrednio.
 
-Podczas rozwoju aplikacji, kompilacja zasobów może być wykonana za pomocą polecenia ``encore dev``:
-
-.. code-block:: terminal
-
-    $ symfony run npm run dev
-
-Zamiast wykonywać polecenie za każdym razem, gdy wystąpi zmiana, uruchom je w tle i pozwól mu obserwować zmiany w plikach JS i CSS:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ symfony run -d npm run watch
-
-Poświęć czas na odkrycie zmian wizualnych. Przyjrzyj się nowemu wyglądowi w przeglądarce.
+Poświęć chwilę, aby odkryć zmiany wizualne. Obejrzyj nowy wygląd w przeglądarce.
 
 .. figure:: screenshots/design-homepage.png
     :alt: /
@@ -169,26 +86,24 @@ Poświęć czas na odkrycie zmian wizualnych. Przyjrzyj się nowemu wyglądowi w
     :align: center
     :figclass: with-browser
 
-Wygenerowany formularz logowania jest teraz ostylowany, a Maker Bundle używa domyślnie klas CSS Bootstrapa:
+Wygenerowany formularz logowania jest teraz również ostylowany, ponieważ Maker bundle domyślnie używa klas CSS Bootstrap:
 
 .. figure:: screenshots/login-styled.png
     :alt: /login
     :align: center
     :figclass: with-browser
 
-W środowisku produkcyjnym Upsun automatycznie wykrywa, że używasz Encore i kompiluje zasoby za Ciebie podczas fazy budowania aplikacji.
+W produkcji Upsun automatycznie uruchamia polecenie ``asset-map:compile`` w fazie budowania: wszystkie zasoby są kopiowane do ``public/assets/`` z hashem wersji w nazwach plików, co umożliwia bezpieczne, długoterminowe buforowanie HTTP.
 
 .. sidebar:: Idąc dalej
 
-    * `Dokumentacja Webpack`_;
+    * `Dokumentacja komponentu AssetMapper`_;
 
-    * `Dokumentacja Symfony Webpack Encore`_;
+    * `Specyfikacja importmap`_;
 
-    * `Samouczek SymfonyCasts Webpack Encore`_.
+    * `Dokumentacja Bootstrap`_.
 
-.. _`Webpacku`: https://webpack.js.org/
-.. _`Sass`: https://sass-lang.com/
 .. _`Bootstrap`: https://getbootstrap.com/
-.. _`Dokumentacja Webpack`: https://webpack.js.org/concepts/
-.. _`Dokumentacja Symfony Webpack Encore`: https://symfony.com/doc/current/frontend.html
-.. _`Samouczek SymfonyCasts Webpack Encore`: https://symfonycasts.com/screencast/webpack-encore
+.. _`Dokumentacja komponentu AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`Specyfikacja importmap`: https://html.spec.whatwg.org/multipage/webappapis.html#import-maps
+.. _`Dokumentacja Bootstrap`: https://getbootstrap.com/docs/
