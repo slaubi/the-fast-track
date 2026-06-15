@@ -31,9 +31,9 @@ Kilka atrybutów w klasie Conference to wszystko, czego potrzebujemy, aby skonfi
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
-    @@ -2,35 +2,52 @@
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
+    @@ -2,29 +2,45 @@
 
      namespace App\Entity;
 
@@ -45,7 +45,7 @@ Kilka atrybutów w klasie Conference to wszystko, czego potrzebujemy, aby skonfi
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
      use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-    +use Symfony\Component\Serializer\Annotation\Groups;
+    +use Symfony\Component\Serializer\Attribute\Groups;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
      #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
@@ -78,7 +78,8 @@ Kilka atrybutów w klasie Conference to wszystko, czego potrzebujemy, aby skonfi
     +    #[Groups(['conference:list', 'conference:item'])]
          private ?bool $isInternational = null;
 
-         #[ORM\OneToMany(mappedBy: 'conference', targetEntity: Comment::class, orphanRemoval: true)]
+         /**
+    @@ -34,6 +50,7 @@ class Conference
          private Collection $comments;
 
          #[ORM\Column(length: 255, unique: true)]
@@ -120,8 +121,8 @@ Zrób to samo w przypadku komentarzy:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -2,41 +2,63 @@
 
      namespace App\Entity;
@@ -134,7 +135,7 @@ Zrób to samo w przypadku komentarzy:
      use App\Repository\CommentRepository;
      use Doctrine\DBAL\Types\Types;
      use Doctrine\ORM\Mapping as ORM;
-    +use Symfony\Component\Serializer\Annotation\Groups;
+    +use Symfony\Component\Serializer\Attribute\Groups;
      use Symfony\Component\Validator\Constraints as Assert;
 
      #[ORM\Entity(repositoryClass: CommentRepository::class)]

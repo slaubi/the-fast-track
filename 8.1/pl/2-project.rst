@@ -60,7 +60,7 @@ Sklonuj (ang. clone) `repozytorium księgi gości`_ na swój komputer:
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=6.2-1 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 To repozytorium zawiera cały kod tej książki.
 

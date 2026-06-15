@@ -116,9 +116,9 @@ W środowisku deweloperskim, kiedy wyjątek zostaje rzucony, Symfony wyświetla 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/php.ini
-    +++ b/php.ini
-    @@ -6,3 +6,4 @@ max_execution_time=30
+    --- i/php.ini
+    +++ w/php.ini
+    @@ -6,3 +6,4 @@ session.gc_probability=0
      session.use_strict_mode=On
      realpath_cache_ttl=3600
      zend.detect_unicode=Off

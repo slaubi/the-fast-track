@@ -15,9 +15,9 @@ Elementy wyświetlane na wszystkich stronach aplikacji, jak nagłówek strony, p
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -14,6 +14,15 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -12,6 +12,15 @@
              {% endblock %}
          </head>
          <body>
@@ -41,23 +41,23 @@ Ponieważ mamy tylko dwa kontrolery, *możesz* wykonać następujące czynności
 .. code-block:: diff
     :class: ignore
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -21,12 +21,13 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -21,12 +21,13 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
              return $this->render('conference/show.html.twig', [
     +            'conferences' => $conferenceRepository->findAll(),
                  'conference' => $conference,
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
 
 Wyobraź sobie, że musisz wprowadzić zmianę w dziesiątkach istniejących kontrolerów, a także we wszystkich nowo utworzonych. Nie jest to zbyt praktyczne, musi istnieć lepszy sposób.
 
@@ -97,42 +97,39 @@ Znasz już tę śpiewkę – użyj Maker Bundle, aby wygenerować subskrybenta z
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
-    $ symfony console make:subscriber TwigEventSubscriber
+    $ symfony console make:listener TwigEventListener
 
 Polecenie zapyta o to, jakich zdarzeń chcesz nasłuchiwać. Wybierz zdarzenie typu ``Symfony\Component\HttpKernel\Event\ControllerEvent``, które jest emitowane tuż przed wykonaniem kodu kontrolera. Jest to najlepszy moment na wstrzyknięcie globalnej zmiennej ``conferences`` w taki sposób, aby Twig miał do niej dostęp, kiedy kontroler będzie renderował szablon. Zaktualizuj swojego subskrybenta zdarzeń w następujący sposób:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/EventSubscriber/TwigEventSubscriber.php
-    +++ b/src/EventSubscriber/TwigEventSubscriber.php
-    @@ -2,14 +2,25 @@
+    --- i/src/EventListener/TwigEventListener.php
+    +++ w/src/EventListener/TwigEventListener.php
+    @@ -2,14 +2,22 @@
 
-     namespace App\EventSubscriber;
+     namespace App\EventListener;
 
     +use App\Repository\ConferenceRepository;
-     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+     use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
      use Symfony\Component\HttpKernel\Event\ControllerEvent;
     +use Twig\Environment;
 
-     class TwigEventSubscriber implements EventSubscriberInterface
+     final class TwigEventListener
      {
-    +    private $twig;
-    +    private $conferenceRepository;
-    +
-    +    public function __construct(Environment $twig, ConferenceRepository $conferenceRepository)
-    +    {
-    +        $this->twig = $twig;
-    +        $this->conferenceRepository = $conferenceRepository;
+    +    public function __construct(
+    +        private Environment $twig,
+    +        private ConferenceRepository $conferenceRepository,
+    +    ) {
     +    }
     +
+         #[AsEventListener]
          public function onControllerEvent(ControllerEvent $event): void
          {
     -        // ...
     +        $this->twig->addGlobal('conferences', $this->conferenceRepository->findAll());
          }
-
-         public static function getSubscribedEvents(): array
+     }
 
 Teraz możesz dodać dowolną liczbę kontrolerów: zmienna ``conferences`` będzie zawsze dostępna w szablonach Twig.
 
@@ -148,9 +145,9 @@ Sortowanie listy konferencji według roku ułatwi jej przeglądanie. Moglibyśmy
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/ConferenceRepository.php
-    +++ b/src/Repository/ConferenceRepository.php
-    @@ -21,6 +21,11 @@ class ConferenceRepository extends ServiceEntityRepository
+    --- i/src/Repository/ConferenceRepository.php
+    +++ w/src/Repository/ConferenceRepository.php
+    @@ -16,6 +16,11 @@ class ConferenceRepository extends ServiceEntityRepository
              parent::__construct($registry, Conference::class);
          }
 
@@ -159,9 +156,9 @@ Sortowanie listy konferencji według roku ułatwi jej przeglądanie. Moglibyśmy
     +        return $this->findBy([], ['year' => 'ASC', 'city' => 'ASC']);
     +    }
     +
-         public function save(Conference $entity, bool $flush = false): void
-         {
-             $this->getEntityManager()->persist($entity);
+         //    /**
+         //     * @return Conference[] Returns an array of Conference objects
+         //     */
 
 Na koniec tego etapu strona aplikacji powinna wyglądać następująco:
 

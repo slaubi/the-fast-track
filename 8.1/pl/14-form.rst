@@ -47,7 +47,7 @@ Klasa ``App\Form\CommentType`` definiuje formularz dla encji ``App\Entity\Commen
 
     class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('author')
@@ -59,7 +59,7 @@ Klasa ``App\Form\CommentType`` definiuje formularz dla encji ``App\Entity\Commen
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Comment::class,
@@ -76,11 +76,11 @@ Aby wyświetlić formularz użytkownikowi, utwórz go w kontrolerze i przekaż d
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 19,29
+    :emphasize-lines: 20,30
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -2,7 +2,9 @@
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -2,8 +2,10 @@
 
      namespace App\Controller;
 
@@ -89,21 +89,22 @@ Aby wyświetlić formularz użytkownikowi, utwórz go w kontrolerze i przekaż d
     +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    @@ -23,6 +25,9 @@ class ConferenceController extends AbstractController
+    @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+         public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-    @@ -31,6 +36,7 @@ class ConferenceController extends AbstractController
+    @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
     +            'comment_form' => $form,
              ]);
          }
@@ -120,8 +121,8 @@ W celu wyświetlenia formularza w szablonie można skorzystać z funkcji ``form`
     :caption: patch_file
     :emphasize-lines: 10
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -30,4 +30,8 @@
          {% else %}
              <div>No comments have been posted yet for this conference.</div>
@@ -149,11 +150,11 @@ Nawet jeśli pola formularza są konfigurowane na podstawie ich odpowiednika mod
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Form/CommentType.php
-    +++ b/src/Form/CommentType.php
-    @@ -4,20 +4,31 @@ namespace App\Form;
-
-     use App\Entity\Comment;
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
+    @@ -6,26 +6,32 @@ use App\Entity\Comment;
+     use App\Entity\Conference;
+     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
      use Symfony\Component\Form\AbstractType;
     +use Symfony\Component\Form\Extension\Core\Type\EmailType;
     +use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -173,20 +174,27 @@ Nawet jeśli pola formularza są konfigurowane na podstawie ich odpowiednika mod
     +            ])
                  ->add('text')
     -            ->add('email')
-    -            ->add('createdAt')
-    -            ->add('photoFilename')
-    -            ->add('conference')
+    -            ->add('createdAt', null, [
+    -                'widget' => 'single_text',
     +            ->add('email', EmailType::class)
     +            ->add('photo', FileType::class, [
     +                'required' => false,
     +                'mapped' => false,
     +                'constraints' => [
-    +                    new Image(['maxSize' => '1024k'])
+    +                    new Image(maxSize: '1024k')
     +                ],
-    +            ])
+                 ])
+    -            ->add('photoFilename')
+    -            ->add('conference', EntityType::class, [
+    -                'class' => Conference::class,
+    -                'choice_label' => 'id',
+    -            ])
+    -        ;
     +            ->add('submit', SubmitType::class)
-             ;
+    +       ;
          }
+
+         public function configureOptions(OptionsResolver $resolver): void
 
 Zauważ, że dodaliśmy przycisk wyślij (ang. submit) (który pozwala nam używać prostego wyrażenia ``{{ form(comment_form) }}`` w szablonie).
 
@@ -241,8 +249,8 @@ Musimy dodać również ograniczenia walidacji (ang. validation constraints) dot
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
     @@ -5,6 +5,7 @@ namespace App\Entity;
      use App\Repository\CommentRepository;
      use Doctrine\DBAL\Types\Types;
@@ -279,19 +287,22 @@ Powinniśmy teraz zająć się przesyłaniem formularzy i zapisaniem dostarczony
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -7,8 +7,10 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
+    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
+    @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
     +    public function __construct(
     +        private EntityManagerInterface $entityManager,
@@ -301,7 +312,12 @@ Powinniśmy teraz zająć się przesyłaniem formularzy i zapisaniem dostarczony
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -27,6 +33,15 @@ class ConferenceController extends AbstractController
+    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
+         }
+
+         #[Route('/conference/{slug}', name: 'conference')]
+    -    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -315,7 +331,7 @@ Powinniśmy teraz zająć się przesyłaniem formularzy i zapisaniem dostarczony
     +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
     +        }
 
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 Po wysłaniu formularza, obiekt ``Comment`` jest aktualizowany zgodnie z przesłanymi danymi.
@@ -340,8 +356,8 @@ Ponieważ nie chcemy na stałe przechowywać ścieżki katalogu w kodzie, potrze
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -4,6 +4,7 @@
      # Put parameters here that don't need to change on each machine where the app is deployed
      # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
@@ -358,27 +374,30 @@ Teraz mamy wszystko, co musimy wiedzieć, aby zaimplementować logikę potrzebn�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -9,7 +9,8 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
-    @@ -29,13 +30,22 @@ class ConferenceController extends AbstractController
+     use Symfony\Component\Routing\Attribute\Route;
+    @@ -29,13 +30,24 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     -    {
     +    public function show(
     +        Request $request,
+    +        #[MapEntity(mapping: ['slug' => 'slug'])]
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
+    +        #[MapQueryParameter] int $offset = 0,
     +    ): Response {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -438,17 +457,17 @@ Panel administracyjny wyświetla obecnie nazwę pliku zdjęcia, ale chcemy zobac
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
-    @@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-     use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
     +use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-     use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
-    @@ -45,7 +46,9 @@ class CommentCrudController extends AbstractCrudController
+    @@ -47,7 +48,9 @@ class CommentCrudController extends AbstractCrudController
              yield TextareaField::new('text')
                  ->hideOnIndex()
              ;
@@ -467,8 +486,8 @@ Nie zatwierdzaj (ang. commit) jeszcze zmian! Nie chcemy przechowywać przesłany
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.gitignore
-    +++ b/.gitignore
+    --- i/.gitignore
+    +++ w/.gitignore
     @@ -1,3 +1,4 @@
     +/public/uploads
 
@@ -489,16 +508,16 @@ Stwórzmy nowy zasób (ang. mount) dla przesłanych zdjęć:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.platform.app.yaml
-    +++ b/.platform.app.yaml
-    @@ -35,6 +35,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -41,6 +41,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    +            "/public/uploads": { source: storage, source_path: uploads }
 
-     mounts:
-         "/var": { source: local, source_path: var }
-    +    "/public/uploads": { source: local, source_path: uploads }
-         
 
-     relationships:
+             relationships:
 
 Możesz teraz wdrożyć (ang. deploy) kod, a zdjęcia będą przechowywane w katalogu ``public/uploads/``, tak jak w naszej lokalnej wersji.
 

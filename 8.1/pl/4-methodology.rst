@@ -54,4 +54,4 @@ Innym dobrym nawykiem jest częste wdrażanie. Wdrażanie projektu na końcu ka�
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
