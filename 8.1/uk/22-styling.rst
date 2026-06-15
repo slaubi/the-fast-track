@@ -130,9 +130,9 @@
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-6.2.zip', 'guestbook-6.2.zip');"
-    $ unzip -o guestbook-6.2.zip
-    $ rm guestbook-6.2.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-8.1.zip', 'guestbook-8.1.zip');"
+    $ unzip -o guestbook-8.1.zip
+    $ rm guestbook-8.1.zip
 
 Погляньте на шаблони, ви могли б дізнатися одну чи дві хитрощі про Twig.
 
