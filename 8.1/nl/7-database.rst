@@ -16,7 +16,7 @@ PostgreSQL aan Docker Compose toevoegen
 .. index::
     single: Docker;PostgreSQL
 
-Op onze lokale machine gebruiken we Docker om onze services te beheren. Het gegenereerde ``docker-compose.yml`` bestand bevat reeds PostgreSQL als service:
+Op onze lokale machine gebruiken we Docker om onze services te beheren. Het gegenereerde ``compose.yaml`` bestand bevat reeds PostgreSQL als service:
 
 .. code-block:: yaml
     :caption: compose.yaml
@@ -25,7 +25,7 @@ Op onze lokale machine gebruiken we Docker om onze services te beheren. Het gege
 
     ###> doctrine/doctrine-bundle ###
     database:
-        image: postgres:${POSTGRES_VERSION:-14}-alpine
+        image: postgres:${POSTGRES_VERSION:-16}-alpine
         environment:
             POSTGRES_DB: ${POSTGRES_DB:-app}
             # You should definitely change the password in production
@@ -62,15 +62,20 @@ Docker Compose starten
 Start Docker Compose in de achtergrond ( ``-d`` ):
 
 .. code-block:: terminal
+    :class: hide
 
-    $ docker-compose up -d
+    $ docker compose down --remove-orphans
+
+.. code-block:: terminal
+
+    $ docker compose up -d --remove-orphans
 
 Wacht even tot de database volledig opgestart is en controleer dan of alles goed draait:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose ps
+    $ docker compose ps
 
             Name                      Command              State            Ports
     ---------------------------------------------------------------------------------------
@@ -81,7 +86,7 @@ Als er geen containers draaien of als de ``State`` kolom niet ``Up`` bevat, beki
 .. code-block:: terminal
     :class: ignore
 
-    $ docker-compose logs
+    $ docker compose logs
 
 De lokale database benaderen
 ----------------------------
@@ -104,12 +109,12 @@ Dankzij deze conventies is het benaderen van de database via ``symfony run`` vee
 
 .. note::
 
-    Als de ``psql`` binary niet aanwezig is op jouw lokale host kun je deze ook uitvoeren via ``docker-compose``:
+    Als de ``psql`` binary niet aanwezig is op jouw lokale host kun je deze ook uitvoeren via ``docker compose``:
 
     .. code-block:: terminal
         :class: ignore
 
-        $ docker-compose exec database psql app app
+        $ docker compose exec database psql app app
 
 Database data dumpen en terugzetten
 -----------------------------------
@@ -139,19 +144,18 @@ PostgreSQL toevoegen aan Upsun
 .. index::
     single: Upsun;PostgreSQL
 
-Voor de productie infrastructuur op Upsun, zou je een service zoals PostgreSQL moeten toevoegen in het ``.platform/services.yaml`` bestand, wat reeds gedaan werd door het recept van de ``webapp`` package:
+Voor de productie infrastructuur op Upsun, zou je een service zoals PostgreSQL moeten toevoegen in het ``.upsun/config.yaml`` bestand, wat reeds gedaan werd door het recept van de ``webapp`` package:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
     :class: ignore
 
     database:
-        type: postgresql:14
-        disk: 1024
+        type: postgresql:16
 
-De ``database`` service is een PostgreSQL database (dezelfde versie als we in Docker gebruiken) die we willen opzetten met met 1GB schijfruimte.
+De ``database`` service is een PostgreSQL database (dezelfde versie als we in Docker gebruiken). Upsun wijst de schijfruimte automatisch toe bij de eerste deployment; pas deze later aan met ``symfony cloud:resources:set`` indien nodig.
 
-We moeten de DB ook "koppelen" aan de applicatie-container die beschreven staat in ``.platform.app.yaml``:
+We moeten de DB ook "koppelen" aan de applicatie-container die beschreven staat in ``.upsun/config.yaml``:
 
 .. code-block:: yaml
     :caption: .upsun/config.yaml
@@ -264,9 +268,9 @@ Je hebt het misschien nog niet gerealiseerd, maar het helpt veel om de infrastru
 
     * `PostgreSQL documentatie`_;
 
-    * `docker-compose commando's`_.
+    * `Docker Compose commando's`_.
 
 .. _`Upsun diensten`: https://symfony.com/doc/current/cloud/services/intro.html#available-services
 .. _`Upsun tunnel`: https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service
 .. _`PostgreSQL documentatie`: https://www.postgresql.org/docs/
-.. _`docker-compose commando's`: https://docs.docker.com/compose/reference/
+.. _`Docker Compose commando's`: https://docs.docker.com/reference/cli/docker/compose/
