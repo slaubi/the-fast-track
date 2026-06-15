@@ -162,7 +162,7 @@ Opslaan van geüploade gegevens in productie
 .. index::
     single: Upsun;File Service
 
-We hebben al een speciale lezen-schrijven directory gedefinieerd voor geüploade bestanden in ``.platform.app.yaml``, maar de mount is lokaal. Als we willen dat de webcontainer en de message consumer toegang krijgen tot dezelfde mount, moeten we een *file service* toevoegen:
+We hebben al een speciale lezen-schrijven directory gedefinieerd voor geüploade bestanden in ``.upsun/config.yaml``, maar de mount is lokaal aan de applicatiecontainer. Als we willen dat de webcontainer en de message consumer toegang krijgen tot dezelfde mount, moeten we een *file service* toevoegen:
 
 .. code-block:: diff
     :caption: patch_file

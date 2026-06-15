@@ -10,7 +10,7 @@ Het zou leuk zijn als het project op de een of andere manier gerelateerd is aan 
 
 We hebben het. Het project draait om het krijgen van feedback op conferenties: een lijst met conferenties op de homepage, een pagina voor elke conferentie, vol met leuke opmerkingen. Een opmerking bestaat uit een kleine tekst en een optionele foto die tijdens de conferentie is gemaakt. Ik geloof dat ik net alle specificaties heb opgeschreven die we nodig hebben om te beginnen.
 
-Het *project* zal verschillende *toepassingen* bevatten. Een traditionele webapplicatie met een HTML-frontend, een API en een SPA voor mobiele telefoons. Klinkt goed toch?
+Het *project* zal verschillende *toepassingen* bevatten. Een traditionele webapplicatie met een HTML-frontend die net zo soepel aanvoelt als een SPA, en een API die klaar is om mobiele applicaties aan te drijven. Klinkt goed toch?
 
 Leren is doen
 -------------

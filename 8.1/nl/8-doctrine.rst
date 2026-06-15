@@ -213,7 +213,7 @@ De gegenereerde code ziet er als volgt uit (slechts een klein deel van het besta
 
 Merk op dat de class een gewone PHP class is zonder invloeden van Doctrine. Attributen worden gebruikt om metadata toe te voegen die Doctrine gebruikt om de class te kunnen koppelen aan de bijhorende databasetabel.
 
-Doctrine heeft een ``id`` eigenschap toegevoegd om de primaire sleutel van de rij te bewaren in de tabel. Deze sleutel (``ORM\Id()``) wordt automatisch gegenereerd (``ORM\GeneratedValue()``) via een strategie die afhankelijk is van het gebruikte databasesysteem.
+Doctrine heeft een ``id`` eigenschap toegevoegd om de primaire sleutel van de rij te bewaren in de tabel. Deze sleutel (``#[ORM\Id]``) wordt automatisch gegenereerd (``#[ORM\GeneratedValue]``) via een strategie die afhankelijk is van het gebruikte databasesysteem.
 
 .. index::
     single: Command;make:entity
