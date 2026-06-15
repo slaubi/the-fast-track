@@ -68,47 +68,24 @@ Kroki niezbędne do urzeczywistnienia tej koncepcji są typowe:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -8,7 +8,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: null
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -3,7 +3,8 @@ framework:
+         secret: '%env(APP_SECRET)%'
+
+         # Note that the session will be started ONLY if you read or write from it.
+    -    session: true
+    +    session:
     +        handler_id: '%env(resolve:DATABASE_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
-             storage_factory_id: session.storage.factory.native
+
+         #esi: true
+         #fragments: true
 
 Żeby przechowywać sesje w bazie danych, musimy utworzyć tabele ``sessions``. Zrób to wykorzystując migracje Doctrine:
 
 .. code-block:: terminal
 
     $ symfony console make:migration
-
-Zmodyfikuj plik tak, aby w metodzie ``up()`` dodać tworzenie tabeli:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
-    @@ -21,6 +21,15 @@ final class Version00000000000000 extends AbstractMigration
-         {
-             // this up() migration is auto-generated, please modify it to your needs
-
-    +        $this->addSql('
-    +            CREATE TABLE sessions (
-    +                sess_id VARCHAR(128) NOT NULL PRIMARY KEY,
-    +                sess_data BYTEA NOT NULL,
-    +                sess_lifetime INTEGER NOT NULL,
-    +                sess_time INTEGER NOT NULL
-    +            )
-    +        ');
-    +        $this->addSql('CREATE INDEX expiry ON sessions (sess_lifetime)');
-         }
-
-         public function down(Schema $schema): void
 
 Wykonaj migrację bazy danych:
 
@@ -122,23 +99,6 @@ Przetestuj lokalnie, poprzez przeglądanie strony internetowej. Ponieważ nie ma
 .. note::
 
     Nie potrzebujemy tutaj kroków od 3 do 5, ponieważ ponownie używamy bazy danych jako magazynu sesji, ale rozdział o korzystaniu z Redisa pokazuje, jak proste jest dodawanie, testowanie i wdrażanie nowej usługi zarówno w Dockerze, jak i Upsun.
-
-Ponieważ nowa tabela nie jest „zarządzana” przez Doctrine, musimy skonfigurować Doctrine tak, aby nie usuwał jej podczas następnej migracji bazy danych:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/doctrine.yaml
-    +++ b/config/packages/doctrine.yaml
-    @@ -5,6 +5,8 @@ doctrine:
-             # IMPORTANT: You MUST configure your server version,
-             # either here or in the DATABASE_URL env var (see .env file)
-             #server_version: '14'
-    +
-    +        schema_filter: ~^(?!session)~
-         orm:
-             auto_generate_proxy_classes: true
-             naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
 
 Zatwierdź (ang. commit) swoje zmiany do nowej gałęzi (ang. branch):
 
@@ -169,7 +129,7 @@ Teraz stwórzmy *środowisko Upsun* oparte na *gałęzi Git* :
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Polecenie to tworzy nowe środowisko w następujący sposób:
 
@@ -264,7 +224,7 @@ I wdróż:
 
 .. code-block:: terminal
 
-    $ symfony cloud:deploy
+    $ symfony cloud:push
 
 Podczas wdrażania, tylko kod i zmiany w infrastrukturze są przekazywane do Upsun; dane nie są w żaden sposób naruszone.
 

@@ -16,8 +16,8 @@ Aby zapisać adres e-mail konta administracyjnego, użyj parametru kontenera. Dl
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
     @@ -5,6 +5,8 @@
      # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
      parameters:
@@ -40,8 +40,8 @@ Przy obsłudze wiadomości zastąpmy reguły automatycznej walidacji:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -7,6 +7,9 @@ use App\Repository\CommentRepository;
      use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
@@ -85,8 +85,8 @@ Aby wysłać wiadomość e-mail, potrzebujemy nadawcy (nagłówka ``From``/``Sen
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/mailer.yaml
-    +++ b/config/packages/mailer.yaml
+    --- i/config/packages/mailer.yaml
+    +++ w/config/packages/mailer.yaml
     @@ -1,3 +1,5 @@
      framework:
          mailer:
@@ -153,17 +153,29 @@ Zdefiniuj nazwę domeny i protokół do użycia:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -7,6 +7,8 @@ parameters:
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
+    @@ -7,6 +7,7 @@ parameters:
          photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com
          admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
     +    default_base_url: 'http://127.0.0.1'
-    +    router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
      services:
          # default configuration for services in *this* file
+
+Następnie poinformuj router, aby używał tej wartości jako domyślnego URI podczas generowania adresów URL poza kontekstem żądania HTTP:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/routing.yaml
+    +++ w/config/packages/routing.yaml
+    @@ -3,3 +3,3 @@ framework:
+             # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+             # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+    -        default_uri: '%env(DEFAULT_URI)%'
+    +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
 
 Zmienna środowiskowa ``SYMFONY_DEFAULT_ROUTE_HOST`` jest lokalnie automatycznie ustawiana podczas korzystania z ``symfony`` CLI i ustalana na podstawie konfiguracji na Upsun.
 
@@ -184,7 +196,7 @@ Trasa ``review_comment`` jeszcze nie istnieje, stwórzmy kontroler administracyj
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Messenger\MessageBusInterface;
-    use Symfony\Component\Routing\Annotation\Route;
+    use Symfony\Component\Routing\Attribute\Route;
     use Symfony\Component\Workflow\WorkflowInterface;
     use Twig\Environment;
 
@@ -258,11 +270,15 @@ Zamiast używać "prawdziwego" serwera SMTP lub zewnętrznego dostawcy do wysył
     :caption: compose.override.yaml
     :class: ignore
 
-    services:
     ###> symfony/mailer ###
-      mailer:
-        image: schickling/mailcatcher
-        ports: [1025, 1080]
+    mailer:
+        image: axllent/mailpit
+        ports:
+        - "1025"
+        - "8025"
+        environment:
+        MP_SMTP_AUTH_ACCEPT_ANY: 1
+        MP_SMTP_AUTH_ALLOW_INSECURE: 1
     ###< symfony/mailer ###
 
 Dostęp do panelu poczty (ang. webmail)
@@ -348,7 +364,7 @@ Symfony dostarcza asercje (ang. assertions), które ułatwiają takie testy. Prz
 .. code-block:: php
     :class: ignore
 
-    public function testMailerAssertions()
+    public function testMailerAssertions(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');
