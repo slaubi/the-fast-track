@@ -21,24 +21,26 @@ Vamos a almacenar en caché la página de inicio durante una hora:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -33,9 +33,12 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
+     use Symfony\Component\HttpFoundation\Request;
+     use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\Attribute\Cache;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
+     use Symfony\Component\Messenger\MessageBusInterface;
+    @@ -27,6 +28,7 @@ final class ConferenceController extends AbstractController
+         ) {
+         }
+
+    +    #[Cache(smaxage: 3600)]
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    -        return new Response($this->twig->render('conference/index.html.twig', [
-    +        $response = new Response($this->twig->render('conference/index.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-             ]));
-    +        $response->setSharedMaxAge(3600);
-    +
-    +        return $response;
-         }
 
-         #[Route('/conference/{slug}', name: 'conference')]
-
-El método ``setSharedMaxAge()`` configura la expiración de la caché para proxies inversos. Utiliza ``setMaxAge()`` para controlar la caché del navegador. El tiempo se expresa en segundos (1 hora = 60 minutos = 3600 segundos).
+El atributo ``#[Cache]`` configura la expiración de la caché para los proxies inversos a través de su argumento ``smaxage``; usa ``maxage`` para controlar la caché del navegador. El tiempo se expresa en segundos (1 hora = 60 minutos = 3600 segundos). Y al igual que con el enrutamiento o la limitación de frecuencia, la política de caché se declara justo donde aplica: en el controlador.
 
 El almacenamiento en caché de la página de la conferencia es más difícil, ya que es más dinámico. Cualquiera puede añadir un comentario en cualquier momento, y nadie quiere esperar una hora para verlo en línea. En tales casos, utiliza la estrategia de *validación HTTP* .
 
@@ -48,19 +50,21 @@ Activando el HTTP Cache Kernel de Symfony
 .. index::
     single: HTTP Cache;Symfony Reverse Proxy
 
-Para probar la estrategia de caché HTTP, habilita el proxy inverso HTTP de Symfony:
+Para probar la estrategia de caché HTTP, habilita el proxy inverso HTTP de Symfony, pero solo en el entorno de "desarrollo" (para el entorno de "producción", usaremos una solución "más robusta"):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -15,3 +15,5 @@ framework:
-         #fragments: true
-         php_errors:
-             log: true
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -22,3 +22,7 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
     +
-    +    http_cache: true
+    +when@dev:
+    +    framework:
+    +        http_cache: true
 
 Además de ser un proxy inverso HTTP completo, el proxy inverso HTTP de Symfony (a través de la clase ``HttpCache``) añade información de depuración muy útil como cabeceras HTTP. Esto es de gran ayuda cuando se quieren validar las cabeceras de caché que hemos establecido.
 
@@ -114,7 +118,7 @@ Evitando solicitudes SQL con ESI
     single: HTTP Cache;ESI
     single: ESI
 
-El oyente ``TwigEventSubscriber`` inyecta una variable global en Twig con todos los objetos conferencia. Lo hace para cada una de las páginas del sitio web. Es, con seguridad, un buen candidato a tener en cuenta de cara a la optimización del rendimiento.
+El oyente ``TwigEventListener`` inyecta una variable global en Twig con todos los objetos conferencia. Lo hace para cada una de las páginas del sitio web. Es, con seguridad, un buen candidato a tener en cuenta de cara a la optimización del rendimiento.
 
 No añadirás nuevas conferencias todos los días, así que el código está consultando los mismos datos exactos de la base de datos una y otra vez.
 
@@ -127,27 +131,27 @@ Crea un controlador que sólo devuelva el fragmento HTML que muestra las confere
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -41,6 +41,14 @@ class ConferenceController extends AbstractController
-             return $response;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,14 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     +    #[Route('/conference_header', name: 'conference_header')]
     +    public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
     +    {
-    +        return new Response($this->twig->render('conference/header.html.twig', [
+    +        return $this->render('conference/header.html.twig', [
     +            'conferences' => $conferenceRepository->findAll(),
-    +        ]));
+    +        ]);
     +    }
     +
+         #[RateLimit('comment_submission', methods: ['POST'])]
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository, string $photoDir): Response
-         {
+         public function show(
 
 Crea la plantilla correspondiente:
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/header.html.twig
 
     <ul>
@@ -167,9 +171,9 @@ Accede a ``/conference_header`` para comprobar que todo funciona correctamente.
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,11 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,11 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -200,9 +204,9 @@ Primero, habilita el soporte de ESI:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -11,7 +11,7 @@ framework:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -12,7 +12,7 @@ framework:
              cookie_secure: auto
              cookie_samesite: lax
 
@@ -221,9 +225,9 @@ Luego, usa ``render_esi`` en lugar de ``render``:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -16,7 +16,7 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -14,7 +14,7 @@
          <body>
              <header>
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
@@ -266,22 +270,16 @@ Sin embargo, esto no es lo que queremos. Vamos a incluir en la caché la página
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -44,9 +44,12 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -36,6 +36,7 @@ final class ConferenceController extends AbstractController
+             ]);
+         }
+
+    +    #[Cache(smaxage: 3600)]
          #[Route('/conference_header', name: 'conference_header')]
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
-    -        return new Response($this->twig->render('conference/header.html.twig', [
-    +        $response = new Response($this->twig->render('conference/header.html.twig', [
-                 'conferences' => $conferenceRepository->findAll(),
-             ]));
-    +        $response->setSharedMaxAge(3600);
-    +
-    +        return $response;
-         }
-
-         #[Route('/conference/{slug}', name: 'conference')]
 
 La caché está ahora habilitada para ambas peticiones:
 
@@ -314,54 +312,61 @@ Quita al oyente ya que no lo necesitamos más:
 
 .. code-block:: terminal
 
-    $ rm src/EventSubscriber/TwigEventSubscriber.php
+    $ rm src/EventListener/TwigEventListener.php
 
 Purgando la caché HTTP para pruebas
 ------------------------------------
 
 Probar el sitio web en un navegador o mediante pruebas automatizadas se hace un poco más difícil con una capa de caché.
 
-You can manually remove all the HTTP cache by removing the
-``var/cache/dev/http_cache/`` directory:
+Puedes eliminar manualmente toda la caché HTTP eliminando el directorio ``var/cache/dev/http_cache/``:
 
 .. code-block:: terminal
 
     $ rm -rf var/cache/dev/http_cache/
 
 .. index::
-    single: Annotations;Route
+    single: Attributes;Route
 
 Esta estrategia no funciona bien si sólo deseas invalidar algunas URL o si deseas integrar la invalidación de caché en tus pruebas funcionales. Añadamos un pequeño endpoint HTTP, sólo para administradores, para invalidar algunas URL:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
-    @@ -6,8 +6,10 @@ use App\Entity\Comment;
-     use App\Message\CommentMessage;
-     use Doctrine\ORM\EntityManagerInterface;
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -20,6 +20,8 @@ security:
+                     login_path: app_login
+                     check_path: app_login
+                     enable_csrf: true
+    +            http_basic: { realm: Admin Area }
+    +            entry_point: form_login
+                 logout:
+                     path: app_logout
+                     # where to redirect after logout
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
+    @@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
+    +use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
     +use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
-     use Symfony\Component\Workflow\Registry;
-    @@ -52,4 +54,17 @@ class AdminController extends AbstractController
+     use Symfony\Component\Routing\Attribute\Route;
+     use Symfony\Component\Workflow\WorkflowInterface;
+    @@ -47,4 +49,16 @@ class AdminController extends AbstractController
                  'comment' => $comment,
-             ]);
+             ]));
          }
     +
     +    #[Route('/admin/http-cache/{uri<.*>}', methods: ['PURGE'])]
-    +    public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri): Response
+    +    public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri, StoreInterface $store): Response
     +    {
     +        if ('prod' === $kernel->getEnvironment()) {
     +            return new Response('KO', 400);
     +        }
     +
-    +        $store = (new class($kernel) extends HttpCache {})->getStore();
     +        $store->purge($request->getSchemeAndHttpHost().'/'.$uri);
     +
     +        return new Response('Done');
@@ -372,14 +377,12 @@ El nuevo controlador se ha restringido al método HTTP ``PURGE``. Este método n
 
 Por defecto, los parámetros de ruta no pueden contener ``/`` , ya que separan los segmentos de URL. Puedes anular esta restricción para el último parámetro de ruta, por ejemplo ``uri``, configurando tu propio patrón de requisitos (``.*``).
 
-La forma en que obtenemos la instancia ``HttpCache`` también puede parecer un poco extraña; estamos usando una clase anónima ya que no es posible acceder a la "real". La instancia ``HttpCache`` envuelve el kernel real, que no conoce la capa de caché como debería ser.
-
 Invalida la página de inicio y el encabezado de la conferencia a través de las siguientes llamadas cURL:
 
 .. code-block:: terminal
 
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
-    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/
+    $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`admin/http-cache/conference_header
 
 El subcomando ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` devuelve la URL actual del servidor web local.
 
@@ -387,43 +390,64 @@ El subcomando ``symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`` devuelve 
 
     El controlador no tiene un nombre de ruta ya que nunca será referenciado en el código.
 
+Deshabilitando la caché HTTP en desarrollo
+-------------------------------------------
+
+La caché HTTP fue estupenda para validar nuestras cabeceras de caché y para aprender a purgar las entradas obsoletas. Pero tener un proxy inverso habilitado en el entorno de desarrollo es inusual, y rápidamente se interpone en el camino: las respuestas se sirven desde la caché mientras iteras sobre el código, y algunos assets de los proveedores incluso se sirven con un cuerpo vacío debido a una limitación antigua de HttpCache con las respuestas de archivos.
+
+Ahora que todo está validado, deshabilítala; Varnish tomará el relevo en producción:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -14,7 +14,3 @@ when@test:
+             test: true
+             session:
+                 storage_factory_id: session.storage.factory.mock_file
+    -
+    -when@dev:
+    -    framework:
+    -        http_cache: true
+
 Agrupando rutas similares con un prefijo
 ----------------------------------------
 
 .. index::
-    single: Annotations;Route
+    single: Attributes;Route
 
 Las dos rutas en el controlador de administración tienen el mismo prefijo ``/admin``. En lugar de repetirlo en todas las rutas, refactoriza las rutas para configurar el prefijo en la propia clase:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
-    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
-     use Symfony\Component\Workflow\Registry;
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
+    @@ -15,6 +15,7 @@ use Symfony\Component\Routing\Attribute\Route;
+     use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
 
     +#[Route('/admin')]
      class AdminController extends AbstractController
      {
-         private $twig;
-    @@ -28,7 +29,7 @@ class AdminController extends AbstractController
-             $this->bus = $bus;
+         public function __construct(
+    @@ -24,7 +25,7 @@ class AdminController extends AbstractController
+         ) {
          }
 
     -    #[Route('/admin/comment/review/{id}', name: 'review_comment')]
     +    #[Route('/comment/review/{id}', name: 'review_comment')]
-         public function reviewComment(Request $request, Comment $comment, Registry $registry): Response
+         public function reviewComment(Request $request, Comment $comment, WorkflowInterface $commentStateMachine): Response
          {
              $accepted = !$request->query->get('reject');
-    @@ -55,7 +56,7 @@ class AdminController extends AbstractController
-             ]);
+    @@ -50,7 +51,7 @@ class AdminController extends AbstractController
+             ]));
          }
 
     -    #[Route('/admin/http-cache/{uri<.*>}', methods: ['PURGE'])]
     +    #[Route('/http-cache/{uri<.*>}', methods: ['PURGE'])]
-         public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri): Response
+         public function purgeHttpCache(KernelInterface $kernel, Request $request, string $uri, StoreInterface $store): Response
          {
              if ('prod' === $kernel->getEnvironment()) {
 
@@ -436,11 +460,7 @@ Almacenando en la caché operaciones intensivas de CPU/memoria
 
 No tenemos en nuestro sitio web código que sea intensivo en el uso de CPU o de memoria. Con el fin de hablar de *cachés locales*, vamos a crear un comando que muestre el paso actual en el que estamos trabajando (para ser más precisos, el nombre de la etiqueta Git adjuntada al commit actual de Git).
 
-El componente Process de Symfony te permite ejecutar un comando y recuperar el resultado (salida estándar y de error); instálalo:
-
-.. code-block:: terminal
-
-    $ symfony composer req process
+El componente Process de Symfony te permite ejecutar un comando y recuperar el resultado (salida estándar y de error).
 
 Implementa el comando:
 
@@ -449,79 +469,53 @@ Implementa el comando:
 
     namespace App\Command;
 
+    use Symfony\Component\Console\Attribute\AsCommand;
     use Symfony\Component\Console\Command\Command;
-    use Symfony\Component\Console\Input\InputInterface;
     use Symfony\Component\Console\Output\OutputInterface;
     use Symfony\Component\Process\Process;
 
-    class StepInfoCommand extends Command
+    #[AsCommand('app:step:info')]
+    class StepInfoCommand
     {
-        protected static $defaultName = 'app:step:info';
-
-        protected function execute(InputInterface $input, OutputInterface $output): int
+        public function __invoke(OutputInterface $output): int
         {
             $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
             $process->mustRun();
             $output->write($process->getOutput());
 
-            return 0;
+            return Command::SUCCESS;
         }
     }
-
-.. index::
-    single: Command;make:command
-
-.. note::
-
-    Podrías haber usado ``make:command`` para crear el comando:
-
-    .. code-block:: terminal
-        :class: ignore
-
-        $ symfony console make:command app:step:info
 
 .. index::
     single: Cache
     single: Components;Cache
 
-¿Qué pasa si queremos almacenar en caché la salida durante unos minutos? Utiliza la Cache de Symfony:
+¿Qué pasa si queremos almacenar en caché la salida durante unos minutos? Utiliza la Cache de Symfony.
 
-.. code-block:: terminal
-
-    $ symfony composer req cache
-
-Y envuelve el código con la lógica de la caché:
+Symfony inyecta los servicios indicados por tipo (*type-hint*) en el método ``__invoke()`` de un comando, de la misma manera que lo hace con los argumentos del controlador. Envuelve el código con la lógica de la caché:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Command/StepInfoCommand.php
-    +++ b/src/Command/StepInfoCommand.php
-    @@ -6,16 +6,31 @@ use Symfony\Component\Console\Command\Command;
-     use Symfony\Component\Console\Input\InputInterface;
+    --- i/src/Command/StepInfoCommand.php
+    +++ w/src/Command/StepInfoCommand.php
+    @@ -6,15 +6,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
+     use Symfony\Component\Console\Command\Command;
      use Symfony\Component\Console\Output\OutputInterface;
      use Symfony\Component\Process\Process;
     +use Symfony\Contracts\Cache\CacheInterface;
 
-     class StepInfoCommand extends Command
+     #[AsCommand('app:step:info')]
+     class StepInfoCommand
      {
-         protected static $defaultName = 'app:step:info';
-
-    +    private $cache;
-    +
-    +    public function __construct(CacheInterface $cache)
-    +    {
-    +        $this->cache = $cache;
-    +
-    +        parent::__construct();
-    +    }
-    +
-         protected function execute(InputInterface $input, OutputInterface $output): int
+    -    public function __invoke(OutputInterface $output): int
+    +    public function __invoke(OutputInterface $output, CacheInterface $cache): int
          {
     -        $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     -        $process->mustRun();
     -        $output->write($process->getOutput());
-    +        $step = $this->cache->get('app.current_step', function ($item) {
+    +        $step = $cache->get('app.current_step', function ($item) {
     +            $process = new Process(['git', 'tag', '-l', '--points-at', 'HEAD']);
     +            $process->mustRun();
     +            $item->expiresAfter(30);
@@ -530,7 +524,7 @@ Y envuelve el código con la lógica de la caché:
     +        });
     +        $output->writeln($step);
 
-             return 0;
+             return Command::SUCCESS;
          }
 
 Ahora el proceso solo se llama si el elemento ``app.current_step`` no está en la caché.
@@ -540,7 +534,7 @@ Analizando y comparando el rendimiento
 
 Nunca añadas caché a ciegas. Ten en cuenta que añadir algo de caché añade una capa de complejidad. Y como todos somos muy malos adivinando lo que será rápido y lo que es lento, puedes terminar en una situación en la que la caché hace que tu aplicación sea más lenta.
 
-Siempre mide el impacto de añadir una caché con una herramienta de análisis como `Blackfire <https://blackfire.io/>`_.
+Siempre mide el impacto de añadir una caché con una herramienta de análisis como `Blackfire`_.
 
 Consulta el paso "Rendimiento" para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes de la implementación.
 
@@ -552,28 +546,29 @@ Configurando una caché de proxy inverso en producción
     single: Upsun;Varnish
     single: Varnish
 
-No utilices el proxy inverso de Symfony en producción. Opta siempre por un proxy inverso como Varnish en tu infraestructura o una CDN comercial.
+En lugar de usar el proxy inverso de Symfony en producción, vamos a usar el proxy inverso "más robusto" Varnish.
 
 Agrega Varnish a los servicios Upsun:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony/services.yaml
-    +++ b/.symfony/services.yaml
-    @@ -2,3 +2,12 @@ db:
-         type: postgresql:13
-         disk: 1024
-         size: S
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -6,6 +6,15 @@ services:
+         database:
+             type: postgresql:16
+
+    +    varnish:
+    +        type: varnish:9.0
+    +        relationships:
+    +            application: 'app:http'
+    +        configuration:
+    +            vcl: !include
+    +                type: string
+    +                path: config.vcl
     +
-    +varnish:
-    +    type: varnish:6.0
-    +    relationships:
-    +        application: 'app:http'
-    +    configuration:
-    +        vcl: !include
-    +            type: string
-    +            path: config.vcl
+     applications:
 
 .. index::
     single: Upsun;Routes
@@ -583,17 +578,18 @@ Utiliza Varnish como el principal punto de entrada en las rutas:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony/routes.yaml
-    +++ b/.symfony/routes.yaml
-    @@ -1,2 +1,2 @@
-    -"https://{all}/": { type: upstream, upstream: "app:http" }
-    +"https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -1,5 +1,5 @@
+     routes:
+    -    "https://{all}/": { type: upstream, upstream: "app:http" }
+    +    "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
+         "http://{all}/": { type: redirect, to: "https://{all}/" }
 
 Finalmente, crea un archivo ``config.vcl`` para configurar Varnish:
 
 .. code-block:: vcl
-    :caption: .symfony/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -605,7 +601,7 @@ Habilitando el soporte de ESI en Varnish
 El soporte de ESI en Varnish debe estar habilitado explícitamente para cada solicitud. Para hacerlo universal, Symfony utiliza el estándar ``Surrogate-Capability`` y los encabezados ``Surrogate-Control`` para negociar el soporte de ESI:
 
 .. code-block:: vcl
-    :caption: .symfony/config.vcl
+    :caption: .upsun/config.vcl
 
     sub vcl_recv {
         set req.backend_hint = application.backend();
@@ -629,8 +625,8 @@ De todos modos, veamos cómo configurar Varnish para la invalidación de la cach
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony/config.vcl
-    +++ b/.symfony/config.vcl
+    --- i/.upsun/config.vcl
+    +++ w/.upsun/config.vcl
     @@ -1,6 +1,13 @@
      sub vcl_recv {
          set req.backend_hint = application.backend();
@@ -646,27 +642,35 @@ De todos modos, veamos cómo configurar Varnish para la invalidación de la cach
 
      sub vcl_backend_response {
 
-En la vida real, probablemente restrinjas por IPs como se describe en la `documentación de Varnish <https://varnish-cache.org/docs/trunk/users-guide/purging.html>`_.
+En la vida real, probablemente restrinjas por IPs como se describe en la `documentación de Varnish`_.
 
 Purga algunas URLs ahora:
 
 .. code-block:: terminal
 
-    $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
-    $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header
+    $ curl -X PURGE -H 'x-purge-token: PURGE_NOW' `symfony cloud:env:url --pipe --primary`
+    $ curl -X PURGE -H 'x-purge-token: PURGE_NOW' `symfony cloud:env:url --pipe --primary`conference_header
 
-Las URLs se ven un poco extrañas porque las URLs devueltas por ``env:urls`` ya terminan con ``/`` .
+Las URLs se ven un poco extrañas porque las URLs devueltas por ``env:url`` ya terminan con ``/`` .
 
 .. sidebar:: Yendo más allá
 
-    * `Cloudflare <https://www.cloudflare.com>`_ , la plataforma global de nube;
+    * `Cloudflare`_ , la plataforma global de nube;
 
-    * `Documentación de Varnish HTTP Cache <https://varnish-cache.org/docs/index.html>`_;
+    * `Documentación de Varnish HTTP Cache`_ ;
 
-    * `Especificaciones de ESI <https://www.w3.org/TR/esi-lang>`_ y `recursos para desarrolladores de ESI <https://www.akamai.com/us/en/support/esi.jsp>`_ ;
+    * `Especificaciones de ESI`_ y `recursos para desarrolladores de ESI`_ ;
 
-    * `Modelo de validación de caché HTTP <https://symfony.com/doc/current/http_cache/validation.html>`_ ;
+    * `Modelo de validación de caché HTTP`_ ;
 
-    * `Caché HTTP en Upsun <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_ .
+    * `Caché HTTP en Upsun`_ .
 
+.. _`Blackfire`: https://blackfire.io/
+.. _`documentación de Varnish`: https://varnish-cache.org/docs/trunk/users-guide/purging.html
 .. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network
+.. _`Cloudflare`: https://www.cloudflare.com
+.. _`Documentación de Varnish HTTP Cache`: https://varnish-cache.org/docs/index.html
+.. _`Especificaciones de ESI`: https://www.w3.org/TR/esi-lang
+.. _`recursos para desarrolladores de ESI`: https://www.akamai.com/us/en/support/esi.jsp
+.. _`Modelo de validación de caché HTTP`: https://symfony.com/doc/current/http_cache/validation.html
+.. _`Caché HTTP en Upsun`: https://symfony.com/doc/current/cloud/cookbooks/cache.html
