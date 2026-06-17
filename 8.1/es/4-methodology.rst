@@ -39,13 +39,15 @@ Las cadenas de caracteres raros son marcadores añadidos por Symfony Flex para q
 
 Podría ser bueno hacer *push* de tu repositorio a algún servidor externo. GitHub, GitLab o Bitbucket son buenas opciones.
 
-Si estás desplegando en Upsun, ya tienes una copia del repositorio Git, pero no deberías depender exclusivamente de él. Se usa solamente para el despliegue. No es una copia de seguridad.
+.. note::
+
+    Si estás desplegando en Upsun, ya tienes una copia del repositorio Git, ya que Upsun usa Git entre bastidores cuando utilizas ``cloud:push``. Pero no deberías depender del repositorio Git de Upsun. Se usa solamente para el despliegue. No es una copia de seguridad.
 
 Despliegue continuo a producción
 ---------------------------------
 
 .. index::
-    single: Symfony CLI;deploy
+    single: Symfony CLI;cloud:push
 
 Otra buena costumbre es desplegar con frecuencia. Hacerlo al final de cada paso podría considerarse un ritmo adecuado.
 
