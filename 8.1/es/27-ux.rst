@@ -1,715 +1,158 @@
-Construyendo una SPA
-====================
+Haciendo que el sitio web parezca una SPA
+=========================================
 
 .. index::
-    single: SPA
-    single: Mobile
+    single: Symfony UX
+    single: Turbo
+    single: Stimulus
 
-La mayoría de los comentarios se enviarán durante la conferencia, donde algunas personas no traen un ordenador portátil. Pero probablemente tengan un teléfono inteligente. ¿Qué tal si creamos una aplicación móvil para echar un vistazo rápido a los comentarios de la conferencia?
+El sitio web es rápido, pero cada clic sigue recargando una página HTML completa. La respuesta tradicional es construir una *Single-Page Application* (SPA): una aplicación JavaScript, escrita en otra pila tecnológica, que se comunica con la API. Eso significa una segunda aplicación que desarrollar, asegurar, desplegar y mantener sincronizada con la principal.
 
-Una forma de crear una aplicación móvil de este tipo es crear una aplicación de una sola página (SPA) en Javascript. Una SPA se ejecuta localmente, puede usar almacenamiento local, puede llamar a una API HTTP remota y puede aprovechar a los *service workers* para crear una experiencia casi nativa.
+Symfony tiene una respuesta diferente. *Symfony UX* es una iniciativa que lleva la experiencia SPA a las aplicaciones renderizadas en el servidor: sigue escribiendo plantillas Twig y controladores Symfony, y añade JavaScript solo donde aporta valor.
 
-Creando la aplicación
-----------------------
+Descubriendo Symfony UX
+-----------------------
 
-Para crear la aplicación móvil, vamos a utilizar `Preact`_ y **Symfony Encore**. **Preact** proporciona unos cimientos ligeros pero eficaces sobre los que trabajar, muy adecuados para nuestro libro de visitas SPA.
+¿La buena noticia? Hemos estado usando Symfony UX desde el primer paso de este libro. El esqueleto webapp incluye dos de sus paquetes: ``symfony/stimulus-bundle`` y ``symfony/ux-turbo``. Echa un vistazo a ``importmap.php``:
 
-Para que tanto el sitio web como la SPA sean consistentes, vamos a reutilizar las hojas de estilo Sass del sitio web para la aplicación móvil.
+.. code-block:: php
+    :class: ignore
 
-Crea la aplicación SPA dentro de la carpeta ``spa`` y copia las hojas de estilo del sitio web:
+    return [
+        'app' => ['path' => './assets/app.js', 'entrypoint' => true],
+        '@hotwired/stimulus' => ['version' => '3.2.2'],
+        '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
+        '@hotwired/turbo' => ['version' => '8.0.23'],
+    ];
 
-.. code-block:: terminal
+`Stimulus`_ es un pequeño framework de JavaScript que conecta *controladores* JavaScript con elementos HTML a través de atributos ``data-``. El archivo ``assets/stimulus_bootstrap.js`` inicia la aplicación Stimulus y registra automáticamente cualquier controlador almacenado en el directorio ``assets/controllers/``.
 
-    $ mkdir -p spa/src spa/public spa/assets/styles
-    $ cp assets/styles/*.scss spa/assets/styles/
-    $ cd spa
+`Turbo`_ se apoya en esta base para hacer que la navegación sea instantánea.
 
-.. note::
+Navegando instantáneamente con Turbo
+------------------------------------
 
-    Hemos creado un directorio ``public`` ya que interactuaremos principalmente con la SPA a través de un navegador. Podríamos haberle puesto nombre ``build`` si únicamente hubiéramos querido construir una aplicación móvil.
+.. index::
+    single: Turbo;Drive
 
-Añade un archivo ``.gitignore``, se considera una buena práctica:
+Turbo *Drive* ha estado trabajando silenciosamente todo este tiempo: intercepta cada clic en un enlace y cada envío de formulario, obtiene la página en segundo plano e intercambia el ``<body>`` sin recargar la página completa. El navegador mantiene vivos el mismo JavaScript y CSS, por lo que la navegación se siente inmediata.
 
-.. code-block:: text
-    :caption: .gitignore
+Abre las herramientas de desarrollo del navegador, cambia a la pestaña "Network" y navega por el sitio web: los cambios de página son peticiones ``fetch``, no cargas completas del documento.
 
-    /node_modules/
-    /public/
-    /npm-debug.log
-    /yarn-error.log
-    # used later by Cordova
-    /app/
+Turbo solo pide una cosa a cambio: una semántica HTTP correcta para los formularios. Un envío correcto debe redirigir (el nuestro lo hace, gracias a ``redirectToRoute()``), y uno fallido debe usar un código de estado ``4xx``. Symfony se encarga de esto último automáticamente: cuando un formulario enviado no es válido, ``render()`` responde con un código de estado ``422 Unprocessable Entity``.
 
-Initialize the ``package.json`` file (equivalent of the ``composer.json``
-file for JavaScript):
+Actualizando parte de una página con Turbo Frames
+-------------------------------------------------
 
-.. code-block:: terminal
+.. index::
+    single: Turbo;Frame
 
-    $ yarn init -y
+Turbo Drive evita las recargas completas de la página. Los *Frames* de Turbo van un paso más allá: permiten que un fragmento de la página navegue de forma independiente del resto.
 
-Ahora, agrega algunas dependencias que son necesarias:
+La lista de comentarios es un candidato perfecto. Al navegar por las páginas de comentarios con los enlaces "Anterior" y "Siguiente", solo debería cambiar la lista; volver a renderizar el encabezado, el formulario y el pie de página es trabajo desperdiciado. Envuelve los comentarios en un frame:
 
-.. code-block:: terminal
+.. code-block:: diff
+    :caption: patch_file
 
-    $ yarn add @symfony/webpack-encore @babel/core @babel/preset-env babel-preset-preact preact html-webpack-plugin bootstrap
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
+    @@ -17,3 +17,4 @@
+         <div class="row">
+             <div class="col-12 col-lg-8">
+    +            <turbo-frame id="comments" data-turbo-action="advance">
+                 {% if comments|length > 0 %}
+    @@ -56,5 +57,6 @@
+                     No comments have been posted yet for this conference.
+                 </div>
+             {% endif %}
+    +            </turbo-frame>
+             </div>
+             <div class="col-12 col-lg-4">
 
-El último paso de configuración es crear la configuración de Webpack Encore:
+Los enlaces dentro de un elemento ``<turbo-frame>`` solo actualizan ese frame: al hacer clic en "Siguiente", Turbo obtiene la página en segundo plano e intercambia el frame coincidente, dejando el resto de la página intacto.
+
+El atributo ``data-turbo-action="advance"`` promueve la navegación del frame a una visita completa: la URL de la barra de direcciones se actualiza (incluyendo el parámetro de consulta ``offset``), de modo que los comentarios paginados siguen siendo compartibles y el botón de retroceso del navegador funciona como se espera.
+
+Previsualizando la foto del comentario con Stimulus
+---------------------------------------------------
+
+.. index::
+    single: Stimulus;Controller
+
+Es hora de escribir nuestras primeras líneas de JavaScript de todo el libro. Los asistentes que envían una foto no pueden verla antes de publicar el comentario. Vamos a mostrar una previsualización cuando seleccionen un archivo.
+
+Crea un controlador Stimulus (el nombre del archivo determina el nombre del controlador, ``photo-preview``):
 
 .. code-block:: javascript
-    :caption: webpack.config.js
-    :emphasize-lines: 8,11
+    :caption: assets/controllers/photo_preview_controller.js
 
-    const Encore = require('@symfony/webpack-encore');
-    const HtmlWebpackPlugin = require('html-webpack-plugin');
+    import { Controller } from '@hotwired/stimulus';
 
-    Encore
-        .setOutputPath('public/')
-        .setPublicPath('/')
-        .cleanupOutputBeforeBuild()
-        .addEntry('app', './src/app.js')
-        .enablePreactPreset()
-        .enableSingleRuntimeChunk()
-        .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-    ;
+    export default class extends Controller {
+        show() {
+            const [photo] = this.element.files;
+            if (!photo) {
+                this.preview?.remove();
+                this.preview = null;
 
-    module.exports = Encore.getWebpackConfig();
+                return;
+            }
 
-Creando la plantilla principal de la SPA
-----------------------------------------
+            if (!this.preview) {
+                this.preview = document.createElement('img');
+                this.preview.className = 'img-thumbnail mt-2';
+                this.preview.style.maxHeight = '150px';
+                this.element.insertAdjacentElement('afterend', this.preview);
+            }
 
-Ahora toca crear la plantilla inicial en la que Preact mostrará la aplicación:
-
-.. code-block:: html
-    :caption: src/index.ejs
-    :emphasize-lines: 12
-
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
-
-        <title>Conference Guestbook application</title>
-    </head>
-    <body>
-        <div id="app"></div>
-    </body>
-    </html>
-
-La etiqueta ``<div>`` es donde la aplicación será mostrada vía JavaScript. Aquí está la primera versión del código que muestra la vista "Hello World":
-
-.. code-block:: text
-    :caption: src/app.js
-    :emphasize-lines: 3,11
-
-    import {h, render} from 'preact';
-
-    function App() {
-        return (
-            <div>
-                Hello world!
-            </div>
-        )
+            this.preview.src = URL.createObjectURL(photo);
+        }
     }
 
-    render(<App />, document.getElementById('app'));
-
-La última línea registra la función ``App()``en el elemento ``#app`` de la página HTML.
-
-¡Ahora todo está listo!
-
-Ejecutando una SPA en el navegador
-----------------------------------
-
-.. index::
-    single: Symfony CLI;server:start
-    single: Symfony CLI;server:stop
-
-Como esta aplicación es independiente del sitio web principal, necesitamos ejecutar otro servidor web:
-
-.. code-block:: terminal
-    :class: hide
-
-    $ symfony server:stop
-
-.. code-block:: terminal
-
-    $ symfony server:start -d --passthru=index.html
-
-El parámetro ``--passthru`` le dice al servidor web que pase todas las peticiones HTTP al archivo ``public/index.html`` ( ``public/`` es el directorio raíz web por defecto del servidor web). Esta página es gestionada por la aplicación Preact y es la encargada de generar la página que se mostrará en el historial del navegador.
-
-Para compilar los archivos CSS **y JavaScript**, ejecuta ``yarn``:
-
-.. code-block:: terminal
-
-    $ yarn encore dev
-
-Abre la SPA en un navegador:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ symfony open:local
-
-Y admira nuestra SPA de hola mundo:
-
-.. figure:: screenshots/spa.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-Incorporando un enrutador (router) para gestionar estados
----------------------------------------------------------
-
-La SPA actual no es capaz de gestionar diferentes páginas. Para implementar varias páginas, necesitamos un router, como para Symfony. Vamos a usar el **preact-router**. Éste toma una URL como entrada y, en función de la misma, selecciona un componente de Preact para mostrar.
-
-Instala preact-router:
-
-.. code-block:: terminal
-
-    $ yarn add preact-router
-
-Crea una página para la página de inicio (un *componente de Preact* ):
-
-.. code-block:: text
-    :caption: src/pages/home.js
-
-    import {h} from 'preact';
-
-    export default function Home() {
-        return (
-            <div>Home</div>
-        );
-    };
-
-Y otra para la página de la conferencia:
-
-.. code-block:: text
-    :caption: src/pages/conference.js
-
-    import {h} from 'preact';
-
-    export default function Conference() {
-        return (
-            <div>Conference</div>
-        );
-    };
-
-Sustituye el mensaje "Hello World" del ``div`` por el componente ``Router``:
-
-.. code-block:: diff
-    :caption: patch_file
-    :emphasize-lines: 15,17,20-23
-
-    --- a/src/app.js
-    +++ b/src/app.js
-    @@ -1,9 +1,22 @@
-     import {h, render} from 'preact';
-    +import {Router, Link} from 'preact-router';
-    +
-    +import Home from './pages/home';
-    +import Conference from './pages/conference';
-
-     function App() {
-         return (
-             <div>
-    -            Hello world!
-    +            <header>
-    +                <Link href="/">Home</Link>
-    +                <br />
-    +                <Link href="/conference/amsterdam2019">Amsterdam 2019</Link>
-    +            </header>
-    +
-    +            <Router>
-    +                <Home path="/" />
-    +                <Conference path="/conference/:slug" />
-    +            </Router>
-             </div>
-         )
-     }
-
-Reconstruye la aplicación:
-
-.. code-block:: terminal
-
-    $ yarn encore dev
-
-Si recargas la aplicación en el navegador, ya podrás hacer clic en "Home" y en los enlaces de las conferencias. Fíjate en que la URL del navegador y los botones Atrás/Adelante de tu navegador funcionan correctamente, como es de esperar.
-
-Aplicando estilos a la SPA
---------------------------
-
-En cuanto a la página web, añadamos el cargador Sass:
-
-.. code-block:: terminal
-
-    $ yarn add node-sass sass-loader
-
-Habilita el cargador Sass en Webpack y añade una referencia a la hoja de estilos:
+Eso es todo el JavaScript que necesitamos. Stimulus descubre y registra el controlador automáticamente. Conéctalo al campo de la foto del formulario de comentarios a través de atributos ``data-``:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/app.js
-    +++ b/src/app.js
-    @@ -1,3 +1,5 @@
-    +import '../assets/styles/app.scss';
-    +
-     import {h, render} from 'preact';
-     import {Router, Link} from 'preact-router';
-
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
-    @@ -7,6 +7,7 @@ Encore
-         .cleanupOutputBeforeBuild()
-         .addEntry('app', './src/app.js')
-         .enablePreactPreset()
-    +    .enableSassLoader()
-         .enableSingleRuntimeChunk()
-         .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-     ;
-
-Ahora podemos actualizar la aplicación para usar las hojas de estilo:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/src/app.js
-    +++ b/src/app.js
-    @@ -9,10 +9,20 @@ import Conference from './pages/conference';
-     function App() {
-         return (
-             <div>
-    -            <header>
-    -                <Link href="/">Home</Link>
-    -                <br />
-    -                <Link href="/conference/amsterdam2019">Amsterdam 2019</Link>
-    +            <header className="header">
-    +                <nav className="navbar navbar-light bg-light">
-    +                    <div className="container">
-    +                        <Link className="navbar-brand mr-4 pr-2" href="/">
-    +                            &#128217; Guestbook
-    +                        </Link>
-    +                    </div>
-    +                </nav>
-    +
-    +                <nav className="bg-light border-bottom text-center">
-    +                    <Link className="nav-conference" href="/conference/amsterdam2019">
-    +                        Amsterdam 2019
-    +                    </Link>
-    +                </nav>
-                 </header>
-
-                 <Router>
-
-Reconstruye la aplicación una vez más:
-
-.. code-block:: terminal
-
-    $ yarn encore dev
-
-Ahora puedes disfrutar de una SPA con estilo:
-
-.. figure:: screenshots/spa-home.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-Obteniendo datos desde una API
-------------------------------
-
-La estructura de la aplicación Preact ya está terminada: Preact Router maneja los estados de la página - incluyendo dónde se coloca el slug de la conferencia - y la hoja de estilo de la aplicación principal se utiliza para dar estilo a la SPA.
-
-Para hacer que la SPA sea dinámica, necesitamos obtener los datos de la API a través de llamadas HTTP.
-
-Configura Webpack para exponer la variable de entorno del *endpoint* de la API:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
-    @@ -1,3 +1,4 @@
-    +const webpack = require('webpack');
-     const Encore = require('@symfony/webpack-encore');
-     const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-    @@ -10,6 +11,9 @@ Encore
-         .enableSassLoader()
-         .enableSingleRuntimeChunk()
-         .addPlugin(new HtmlWebpackPlugin({ template: 'src/index.ejs', alwaysWriteToDisk: true }))
-    +    .addPlugin(new webpack.DefinePlugin({
-    +        'ENV_API_ENDPOINT': JSON.stringify(process.env.API_ENDPOINT),
-    +    }))
-     ;
-
-     module.exports = Encore.getWebpackConfig();
-
-La variable de entorno ``API_ENDPOINT`` debe apuntar al servidor web del sitio web donde tenemos el *endpoint* de la API, en ``/api``. Lo configuraremos correctamente en breve, cuando ejecutemos ``yarn encore``.
-
-Crea un fichero ``api.js`` que abstraerá la obtención de datos usando la API:
-
-.. code-block:: text
-    :caption: src/api/api.js
-
-    function fetchCollection(path) {
-        return fetch(ENV_API_ENDPOINT + path).then(resp => resp.json()).then(json => json['hydra:member']);
-    }
-
-    export function findConferences() {
-        return fetchCollection('api/conferences');
-    }
-
-    export function findComments(conference) {
-        return fetchCollection('api/comments?conference='+conference.id);
-    }
-
-Ahora puedes adaptar los componentes del encabezado (*header*) e inicio (*home*):
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/src/app.js
-    +++ b/src/app.js
-    @@ -2,11 +2,23 @@ import '../assets/styles/app.scss';
-
-     import {h, render} from 'preact';
-     import {Router, Link} from 'preact-router';
-    +import {useState, useEffect} from 'preact/hooks';
-
-    +import {findConferences} from './api/api';
-     import Home from './pages/home';
-     import Conference from './pages/conference';
-
-     function App() {
-    +    const [conferences, setConferences] = useState(null);
-    +
-    +    useEffect(() => {
-    +        findConferences().then((conferences) => setConferences(conferences));
-    +    }, []);
-    +
-    +    if (conferences === null) {
-    +        return <div className="text-center pt-5">Loading...</div>;
-    +    }
-    +
-         return (
-             <div>
-                 <header className="header">
-    @@ -19,15 +31,17 @@ function App() {
-                     </nav>
-
-                     <nav className="bg-light border-bottom text-center">
-    -                    <Link className="nav-conference" href="/conference/amsterdam2019">
-    -                        Amsterdam 2019
-    -                    </Link>
-    +                    {conferences.map((conference) => (
-    +                        <Link className="nav-conference" href={'/conference/'+conference.slug}>
-    +                            {conference.city} {conference.year}
-    +                        </Link>
-    +                    ))}
-                     </nav>
-                 </header>
-
-                 <Router>
-    -                <Home path="/" />
-    -                <Conference path="/conference/:slug" />
-    +                <Home path="/" conferences={conferences} />
-    +                <Conference path="/conference/:slug" conferences={conferences} />
-                 </Router>
-             </div>
-         )
-    --- a/src/pages/home.js
-    +++ b/src/pages/home.js
-    @@ -1,7 +1,28 @@
-     import {h} from 'preact';
-    +import {Link} from 'preact-router';
-    +
-    +export default function Home({conferences}) {
-    +    if (!conferences) {
-    +        return <div className="p-3 text-center">No conferences yet</div>;
-    +    }
-
-    -export default function Home() {
-         return (
-    -        <div>Home</div>
-    +        <div className="p-3">
-    +            {conferences.map((conference)=> (
-    +                <div className="card border shadow-sm lift mb-3">
-    +                    <div className="card-body">
-    +                        <div className="card-title">
-    +                            <h4 className="font-weight-light">
-    +                                {conference.city} {conference.year}
-    +                            </h4>
-    +                        </div>
-    +
-    +                        <Link className="btn btn-sm btn-blue stretched-link" href={'/conference/'+conference.slug}>
-    +                            View
-    +                        </Link>
-    +                    </div>
-    +                </div>
-    +            ))}
-    +        </div>
-         );
-    -};
-    +}
-
-Por último, Preact Router está pasando el contenido por defecto de "slug" al componente Conference como una propiedad. Se usa para mostrar la conferencia adecuada y sus comentarios, de nuevo usando la API; y adapta el contenido mostrado para usar los datos de la API:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/src/pages/conference.js
-    +++ b/src/pages/conference.js
-    @@ -1,7 +1,48 @@
-     import {h} from 'preact';
-    +import {findComments} from '../api/api';
-    +import {useState, useEffect} from 'preact/hooks';
-    +
-    +function Comment({comments}) {
-    +    if (comments !== null && comments.length === 0) {
-    +        return <div className="text-center pt-4">No comments yet</div>;
-    +    }
-    +
-    +    if (!comments) {
-    +        return <div className="text-center pt-4">Loading...</div>;
-    +    }
-    +
-    +    return (
-    +        <div className="pt-4">
-    +            {comments.map(comment => (
-    +                <div className="shadow border rounded-lg p-3 mb-4">
-    +                    <div className="comment-img mr-3">
-    +                        {!comment.photoFilename ? '' : (
-    +                            <a href={ENV_API_ENDPOINT+'uploads/photos/'+comment.photoFilename} target="_blank">
-    +                                <img src={ENV_API_ENDPOINT+'uploads/photos/'+comment.photoFilename} />
-    +                            </a>
-    +                        )}
-    +                    </div>
-    +
-    +                    <h5 className="font-weight-light mt-3 mb-0">{comment.author}</h5>
-    +                    <div className="comment-text">{comment.text}</div>
-    +                </div>
-    +            ))}
-    +        </div>
-    +    );
-    +}
-    +
-    +export default function Conference({conferences, slug}) {
-    +    const conference = conferences.find(conference => conference.slug === slug);
-    +    const [comments, setComments] = useState(null);
-    +
-    +    useEffect(() => {
-    +        findComments(conference).then(comments => setComments(comments));
-    +    }, [slug]);
-
-    -export default function Conference() {
-         return (
-    -        <div>Conference</div>
-    +        <div className="p-3">
-    +            <h4>{conference.city} {conference.year}</h4>
-    +            <Comment comments={comments} />
-    +        </div>
-         );
-    -};
-    +}
-
-La SPA ahora necesita saber la URL de nuestra API a través de la variable de entorno ``API_ENDPOINT`. Configúrala con la URL del servidor web de la API (que se ejecuta en el directorio ``..``):
-
-.. code-block:: terminal
-
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` yarn encore dev
-
-Ahora también la puedes ejecutar en segundo plano:
-
-.. code-block:: terminal
-
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` symfony run -d --watch=webpack.config.js yarn encore dev --watch
-
-Y la aplicación debería funcionar correctamente en el navegador:
-
-.. figure:: screenshots/spa-home-final.png
-    :alt: /
-    :align: center
-    :figclass: with-browser spa
-
-.. figure:: screenshots/spa-conference-final.png
-    :alt: /conference/amsterdam-2019
-    :align: center
-    :figclass: with-browser spa
-
-¡Impresionante! Ahora tenemos un SPA totalmente funcional, con router y datos reales. Podríamos organizar mejor la aplicación Preact más adelante si queremos, pero ya está funcionando muy bien.
-
-Desplegando la SPA en producción
----------------------------------
-
-.. index::
-    single: Upsun;Multi-Applications
-
-Upsun permite desplegar múltiples aplicaciones por proyecto. Se puede añadir otra aplicación creando un archivo ``.symfony.cloud.yaml`` en cualquier subdirectorio. Crea uno bajo ``spa/`` llamado ``spa``:
-
-.. code-block:: yaml
-    :caption: .symfony.cloud.yaml
-    :emphasize-lines: 1
-
-    name: spa
-
-    type: php:8.0
-    size: S
-
-    build:
-        flavor: none
-
-    web:
-        commands:
-            start: sleep
-        locations:
-            "/":
-                root: "public"
-                index:
-                    - "index.html"
-                scripts: false
-                expires: 10m
-
-    hooks:
-        build: |
-            set -x -e
-
-            curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
-            (>&2
-                unset NPM_CONFIG_PREFIX
-                export NVM_DIR=${SYMFONY_APP_DIR}/.nvm
-
-                yarn-install
-
-                set +x && . "${SYMFONY_APP_DIR}/.nvm/nvm.sh" && set -x
-
-                yarn encore prod
-            )
-
-.. index::
-    single: Upsun;Routes
-
-Edita el archivo ``.symfony/routes.yaml`` para enrutar el subdominio ``spa.`` a la aplicación ``spa`` que se encuentra en el directorio raíz del proyecto:
-
-.. code-block:: terminal
-
-    $ cd ../
-
-.. code-block:: diff
-    :caption: patch_file
-    :emphasize-lines: 4,5
-
-    --- a/.symfony/routes.yaml
-    +++ b/.symfony/routes.yaml
-    @@ -1,2 +1,5 @@
-    +"https://spa.{all}/": { type: upstream, upstream: "spa:http" }
-    +"http://spa.{all}/": { type: redirect, to: "https://spa.{all}/" }
-    +
-     "https://{all}/": { type: upstream, upstream: "varnish:http", cache: { enabled: false } }
-     "http://{all}/": { type: redirect, to: "https://{all}/" }
-
-Configurando CORS para la SPA
------------------------------
-
-.. index::
-    single: CORS
-    single: Cross-Origin Resource Sharing
-
-Si desplegaras el código ahora no funcionaría ya que un navegador bloquearía la solicitud de API. Tenemos que permitir explícitamente que la SPA acceda a la API. Obtén el nombre de dominio actual asociado a tu aplicación:
-
-.. code-block:: terminal
-
-    $ symfony env:urls --first
-
-Define la variable de entorno ``CORS_ALLOW_ORIGIN`` correctamente:
-
-.. code-block:: terminal
-
-    $ symfony var:set "CORS_ALLOW_ORIGIN=^`symfony env:urls --first | sed 's#/$##' | sed 's#https://#https://spa.#'`$"
-
-Si tu dominio fuera ``https://master-5szvwec-hzhac461b3a6o.eu.s5y.io/``, las llamadas a ``sed`` lo convertirán a ``https://spa.master-5szvwec-hzhac461b3a6o.eu.s5y.io``.
-
-También necesitamos definir la variable de entorno ``API_ENDPOINT``:
-
-.. code-block:: terminal
-
-    $ symfony var:set API_ENDPOINT=`symfony env:urls --first`
-
-Realiza un *commit* y despliega:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ git add .
-    $ git commit -a -m'Add the SPA application'
-    $ symfony deploy
-
-Accede a la SPA en un navegador especificando que es una aplicación:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ symfony open:remote --app=spa
-
-Usando Cordova para construir una aplicación de Smartphone
------------------------------------------------------------
-
-.. index::
-    single: SPA;Cordova
-    single: Apache Cordova
-    single: Cordova
-
-**Apache Cordova** es una herramienta que crea aplicaciones multiplataforma para teléfonos inteligentes. Y, ¡buenas noticias!, puede utilizar la SPA que acabamos de crear.
-
-Vamos a instalarlo:
-
-.. code-block:: terminal
-
-    $ cd spa
-    $ yarn global add cordova
-
-.. note::
-
-    También será necesario instalar el SDK de Android. Esta sección sólo menciona Android, pero Cordova funciona con todas las plataformas móviles, incluyendo iOS.
-
-Crea la estructura de directorios de la aplicación:
-
-.. code-block:: terminal
-    :class: answers(n)
-
-    $ ~/.yarn/bin/cordova create app
-
-Y genera la aplicación Android:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ cd app
-    $ ~/.yarn/bin/cordova platform add android
-    $ cd ..
-
-Eso es todo lo que necesitas. Ahora puedes generar los archivos de producción y moverlos a Cordova:
-
-.. code-block:: terminal
-
-    $ API_ENDPOINT=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL --dir=..` yarn encore production
-    $ rm -rf app/www
-    $ mkdir -p app/www
-    $ cp -R public/ app/www
-
-Ejecuta la aplicación en un smartphone o en un emulador:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ ~/.yarn/bin/cordova run android
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
+    @@ -26,6 +26,10 @@ class CommentType extends AbstractType
+                 ->add('photo', FileType::class, [
+                     'required' => false,
+                     'mapped' => false,
+    +                'attr' => [
+    +                    'data-controller' => 'photo-preview',
+    +                    'data-action' => 'change->photo-preview#show',
+    +                ],
+                     'constraints' => [
+                         new Image(maxSize: '1024k')
+                     ],
+
+El atributo ``data-controller`` vincula el controlador al input de archivo, y ``data-action`` llama a su método ``show()`` cada vez que cambia el valor del input. Selecciona una foto en una página de conferencia y disfruta de la previsualización.
+
+Los controladores Stimulus trabajan codo con codo con Turbo: como Drive y Frames actualizan la página sin recargarla, los controladores se conectan y desconectan automáticamente a medida que los elementos entran y salen del DOM.
+
+¿Y las aplicaciones móviles?
+----------------------------
+
+Hemos conseguido la experiencia SPA sin construir una segunda aplicación: sin una pila JavaScript separada, sin un segundo servidor web, sin configuración de CORS, nada nuevo que desplegar.
+
+Y si alguna vez necesitas una aplicación móvil *nativa*, la API creada en el paso anterior es el punto de entrada adecuado: es pública, está documentada y es independiente del framework. El sitio web y la aplicación móvil pueden evolucionar de forma independiente mientras comparten el mismo backend.
 
 .. sidebar:: Yendo más allá
 
-    * `El sitio web oficial de Preact <https://preactjs.com/>`_;
+    * La `iniciativa Symfony UX`_ ;
 
-    * `El sitio web oficial de Cordova <https://cordova.apache.org/>`_.
+    * El `Turbo Handbook`_ y el `Stimulus Handbook`_ ;
 
-.. _`preact`: https://preactjs.com/
+    * La `documentación de Symfony UX Turbo`_ , incluyendo los *Streams* de Turbo, que difunden actualizaciones de página a todos los usuarios conectados a través de Mercure;
+
+    * Los `Live Components`_ , para construir interfaces dinámicas sin nada de JavaScript personalizado.
+
+.. _`Stimulus`: https://stimulus.hotwired.dev/
+.. _`Turbo`: https://turbo.hotwired.dev/
+.. _`iniciativa Symfony UX`: https://ux.symfony.com/
+.. _`Turbo Handbook`: https://turbo.hotwired.dev/handbook/introduction
+.. _`Stimulus Handbook`: https://stimulus.hotwired.dev/handbook/introduction
+.. _`documentación de Symfony UX Turbo`: https://symfony.com/bundles/ux-turbo/current/index.html
+.. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
