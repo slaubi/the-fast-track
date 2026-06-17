@@ -1,7 +1,7 @@
 Revisando tu entorno de trabajo
 ===============================
 
-Antes de empezar a trabajar en el proyecto, tenemos que comprobar que todo el mundo tiene un buen entorno de trabajo. Es muy importante. Las herramientas de desarrollo que tenemos a nuestra disposición hoy en día son muy diferentes de las que teníamos hace 10 años. Han evolucionado mucho, para mejor. Sería una pena no aprovecharlas. Las buenas herramientas te pueden llevar lejos en poco tiempo.
+Antes de empezar a trabajar en el proyecto, tenemos que comprobar que tienes un buen entorno de trabajo. Es muy importante. Las herramientas de desarrollo que tenemos a nuestra disposición hoy en día son muy diferentes de las que teníamos hace 10 años. Han evolucionado mucho, para mejor. Sería una pena no aprovecharlas. Las buenas herramientas te pueden llevar lejos en poco tiempo.
 
 Por favor, no te saltes este paso. O al menos, lee la última sección sobre la CLI de Symfony.
 
@@ -44,7 +44,7 @@ Git
 
 .. index:: Git
 
-Mi último libro recomendaba Subversion para el control de versiones. Parece que todo el mundo está usando `Git`_ ahora.
+Para el control de versiones, usaremos `Git`_ , ya que todo el mundo lo está usando ahora.
 
 En Windows, instala `Git bash`_ .
 
@@ -53,11 +53,13 @@ Asegúrate de que sabes cómo realizar las operaciones más comunes, como ejecut
 PHP
 ---
 
-.. index:: PHP
+.. index::
+    single: PHP
+    single: PHP extensions
 
 Usaremos Docker para los servicios, pero me gusta tener PHP instalado en mi ordenador local por razones de rendimiento, estabilidad y simplicidad. Puedes pensar que soy de la vieja escuela, pero la combinación de un servicio local de PHP y Docker es la combinación perfecta para mí.
 
-Usa PHP 8.0 y comprueba que las :index:`siguientes extensiones de PHP <PHP extensions>` están instaladas o instálalas ahora: ``intl`` , ``pdo_pgsql`` , ``xsl`` , ``amqp`` , ``gd`` , ``openssl`` y ``sodium``. Opcionalmente también puedes instalar ``redis``, ``curl`` y ``zip``.
+Usa PHP 8.5 y comprueba que las siguientes extensiones de PHP están instaladas o instálalas ahora: ``intl`` , ``pdo_pgsql`` , ``xsl`` , ``amqp`` , ``gd`` , ``openssl`` , ``sodium`` e ``iconv``. Opcionalmente también puedes instalar ``redis``, ``curl`` y ``zip``.
 
 Puedes comprobar las extensiones habilitadas actualmente usando ``php -m``.
 
@@ -76,11 +78,6 @@ Si no estás familiarizado con Composer, tómate un tiempo para leer sobre él.
 
     No es necesario que escribas los nombres completos de los comandos: ``composer req`` hace lo mismo que ``composer require``, usa ``composer rem`` en lugar de ``composer remove``...
 
-NodeJS
-------
-
-No escribiremos mucho código JavaScript, pero usaremos herramientas JavaScript / NodeJS para administrar nuestros assets. Comprueba que tienes `NodeJS`_ instalado y el gestor de paquetes `Yarn`_.
-
 Docker y Docker Compose
 -----------------------
 
@@ -93,9 +90,9 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Por último, pero no por ello menos importante, utilizaremos la línea de comandos (CLI) de ``symfony`` para aumentar nuestra productividad. Desde el servidor web local que proporciona, hasta la integración completa con Docker y el soporte de Upsun, nos servirá para ahorrar mucho tiempo.
+Por último, pero no por ello menos importante, utilizaremos la línea de comandos (CLI) de ``symfony`` para aumentar nuestra productividad. Desde el servidor web local que proporciona, hasta la integración completa con Docker y el soporte en la nube a través de Upsun, nos servirá para ahorrar mucho tiempo.
 
-Instala `Symfony CLI`_ y muévelo a algún lugar dentro de tu ``$PATH``. Crea una cuenta `SymfonyConnect`_ si aún no la tienes e inicia sesión a través de ``symfony login``.
+Instala `Symfony CLI`_ ahora.
 
 Para utilizar HTTPS localmente, también necesitamos `instalar una autoridad de certificación (CA)`_ para habilitar el soporte de TLS. Ejecuta el siguiente comando:
 
@@ -128,11 +125,8 @@ Además, la CLI de Symfony selecciona automáticamente la "mejor" versión posib
 .. _`Visual Studio Code`: https://code.visualstudio.com/
 .. _`PhpStorm`: https://www.jetbrains.com/phpstorm/
 .. _`Composer`: https://getcomposer.org/
-.. _`NodeJS`: https://nodejs.org/
-.. _`Yarn`: https://classic.yarnpkg.com/en/docs/install/
 .. _`Instálalos`: https://docs.docker.com/install/
 .. _`Symfony CLI`: https://symfony.com/download
-.. _`SymfonyConnect`: https://symfony.com/connect/login
 .. _`instalar una autoridad de certificación (CA)`: https://symfony.com/doc/current/setup/symfony_server.html#enabling-tls
 .. _`plugin de soporte de Symfony`: https://plugins.jetbrains.com/plugin/7219-symfony-support
 .. _`iTerm2`: https://iterm2.com/

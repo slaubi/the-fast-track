@@ -6,11 +6,11 @@ Tenemos que encontrar un proyecto en el que trabajar. Es todo un reto ya que nec
 Revelando el proyecto
 ---------------------
 
-Como el libro tiene que ser publicado durante SymfonyCon Amsterdam, sería bueno que el proyecto estuviera relacionado de alguna manera con Symfony y las conferencias. ¿Qué tal un `libro de visitas <https://en.wikipedia.org/wiki/Guestbook>`_ ? A `livre d'or <https://fr.wikipedia.org/wiki/Livre_d%27or>`_ como decimos en francés. ¡Me gusta la sensación anticuada y desactualizada de desarrollar un libro de visitas en 2019!
+Sería bueno que el proyecto estuviera relacionado de alguna manera con Symfony y su comunidad. Como organizamos bastantes conferencias en línea y presenciales cada año, ¿qué tal un `libro de visitas`_ ? A livre d'or como decimos en francés. ¡Me gusta la sensación anticuada y desactualizada de desarrollar un libro de visitas en el siglo XXI!
 
 Lo tenemos. El proyecto consiste en obtener comentarios sobre las conferencias: una lista de conferencias en la página principal, una página para cada conferencia, llena de comentarios agradables. Un comentario se compone de un pequeño texto y una foto opcional tomada durante la conferencia. Supongo que acabo de escribir todas las especificaciones que necesitamos para empezar.
 
-El *proyecto* contendrá varias *aplicaciones*. Una aplicación web tradicional con una interfaz HTML, una API y una SPA para teléfonos móviles. ¿A que suena bien?
+El *proyecto* contendrá varias *aplicaciones*. Una aplicación web tradicional con una interfaz HTML que se siente tan ágil como una SPA, y una API lista para impulsar aplicaciones móviles. ¿A que suena bien?
 
 Aprender es hacer
 -----------------
@@ -26,7 +26,7 @@ Aunque la idea del proyecto parezca simple, no vamos a construir un proyecto tip
 
 El objetivo es crear un proyecto con algunas de las complejidades que se pueden encontrar en la vida real. ¿Quieres una prueba? Echa un vistazo a la infraestructura final del proyecto:
 
-.. figure:: images/infrastructure.svg
+.. figure:: images/infrastructure.png
     :align: center
     :figclass: ad diagram
 
@@ -34,9 +34,9 @@ Uno de los grandes beneficios de usar un framework es la pequeña cantidad de c�
 
 * 20 clases PHP en la carpeta ``src/`` para el sitio web;
 
-* 550 Líneas Lógicas de Código (LLOC) PHP según lo reportado por `PHPLOC <https://github.com/sebastianbergmann/phploc>`_ ;
+* 550 Líneas Lógicas de Código (LLOC) PHP según lo reportado por `PHPLOC`_ ;
 
-* 40 líneas de ajustes de configuración en 3 archivos (vía anotaciones y YAML), principalmente para configurar el diseño del backend;
+* 40 líneas de ajustes de configuración en 3 archivos (vía atributos y YAML), principalmente para configurar el diseño del backend;
 
 * 20 líneas para la configuración de la infraestructura de desarrollo (Docker);
 
@@ -55,7 +55,7 @@ Para seguir pareciendo anticuado, podría haber creado un CD con el código fuen
     single: Project;Git Repository
     single: Git;clone
 
-Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-8.1-1>`_ en algún lugar de tu equipo local:
+Clona el `repositorio del libro de visitas`_ en algún lugar de tu equipo local:
 
 .. code-block:: terminal
     :class: ignore
@@ -73,7 +73,7 @@ La buena noticia es que el repositorio Git para este libro se *genera automátic
 Navegando por el código fuente
 -------------------------------
 
-Mejor aún, el repositorio no es sólo la versión final del código en la rama ``master``. El *script* ejecuta cada acción explicada en el libro y hace un *commit* con el resultado al final de cada sección. También marca cada paso y subpaso para facilitar la navegación por el código. Bonito, ¿verdad?
+Mejor aún, el repositorio no es sólo la versión final del código en la rama ``main``. El *script* ejecuta cada acción explicada en el libro y hace un *commit* con el resultado al final de cada sección. También marca cada paso y subpaso para facilitar la navegación por el código. Bonito, ¿verdad?
 
 .. index::
     single: Git;checkout
@@ -120,3 +120,7 @@ De nuevo, te recomiendo que lo programes tú mismo. Pero si te quedas atascado, 
     $ git log -- src/Controller/ConferenceController.php
 
 También puedes buscar diferencias, etiquetas y *commits* directamente en GitHub. ¡Esta es una gran forma de copiar/pegar código si estás leyendo el libro en papel!
+
+.. _`PHPLOC`: https://github.com/sebastianbergmann/phploc
+.. _`libro de visitas`: https://en.wikipedia.org/wiki/Guestbook
+.. _`repositorio del libro de visitas`: https://github.com/the-fast-track/book-8.1-1
