@@ -27,7 +27,7 @@ Mientras empezaba a trabajar en este libro, lo primero que hice fue programar la
 
 El libro está dividido en pasos. Cada paso se subdivide en sub-pasos. Deben ser de lectura rápida. Pero lo más importante es que te invito a programar a medida que lees. Escribe el código, pruébalo, impleméntalo, ajústalo.
 
-Por último, pero no menos importante, no dudes en pedir ayuda si te quedas atascado. Puede que encuentres un caso límite o un error tipográfico en el código que escribiste que puede ser difícil de encontrar y corregir. Pregunta. Tenemos una comunidad maravillosa en `Slack`_ and `GitHub`_ .
+Por último, pero no menos importante, no dudes en pedir ayuda si te quedas atascado. Puede que encuentres un caso límite o un error tipográfico en el código que escribiste que puede ser difícil de encontrar y corregir. Pregunta. Tenemos una comunidad maravillosa en `Slack`_ y `GitHub`_.
 
 ¿Listo para programar? ¡Disfruta!
 

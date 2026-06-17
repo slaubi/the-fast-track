@@ -15,7 +15,7 @@ Configurando Doctrine ORM
 
 ¿De dónde obtiene Doctrine los datos de conexión con la base de datos? La receta de Doctrine agregó un archivo de configuración, ``config/packages/doctrine.yaml``, que controla su comportamiento. La configuración principal es el *DSN de la base de datos*, una cadena que contiene toda la información sobre la conexión: credenciales, host, puerto, etc. Por defecto, Doctrine busca una variable de entorno ``DATABASE_URL``.
 
-Casi todos los paquetes instalados tienen una configuración en el directorio `config/packages/``. La mayoría de las veces, los valores predeterminados se han elegido cuidadosamente para que funcionen en la mayoría de las aplicaciones.
+Casi todos los paquetes instalados tienen una configuración en el directorio ``config/packages/``. La mayoría de las veces, los valores predeterminados se han elegido cuidadosamente para que funcionen en la mayoría de las aplicaciones.
 
 Entendiendo las convenciones de las variables de entorno de Symfony
 -------------------------------------------------------------------
@@ -25,9 +25,9 @@ Entendiendo las convenciones de las variables de entorno de Symfony
     single: .env
     single: .env.local
 
-Puedes definir ``DATABASE_URL`` manualmente en el archivo ``.env`` o ``.env.local``. De hecho, gracias a la receta del paquete, verás un ejemplo  de ``DATABASE_URL`` en tu archivo ``.env``. Pero debido a que el puerto local a PostgreSQL expuesto por Docker puede cambiar, es bastante engorroso. Hay una manera mejor.
+Puedes definir ``DATABASE_URL`` manualmente en el archivo ``.env`` o ``.env.local``. De hecho, gracias a la receta del paquete, verás un ejemplo de ``DATABASE_URL`` en tu archivo ``.env``. Pero debido a que el puerto local a PostgreSQL expuesto por Docker puede cambiar, es bastante engorroso. Hay una manera mejor.
 
-En lugar de la definir ``DATABASE_URL`` en un archivo, podemos prefijar todos los comandos con ``symfony``. Esto detectará los servicios ejecutados por Docker y/o Upsun (cuando el túnel está abierto) y establecerá la variable de entorno automáticamente.
+En lugar de definir ``DATABASE_URL`` en un archivo, podemos prefijar todos los comandos con ``symfony``. Esto detectará los servicios ejecutados por Docker y/o Upsun (cuando el túnel está abierto) y establecerá la variable de entorno automáticamente.
 
 Docker Compose y Upsun funcionan perfectamente con Symfony gracias a estas variables de entorno.
 
@@ -55,7 +55,7 @@ Comprueba todas las variables de entorno expuestas ejecutando ``symfony var:expo
 Cambiando el valor por defecto de DATABASE_URL en .env
 ------------------------------------------------------
 
-Aún así cambiaremos el archivo ``.env`` para configurar el valor predeterminado ``DATABASE_URL`` para usar PostgreSQL:
+Aun así cambiaremos el archivo ``.env`` para configurar el valor predeterminado ``DATABASE_URL`` para usar PostgreSQL:
 
 .. code-block:: diff
 
@@ -82,7 +82,7 @@ Una conferencia puede describirse con algunas propiedades:
 
 * El *año* de la conferencia;
 
-* Una valor booleano *internacional* para indicar si la conferencia es local o internacional (SymfonyLive vs SymfonyCon).
+* Un valor booleano *internacional* para indicar si la conferencia es local o internacional (SymfonyLive vs SymfonyCon).
 
 .. index:: ! Command;make:entity
 
@@ -97,7 +97,7 @@ Es hora de generar la entidad ``Conference``:
 
 Este comando es interactivo: te guiará a través del proceso de añadir todos los campos que necesites. Utiliza las respuestas que mostramos a continuación (la mayoría de ellas son las predeterminadas, por lo que puedes pulsar la tecla "Intro" para utilizarlas):
 
-* ``city`` , ``string`` , ``255``, ``no``;
+* ``city``, ``string``, ``255``, ``no``;
 * ``year``, ``string``, ``4``, ``no``;
 * ``isInternational``, ``boolean``, ``no``.
 
@@ -230,7 +230,7 @@ Introduce las siguientes respuestas:
 * ``author``, ``string``, ``255``, ``no``;
 * ``text``, ``text``, ``no``;
 * ``email``, ``string``, ``255``, ``no``;
-* ``createdAt``, ``datetime``, ``no``.
+* ``createdAt``, ``datetime_immutable``, ``no``.
 
 Enlazando entidades
 -------------------
@@ -240,7 +240,7 @@ Enlazando entidades
 
 Las dos entidades, Conference y Comment, deben estar vinculadas entre sí. Una conferencia puede tener cero o más comentarios, lo que se llama una relación de *uno a muchos*.
 
-Usa el comando ``make:entity`` de nuevo para agregar esta relación a la  clase ``Conference``:
+Usa el comando ``make:entity`` de nuevo para agregar esta relación a la clase ``Conference``:
 
 .. code-block:: terminal
     :class: answers(comments||OneToMany||Comment||conference||no||yes)

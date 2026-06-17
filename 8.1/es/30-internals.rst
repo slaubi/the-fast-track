@@ -128,7 +128,7 @@ En producción, verías, por ejemplo, que se carga un archivo llamado ``.env.loc
     single: Composer;Autoloader
     single: Autoloader
 
-¿De dónde viene? Upsun hace algunas optimizaciones cuando despliega una aplicación Symfony, como optimizar el *Composer autoloader* (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). También optimiza las variables de entorno definidas en el archivo ``.env`` (para evitar el análisis del archivo para cada solicitud) mediante la generación del archivo ``.env.local.prod``:
+¿De dónde viene? Upsun hace algunas optimizaciones cuando despliega una aplicación Symfony, como optimizar el *Composer autoloader* (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). También optimiza las variables de entorno definidas en el archivo ``.env`` (para evitar el análisis del archivo para cada solicitud) mediante la generación del archivo ``.env.local.php``:
 
 .. code-block:: terminal
     :class: ignore
@@ -174,7 +174,7 @@ También puedes verificar que Xdebug esté habilitado para PHP-FPM yendo al nave
     :align: center
     :figclass: with-browser
 
-Ahora, habilita el modo de `debug`` de Xdebug:
+Ahora, habilita el modo ``debug`` de Xdebug:
 
 .. code-block:: ini
     :caption: php.ini

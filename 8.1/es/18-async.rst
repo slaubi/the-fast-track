@@ -356,7 +356,7 @@ La configuración le dice al bus que envíe instancias de ``App\Message\CommentM
 
 .. tip::
 
-    Por detrás, Symfony utiliza el sistema de publicación, de alto rendimiento, escalable y transaccional de PostgreSQL (``LISTEN`` / `` NOTIFY``). También puedes leer el capítulo RabbitMQ si deseas utilizarlo en lugar de PostgreSQL como intermediario de mensajes.
+    Por detrás, Symfony utiliza el sistema de publicación, de alto rendimiento, escalable y transaccional de PostgreSQL (``LISTEN``/``NOTIFY``). También puedes leer el capítulo RabbitMQ si deseas utilizarlo en lugar de PostgreSQL como intermediario de mensajes.
 
 Consumiendo mensajes
 --------------------
@@ -366,7 +366,7 @@ Si intentas enviar un nuevo comentario, ya no se llamará al verificador de spam
 .. index::
     single: Command;messenger:consume
 
-Como te puedes imaginar, Symfony viene con un comando ``consumer`` para el consumidor. Ejecútalo ahora:
+Como te puedes imaginar, Symfony viene con un comando de consumidor. Ejecútalo ahora:
 
 .. code-block:: terminal
     :class: ignore

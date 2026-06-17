@@ -92,7 +92,7 @@ Y ejecuta esa nueva migración:
 
     $ symfony console doctrine:migrations:migrate
 
-¿Te has encontrado con un error? Era de esperar. ¿Por qué? Porque pedimos que el *slug* no aceptara valores ``nulos`` pero las entradas existentes en la base de datos de la conferencia tendrán un valor ``nulo`` cuando se ejecute la migración. Arreglemos eso ajustando la migración:
+¿Te has encontrado con un error? Era de esperar. ¿Por qué? Porque pedimos que el *slug* no aceptara valores ``null`` pero las entradas existentes en la base de datos de la conferencia tendrán un valor ``null`` cuando se ejecute la migración. Arreglemos eso ajustando la migración:
 
 .. code-block:: diff
     :caption: patch_file
@@ -111,7 +111,7 @@ Y ejecuta esa nueva migración:
 
          public function down(Schema $schema): void
 
-El truco aquí es agregar la columna y permitirle que acepte valores ``nulos``, luego asignar a *slug* un valor no ``nulo``, y finalmente, cambiar la columna de *slug* para no permitir valores ``nulos``.
+El truco aquí es agregar la columna y permitirle que acepte valores ``null``, luego asignar a *slug* un valor no ``null``, y finalmente, cambiar la columna de *slug* para no permitir valores ``null``.
 
 .. note::
 

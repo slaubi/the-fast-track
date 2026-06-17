@@ -202,7 +202,7 @@ Probando las implementaciones de producción antes del despliegue
 
 Tener acceso a la próxima versión del sitio web con datos de producción te abre un abanico de oportunidades: desde pruebas visuales de regresión hasta pruebas de rendimiento. `Blackfire`_ es la herramienta perfecta para este trabajo.
 
-Consulta el paso :doc:`Rendimiento <29-performance>` para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes del despliegue.
+Consulta el paso :doc:`Performance <29-performance>` para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes del despliegue.
 
 Fusionando en producción
 -------------------------
@@ -231,7 +231,7 @@ Limpiando
 ---------
 
 .. index::
-    single: Symfony CLI;cloud:env:delete
+    single: Symfony CLI;env:delete
     single: Git;branch
 
 Finalmente, elimina la rama Git y el entorno Upsun:

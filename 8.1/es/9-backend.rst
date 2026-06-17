@@ -193,7 +193,7 @@ La página del panel de administración está vacía por ahora. Aquí es donde p
              // Option 1. You can make your dashboard redirect to some common page of your backend
              //
 
-Cuando se muestran las relaciones entre entidades (la conferencia vinculada a un comentario), EasyAdmin intenta utilizar una representación textual de la conferencia. De manera predeterminada, usa una convención que utiliza el nombre de la entidad y la clave principal (como ``Conferencia #1``) si la entidad no define el método "mágico" ``__toString()``. Para que la visualización sea más significativa, añade dicho método en la clase ``Conferencia``:
+Cuando se muestran las relaciones entre entidades (la conferencia vinculada a un comentario), EasyAdmin intenta utilizar una representación textual de la conferencia. De manera predeterminada, usa una convención que utiliza el nombre de la entidad y la clave principal (como ``Conference #1``) si la entidad no define el método "mágico" ``__toString()``. Para que la visualización sea más significativa, añade dicho método en la clase ``Conference``:
 
 .. code-block:: diff
     :caption: patch_file
@@ -223,7 +223,7 @@ Ahora puedes añadir/modificar/eliminar conferencias directamente desde el panel
 Personalizando EasyAdmin
 ------------------------
 
-El panel de administración por defecto funciona bien, pero se puede personalizar de muchas maneras para mejorar la experiencia. Hagamos algunos cambios sencillos en la entidad Comentario para demostrar algunas de sus posibilidades.
+El panel de administración por defecto funciona bien, pero se puede personalizar de muchas maneras para mejorar la experiencia. Hagamos algunos cambios sencillos en la entidad ``Comment`` para demostrar algunas de sus posibilidades:
 
 .. code-block:: diff
     :caption: patch_file
@@ -300,7 +300,7 @@ El panel de administración por defecto funciona bien, pero se puede personaliza
     -    */
      }
 
-Para personalizar la sección ``Comentario``, enumerar los campos explícitamente en el método ``configureFields()`` nos permite ordenarlos del modo deseado. Algunos campos permiten más configuración, como ocultar el campo de texto en la página principal.
+Para personalizar la sección ``Comment``, enumerar los campos explícitamente en el método ``configureFields()`` nos permite ordenarlos del modo deseado. Algunos campos permiten más configuración, como ocultar el campo de texto en la página principal.
 
 Añade algunos comentarios sin fotos. De momento, configura la fecha manualmente; rellenaremos la columna ``createdAt`` automáticamente en un paso posterior.
 

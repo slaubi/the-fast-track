@@ -699,7 +699,7 @@ Ejecutando pruebas funcionales de caja negra (*Black Box*) con Blackfire
 
 Otra forma de realizar pruebas funcionales es utilizar el `reproductor Blackfire`_. Además de lo que puedes hacer con las pruebas funcionales, también puedes realizar pruebas de rendimiento.
 
-Consulta el paso :doc:`Rendimiento <29-performance>` para obtener más información.
+Consulta el paso :doc:`Performance <29-performance>` para obtener más información.
 
 .. sidebar:: Yendo más allá
 

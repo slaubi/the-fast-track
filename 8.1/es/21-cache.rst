@@ -375,7 +375,9 @@ Esta estrategia no funciona bien si sólo deseas invalidar algunas URL o si dese
 
 El nuevo controlador se ha restringido al método HTTP ``PURGE``. Este método no se encuentra en el estándar HTTP, pero se utiliza ampliamente para invalidar las cachés.
 
-Por defecto, los parámetros de ruta no pueden contener ``/`` , ya que separan los segmentos de URL. Puedes anular esta restricción para el último parámetro de ruta, por ejemplo ``uri``, configurando tu propio patrón de requisitos (``.*``).
+Por defecto, los parámetros de ruta no pueden contener ``/``, ya que separan los segmentos de URL. Puedes anular esta restricción para el último parámetro de ruta, por ejemplo ``uri``, configurando tu propio patrón de requisitos (``.*``).
+
+La forma en que obtenemos la instancia de ``HttpCache`` también puede parecer un poco extraña; estamos usando una clase anónima porque no es posible acceder a la instancia "real". La instancia de ``HttpCache`` envuelve el kernel real, que no conoce la capa de caché, como debe ser.
 
 Invalida la página de inicio y el encabezado de la conferencia a través de las siguientes llamadas cURL:
 
