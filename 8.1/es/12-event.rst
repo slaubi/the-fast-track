@@ -80,26 +80,24 @@ Otro ejemplo de eventos y oyentes en acción es el ciclo de vida de un comando: 
 
 Cualquier paquete o *bundle* también puede enviar sus propios eventos para hacer que su código sea extensible.
 
-Para evitar tener un archivo de configuración que describa qué eventos quiere escuchar un oyente, crea un *suscriptor* (*subscriber*). Un suscriptor es un oyente con un método estático ``getSubscribedEvents()`` que devuelve su configuración. Esto permite que los suscriptores se registren en el despachador de Symfony automáticamente.
+Para evitar tener un archivo de configuración que describa qué eventos quiere escuchar un oyente, añade el atributo ``#[AsEventListener]`` en la clase o el método del oyente. Esto permite que los oyentes se registren en el despachador de Symfony automáticamente.
 
-Implementando un suscriptor
----------------------------
+Implementando un oyente
+-----------------------
 
 .. index::
-    single: Event;Subscriber
-    single: Subscriber
     single: Event;Listener
     single: Listener
-    single: Command;make:subscriber
+    single: Command;make:listener
 
-Ahora te sabes la canción de memoria, usa el *bundle* maker para generar un suscriptor:
+Ahora te sabes la canción de memoria, usa el *bundle* maker para generar un oyente:
 
 .. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
     $ symfony console make:listener TwigEventListener
 
-El comando te pregunta sobre el evento que deseas escuchar. Selecciona el evento ``Symfony\Component\HttpKernel\Event\ControllerEvent``, que se envía justo antes de que se llame al controlador. Es el mejor momento para inyectar la variable ``conferences`` global para que Twig tenga acceso a ella cuando el controlador llame a la plantilla. Actualiza tu suscriptor de la siguiente manera:
+El comando te pregunta sobre el evento que deseas escuchar. Selecciona el evento ``Symfony\Component\HttpKernel\Event\ControllerEvent``, que se envía justo antes de que se llame al controlador. Es el mejor momento para inyectar la variable ``conferences`` global para que Twig tenga acceso a ella cuando el controlador renderice la plantilla. Actualiza tu oyente de la siguiente manera:
 
 .. code-block:: diff
     :caption: patch_file
@@ -169,8 +167,12 @@ Tras acabar este paso, el sitio web debe tener el siguiente aspecto:
 
 .. sidebar:: Yendo más allá
 
-    * El `flujo de Request-Response <https://symfony.com/doc/current/components/http_kernel.html#the-workflow-of-a-request>`_ en las aplicaciones Symfony;
+    * El `flujo de Request-Response`_ en las aplicaciones Symfony;
 
-    * Los `eventos HTTP incorporados en Symfony <https://symfony.com/doc/current/reference/events.html>`_ ;
+    * Los `eventos HTTP incorporados en Symfony`_ ;
 
-    * Los `eventos Console incorporados en Symfony <https://symfony.com/doc/current/components/console/events.html>`_ .
+    * Los `eventos Console incorporados en Symfony`_ .
+
+.. _`flujo de Request-Response`: https://symfony.com/doc/current/components/http_kernel.html#the-workflow-of-a-request
+.. _`eventos HTTP incorporados en Symfony`: https://symfony.com/doc/current/reference/events.html
+.. _`eventos Console incorporados en Symfony`: https://symfony.com/doc/current/components/console/events.html
