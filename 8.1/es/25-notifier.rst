@@ -13,11 +13,7 @@ Hay muchas maneras de notificar a los usuarios. El correo electrónico es el pri
     single: Components;Notifier
     single: Notifier
 
-El componente Symfony Notifier implementa muchas estrategias de notificación:
-
-.. code-block:: terminal
-
-    $ symfony composer req notifier
+El componente Symfony Notifier implementa muchas estrategias de notificación.
 
 Enviando notificaciones de aplicación web en el navegador
 ----------------------------------------------------------
@@ -30,28 +26,29 @@ Como primer paso, notifiquemos a los usuarios que los comentarios son moderados 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
-     use Symfony\Component\HttpFoundation\Request;
-     use Symfony\Component\HttpFoundation\Response;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\HttpKernel\Attribute\RateLimit;
      use Symfony\Component\Messenger\MessageBusInterface;
     +use Symfony\Component\Notifier\Notification\Notification;
     +use Symfony\Component\Notifier\NotifierInterface;
-     use Symfony\Component\Routing\Annotation\Route;
-     use Twig\Environment;
+     use Symfony\Component\Routing\Attribute\Route;
 
-    @@ -53,7 +55,7 @@ class ConferenceController extends AbstractController
-         }
-
-         #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, string $photoDir): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, NotifierInterface $notifier, string $photoDir): Response
-         {
+     final class ConferenceController extends AbstractController
+    @@ -45,8 +47,9 @@ final class ConferenceController extends AbstractController
+             Request $request,
+             #[MapEntity(mapping: ['slug' => 'slug'])]
+             Conference $conference,
+             CommentRepository $commentRepository,
+    +        NotifierInterface $notifier,
+             #[Autowire('%photo_dir%')] string $photoDir,
+             #[MapQueryParameter] int $offset = 0,
+         ): Response {
              $comment = new Comment();
-             $form = $this->createForm(CommentFormType::class, $comment);
-    @@ -82,9 +84,15 @@ class ConferenceController extends AbstractController
-
+    @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
+                 ];
                  $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
     +            $notifier->send(new Notification('Thank you for the feedback; your comment will be posted after moderation.', ['browser']));
@@ -63,7 +60,7 @@ Como primer paso, notifiquemos a los usuarios que los comentarios son moderados 
     +            $notifier->send(new Notification('Can you check your submission? There are some problems with it.', ['browser']));
     +        }
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 El notificador *envía* una *notificación* a *los destinatarios* a través de un *canal* .
@@ -82,8 +79,8 @@ La notificación del navegador utiliza *mensajes flash* a través de la sección
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -3,6 +3,13 @@
      {% block title %}Conference Guestbook - {{ conference }}{% endblock %}
 
@@ -91,7 +88,7 @@ La notificación del navegador utiliza *mensajes flash* a través de la sección
     +    {% for message in app.flashes('notification') %}
     +        <div class="alert alert-info alert-dismissible fade show">
     +            {{ message }}
-    +            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    +            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     +        </div>
     +    {% endfor %}
     +
@@ -127,9 +124,9 @@ En lugar de enviar un correo electrónico a través de ``MailerInterface`` para 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
-    @@ -4,14 +4,14 @@ namespace App\MessageHandler;
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
+    @@ -4,15 +4,15 @@ namespace App\MessageHandler;
 
      use App\ImageOptimizer;
      use App\Message\CommentMessage;
@@ -139,43 +136,28 @@ En lugar de enviar un correo electrónico a través de ``MailerInterface`` para 
      use Doctrine\ORM\EntityManagerInterface;
      use Psr\Log\LoggerInterface;
     -use Symfony\Bridge\Twig\Mime\NotificationEmail;
+     use Symfony\Component\DependencyInjection\Attribute\Autowire;
     -use Symfony\Component\Mailer\MailerInterface;
-     use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+     use Symfony\Component\Messenger\Attribute\AsMessageHandler;
      use Symfony\Component\Messenger\MessageBusInterface;
     +use Symfony\Component\Notifier\NotifierInterface;
      use Symfony\Component\Workflow\WorkflowInterface;
 
-     class CommentMessageHandler implements MessageHandlerInterface
-    @@ -21,22 +21,20 @@ class CommentMessageHandler implements MessageHandlerInterface
-         private $commentRepository;
-         private $bus;
-         private $workflow;
-    -    private $mailer;
-    +    private $notifier;
-         private $imageOptimizer;
-    -    private $adminEmail;
-         private $photoDir;
-         private $logger;
-
-    -    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, MailerInterface $mailer, ImageOptimizer $imageOptimizer, string $adminEmail, string $photoDir, LoggerInterface $logger = null)
-    +    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, NotifierInterface $notifier, ImageOptimizer $imageOptimizer, string $photoDir, LoggerInterface $logger = null)
-         {
-             $this->entityManager = $entityManager;
-             $this->spamChecker = $spamChecker;
-             $this->commentRepository = $commentRepository;
-             $this->bus = $bus;
-             $this->workflow = $commentStateMachine;
-    -        $this->mailer = $mailer;
-    +        $this->notifier = $notifier;
-             $this->imageOptimizer = $imageOptimizer;
-    -        $this->adminEmail = $adminEmail;
-             $this->photoDir = $photoDir;
-             $this->logger = $logger;
-         }
-    @@ -62,13 +60,7 @@ class CommentMessageHandler implements MessageHandlerInterface
-
+     #[AsMessageHandler]
+    @@ -24,8 +24,7 @@ class CommentMessageHandler
+             private CommentRepository $commentRepository,
+             private MessageBusInterface $bus,
+             private WorkflowInterface $commentStateMachine,
+    -        private MailerInterface $mailer,
+    -        #[Autowire('%admin_email%')] private string $adminEmail,
+    +        private NotifierInterface $notifier,
+             private ImageOptimizer $imageOptimizer,
+             #[Autowire('%photo_dir%')] private string $photoDir,
+             private ?LoggerInterface $logger = null,
+    @@ -50,13 +49,7 @@ class CommentMessageHandler
+                 $this->entityManager->flush();
                  $this->bus->dispatch($message);
-             } elseif ($this->workflow->can($comment, 'publish') || $this->workflow->can($comment, 'publish_ham')) {
+             } elseif ($this->commentStateMachine->can($comment, 'publish') || $this->commentStateMachine->can($comment, 'publish_ham')) {
     -            $this->mailer->send((new NotificationEmail())
     -                ->subject('New comment posted')
     -                ->htmlTemplate('emails/comment_notification.html.twig')
@@ -184,7 +166,7 @@ En lugar de enviar un correo electrónico a través de ``MailerInterface`` para 
     -                ->context(['comment' => $comment])
     -            );
     +            $this->notifier->send(new CommentReviewNotification($comment), ...$this->notifier->getAdminRecipients());
-             } elseif ($this->workflow->can($comment, 'optimize')) {
+             } elseif ($this->commentStateMachine->can($comment, 'optimize')) {
                  if ($comment->getPhotoFilename()) {
                      $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
 
@@ -193,9 +175,9 @@ El método ``getAdminRecipients()`` devuelve los destinatarios del administrador
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/notifier.yaml
-    +++ b/config/packages/notifier.yaml
-    @@ -13,4 +13,4 @@ framework:
+    --- i/config/packages/notifier.yaml
+    +++ w/config/packages/notifier.yaml
+    @@ -9,4 +9,4 @@ framework:
                  medium: ['email']
                  low: ['email']
              admin_recipients:
@@ -217,12 +199,9 @@ Ahora, crea la clase ``CommentReviewNotification``:
 
     class CommentReviewNotification extends Notification implements EmailNotificationInterface
     {
-        private $comment;
-
-        public function __construct(Comment $comment)
-        {
-            $this->comment = $comment;
-
+        public function __construct(
+            private Comment $comment,
+        ) {
             parent::__construct('New comment posted');
         }
 
@@ -296,33 +275,15 @@ Haz lo mismo para producción:
 .. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
-    $ APP_ENV=prod symfony console secrets:set SLACK_DSN
-
-Habilita el soporte de charla Slack:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/notifier.yaml
-    +++ b/config/packages/notifier.yaml
-    @@ -1,7 +1,7 @@
-     framework:
-         notifier:
-    -        #chatter_transports:
-    -        #    slack: '%env(SLACK_DSN)%'
-    +        chatter_transports:
-    +            slack: '%env(SLACK_DSN)%'
-             #    telegram: '%env(TELEGRAM_DSN)%'
-             #texter_transports:
-             #    twilio: '%env(TWILIO_DSN)%'
+    $ symfony console secrets:set SLACK_DSN --env=prod
 
 Actualiza la clase Notification para enrutar los mensajes dependiendo del contenido del texto de los comentarios (un simple *regex* hará el trabajo):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -7,6 +7,7 @@ use Symfony\Component\Notifier\Message\EmailMessage;
      use Symfony\Component\Notifier\Notification\EmailNotificationInterface;
      use Symfony\Component\Notifier\Notification\Notification;
@@ -331,7 +292,7 @@ Actualiza la clase Notification para enrutar los mensajes dependiendo del conten
 
      class CommentReviewNotification extends Notification implements EmailNotificationInterface
      {
-    @@ -29,4 +30,15 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
+    @@ -26,4 +27,15 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
 
              return $message;
          }
@@ -357,8 +318,8 @@ En cuanto al correo electrónico, puedes implementar ``ChatNotificationInterface
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,13 +3,18 @@
      namespace App\Notification;
 
@@ -377,9 +338,9 @@ En cuanto al correo electrónico, puedes implementar ``ChatNotificationInterface
     -class CommentReviewNotification extends Notification implements EmailNotificationInterface
     +class CommentReviewNotification extends Notification implements EmailNotificationInterface, ChatNotificationInterface
      {
-         private $comment;
-
-    @@ -31,6 +36,28 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
+         public function __construct(
+             private Comment $comment,
+    @@ -28,6 +33,28 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
              return $message;
          }
 
@@ -416,8 +377,8 @@ Cambia la notificación para aceptar la URL de revisión y añade dos botones en
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Notification/CommentReviewNotification.php
-    +++ b/src/Notification/CommentReviewNotification.php
+    --- i/src/Notification/CommentReviewNotification.php
+    +++ w/src/Notification/CommentReviewNotification.php
     @@ -3,6 +3,7 @@
      namespace App\Notification;
 
@@ -426,21 +387,15 @@ Cambia la notificación para aceptar la URL de revisión y añade dos botones en
      use Symfony\Component\Notifier\Bridge\Slack\Block\SlackDividerBlock;
      use Symfony\Component\Notifier\Bridge\Slack\Block\SlackSectionBlock;
      use Symfony\Component\Notifier\Bridge\Slack\SlackOptions;
-    @@ -17,10 +18,12 @@ use Symfony\Component\Notifier\Recipient\RecipientInterface;
-     class CommentReviewNotification extends Notification implements EmailNotificationInterface, ChatNotificationInterface
+    @@ -18,6 +19,7 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
      {
-         private $comment;
-    +    private $reviewUrl;
-
-    -    public function __construct(Comment $comment)
-    +    public function __construct(Comment $comment, string $reviewUrl)
-         {
-             $this->comment = $comment;
-    +        $this->reviewUrl = $reviewUrl;
-
+         public function __construct(
+             private Comment $comment,
+    +        private string $reviewUrl,
+         ) {
              parent::__construct('New comment posted');
          }
-    @@ -53,6 +56,10 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
+    @@ -50,6 +52,10 @@ class CommentReviewNotification extends Notification implements EmailNotificatio
                  ->block((new SlackSectionBlock())
                      ->text(sprintf('%s (%s) says: %s', $this->comment->getAuthor(), $this->comment->getEmail(), $this->comment->getText()))
                  )
@@ -457,16 +412,16 @@ Ahora se trata de rastrear los cambios hacia atrás. Primero, actualiza el manej
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
-    @@ -60,7 +60,8 @@ class CommentMessageHandler implements MessageHandlerInterface
-
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
+    @@ -49,7 +49,8 @@ class CommentMessageHandler
+                 $this->entityManager->flush();
                  $this->bus->dispatch($message);
-             } elseif ($this->workflow->can($comment, 'publish') || $this->workflow->can($comment, 'publish_ham')) {
+             } elseif ($this->commentStateMachine->can($comment, 'publish') || $this->commentStateMachine->can($comment, 'publish_ham')) {
     -            $this->notifier->send(new CommentReviewNotification($comment), ...$this->notifier->getAdminRecipients());
     +            $notification = new CommentReviewNotification($comment, $message->getReviewUrl());
     +            $this->notifier->send($notification, ...$this->notifier->getAdminRecipients());
-             } elseif ($this->workflow->can($comment, 'optimize')) {
+             } elseif ($this->commentStateMachine->can($comment, 'optimize')) {
                  if ($comment->getPhotoFilename()) {
                      $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
 
@@ -475,21 +430,15 @@ Como puedes ver, la URL de revisión debería ser parte del mensaje de comentari
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Message/CommentMessage.php
-    +++ b/src/Message/CommentMessage.php
-    @@ -5,14 +5,21 @@ namespace App\Message;
-     class CommentMessage
+    --- i/src/Message/CommentMessage.php
+    +++ w/src/Message/CommentMessage.php
+    @@ -6,10 +6,16 @@ class CommentMessage
      {
-         private $id;
-    +    private $reviewUrl;
-         private $context;
-
-    -    public function __construct(int $id, array $context = [])
-    +    public function __construct(int $id, string $reviewUrl, array $context = [])
-         {
-             $this->id = $id;
-    +        $this->reviewUrl = $reviewUrl;
-             $this->context = $context;
+         public function __construct(
+             private int $id,
+    +        private string $reviewUrl,
+             private array $context = [],
+         ) {
          }
 
     +    public function getReviewUrl(): string
@@ -506,17 +455,17 @@ Finalmente, actualiza los controladores para generar la URL de revisión y pása
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/AdminController.php
-    +++ b/src/Controller/AdminController.php
-    @@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
+    --- i/src/Controller/AdminController.php
+    +++ w/src/Controller/AdminController.php
+    @@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
      use Symfony\Component\HttpKernel\KernelInterface;
      use Symfony\Component\Messenger\MessageBusInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-     use Symfony\Component\Workflow\Registry;
+     use Symfony\Component\Workflow\WorkflowInterface;
      use Twig\Environment;
 
-    @@ -47,7 +48,8 @@ class AdminController extends AbstractController
+    @@ -42,7 +43,8 @@ class AdminController extends AbstractController
              $this->entityManager->flush();
 
              if ($accepted) {
@@ -525,21 +474,21 @@ Finalmente, actualiza los controladores para generar la URL de revisión y pása
     +            $this->bus->dispatch(new CommentMessage($comment->getId(), $reviewUrl));
              }
 
-             return $this->render('admin/review.html.twig', [
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+             return new Response($this->twig->render('admin/review.html.twig', [
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -17,6 +17,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Notifier\Notification\Notification;
      use Symfony\Component\Notifier\NotifierInterface;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-     use Twig\Environment;
 
-     class ConferenceController extends AbstractController
-    @@ -82,7 +83,8 @@ class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
+     {
+    @@ -70,7 +71,8 @@ final class ConferenceController extends AbstractController
+                     'referrer' => $request->headers->get('referer'),
                      'permalink' => $request->getUri(),
                  ];
-
     -            $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
     +            $reviewUrl = $this->generateUrl('review_comment', ['id' => $comment->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
     +            $this->bus->dispatch(new CommentMessage($comment->getId(), $reviewUrl, $context));
@@ -556,21 +505,26 @@ Inténtalo de nuevo, el mensaje debe estar bien ahora:
 Volviéndonos asíncronos en todos los ámbitos
 -----------------------------------------------
 
-Permíteme explicarte un pequeño problema que debemos resolver. Por cada comentario, recibimos un correo electrónico y un mensaje de Slack. Si se produce un error en el mensaje de Slack (id de canal incorrecto, token incorrecto...), el mensaje se volverá a intentar enviar tres veces antes de ser descartado. Pero como el correo electrónico se envía primero, recibiremos 3 correos electrónicos y ningún mensaje de Slack. Una forma de arreglarlo es enviar mensajes de Slack de forma asíncrona como si fueran correos electrónicos:
+Las notificaciones se envían de forma asíncrona por defecto, como los correos electrónicos:
 
-.. code-block:: diff
-    :caption: patch_file
+.. code-block:: yaml
+    :caption: config/packages/messenger.yaml
+    :emphasize-lines: 5,6
+    :class: ignore
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
-    @@ -21,3 +21,5 @@ framework:
-                 # Route your messages to the transports
-                 App\Message\CommentMessage: async
-                 Symfony\Component\Mailer\Messenger\SendEmailMessage: async
-    +            Symfony\Component\Notifier\Message\ChatMessage: async
-    +            Symfony\Component\Notifier\Message\SmsMessage: async
+    framework:
+        messenger:
+            routing:
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+                Symfony\Component\Notifier\Message\ChatMessage: async
+                Symfony\Component\Notifier\Message\SmsMessage: async
 
-Tan pronto como todo sea asíncrono, los mensajes se vuelven independientes. También hemos habilitado los mensajes SMS asíncronos en caso de que también quieras ser notificado en tu teléfono.
+                # Route your messages to the transports
+                App\Message\CommentMessage: async
+
+Si deshabilitáramos los mensajes asíncronos, tendríamos un pequeño problema. Por cada comentario, recibimos un correo electrónico y un mensaje de Slack. Si se produce un error en el mensaje de Slack (id de canal incorrecto, token incorrecto...), el mensaje se volverá a intentar enviar tres veces antes de ser descartado. Pero como el correo electrónico se envía primero, recibiremos 3 correos electrónicos y ningún mensaje de Slack.
+
+Tan pronto como todo sea asíncrono, los mensajes se vuelven independientes. Los mensajes SMS ya están configurados como asíncronos en caso de que también quieras ser notificado en tu teléfono.
 
 Notificando a los usuarios por correo electrónico
 --------------------------------------------------
@@ -579,4 +533,6 @@ La última tarea es notificar a los usuarios cuando se apruebe su envío. ¿Qué
 
 .. sidebar:: Yendo más allá
 
-    * `Mensajes flash de Symfony <https://symfony.com/doc/current/controller.html#flash-messages>`_.
+    * `Mensajes flash de Symfony`_ .
+
+.. _`Mensajes flash de Symfony`: https://symfony.com/doc/current/controller.html#flash-messages
