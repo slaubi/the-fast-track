@@ -10,42 +10,51 @@ Definiendo *callbacks* del ciclo de vida
 
 .. index::
     single: Doctrine;Lifecycle
-    single: Annotations;@ORM\\Entity
-    single: Annotations;@ORM\\HasLifecycleCallbacks
-    single: Annotations;@ORM\\PrePersist
+    single: Attributes;ORM\\Entity
+    single: Attributes;ORM\\HasLifecycleCallbacks
+    single: Attributes;ORM\\PrePersist
 
 Cuando el comportamiento no necesita ningún servicio y debe ser aplicado a un solo tipo de entidad, define un *callback* en la clase de la entidad:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -57,8 +57,6 @@ class CommentCrudController extends AbstractCrudController
+             ]);
+             if (Crud::PAGE_EDIT === $pageName) {
+                 yield $createdAt->setFormTypeOption('disabled', true);
+    -        } else {
+    -            yield $createdAt;
+             }
+         }
+     }
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
+    @@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
+     use Doctrine\ORM\Mapping as ORM;
 
-     /**
-      * @ORM\Entity(repositoryClass=CommentRepository::class)
-    + * @ORM\HasLifecycleCallbacks()
-      */
+     #[ORM\Entity(repositoryClass: CommentRepository::class)]
+    +#[ORM\HasLifecycleCallbacks]
      class Comment
      {
-    @@ -106,6 +107,14 @@ class Comment
+         #[ORM\Id]
+    @@ -86,6 +87,12 @@ class Comment
              return $this;
          }
 
-    +    /**
-    +     * @ORM\PrePersist
-    +     */
-    +    public function setCreatedAtValue()
+    +    #[ORM\PrePersist]
+    +    public function setCreatedAtValue(): void
     +    {
-    +        $this->createdAt = new \DateTime();
+    +        $this->createdAt = new \DateTimeImmutable();
     +    }
     +
          public function getConference(): ?Conference
          {
              return $this->conference;
 
-El *evento* ``@ORM\PrePersist`` se lanza cuando el objeto se almacena en la base de datos por primera vez. Cuando esto sucede, se llama al método ``setCreatedAtValue()`` y se utiliza la fecha y hora actual para el valor de la propiedad ``createdAt``.
+El *evento* ``ORM\PrePersist`` se lanza cuando el objeto se almacena en la base de datos por primera vez. Cuando esto sucede, se llama al método ``setCreatedAtValue()`` y se utiliza la fecha y hora actual para el valor de la propiedad ``createdAt``.
 
 Agregando *slugs* a las conferencias
 ------------------------------------
@@ -88,8 +97,8 @@ Y ejecuta esa nueva migración:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
+    --- i/migrations/Version00000000000000.php
+    +++ w/migrations/Version00000000000000.php
     @@ -20,7 +20,9 @@ final class Version00000000000000 extends AbstractMigration
          public function up(Schema $schema): void
          {
@@ -119,45 +128,37 @@ La migración debería funcionar bien ahora:
     $ symfony console doctrine:migrations:migrate
 
 .. index::
-    single: Annotations;@ORM\\UniqueEntity
-    single: Annotations;@ORM\\Column
+    single: Attributes;ORM\\UniqueEntity
+    single: Attributes;ORM\\Column
+    single: Components;Validator
 
 Debido a que la aplicación pronto usará *slugs* para encontrar cada conferencia, ajustemos la entidad Conference para asegurar que los valores de *slug* sean únicos en la base de datos:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
-    @@ -6,9 +6,11 @@ use App\Repository\ConferenceRepository;
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
+    @@ -6,8 +6,10 @@ use App\Repository\ConferenceRepository;
      use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
     +use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-     /**
-      * @ORM\Entity(repositoryClass=ConferenceRepository::class)
-    + * @UniqueEntity("slug")
-      */
+     #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
+    +#[UniqueEntity('slug')]
      class Conference
      {
-    @@ -40,7 +42,7 @@ class Conference
-         private $comments;
+         #[ORM\Id]
+    @@ -30,7 +32,7 @@ class Conference
+         #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'conference', orphanRemoval: true)]
+         private Collection $comments;
 
-         /**
-    -     * @ORM\Column(type="string", length=255)
-    +     * @ORM\Column(type="string", length=255, unique=true)
-          */
-         private $slug;
+    -    #[ORM\Column(length: 255)]
+    +    #[ORM\Column(length: 255, unique: true)]
+         private ?string $slug = null;
 
-.. index::
-    single: Components;Validator
-
-Debido a que utilizamos un validador para garantizar la unicidad de los slugs, necesitamos agregar el componente Symfony Validator:
-
-.. code-block:: terminal
-
-    $ symfony composer req validator
+         public function __construct()
 
 .. index::
     single: Command;make:migration
@@ -185,32 +186,28 @@ Generando *slugs*
 
 Generar un *slug* que se lea bien en una URL (donde cualquier cosa que no sean caracteres ASCII debe ser codificada) es una tarea desafiante, especialmente para idiomas que no sean el inglés. Por ejemplo, ¿Cómo conviertes ``é`` a ``e``?
 
-En lugar de reinventar la rueda, usemos el componente de Symfony ``String``, que facilita la manipulación de las cadenas y proporciona un *slugger*:
-
-.. code-block:: terminal
-
-    $ symfony composer req string
+En lugar de reinventar la rueda, usemos el componente de Symfony ``String``, que facilita la manipulación de las cadenas y proporciona un *slugger*.
 
 Añade un método ``computeSlug()`` a la clase ``Conference`` que calcule el *slug* basado en los datos de la conferencia:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
      use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     +use Symfony\Component\String\Slugger\SluggerInterface;
 
-     /**
-      * @ORM\Entity(repositoryClass=ConferenceRepository::class)
-    @@ -61,6 +62,13 @@ class Conference
+     #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
+     #[UniqueEntity('slug')]
+    @@ -50,6 +51,13 @@ class Conference
              return $this->id;
          }
 
-    +    public function computeSlug(SluggerInterface $slugger)
+    +    public function computeSlug(SluggerInterface $slugger): void
     +    {
     +        if (!$this->slug || '-' === $this->slug) {
     +            $this->slug = (string) $slugger->slug((string) $this)->lower();
@@ -241,24 +238,23 @@ En su lugar, crea un oyente de entidades de Doctrine:
     namespace App\EntityListener;
 
     use App\Entity\Conference;
-    use Doctrine\ORM\Event\LifecycleEventArgs;
+    use Doctrine\ORM\Event\PrePersistEventArgs;
+    use Doctrine\ORM\Event\PreUpdateEventArgs;
     use Symfony\Component\String\Slugger\SluggerInterface;
 
     class ConferenceEntityListener
     {
-        private $slugger;
-
-        public function __construct(SluggerInterface $slugger)
-        {
-            $this->slugger = $slugger;
+        public function __construct(
+            private SluggerInterface $slugger,
+        ) {
         }
 
-        public function prePersist(Conference $conference, LifecycleEventArgs $event)
+        public function prePersist(Conference $conference, PrePersistEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
 
-        public function preUpdate(Conference $conference, LifecycleEventArgs $event)
+        public function preUpdate(Conference $conference, PreUpdateEventArgs $event): void
         {
             $conference->computeSlug($this->slugger);
         }
@@ -281,23 +277,28 @@ Rara vez interactúas con el contenedor directamente, ya que inyecta automática
 
 Si te preguntabas cómo se registró el oyente del evento en el paso anterior, ahora tienes la respuesta: el contenedor. Cuando una clase implementa algunas interfaces específicas, el contenedor sabe que la clase necesita ser registrada de cierta manera.
 
-Desafortunadamente, la automatización no está prevista para todo, especialmente para los paquetes de terceros. El oyente de entidades que acabamos de escribir es un ejemplo de ello; no puede ser gestionado automáticamente por el contenedor de servicios de Symfony ya que no implementa ninguna interfaz y no extiende una "clase bien conocida".
-
-Necesitamos declarar parcialmente al oyente en el contenedor. El cableado de dependencias se puede omitir ya que todavía se puede adivinar por el contenedor, pero necesitamos agregar manualmente algunas *etiquetas* para registrar al oyente con el despachador de eventos de Doctrine:
+Aquí, como nuestra clase no implementa ninguna interfaz ni extiende ninguna clase base, Symfony no sabe cómo autoconfigurarla. En su lugar, podemos usar un atributo para indicarle al contenedor de Symfony cómo cablearla:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -29,3 +29,7 @@ services:
+    --- i/src/EntityListener/ConferenceEntityListener.php
+    +++ w/src/EntityListener/ConferenceEntityListener.php
+    @@ -3,10 +3,14 @@
+     namespace App\EntityListener;
 
-         # add more service definitions when explicit configuration is needed
-         # please note that last definitions always *replace* previous ones
-    +    App\EntityListener\ConferenceEntityListener:
-    +        tags:
-    +            - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Conference'}
-    +            - { name: 'doctrine.orm.entity_listener', event: 'preUpdate', entity: 'App\Entity\Conference'}
+     use App\Entity\Conference;
+    +use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+     use Doctrine\ORM\Event\PrePersistEventArgs;
+     use Doctrine\ORM\Event\PreUpdateEventArgs;
+    +use Doctrine\ORM\Events;
+     use Symfony\Component\String\Slugger\SluggerInterface;
+
+    +#[AsEntityListener(event: Events::prePersist, entity: Conference::class)]
+    +#[AsEntityListener(event: Events::preUpdate, entity: Conference::class)]
+     class ConferenceEntityListener
+     {
+         public function __construct(
 
 .. note::
 
@@ -312,27 +313,28 @@ Intenta añadir más conferencias en el módulo de servicio y cambia la ciudad o
     single: Twig;for
     single: Twig;if
     single: Twig;path
-    single: Annotations;Route
+    single: Attributes;Route
 
-El último cambio es actualizar los controladores y las plantillas para utilizar el ``slug`` de la conferencia en lugar del ``id`` de la conferencia para las rutas:
+El último cambio es actualizar los controladores y las plantillas para utilizar el ``slug`` de la conferencia en lugar del ``id`` de la conferencia para las rutas. Como el parámetro de la ruta ya no es la clave primaria de la entidad, indícale a ``#[MapEntity]`` qué propiedad debe coincidir pasando un ``mapping`` explícito:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -28,7 +28,7 @@ class ConferenceController extends AbstractController
-             ]));
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
+             ]);
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     +    #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -18,7 +18,7 @@
+             $offset = max(0, $offset);
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -16,7 +16,7 @@
                  <h1><a href="{{ path('homepage') }}">Guestbook</a></h1>
                  <ul>
                  {% for conference in conferences %}
@@ -341,8 +343,8 @@ El último cambio es actualizar los controladores y las plantillas para utilizar
                  {% endfor %}
                  </ul>
                  <hr />
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -352,8 +354,8 @@ El último cambio es actualizar los controladores y las plantillas para utilizar
              </p>
          {% endfor %}
      {% endblock %}
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -22,10 +22,10 @@
              {% endfor %}
 
@@ -377,10 +379,15 @@ El acceso a las páginas de la conferencia debe realizarse ahora a través de su
 
 .. sidebar:: Yendo más allá
 
-    * El `sistema de eventos de Doctrine <https://symfony.com/doc/current/doctrine/events.html>`_ (callbacks del ciclo de vida y oyentes, oyentes de entidades y suscriptores del ciclo de vida);
+    * El `sistema de eventos de Doctrine`_ (callbacks del ciclo de vida y oyentes, oyentes de entidades y suscriptores del ciclo de vida);
 
-    * La documentación del `componente String  <https://symfony.com/doc/current/components/string.html>`_ ;
+    * La documentación del `componente String`_ ;
 
-    * El `contenedor de servicio <https://symfony.com/doc/current/service_container.html>`_ ;
+    * El `contenedor de servicio`_ ;
 
-    * La `Chuleta de servicios de Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/services_en_42.pdf>`_.
+    * La `Chuleta de servicios de Symfony`_ .
+
+.. _`sistema de eventos de Doctrine`: https://symfony.com/doc/current/doctrine/events.html
+.. _`componente String`: https://symfony.com/doc/current/components/string.html
+.. _`contenedor de servicio`: https://symfony.com/doc/current/service_container.html
+.. _`Chuleta de servicios de Symfony`: https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/services_en_42.pdf
