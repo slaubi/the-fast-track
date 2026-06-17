@@ -5,13 +5,7 @@ Describiendo la estructura de datos
     single: Doctrine
     single: Database
 
-Para trabajar con la base de datos desde PHP, vamos a hacer uso de `Doctrine`_, un conjunto de librerías que ayudan a los desarrolladores a gestionar bases de datos:
-
-.. code-block:: terminal
-
-    $ symfony composer req "orm:^2"
-
-Este comando instala algunas dependencias: Doctrine DBAL (una capa de abstracción de base de datos), Doctrine ORM (una biblioteca para manipular el contenido de nuestra base de datos usando objetos PHP), y Doctrine Migrations.
+Para trabajar con la base de datos desde PHP, vamos a hacer uso de `Doctrine`_, un conjunto de librerías que ayudan a los desarrolladores a gestionar bases de datos: Doctrine DBAL (una capa de abstracción de base de datos), Doctrine ORM (una biblioteca para manipular el contenido de nuestra base de datos usando objetos PHP), y Doctrine Migrations.
 
 Configurando Doctrine ORM
 -------------------------
@@ -49,7 +43,7 @@ Comprueba todas las variables de entorno expuestas ejecutando ``symfony var:expo
 .. code-block:: text
     :class: ignore
 
-    DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
+    DATABASE_URL=postgres://app:!ChangeMe!@127.0.0.1:32781/app?sslmode=disable&charset=utf8
     # ...
 
 ¿Recuerdas el *nombre del servicio* ``database`` utilizado en las configuraciones Docker y Upsun? Los nombres de servicio se utilizan como prefijos para definir variables de entorno como ``DATABASE_URL``. Si tus servicios se nombran de acuerdo a las convenciones de Symfony, no se necesita ninguna otra configuración.
@@ -65,15 +59,17 @@ Aún así cambiaremos el archivo ``.env`` para configurar el valor predeterminad
 
 .. code-block:: diff
 
-    --- a/.env
-    +++ b/.env
-    @@ -24,5 +24,5 @@ APP_SECRET=ce2ae8138936039d22afb20f4596fe97
-     #
-     # DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
-     # DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=5.7"
-    -DATABASE_URL="postgresql://db_user:db_password@127.0.0.1:5432/db_name?serverVersion=13&charset=utf8"
-    +DATABASE_URL="postgresql://127.0.0.1:5432/db?serverVersion=13&charset=utf8"
+    --- i/.env
+    +++ w/.env
+    @@ -26,7 +26,7 @@ APP_SECRET=ce2ae8138936039d22afb20f4596fe97
+     # DATABASE_URL="sqlite:///%kernel.project_dir%/var/data_%kernel.environment%.db"
+     # DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=8.0.32&charset=utf8mb4"
+     # DATABASE_URL="mysql://app:!ChangeMe!@127.0.0.1:3306/app?serverVersion=10.11.2-MariaDB&charset=utf8mb4"
+    -DATABASE_URL="postgresql://app:!ChangeMe!@127.0.0.1:5432/app?serverVersion=16&charset=utf8"
+    +DATABASE_URL="postgresql://127.0.0.1:5432/db?serverVersion=16&charset=utf8"
      ###< doctrine/doctrine-bundle ###
+
+     ###> symfony/messenger ###
 
 ¿Por qué es necesario duplicar la información en dos lugares diferentes? Porque en algunas plataformas Cloud, a la *hora de crear la aplicación*, puede que no se conozca todavía la URL de la base de datos, pero Doctrine necesita conocer el motor de la base de datos para construir su configuración. Por lo tanto, el host, el nombre de usuario y la contraseña no importan realmente.
 
@@ -90,7 +86,9 @@ Una conferencia puede describirse con algunas propiedades:
 
 .. index:: ! Command;make:entity
 
-El *bundle* Maker puede ayudarnos a generar una clase (una clase *Entity*) que representa una conferencia:
+El *bundle* Maker puede ayudarnos a generar una clase (una clase *Entity*) que representa una conferencia.
+
+Es hora de generar la entidad ``Conference``:
 
 .. code-block:: terminal
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
@@ -169,15 +167,15 @@ La clase ``Conference`` se ha almacenado bajo el espacio de nombres ``App\Entity
 El comando también generó una clase *repositorio* de Doctrine: ``App\Repository\ConferenceRepository``.
 
 .. index::
-    single: Annotations;@ORM\\Entity
-    single: Annotations;@ORM\\Id
-    single: Annotations;@ORM\\GeneratedValue
-    single: Annotations;@ORM\\Column
+    single: Attributes;ORM\\Entity
+    single: Attributes;ORM\\Id
+    single: Attributes;ORM\\GeneratedValue
+    single: Attributes;ORM\\Column
 
 El código generado tiene el siguiente aspecto (solo mostraremos una pequeña parte del archivo):
 
 .. code-block:: php
-    :caption: src/App/Entity/Conference.php
+    :caption: src/Entity/Conference.php
     :class: ignore
 
     namespace App\Entity;
@@ -185,22 +183,16 @@ El código generado tiene el siguiente aspecto (solo mostraremos una pequeña pa
     use App\Repository\ConferenceRepository;
     use Doctrine\ORM\Mapping as ORM;
 
-    /**
-     * @ORM\Entity(repositoryClass=ConferenceRepository::class)
-     */
+    #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
     class Conference
     {
-        /**
-         * @ORM\Id()
-         * @ORM\GeneratedValue()
-         * @ORM\Column(type="integer")
-         */
-        private $id;
+        #[ORM\Id]
+        #[ORM\GeneratedValue]
+        #[ORM\Column]
+        private ?int $id = null;
 
-        /**
-         * @ORM\Column(type="string", length=255)
-         */
-        private $city;
+        #[ORM\Column(length: 255)]
+        private ?string $city = null;
 
         // ...
 
@@ -209,7 +201,7 @@ El código generado tiene el siguiente aspecto (solo mostraremos una pequeña pa
             return $this->city;
         }
 
-        public function setCity(string $city): self
+        public function setCity(string $city): static
         {
             $this->city = $city;
 
@@ -219,9 +211,9 @@ El código generado tiene el siguiente aspecto (solo mostraremos una pequeña pa
         // ...
     }
 
-Ten en cuenta que la clase en sí es una clase PHP sencilla sin rastro de Doctrine. Las anotaciones se utilizan para añadir metadatos útiles para que Doctrine asocie la clase a la tabla correspondiente de la base de datos.
+Ten en cuenta que la clase en sí es una clase PHP sencilla sin rastro de Doctrine. Los atributos se utilizan para añadir metadatos útiles para que Doctrine asocie la clase a la tabla correspondiente de la base de datos.
 
-Doctrine agregó una propiedad ``id`` para almacenar la clave primaria de la fila en la tabla de la base de datos. Esta clave (``@ORM\Id()``) se crea automáticamente (``@ORM\GeneratedValue()``) mediante una estrategia que depende del motor de la base de datos.
+Doctrine agregó una propiedad ``id`` para almacenar la clave primaria de la fila en la tabla de la base de datos. Esta clave (``#[ORM\Id]``) se crea automáticamente (``#[ORM\GeneratedValue]``) mediante una estrategia que depende del motor de la base de datos.
 
 .. index::
     single: Command;make:entity
@@ -229,7 +221,7 @@ Doctrine agregó una propiedad ``id`` para almacenar la clave primaria de la fil
 A continuación, genera una clase Entity para los comentarios de la conferencia:
 
 .. code-block:: terminal
-    :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime||no)
+    :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime_immutable||no)
 
     $ symfony console make:entity Comment
 
@@ -331,31 +323,29 @@ Usa el comando ``make:entity`` de nuevo para agregar esta relación a la  clase 
           * json_array
 
 .. index::
-    single: Annotations;@ORM\\ManyToOne
-    single: Annotations;@ORM\\JoinColumn
-    single: Annotations;@ORM\\OneToMany
+    single: Attributes;ORM\\ManyToOne
+    single: Attributes;ORM\\JoinColumn
+    single: Attributes;ORM\\OneToMany
 
 Echa un vistazo a los cambios que se aplican en las clases de entidad después de añadir la relación:
 
 .. code-block:: diff
     :class: ignore
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -36,6 +36,12 @@ class Comment
-          */
-         private $createdAt;
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
+    @@ -23,6 +23,10 @@ class Comment
+         #[ORM\Column]
+         private ?\DateTimeImmutable $createdAt = null;
 
-    +    /**
-    +     * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments")
-    +     * @ORM\JoinColumn(nullable=false)
-    +     */
-    +    private $conference;
+    +    #[ORM\ManyToOne(inversedBy: 'comments')]
+    +    #[ORM\JoinColumn(nullable: false)]
+    +    private ?Conference $conference = null;
     +
          public function getId(): ?int
          {
              return $this->id;
-    @@ -88,4 +94,16 @@ class Comment
+    @@ -88,4 +92,16 @@ class Comment
 
              return $this;
          }
@@ -365,15 +355,15 @@ Echa un vistazo a los cambios que se aplican en las clases de entidad después d
     +        return $this->conference;
     +    }
     +
-    +    public function setConference(?Conference $conference): self
+    +    public function setConference(?Conference $conference): static
     +    {
     +        $this->conference = $conference;
     +
     +        return $this;
     +    }
      }
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
     @@ -2,6 +2,8 @@
 
      namespace App\Entity;
@@ -383,14 +373,15 @@ Echa un vistazo a los cambios que se aplican en las clases de entidad después d
      use Doctrine\ORM\Mapping as ORM;
 
      /**
-    @@ -31,6 +33,16 @@ class Conference
-          */
-         private $isInternational;
+    @@ -20,6 +22,19 @@ class Conference
+         #[ORM\Column]
+         private ?bool $isInternational = null;
 
     +    /**
-    +     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="conference", orphanRemoval=true)
+    +     * @var Collection<int, Comment>
     +     */
-    +    private $comments;
+    +    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'conference', orphanRemoval: true)]
+    +    private Collection $comments;
     +
     +    public function __construct()
     +    {
@@ -406,27 +397,26 @@ Echa un vistazo a los cambios que se aplican en las clases de entidad después d
          }
     +
     +    /**
-    +     * @return Collection|Comment[]
+    +     * @return Collection<int, Comment>
     +     */
     +    public function getComments(): Collection
     +    {
     +        return $this->comments;
     +    }
     +
-    +    public function addComment(Comment $comment): self
+    +    public function addComment(Comment $comment): static
     +    {
     +        if (!$this->comments->contains($comment)) {
-    +            $this->comments[] = $comment;
+    +            $this->comments->add($comment);
     +            $comment->setConference($this);
     +        }
     +
     +        return $this;
     +    }
     +
-    +    public function removeComment(Comment $comment): self
+    +    public function removeComment(Comment $comment): static
     +    {
-    +        if ($this->comments->contains($comment)) {
-    +            $this->comments->removeElement($comment);
+    +        if ($this->comments->removeElement($comment)) {
     +            // set the owning side to null (unless already changed)
     +            if ($comment->getConference() === $this) {
     +                $comment->setConference(null);
@@ -465,7 +455,7 @@ A continuación, necesitamos crear las tablas de base de datos relacionadas con 
 
 *Doctrine Migrations* es el complemento perfecto para esta tarea. Ya se ha instalado como parte de la dependencia ``orm``.
 
-Una *migración* es una clase que describe los cambios necesarios para actualizar un esquema de base de datos desde su estado actual al nuevo definido por las anotaciones de la entidad. Como la base de datos está vacía por ahora, la migración debería consistir en dos creaciones de tablas.
+Una *migración* es una clase que describe los cambios necesarios para actualizar un esquema de base de datos desde su estado actual al nuevo definido por los atributos de la entidad. Como la base de datos está vacía por ahora, la migración debería consistir en dos creaciones de tablas.
 
 Veamos qué genera Doctrine:
 
@@ -484,9 +474,9 @@ Observa el nombre del archivo generado en la salida (un nombre similar a ``migra
     use Doctrine\DBAL\Schema\Schema;
     use Doctrine\Migrations\AbstractMigration;
 
-    final class Version20191019083640 extends AbstractMigration
+    final class Version00000000000000 extends AbstractMigration
     {
-        public function up(Schema $schema) : void
+        public function up(Schema $schema): void
         {
             // this up() migration is auto-generated, please modify it to your needs
             $this->addSql('CREATE SEQUENCE comment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
@@ -497,7 +487,7 @@ Observa el nombre del archivo generado en la salida (un nombre similar a ``migra
             $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C604B8382 FOREIGN KEY (conference_id) REFERENCES conference (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         }
 
-        public function down(Schema $schema) : void
+        public function down(Schema $schema): void
         {
             // ...
         }
@@ -526,12 +516,16 @@ Al desplegar el proyecto, Upsun actualiza el código, pero también ejecuta la m
 
 .. sidebar:: Yendo más allá
 
-    * `Bases de datos y Doctrine ORM <https://symfony.com/doc/current/doctrine.html>`_ en aplicaciones Symfony;
+    * `Bases de datos y Doctrine ORM`_ en aplicaciones Symfony;
 
-    * `Tutorial de Doctrine SymfonyCasts <https://symfonycasts.com/screencast/symfony-doctrine/install>`_ ;
+    * `Tutorial de Doctrine SymfonyCasts`_ ;
 
-    * `Trabajar con Asociaciones/Relaciones de Doctrine <https://symfony.com/doc/current/doctrine/associations.html>`_ ;
+    * `Trabajar con Asociaciones/Relaciones de Doctrine`_ ;
 
-    * `Documentación de DoctrineMigrationsBundle <https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html>`_.
+    * `Documentación de DoctrineMigrationsBundle`_ .
 
 .. _`Doctrine`: https://www.doctrine-project.org/
+.. _`Bases de datos y Doctrine ORM`: https://symfony.com/doc/current/doctrine.html
+.. _`Tutorial de Doctrine SymfonyCasts`: https://symfonycasts.com/screencast/symfony-doctrine/install
+.. _`Trabajar con Asociaciones/Relaciones de Doctrine`: https://symfony.com/doc/current/doctrine/associations.html
+.. _`Documentación de DoctrineMigrationsBundle`: https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
