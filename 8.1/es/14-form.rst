@@ -17,13 +17,13 @@ Utiliza el bundle Maker para generar una clase de formulario:
 
 .. code-block:: terminal
 
-    $ symfony console make:form CommentFormType Comment
+    $ symfony console make:form CommentType Comment
 
 .. code-block:: text
     :class: ignore
     :emphasize-lines: 1
 
-     created: src/Form/CommentFormType.php
+     created: src/Form/CommentType.php
 
 
       Success!
@@ -32,10 +32,10 @@ Utiliza el bundle Maker para generar una clase de formulario:
      Next: Add fields to your form and start using it.
      Find the documentation at https://symfony.com/doc/current/forms.html
 
-La clase ``App\Form\CommentFormType`` define un formulario para la entidad ``App\Entity\Comment``:
+La clase ``App\Form\CommentType`` define un formulario para la entidad ``App\Entity\Comment``:
 
 .. code-block:: php
-    :caption: src/App/Form/CommentFormType.php
+    :caption: src/Form/CommentType.php
     :class: ignore
 
     namespace App\Form;
@@ -45,9 +45,9 @@ La clase ``App\Form\CommentFormType`` define un formulario para la entidad ``App
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
 
-    class CommentFormType extends AbstractType
+    class CommentType extends AbstractType
     {
-        public function buildForm(FormBuilderInterface $builder, array $options)
+        public function buildForm(FormBuilderInterface $builder, array $options): void
         {
             $builder
                 ->add('author')
@@ -59,7 +59,7 @@ La clase ``App\Form\CommentFormType`` define un formulario para la entidad ``App
             ;
         }
 
-        public function configureOptions(OptionsResolver $resolver)
+        public function configureOptions(OptionsResolver $resolver): void
         {
             $resolver->setDefaults([
                 'data_class' => Comment::class,
@@ -76,36 +76,37 @@ Para mostrar el formulario al usuario, crea el formulario en el controlador y p�
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 18,24
+    :emphasize-lines: 20,30
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -2,7 +2,9 @@
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -2,8 +2,10 @@
 
      namespace App\Controller;
 
     +use App\Entity\Comment;
      use App\Entity\Conference;
-    +use App\Form\CommentFormType;
+    +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    @@ -31,6 +33,9 @@ class ConferenceController extends AbstractController
+    @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug}', name: 'conference')]
-         public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+         public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
     +        $comment = new Comment();
-    +        $form = $this->createForm(CommentFormType::class, $comment);
+    +        $form = $this->createForm(CommentType::class, $comment);
     +
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-    @@ -39,6 +44,7 @@ class ConferenceController extends AbstractController
+    @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-                 'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
-    +            'comment_form' => $form->createView(),
-             ]));
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
+    +            'comment_form' => $form,
+             ]);
          }
      }
 
@@ -114,16 +115,14 @@ Nunca debes instanciar el tipo de formulario directamente. En su lugar, utiliza 
 .. index::
     single: Twig;form
 
-Al pasar un formulario a una plantilla, utiliza ``createView()`` para convertir los datos a un formato adecuado para las plantillas.
-
 La visualización del formulario en la plantilla se puede realizar a través de la función ``form`` de Twig:
 
 .. code-block:: diff
     :caption: patch_file
     :emphasize-lines: 10
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -30,4 +30,8 @@
          {% else %}
              <div>No comments have been posted yet for this conference.</div>
@@ -151,11 +150,11 @@ Aunque los campos del formulario se configuran en función de su correspondiente
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Form/CommentFormType.php
-    +++ b/src/Form/CommentFormType.php
-    @@ -4,20 +4,31 @@ namespace App\Form;
-
-     use App\Entity\Comment;
+    --- i/src/Form/CommentType.php
+    +++ w/src/Form/CommentType.php
+    @@ -6,26 +6,32 @@ use App\Entity\Comment;
+     use App\Entity\Conference;
+     use Symfony\Bridge\Doctrine\Form\Type\EntityType;
      use Symfony\Component\Form\AbstractType;
     +use Symfony\Component\Form\Extension\Core\Type\EmailType;
     +use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -164,9 +163,9 @@ Aunque los campos del formulario se configuran en función de su correspondiente
      use Symfony\Component\OptionsResolver\OptionsResolver;
     +use Symfony\Component\Validator\Constraints\Image;
 
-     class CommentFormType extends AbstractType
+     class CommentType extends AbstractType
      {
-         public function buildForm(FormBuilderInterface $builder, array $options)
+         public function buildForm(FormBuilderInterface $builder, array $options): void
          {
              $builder
     -            ->add('author')
@@ -175,32 +174,33 @@ Aunque los campos del formulario se configuran en función de su correspondiente
     +            ])
                  ->add('text')
     -            ->add('email')
-    -            ->add('createdAt')
-    -            ->add('photoFilename')
-    -            ->add('conference')
+    -            ->add('createdAt', null, [
+    -                'widget' => 'single_text',
     +            ->add('email', EmailType::class)
     +            ->add('photo', FileType::class, [
     +                'required' => false,
     +                'mapped' => false,
     +                'constraints' => [
-    +                    new Image(['maxSize' => '1024k'])
+    +                    new Image(maxSize: '1024k')
     +                ],
-    +            ])
+                 ])
+    -            ->add('photoFilename')
+    -            ->add('conference', EntityType::class, [
+    -                'class' => Conference::class,
+    -                'choice_label' => 'id',
+    -            ])
+    -        ;
     +            ->add('submit', SubmitType::class)
-             ;
+    +       ;
          }
+
+         public function configureOptions(OptionsResolver $resolver): void
 
 Ten en cuenta que hemos añadido un botón de enviar (eso nos permite seguir usando la expresión simple ``{{ form(comment_form) }}`` en la plantilla).
 
 Algunos campos no pueden ser configurados automáticamente, como es el caso de ``photoFilename``. La entidad ``Comment`` sólo necesita guardar el nombre del archivo de la foto, pero el formulario tiene que ocuparse de la carga del archivo en sí. Para gestionar este caso, hemos añadido un campo llamado ``photo`` que no está "mapeado" (un-``mapped``): no será asociado a ninguna propiedad en ``Comment``. Lo procesaremos manualmente para implementar alguna lógica específica (como almacenar la foto enviada en el disco).
 
 Como ejemplo de personalización, también hemos modificado la etiqueta por defecto para algunos campos.
-
-La restricción de la imagen funciona comprobando el tipo mime; se requiere el componente Mime para que funcione:
-
-.. code-block:: terminal
-
-    $ symfony composer req mime
 
 .. figure:: screenshots/form-customized.png
     :alt: /conference/amsterdam-2019
@@ -240,7 +240,7 @@ El tipo de formulario configura cómo se muestra en el navegador (a través de a
         </div>
     </form>
 
-El formulario utiliza el campo ``email`` para el correo electrónico del comentario y marca la mayoría de los campos como ``required`` –obligatorios–. Ten en cuenta que el formulario también contiene un campo oculto: ``_token``, para protegerlo de `ataques CSRF <https://owasp.org/www-community/attacks/csrf>`_.
+El formulario utiliza el campo ``email`` para el correo electrónico del comentario y marca la mayoría de los campos como ``required`` –obligatorios–. Ten en cuenta que el formulario también contiene un campo oculto: ``_token``, para protegerlo de `ataques CSRF`_.
 
 Pero si el envío del formulario pasa por alto la validación HTML (utilizando un cliente HTTP que no aplica estas reglas de validación como cURL), los datos no válidos pueden llegar al servidor.
 
@@ -249,37 +249,33 @@ También tenemos que añadir algunas restricciones de validación en el modelo d
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -4,6 +4,7 @@ namespace App\Entity;
-
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
+    @@ -5,6 +5,7 @@ namespace App\Entity;
      use App\Repository\CommentRepository;
+     use Doctrine\DBAL\Types\Types;
      use Doctrine\ORM\Mapping as ORM;
     +use Symfony\Component\Validator\Constraints as Assert;
 
-     /**
-      * @ORM\Entity(repositoryClass=CommentRepository::class)
-    @@ -21,16 +22,20 @@ class Comment
-         /**
-          * @ORM\Column(type="string", length=255)
-          */
-    +    #[Assert\NotBlank]
-         private $author;
+     #[ORM\Entity(repositoryClass: CommentRepository::class)]
+     #[ORM\HasLifecycleCallbacks]
+    @@ -16,12 +17,16 @@ class Comment
+         private ?int $id = null;
 
-         /**
-          * @ORM\Column(type="text")
-          */
+         #[ORM\Column(length: 255)]
     +    #[Assert\NotBlank]
-         private $text;
+         private ?string $author = null;
 
-         /**
-          * @ORM\Column(type="string", length=255)
-          */
+         #[ORM\Column(type: Types::TEXT)]
+    +    #[Assert\NotBlank]
+         private ?string $text = null;
+
+         #[ORM\Column(length: 255)]
     +    #[Assert\NotBlank]
     +    #[Assert\Email]
-         private $email;
+         private ?string $email = null;
 
-         /**
+         #[ORM\Column]
 
 Manejando un formulario
 -----------------------
@@ -291,34 +287,40 @@ Ahora debemos ocuparnos del envío del formulario y de la persistencia de su con
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -7,6 +7,7 @@ use App\Entity\Conference;
-     use App\Form\CommentFormType;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -7,8 +7,10 @@ use App\Entity\Conference;
+     use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-     use Symfony\Component\HttpFoundation\Request;
+    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -16,10 +17,12 @@ use Twig\Environment;
-     class ConferenceController extends AbstractController
-     {
-         private $twig;
-    +    private $entityManager;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
+    @@ -14,6 +15,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
-    -    public function __construct(Environment $twig)
-    +    public function __construct(Environment $twig, EntityManagerInterface $entityManager)
+     final class ConferenceController extends AbstractController
+     {
+    +    public function __construct(
+    +        private EntityManagerInterface $entityManager,
+    +    ) {
+    +    }
+    +
+         #[Route('/', name: 'homepage')]
+         public function index(ConferenceRepository $conferenceRepository): Response
          {
-             $this->twig = $twig;
-    +        $this->entityManager = $entityManager;
+    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
          }
 
-         #[Route('/', name: 'homepage')]
-    @@ -35,6 +38,15 @@ class ConferenceController extends AbstractController
+         #[Route('/conference/{slug}', name: 'conference')]
+    -    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $comment = new Comment();
-             $form = $this->createForm(CommentFormType::class, $comment);
+             $form = $this->createForm(CommentType::class, $comment);
     +        $form->handleRequest($request);
     +        if ($form->isSubmitted() && $form->isValid()) {
     +            $comment->setConference($conference);
@@ -329,8 +331,10 @@ Ahora debemos ocuparnos del envío del formulario y de la persistencia de su con
     +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
     +        }
 
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
+
+Ten en cuenta que el objeto ``Request`` se inyecta ahora en el controlador, ya que el formulario lo necesita para inspeccionar los datos enviados a través de ``handleRequest()``.
 
 Cuando se envía el formulario, el objeto ``Comment`` se actualiza con los datos que contiene.
 
@@ -343,40 +347,68 @@ Prueba el formulario. Debería funcionar correctamente y los datos deberían act
 Subiendo archivos
 -----------------
 
-Las fotos subidas deben ser almacenadas en el disco local, en un lugar accesible por el frontend (navegador) para que podamos mostrarlas en la página de la conferencia. Las guardaremos en el directorio ``public/uploads/photos``:
+Las fotos subidas deben ser almacenadas en el disco local, en un lugar accesible por el frontend (navegador) para que podamos mostrarlas en la página de la conferencia. Las guardaremos en el directorio ``public/uploads/photos``.
+
+.. index::
+    single: Attribute;Autowire
+    single: Autowire
+
+Como no queremos codificar la ruta del directorio en el código, necesitamos una forma de almacenarla globalmente en la configuración. El Container de Symfony es capaz de almacenar *parámetros* además de servicios, que son valores escalares que ayudan a configurar los servicios:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
+    @@ -4,6 +4,7 @@
+     # Put parameters here that don't need to change on each machine where the app is deployed
+     # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+     parameters:
+    +    photo_dir: "%kernel.project_dir%/public/uploads/photos"
+
+     services:
+         # default configuration for services in *this* file
+
+Ya hemos visto cómo los servicios se inyectan automáticamente en los argumentos del constructor. Para los parámetros del contenedor, podemos inyectarlos explícitamente a través del atributo ``Autowire``.
+
+Ahora, tenemos todo lo que necesitamos saber para implementar la lógica necesaria para almacenar el archivo subido en su destino final:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -9,7 +9,8 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Component\HttpFoundation\File\Exception\FileException;
+    +use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
-    @@ -34,13 +35,22 @@ class ConferenceController extends AbstractController
+     use Symfony\Component\Routing\Attribute\Route;
+    @@ -29,13 +30,24 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, string $photoDir): Response
-         {
+    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    {
+    +    public function show(
+    +        Request $request,
+    +        #[MapEntity(mapping: ['slug' => 'slug'])]
+    +        Conference $conference,
+    +        CommentRepository $commentRepository,
+    +        #[Autowire('%photo_dir%')] string $photoDir,
+    +        #[MapQueryParameter] int $offset = 0,
+    +    ): Response {
              $comment = new Comment();
-             $form = $this->createForm(CommentFormType::class, $comment);
+             $form = $this->createForm(CommentType::class, $comment);
              $form->handleRequest($request);
              if ($form->isSubmitted() && $form->isValid()) {
                  $comment->setConference($conference);
     +            if ($photo = $form['photo']->getData()) {
     +                $filename = bin2hex(random_bytes(6)).'.'.$photo->guessExtension();
-    +                try {
-    +                    $photo->move($photoDir, $filename);
-    +                } catch (FileException $e) {
-    +                    // unable to upload the photo, give up
-    +                }
+    +                $photo->move($photoDir, $filename);
     +                $comment->setPhotoFilename($filename);
     +            }
 
@@ -384,29 +416,6 @@ Las fotos subidas deben ser almacenadas en el disco local, en un lugar accesible
                  $this->entityManager->flush();
 
 Para gestionar la carga de fotos, creamos un nombre aleatorio para el archivo. Luego, movemos el archivo cargado a su ubicación final (el directorio de fotos). Finalmente, almacenamos el nombre del archivo en el objeto Comment.
-
-.. index::
-    single: Container;Bind
-    single: Bind
-
-¿Has observado el nuevo parámetro en el método ``show()``? ``$photoDir`` es una cadena y no un servicio. ¿Cómo puede saber Symfony qué inyectar aquí? El Container de Symfony es capaz de almacenar *parámetros* además de servicios. Los parámetros son valores escalares que ayudan a configurar los servicios. Estos parámetros pueden ser inyectados en los servicios explícitamente, o pueden estar *vinculados por su nombre*:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -10,6 +10,8 @@ services:
-         _defaults:
-             autowire: true      # Automatically injects dependencies in your services.
-             autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    +        bind:
-    +            $photoDir: "%kernel.project_dir%/public/uploads/photos"
-
-         # makes classes in src/ available to be used as services
-         # this creates a service per class whose id is the fully-qualified class name
-
-La configuración ``bind`` permite a Symfony inyectar el valor cada vez que un servicio tiene un argumento ``$photoDir``.
 
 Intenta cargar un archivo PDF en lugar de una foto. Deberías ver los mensajes de error en acción. El diseño es bastante poco atractivo en este momento, pero no te preocupes, todo se mejorará en unos pocos pasos cuando trabajemos en el diseño del sitio web. Para los formularios, cambiaremos una línea de configuración para darle estilo a todos los elementos de los formularios.
 
@@ -450,17 +459,17 @@ El panel de administración está mostrando el nombre del archivo de la foto, pe
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/Admin/CommentCrudController.php
-    +++ b/src/Controller/Admin/CommentCrudController.php
-    @@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-     use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+    --- i/src/Controller/Admin/CommentCrudController.php
+    +++ w/src/Controller/Admin/CommentCrudController.php
+    @@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
     +use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
+     use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
      use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-     use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
-    @@ -45,7 +46,9 @@ class CommentCrudController extends AbstractCrudController
+    @@ -47,7 +48,9 @@ class CommentCrudController extends AbstractCrudController
              yield TextareaField::new('text')
                  ->hideOnIndex()
              ;
@@ -479,8 +488,8 @@ Excluyendo las fotos subidas de Git
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.gitignore
-    +++ b/.gitignore
+    --- i/.gitignore
+    +++ w/.gitignore
     @@ -1,3 +1,4 @@
     +/public/uploads
 
@@ -494,42 +503,51 @@ El último paso es almacenar los archivos cargados en servidores de producción.
 
 No todo es de sólo lectura en un proyecto Symfony. Nos esforzamos en incluir la mayor cantidad posible de información en la caché al construir el contenedor (durante la fase de escritura de caché), pero Symfony aún necesita poder escribir en algún lugar para la caché de usuario, los registros, las sesiones si están almacenados en el sistema de archivos, y mucho más.
 
-Echa un vistazo a ``.symfony.cloud.yaml``, ya hay un *montaje* con permisos de escritura para el directorio ``var/``. El directorio ``var/`` es el único directorio donde Symfony escribe (cachés, registros...).
+Echa un vistazo a ``.upsun/config.yaml``, ya hay un *montaje* con permisos de escritura para el directorio ``var/``. El directorio ``var/`` es el único directorio donde Symfony escribe (cachés, registros...).
 
 Vamos a crear un nuevo montaje para almacenar las fotos subidas:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony.cloud.yaml
-    +++ b/.symfony.cloud.yaml
-    @@ -36,6 +36,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -41,6 +41,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    +            "/public/uploads": { source: storage, source_path: uploads }
 
-     mounts:
-         "/var": { source: local, source_path: var }
-    +    "/public/uploads": { source: local, source_path: uploads }
 
-     hooks:
-         build: |
+             relationships:
 
 Ahora se puede desplegar el código y las fotos se almacenarán en el directorio ``public/uploads/`` como en nuestra versión local.
 
 .. sidebar:: Yendo más allá
 
-    * `Tutorial de formularios de SymfonyCasts <https://symfonycasts.com/screencast/symfony-forms>`_ ;
+    * `Tutorial de formularios de SymfonyCasts`_ ;
 
-    * Cómo `personalizar la presentación (renderizado) de formularios Symfony en HTML <https://symfony.com/doc/current/form/form_customization.html>`_;
+    * Cómo `personalizar la presentación (renderizado) de formularios Symfony en HTML`_ ;
 
-    * `Validando formularios de Symfony <https://symfony.com/doc/current/forms.html#validating-forms>`_;
+    * `Validando formularios de Symfony`_ ;
 
-    * La `referencia de los tipos de formularios Symfony <https://symfony.com/doc/current/reference/forms/types.html>`_;
+    * La `referencia de los tipos de formularios Symfony`_ ;
 
-    * La `documentación de FlysystemBundle <https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md>`_, que proporciona integración con múltiples proveedores de almacenamiento en nube, como AWS S3, Azure y Google Cloud Storage;
+    * La `documentación de FlysystemBundle`_ , que proporciona integración con múltiples proveedores de almacenamiento en nube, como AWS S3, Azure y Google Cloud Storage;
 
-    * Los `parámetros de configuración de Symfony <https://symfony.com/doc/current/configuration.html#configuration-parameters>`_ .
+    * Los `parámetros de configuración de Symfony`_ .
 
-    * Las `Restricciones de Validación de Symfony <https://symfony.com/doc/current/validation.html#basic-constraints>`_ ;
+    * Las `Restricciones de Validación de Symfony`_ ;
 
-    * La `chuleta de formularios de Symfony <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony2/how_symfony2_forms_works_en.pdf>`_.
+    * La `chuleta de formularios de Symfony`_ .
 
 .. _`tipo de formulario`: https://symfony.com/doc/current/forms.html#form-types
+.. _`ataques CSRF`: https://owasp.org/www-community/attacks/csrf
+.. _`Tutorial de formularios de SymfonyCasts`: https://symfonycasts.com/screencast/symfony-forms
+.. _`personalizar la presentación (renderizado) de formularios Symfony en HTML`: https://symfony.com/doc/current/form/form_customization.html
+.. _`Validando formularios de Symfony`: https://symfony.com/doc/current/forms.html#validating-forms
+.. _`referencia de los tipos de formularios Symfony`: https://symfony.com/doc/current/reference/forms/types.html
+.. _`documentación de FlysystemBundle`: https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+.. _`parámetros de configuración de Symfony`: https://symfony.com/doc/current/configuration.html#configuration-parameters
+.. _`Restricciones de Validación de Symfony`: https://symfony.com/doc/current/validation.html#basic-constraints
+.. _`chuleta de formularios de Symfony`: https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony2/how_symfony2_forms_works_en.pdf
