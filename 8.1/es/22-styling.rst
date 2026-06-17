@@ -9,7 +9,7 @@ Dando estilos a la interfaz de usuario con Webpack
 
 No hemos dedicado tiempo al diseño de la interfaz de usuario. Para dar estilos como un profesional, usaremos un stack moderno, basado en `Webpack <https://webpack.js.org/>`_. Y para añadir un toque Symfony y facilitar su integración con la aplicación, instalaremos *Webpack Encore*:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req encore
 
@@ -27,7 +27,7 @@ Usando Sass
 
 En lugar de usar CSS plano, vamos a cambiar a `Sass <https://sass-lang.com/>`_:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mv assets/styles/app.css assets/styles/app.scss
 
@@ -48,7 +48,7 @@ En lugar de usar CSS plano, vamos a cambiar a `Sass <https://sass-lang.com/>`_:
 
 Instala el cargador de Sass:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add node-sass sass-loader --dev
 
@@ -79,7 +79,7 @@ Añadiendo Bootstrap
 
 Si queremos partir de unos buenos cimientos a la hora de construir un sitio web adaptativo, puede ser muy útil la utilización de un *framework* CSS tal como `Bootstrap <https://getbootstrap.com/>`_. Instálalo como un paquete:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ yarn add bootstrap@4 jquery popper.js bs-custom-file-input --dev
 
@@ -128,7 +128,7 @@ Dando estilo al HTML
 
 Ahora estamos listos para dar estilo a la aplicación. Descarga y descomprime el archivo en la raíz del proyecto:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ php -r "copy('https://symfony.com/uploads/assets/guestbook-5.2.zip', 'guestbook-5.2.zip');"
     $ unzip -o guestbook-5.2.zip
@@ -146,13 +146,13 @@ Un cambio importante al usar Webpack es que los archivos CSS y JS no se utilizan
 
 Durante el desarrollo, la compilación de los *assets* se puede hacer a través del comando ``encore dev``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run yarn encore dev
 
 En lugar de ejecutar el comando cada vez que haya un cambio, déjalo corriendo en segundo plano para que reaccione a los cambios en JS y CSS:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run -d yarn encore dev --watch

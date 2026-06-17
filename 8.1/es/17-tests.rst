@@ -10,7 +10,7 @@ Ahora que empezamos a añadir más y más funcionalidades a la aplicación, es e
 
 Symfony se basa en PHPUnit para las pruebas unitarias (*unit tests*). Vamos a instalarlo:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req phpunit --dev
 
@@ -24,7 +24,7 @@ Escribiendo pruebas unitarias
 
 ``SpamChecker`` es la primera clase para la que vamos a escribir las pruebas. Generemos una prueba unitaria:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:test TestCase SpamCheckerTest
 
@@ -76,7 +76,7 @@ Más tarde llamamos al método ``getSpamScore()`` y comprobamos que se lanza una
 
 Ejecuta las pruebas para comprobar que se han superado:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit
 
@@ -177,7 +177,7 @@ Con el fin de facilitarnos la vida, a PHPUnit se le han incorporado comprobacion
 
     Podríamos haber generado la prueba a través de maker:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console make:test WebTestCase Controller\\ConferenceController
 
@@ -208,7 +208,7 @@ Por defecto, las pruebas PHPUnit corren en el entorno ``test`` de Symfony defini
 
 Para hacer funcionar las pruebas, debemos definir la ``AKISMET_KEY``secreta para este entorno ``test``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ APP_ENV=test symfony console secrets:set AKISMET_KEY
@@ -228,14 +228,14 @@ Como ya hemos visto, Symfony CLI expone automaticamente la variable de entorno `
 
 Antes de poder ejecutar la prueba, necesitamos "inicializar" la base de datos de ``test`` (crear la base de datos y migrarla):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony console doctrine:database:create
     $ APP_ENV=test symfony console doctrine:migrations:migrate -n
 
 Si ahora ejecutas las pruebas, PHPUnit ya no interactuará con tu base de datos de desarrollo. Para ejecutar solo las nuevas pruebas, indica la ruta de sus clases:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -256,7 +256,7 @@ Para poder probar la lista de comentarios, la paginación y el envío del formul
 
 Instala el *bundle* Doctrine Fixtures:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req orm-fixtures --dev
 
@@ -356,7 +356,7 @@ Cuando carguemos los *fixtures*, se eliminarán todos los datos, incluido el usu
 
     Si no recuerdas qué servicio se necesita utilizar para una tarea determinada, utiliza la opción ``debug:autowiring`` con alguna palabra clave:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring encoder
 
@@ -367,7 +367,7 @@ Cargando *fixtures*
 
 Carga los *fixtures* para el entorno/base de datos ``test``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -434,7 +434,7 @@ En lugar de hacer clic en el texto (es decir, ``View``), también podríamos hab
 
 Comprueba que la nueva prueba está en verde:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -473,13 +473,13 @@ Para enviar un formulario a través de ``submitForm()``, busca los nombres de lo
 
 Vuelve a realizar las pruebas para comprobar que todo está en verde:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
 Si quieres comprobar el resultado en un navegador, para el servidor web y vuelve a ejecutarlo en el entorno ``test``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -498,7 +498,7 @@ Recargando los *fixtures*
 
 Si haces las pruebas por segunda vez, deberían fallar. Como ahora hay más comentarios en la base de datos, la comprobación que verifica el número de comentarios fallará. Necesitamos restablecer el estado de la base de datos entre cada ejecución, recargando los *fixtures* antes de cada ejecución:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -539,7 +539,7 @@ Observa el parámetro ``-n`` en el comando Doctrine; es un parámetro global de 
 
 Siempre que desees ejecutar las pruebas, utiliza ``make tests``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -608,12 +608,12 @@ Las pruebas ahora fallan.
 
 Para restablecer la base de datos entre pruebas, instala DoctrineTestBundle:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony composer config extra.symfony.allow-contrib true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
 
@@ -657,7 +657,7 @@ Y hecho. Cualquier cambio realizado en las pruebas se retrotrae automáticamente
 
 Las pruebas deberían de nuevo estar en verde:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -670,7 +670,7 @@ Usando un navegador real para pruebas funcionales
 
 Las pruebas funcionales utilizan un navegador especial que llama directamente a la capa de Symfony. Pero también puedes usar un navegador real y la capa HTTP real gracias a Symfony Panther:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req panther --dev
 

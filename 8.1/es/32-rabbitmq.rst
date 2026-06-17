@@ -53,12 +53,12 @@ Reiniciando los servicios de Docker
 
 Para forzar a Docker Compose a que tenga en cuenta el contenedor RabbitMQ, para los contenedores y reinícialos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -71,7 +71,7 @@ Explorando la interfaz web de administración de RabbitMQ
 
 Si quieres ver las colas y los mensajes que fluyen por RabbitMQ, abre su interfaz web de administración:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:rabbitmq
@@ -146,7 +146,7 @@ Añade la referencia también en la configuración del contenedor web y activa l
 
 Cuando el servicio RabbitMQ está instalado en un proyecto, se puede acceder a su interfaz de administración web abriendo primeramente el túnel:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open

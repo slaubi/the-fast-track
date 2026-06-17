@@ -10,7 +10,7 @@ Para asegurar que los comentarios aporten realmente información útil, el admin
 
 Primero, instala el componente Symfony Mailer:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mailer
 
@@ -157,7 +157,7 @@ Para una máxima compatibilidad con los lectores de correo electrónico, el dise
 
 Estas dos características son parte de las extensiones opcionales de Twig que necesitan ser instaladas:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
@@ -301,25 +301,25 @@ En lugar de usar un servidor SMTP "real" o un proveedor externo para enviar corr
 
 Cierra y reinicia los contenedores para agregar el receptor de correos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
 También debes detener el consumidor de mensajes, ya que aún no conoce el receptor de correo:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console messenger:stop-workers
 
 E inícialo de nuevo. El ``MAILER_DSN`` ahora se expone automáticamente:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -332,7 +332,7 @@ Accediendo al Webmail
 
 Puedes abrir el *webmail* desde un terminal:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:webmail
@@ -454,7 +454,7 @@ Tienes que actualizar aún la configuración de SymfonyCloud para incluir la ext
 
     Por seguridad los correos electrónicos *solo* se envían de manera predeterminada en la rama ``master``. Habilita SMTP de forma explícita en las ramas del repositorio que no sean ``master`` si estás seguro de lo que estás haciendo:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony env:setting:set email on
 

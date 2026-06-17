@@ -152,7 +152,7 @@ Un comando obtiene la *entrada* (argumentos y opciones pasadas al comando) y pue
 
 Limpia la base de datos ejecutando el comando:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console app:comment:cleanup
 
@@ -197,20 +197,20 @@ La utilidad ``croncape`` monitoriza la ejecución del comando y envía un correo
 
 Configura la variable de entorno ``MAILTO``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:set MAILTO=ops@example.com
 
 Puedes forzar la ejecución de un cron desde tu máquina local:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony cron comment_cleanup
 
 Ten en cuenta que los crons están configurados en todas las ramas de SymfonyCloud. Si no deseas ejecutar algunos en entornos que no sean de producción, comprueba la variable de entorno ``$SYMFONY_BRANCH``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     if [ "$SYMFONY_BRANCH" = "master" ]; then

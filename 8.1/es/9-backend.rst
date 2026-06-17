@@ -15,19 +15,19 @@ Configurando EasyAdmin
 
 En primer lugar, añade EasyAdmin como una dependencia del proyecto:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "admin:^3"
 
 EasyAdmin genera automáticamente un área de administración para tu aplicación basada en controladores específicos. Crea un directorio ``src/Controller/Admin/`` donde se almacenarán estos controladores:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir src/Controller/Admin/
 
 Para comenzar con EasyAdmin, generaremos un "panel de administración web" que será el punto de entrada principal para gestionar los datos de nuestro sitio web:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(DashboardController||src/Controller/Admin/)
 
     $ symfony console make:admin:dashboard
@@ -89,7 +89,7 @@ En el controlador del panel de administración, es posible que te hayas fijado q
 
 Generemos el CRUD para conferencias:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -126,7 +126,7 @@ Selecciona ``1`` para crear una interfaz de administración para conferencias y 
 
 Haz lo mismo para comentarios:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(0||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -337,7 +337,7 @@ Estas personalizaciones son solo una pequeña introducción a las posibilidades 
 
 Juega con el panel, filtra los comentarios por conferencia, o busca comentarios por correo electrónico, por ejemplo. Pero todavía nos queda algo por resolver: cualquiera puede acceder al panel de administración. No te preocupes, lo protegeremos más adelante.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"

@@ -66,7 +66,7 @@ Además de ser un proxy inverso HTTP completo, el proxy inverso HTTP de Symfony 
 
 Compruébalo en la página de inicio:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -237,7 +237,7 @@ Si Symfony detecta un proxy inverso que sabe cómo tratar con ESIs, habilitará 
 
 Como el proxy inverso de Symfony soporta ESIs, vamos a comprobar sus registros (primero elimina la caché - ver "Purgar" más abajo):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -285,7 +285,7 @@ Sin embargo, esto no es lo que queremos. Vamos a incluir en la caché la página
 
 La caché está ahora habilitada para ambas peticiones:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -312,7 +312,7 @@ La estrategia de caché puede ser diferente de la página principal y sus ESIs. 
 
 Quita al oyente ya que no lo necesitamos más:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm src/EventSubscriber/TwigEventSubscriber.php
 
@@ -324,7 +324,7 @@ Probar el sitio web en un navegador o mediante pruebas automatizadas se hace un 
 You can manually remove all the HTTP cache by removing the
 ``var/cache/dev/http_cache/`` directory:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -rf var/cache/dev/http_cache/
 
@@ -376,7 +376,7 @@ La forma en que obtenemos la instancia ``HttpCache`` también puede parecer un p
 
 Invalida la página de inicio y el encabezado de la conferencia a través de las siguientes llamadas cURL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
@@ -438,7 +438,7 @@ No tenemos en nuestro sitio web código que sea intensivo en el uso de CPU o de 
 
 El componente Process de Symfony te permite ejecutar un comando y recuperar el resultado (salida estándar y de error); instálalo:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req process
 
@@ -475,7 +475,7 @@ Implementa el comando:
 
     Podrías haber usado ``make:command`` para crear el comando:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ symfony console make:command app:step:info
@@ -486,7 +486,7 @@ Implementa el comando:
 
 ¿Qué pasa si queremos almacenar en caché la salida durante unos minutos? Utiliza la Cache de Symfony:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req cache
 
@@ -650,7 +650,7 @@ En la vida real, probablemente restrinjas por IPs como se describe en la `docume
 
 Purga algunas URLs ahora:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header

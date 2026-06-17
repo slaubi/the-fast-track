@@ -16,7 +16,7 @@ No necesitamos añadir Twig como una dependencia ya que ya ha sido instalado com
 
 Por si acaso, digámosle a Composer que el proyecto realmente depende de Twig, independientemente de EasyAdmin. Basta con añadirlo como cualquier otra dependencia:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig
 
@@ -235,7 +235,7 @@ Intenta obtener la "primera" conferencia a través de ``/conference/1``, y obser
 
 El error viene del filtro ``format_datetime`` ya que no es parte del núcleo de Twig. El mensaje de error te da una pista sobre qué paquete debe instalarse para solucionar el problema:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/intl-extra:^3"
 

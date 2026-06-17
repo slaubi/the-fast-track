@@ -102,14 +102,14 @@ Para utilizar HTTPS localmente, también necesitamos `instalar una autoridad de 
 .. index::
     single: Symfony CLI;server:ca:install
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:ca:install
 
 Comprueba que tu ordenador tiene todos los requisitos necesarios ejecutando el siguiente comando:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:check-requirements

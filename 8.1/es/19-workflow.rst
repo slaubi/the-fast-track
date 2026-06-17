@@ -17,7 +17,7 @@ Puede que queramos dejar que el administrador del sitio web modere todos los com
 
 La implementación de esta lógica no es demasiado compleja, pero te puedes imaginar que añadir más reglas aumentaría enormemente la complejidad. En lugar de codificar la lógica nosotros mismos, podemos usar el componente Workflow de Symfony.
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req workflow
 
@@ -77,10 +77,9 @@ El flujo de trabajo de comentarios se puede describir en el archivo``config/pack
 
 Para comprobar que el flujo de trabajo es correcto, genera una representación visual:
 
-.. code-block:: bash
-    :class: ignore
+.. code-block:: terminal
 
-    $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
+    $ symfony console workflow:dump comment --dump-format=mermaid
 
 .. image:: images/workflow.png
     :align: center
@@ -97,39 +96,30 @@ Reemplaza la lógica actual del manejador de mensajes por el *workflow*:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
-    @@ -6,19 +6,28 @@ use App\Message\CommentMessage;
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
+    @@ -6,7 +6,10 @@ use App\Message\CommentMessage;
      use App\Repository\CommentRepository;
      use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
     +use Psr\Log\LoggerInterface;
-     use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+     use Symfony\Component\Messenger\Attribute\AsMessageHandler;
     +use Symfony\Component\Messenger\MessageBusInterface;
     +use Symfony\Component\Workflow\WorkflowInterface;
 
-     class CommentMessageHandler implements MessageHandlerInterface
-     {
-         private $spamChecker;
-         private $entityManager;
-         private $commentRepository;
-    +    private $bus;
-    +    private $workflow;
-    +    private $logger;
-
-    -    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository)
-    +    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, LoggerInterface $logger = null)
-         {
-             $this->entityManager = $entityManager;
-             $this->spamChecker = $spamChecker;
-             $this->commentRepository = $commentRepository;
-    +        $this->bus = $bus;
-    +        $this->workflow = $commentStateMachine;
-    +        $this->logger = $logger;
+     #[AsMessageHandler]
+     class CommentMessageHandler
+    @@ -15,6 +18,9 @@ class CommentMessageHandler
+             private EntityManagerInterface $entityManager,
+             private SpamChecker $spamChecker,
+             private CommentRepository $commentRepository,
+    +        private MessageBusInterface $bus,
+    +        private WorkflowInterface $commentStateMachine,
+    +        private ?LoggerInterface $logger = null,
+         ) {
          }
 
-         public function __invoke(CommentMessage $message)
-    @@ -28,12 +37,21 @@ class CommentMessageHandler implements MessageHandlerInterface
+    @@ -25,12 +31,18 @@ class CommentMessageHandler
                  return;
              }
 
@@ -137,24 +127,21 @@ Reemplaza la lógica actual del manejador de mensajes por el *workflow*:
     -            $comment->setState('spam');
     -        } else {
     -            $comment->setState('published');
-    -        }
-
-    -        $this->entityManager->flush();
-    +        if ($this->workflow->can($comment, 'accept')) {
+    +        if ($this->commentStateMachine->can($comment, 'accept')) {
     +            $score = $this->spamChecker->getSpamScore($comment, $message->getContext());
-    +            $transition = 'accept';
-    +            if (2 === $score) {
-    +                $transition = 'reject_spam';
-    +            } elseif (1 === $score) {
-    +                $transition = 'might_be_spam';
-    +            }
-    +            $this->workflow->apply($comment, $transition);
+    +            $transition = match ($score) {
+    +                2 => 'reject_spam',
+    +                1 => 'might_be_spam',
+    +                default => 'accept',
+    +            };
+    +            $this->commentStateMachine->apply($comment, $transition);
     +            $this->entityManager->flush();
-    +
     +            $this->bus->dispatch($message);
     +        } elseif ($this->logger) {
     +            $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
-    +        }
+             }
+    -
+    -        $this->entityManager->flush();
          }
      }
 
@@ -177,14 +164,14 @@ Vamos a implementar una auto-validación que modificaremos en el próximo capít
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
-    @@ -50,6 +50,9 @@ class CommentMessageHandler implements MessageHandlerInterface
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
+    @@ -41,6 +41,9 @@ class CommentMessageHandler
+                 $this->commentStateMachine->apply($comment, $transition);
                  $this->entityManager->flush();
-
                  $this->bus->dispatch($message);
-    +        } elseif ($this->workflow->can($comment, 'publish') || $this->workflow->can($comment, 'publish_ham')) {
-    +            $this->workflow->apply($comment, $this->workflow->can($comment, 'publish') ? 'publish' : 'publish_ham');
+    +        } elseif ($this->commentStateMachine->can($comment, 'publish') || $this->commentStateMachine->can($comment, 'publish_ham')) {
+    +            $this->commentStateMachine->apply($comment, $this->commentStateMachine->can($comment, 'publish') ? 'publish' : 'publish_ham');
     +            $this->entityManager->flush();
              } elseif ($this->logger) {
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
@@ -208,7 +195,7 @@ Como inyectamos cualquier instancia de la interfaz genérica ``WorkflowInterface
 
 Si no recuerdas la convención, usa el comando ``debug:container``. Busca todos los servicios que contengan "workflow":
 
-.. code-block:: bash
+.. code-block:: terminal
     :emphasize-lines: 12
     :class: ignore
 
@@ -233,7 +220,7 @@ Observa la opción ``8``, ``Symfony\Component\Workflow\WorkflowInterface $commen
 
     Podríamos haber usado el comando ``debug:autowiring`` como se vio en un capítulo anterior:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring workflow
 

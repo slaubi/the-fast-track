@@ -20,7 +20,7 @@ Siendo perezosos con el Maker Bundle
 
 Para generar controladores sin esfuerzo, podemos usar el paquete ``symfony/maker-bundle``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req maker --dev
 
@@ -33,7 +33,7 @@ Dado que *maker bundle* sólo es útil durante el desarrollo, no olvides añadir
 
 El comando ``list`` incorporado en la consola de Symfony muestra un listado con todos los comandos disponibles bajo un espacio de nombres dado; utilízalo para descubrir todos los generadores proporcionados por el *bundle* maker:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console list make
@@ -49,7 +49,7 @@ Para la *configuración relacionada con el código PHP*, las *anotaciones* son u
 
 Para usar anotaciones, necesitamos añadir otra dependencia:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req annotations
 
@@ -63,7 +63,7 @@ Generando un controlador
 
 Crea tu primer *Controlador* a través del comando ``make:controller``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:controller ConferenceController
 

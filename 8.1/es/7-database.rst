@@ -46,13 +46,13 @@ Iniciando Docker Compose
 
 Iniciar Docker Compose en segundo plano (``-d``):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose up -d
 
 Espera un poco para que la base de datos se inicie y comprueba que todo funciona correctamente:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose ps
@@ -63,7 +63,7 @@ Espera un poco para que la base de datos se inicie y comprueba que todo funciona
 
 Si no hay contenedores en marcha o si en la columna ``State`` no dice ``Up``, comprueba los *logs* de Docker Compose:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose logs
@@ -82,7 +82,7 @@ La interfaz de línea de comandos de Symfony detecta automáticamente los servic
 
 Gracias a estas convenciones, es mucho más fácil acceder a la base de datos a través de ``symfony run``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
@@ -91,7 +91,7 @@ Gracias a estas convenciones, es mucho más fácil acceder a la base de datos a 
 
     Si no tienes el binario de ``psql`` en tu máquina local, también puedes ejecutarlo a través de ``docker-compose``:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ docker-compose exec database psql main
@@ -106,14 +106,14 @@ Volcado y restauración de la base de datos
 
 Utiliza ``pg_dump`` para volcar los datos de la base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run pg_dump --data-only > dump.sql
 
 Y restaura los datos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql < dump.sql
@@ -190,7 +190,7 @@ Aquí está el *diff* completo de los cambios hechos en ``.symfony.cloud.yaml``:
 
 Haz commit de estos cambios y vuelve a desplegar a SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -212,7 +212,7 @@ Como acabamos de ver, al ejecutarse ``symfony run psql`` se conecta automáticam
 
 Si deseas conectarte al PostgreSQL que está alojado en los contenedores de producción, puedes abrir un túnel SSH entre la máquina local y la infraestructura SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
@@ -221,14 +221,14 @@ Por defecto, los servicios SymfonyCloud no están expuestos como variables de en
 
 Ahora, conéctate a la base de datos remota de PostgreSQL con ``symfony run psql`` como antes:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
 
 Cuando termines, no olvides cerrar el túnel:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:close
@@ -248,7 +248,7 @@ Docker Compose y SymfonyCloud funcionan perfectamente con Symfony gracias a las 
 
 Verifica todas las variables de entorno expuestas por ``symfony`` ejecutando ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:export
@@ -264,7 +264,7 @@ Las variables de entorno ``PG*`` se leen por la utilidad ``psql``. ¿Qué hay de
 
 Cuando tienes abierto un túnel a SymfonyCloud con la opción ``--expose-env-vars`` activada, el comando ``var:export`` devuelve las variables de entorno remotas:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars

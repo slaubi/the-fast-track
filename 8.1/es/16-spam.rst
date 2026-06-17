@@ -27,7 +27,7 @@ En lugar de usar una librería que abstraiga la API de Akismet, haremos todas la
 
 Para hacer llamadas a la API, utiliza el componente HttpClient de Symfony:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req http-client
 
@@ -157,7 +157,7 @@ Los secretos son variables de entorno disfrazadas.
 
 Añade la llave de Akismet al *vault*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ symfony console secrets:set AKISMET_KEY
@@ -235,7 +235,7 @@ Manejando los datos secretos en producción
 
 Para el entorno de producción, SymfonyCloud soporta la configuración de *variables de entorno sensibles*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set --sensitive AKISMET_KEY=abcdef
@@ -247,7 +247,7 @@ Pero como se mencionó anteriormente, usar los datos secretos de Symfony podría
 
 Primero, genera un par de claves para uso en producción:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=prod symfony console secrets:generate-keys
 
@@ -260,20 +260,20 @@ Primero, genera un par de claves para uso en producción:
 
 Vuelve a añadir la clave de Akismet en el *vault* de producción, pero con su valor en producción:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(abcdef)
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
 El último paso es enviar la clave de descifrado a SymfonyCloud configurando una variable sensible:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:set --sensitive SYMFONY_DECRYPTION_SECRET=`php -r 'echo base64_encode(include("config/secrets/prod/prod.decrypt.private.php"));'`
 
 Puedes añadir y hacer commit de todos los archivos; la clave de descifrado se ha añadido automáticamente al archivo ``.gitignore``, por lo que nunca se enviará al repositorio. Para mayor seguridad, puedes quitarla de tu equipo local puesto que ya ha sido desplegado ahora:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -f config/secrets/prod/prod.decrypt.private.php
 

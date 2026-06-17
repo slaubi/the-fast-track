@@ -18,7 +18,7 @@ Tenemos que introducir un ``state`` para los comentarios: ``submitted``, ``spam`
 
 Agrega la propiedad ``state`` a la clase ``Comment``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(state||string||255||no)
 
     $ symfony console make:entity Comment
@@ -28,7 +28,7 @@ Agrega la propiedad ``state`` a la clase ``Comment``:
 
 Crea una migración de base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -56,7 +56,7 @@ Modifica la migración para actualizar todos los comentarios existentes para que
 
 Migra la base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -175,7 +175,7 @@ Entendiendo Messenger
 
 El componente Messenger es el encargado de la gestión de código asíncrono cuando usamos Symfony:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req messenger
 
@@ -405,13 +405,13 @@ La configuración le dice al bus que envíe instancias de ``App\Message\CommentM
 
 Configura las tablas y disparadores de PostgreSQL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 Y migra la base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -430,7 +430,7 @@ Si intentas enviar un nuevo comentario, ya no se llamará al verificador de spam
 
 Como te puedes imaginar, Symfony viene con un comando ``consumer`` para el consumidor. Ejecútalo ahora:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:consume async -vv
@@ -469,7 +469,7 @@ El comando Symfony puede administrar dichos comandos en segundo plano o *workers
 
 Ejecuta de nuevo el consumidor del mensaje, pero envíalo en segundo plano:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
@@ -486,7 +486,7 @@ Si el consumidor dejara de trabajar por alguna razón (por quedarse sin memoria,
 
 Usando ``symfony server:log`` los registros generados se unirán a todos los demás registros procedentes de PHP, el servidor web y la aplicación:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -497,7 +497,7 @@ Usando ``symfony server:log`` los registros generados se unirán a todos los dem
 
 Utiliza el comando ``server:status`` para listar todos los *workers* en segundo plano pertenecientes al proyecto actual:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:status
@@ -507,7 +507,7 @@ Utiliza el comando ``server:status`` para listar todos los *workers* en segundo 
 
 Para detener a un *worker*, detén el servidor web o mata el proceso que tiene el PID que se muestra con el comando ``server:status``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ kill 15774
@@ -554,7 +554,7 @@ Si ocurre un problema mientras se maneja un mensaje, el consumidor volverá a in
 
 Inspecciona los mensajes fallidos y vuelve a intentarlo mediante los siguientes comandos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:failed:show
@@ -592,7 +592,7 @@ Al igual que hace el comando Symfony, SymfonyCloud también gestiona los reinici
 
 Para obtener *logs* de un *worker*, usa:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony logs --worker=messages all

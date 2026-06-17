@@ -194,7 +194,7 @@ Actualiza la plantilla para que muestre el nombre de la localización actual en 
 
 Dependiendo de la localización, el nombre de la localización no siempre está en mayúsculas. Para poner las mayúsculas y minúsculas correctamente en los textos necesitamos un filtro que sea compatible con Unicode, tal y como proporciona el componente Symfony String y su implementación en Twig:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig/string-extra
 
@@ -233,7 +233,7 @@ Traduciendo la interfaz
 
 Para empezar a traducir el sitio web, necesitamos instalar el componente Translation de Symfony:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req translation
 
@@ -310,7 +310,7 @@ Como habrás visto en ``config/packages/translation.yaml``, las traducciones se 
 
 En lugar de crear los archivos de traducción a mano, utiliza el comando ``translation:update``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console translation:update fr --force --domain=messages --sort=asc
 

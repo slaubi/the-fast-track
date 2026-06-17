@@ -15,7 +15,7 @@ Generando una clase de tipo de formulario (*Form Type*)
 
 Utiliza el bundle Maker para generar una clase de formulario:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:form CommentFormType Comment
 
@@ -198,7 +198,7 @@ Como ejemplo de personalización, también hemos modificado la etiqueta por defe
 
 La restricción de la imagen funciona comprobando el tipo mime; se requiere el componente Mime para que funcione:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mime
 
@@ -432,7 +432,7 @@ Pero, ¿cómo puedes acceder al Profiler para una solicitud de envío con éxito
 
 Haz clic en él para acceder al perfil de la petición POST, y ve al panel "Form":
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ rm -rf var/cache

@@ -21,12 +21,12 @@ Creando ramas
 
 El flujo de trabajo comienza con la creación de una rama de Git:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git branch -D sessions-in-db || true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout -b sessions-in-db
 
@@ -80,7 +80,7 @@ Para almacenar sesiones en la base de datos, cambia la configuración ``session.
 
 Para almacenar sesiones en la base de datos, es necesario crear la tabla ``sessions``. Hazlo con una migración de Doctrine:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -109,7 +109,7 @@ Edita el archivo para agregar la creación de la tabla en el método ``up()``:
 
 Migra la base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -139,7 +139,7 @@ Como la nueva tabla no es "administrada" por Doctrine, debemos configurar Doctri
 
 Haz commit de tus cambios a la nueva rama:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -159,12 +159,12 @@ Antes de desplegar en producción, debemos probar la rama en la misma infraestru
 
 Ahora, vamos a crear un *entorno SymfonyCloud* basado en la *rama de Git*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony env:delete sessions-in-db --no-interaction
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:create
 
@@ -185,7 +185,7 @@ Los entornos que no son ``master`` son muy similares al ``master`` anterior, exc
 
 Una vez finalizado el despliegue, abre la nueva rama en un navegador:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:remote
@@ -203,7 +203,7 @@ Si el código se desarrolla en *master*, siempre puedes hacer *rebase* a la rama
 
 Incluso puedes sincronizar los datos desde la rama *master* con el entorno ``sessions-in-db``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony env:sync
@@ -221,13 +221,13 @@ Por defecto, todos los entornos SymfonyCloud utilizan la misma configuración qu
 
 En caso que tengas algún problema, es posible que quieras cambiar al entorno Symfony ``dev``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug
 
 Cuando hayas terminado, vuelve a los ajustes de producción:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug --off
 
@@ -252,14 +252,14 @@ Fusionando en producción
 
 Cuando estés satisfecho con los cambios en la rama, vuelve a fusionar el código y la infraestructura con la rama master de Git:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout master
     $ git merge sessions-in-db
 
 Y haz el despliegue:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony deploy
 
@@ -274,7 +274,7 @@ Limpiando
 
 Finalmente, elimina la rama Git y el entorno SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git branch -d sessions-in-db
     $ symfony env:delete --env=sessions-in-db --no-interaction

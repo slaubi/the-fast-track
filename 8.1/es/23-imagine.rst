@@ -10,8 +10,8 @@ Añadamos un nuevo estado ``ready`` y una transición de tipo ``optimize``:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/workflow.yaml
-    +++ b/config/packages/workflow.yaml
+    --- i/config/packages/workflow.yaml
+    +++ w/config/packages/workflow.yaml
     @@ -16,6 +16,7 @@ framework:
                      - potential_spam
                      - spam
@@ -45,7 +45,7 @@ Añadamos un nuevo estado ``ready`` y una transición de tipo ``optimize``:
 
 Genera una representación visual de la nueva configuración del workflow para validar que describe lo que queremos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console workflow:dump comment | dot -Tpng -o workflow.png
@@ -61,9 +61,9 @@ Optimizando imágenes con Imagine
 
 Las optimizaciones de las imágenes se harán gracias a `GD`_ (comprueba que tu instalación local de PHP tenga la extensión GD habilitada) e `Imagine`_:
 
-.. code-block:: bash
+.. code-block:: terminal
 
-    $ symfony composer req "imagine/imagine:^1.2"
+    $ symfony composer req "imagine/imagine:^1.5"
 
 El redimensionamiento de una imagen se puede realizar a través de la siguiente clase de servicio:
 
@@ -80,7 +80,7 @@ El redimensionamiento de una imagen se puede realizar a través de la siguiente 
         private const MAX_WIDTH = 200;
         private const MAX_HEIGHT = 150;
 
-        private $imagine;
+        private readonly Imagine $imagine;
 
         public function __construct()
         {
@@ -89,7 +89,7 @@ El redimensionamiento de una imagen se puede realizar a través de la siguiente 
 
         public function resize(string $filename): void
         {
-            list($iwidth, $iheight) = getimagesize($filename);
+            [$iwidth, $iheight] = getimagesize($filename);
             $ratio = $iwidth / $iheight;
             $width = self::MAX_WIDTH;
             $height = self::MAX_HEIGHT;
@@ -114,8 +114,8 @@ Modifica el workflow para gestionar el nuevo estado:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
     @@ -2,6 +2,7 @@
 
      namespace App\MessageHandler;
@@ -124,39 +124,24 @@ Modifica el workflow para gestionar el nuevo estado:
      use App\Message\CommentMessage;
      use App\Repository\CommentRepository;
      use App\SpamChecker;
-    @@ -21,10 +22,12 @@ class CommentMessageHandler implements MessageHandlerInterface
-         private $bus;
-         private $workflow;
-         private $mailer;
-    +    private $imageOptimizer;
-         private $adminEmail;
-    +    private $photoDir;
-         private $logger;
-
-    -    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, MailerInterface $mailer, string $adminEmail, LoggerInterface $logger = null)
-    +    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, MailerInterface $mailer, ImageOptimizer $imageOptimizer, string $adminEmail, string $photoDir, LoggerInterface $logger = null)
-         {
-             $this->entityManager = $entityManager;
-             $this->spamChecker = $spamChecker;
-    @@ -32,7 +35,9 @@ class CommentMessageHandler implements MessageHandlerInterface
-             $this->bus = $bus;
-             $this->workflow = $commentStateMachine;
-             $this->mailer = $mailer;
-    +        $this->imageOptimizer = $imageOptimizer;
-             $this->adminEmail = $adminEmail;
-    +        $this->photoDir = $photoDir;
-             $this->logger = $logger;
+    @@ -25,6 +26,8 @@ class CommentMessageHandler
+             private WorkflowInterface $commentStateMachine,
+             private MailerInterface $mailer,
+             #[Autowire('%admin_email%')] private string $adminEmail,
+    +        private ImageOptimizer $imageOptimizer,
+    +        #[Autowire('%photo_dir%')] private string $photoDir,
+             private ?LoggerInterface $logger = null,
+         ) {
          }
-
-    @@ -64,6 +69,12 @@ class CommentMessageHandler implements MessageHandlerInterface
+    @@ -54,6 +57,12 @@ class CommentMessageHandler
                      ->to($this->adminEmail)
                      ->context(['comment' => $comment])
                  );
-    +        } elseif ($this->workflow->can($comment, 'optimize')) {
+    +        } elseif ($this->commentStateMachine->can($comment, 'optimize')) {
     +            if ($comment->getPhotoFilename()) {
     +                $this->imageOptimizer->resize($this->photoDir.'/'.$comment->getPhotoFilename());
     +            }
-    +            $this->workflow->apply($comment, 'optimize');
+    +            $this->commentStateMachine->apply($comment, 'optimize');
     +            $this->entityManager->flush();
              } elseif ($this->logger) {
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
@@ -165,13 +150,11 @@ Modifica el workflow para gestionar el nuevo estado:
 Ten en cuenta que ``$photoDir`` se inyecta automáticamente ya que en un paso anterior definimos esa variable como *bind* en el contenedor:
 
 .. code-block:: yaml
-    :caption: config/packages/services.yaml
+    :caption: config/services.yaml
     :class: ignore
 
-    services:
-        _defaults:
-            bind:
-                $photoDir: "%kernel.project_dir%/public/uploads/photos"
+    parameters:
+        photo_dir: "%kernel.project_dir%/public/uploads/photos"
 
 Almacenando los datos subidos en producción
 --------------------------------------------
@@ -184,33 +167,33 @@ Ya hemos definido en ``.symfony.cloud.yaml`` un directorio especial de lectura-e
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony/services.yaml
-    +++ b/.symfony/services.yaml
-    @@ -11,3 +11,7 @@ varnish:
-             vcl: !include
-                 type: string
-                 path: config.vcl
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -15,6 +15,9 @@ services:
+                     type: string
+                     path: config.vcl
+
+    +    files:
+    +        type: network-storage:2.0
     +
-    +files:
-    +    type: network-storage:1.0
-    +    disk: 256
+     applications:
 
 Úsalo para el directorio de subida de las fotos:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony.cloud.yaml
-    +++ b/.symfony.cloud.yaml
-    @@ -37,7 +37,7 @@ web:
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -54,7 +54,7 @@ applications:
+             mounts:
+                 "/var/cache": { source: instance, source_path: var/cache }
+                 "/var/share": { source: storage, source_path: var/share }
+    -            "/public/uploads": { source: storage, source_path: uploads }
+    +            "/public/uploads": { source: service, service: files, source_path: uploads }
 
-     mounts:
-         "/var": { source: local, source_path: var }
-    -    "/public/uploads": { source: local, source_path: uploads }
-    +    "/public/uploads": { source: service, service: files, source_path: uploads }
 
-     hooks:
-         build: |
+             relationships:
 
 Esto debería ser suficiente para que funcione en producción.
 

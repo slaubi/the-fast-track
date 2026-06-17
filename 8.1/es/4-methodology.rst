@@ -12,7 +12,7 @@ Implementando una estrategia de Git
 
 No olvides hacer un *commit* con los cambios cuando acabes cada paso:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -23,12 +23,13 @@ Puedes agregar "todo" de forma segura ya que Symfony administra un fichero ``.gi
 .. code-block:: text
     :caption: .gitignore
     :class: ignore
-    :emphasize-lines: 1,8
+    :emphasize-lines: 1,9
 
     ###> symfony/framework-bundle ###
     /.env.local
     /.env.local.php
     /.env.*.local
+    /config/secrets/prod/prod.decrypt.private.php
     /public/bundles/
     /var/
     /vendor/
@@ -48,7 +49,7 @@ Despliegue continuo a producción
 
 Otra buena costumbre es desplegar con frecuencia. Hacerlo al final de cada paso podría considerarse un ritmo adecuado.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony deploy
+    $ symfony cloud:push

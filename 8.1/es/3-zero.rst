@@ -15,7 +15,7 @@ Inicializando el Proyecto
 
 Crea un nuevo proyecto Symfony con el comando ``symfony`` que instalamos previamente juntos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony new guestbook --version=5.2
     $ cd guestbook
@@ -64,7 +64,7 @@ Todo lo que está bajo ``public/`` es accesible a través de un navegador. Por e
 
 Descarga mi imagen GIF aquí:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir public/images/
     $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
@@ -79,13 +79,13 @@ El comando ``symfony`` viene con un servidor web que está optimizado para el tr
 
 Desde el directorio del proyecto, arranca el servidor web en segundo plano (opción ``-d``):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony server:start -d
 
 El servidor se inició en el primer puerto disponible, empezando por el 8000. Como atajo, abre el sitio web en un navegador desde la interfaz de línea de comandos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local
@@ -114,7 +114,7 @@ Navega hacia ``/images/under-construction.gif``.  ¿Se parece a esto?
 
 ¿Satisfecho? Vamos a hacer un *commit* con nuestro trabajo:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add public/images
@@ -125,7 +125,7 @@ Añadiendo un favicon
 
 Para evitar ser "spameados" con errores HTTP 404 en los logs debido a la falta de un favicon solicitado por los navegadores, agreguemos uno ahora:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ php -r "copy('https://symfony.com/favicon.ico', 'public/favicon.ico');"
     $ git add public/
@@ -148,7 +148,7 @@ He hecho mi elección, va a ser `SymfonyCloud <https://symfony.com/cloud>`_. Pro
 
 El comando ``symfony`` trae soporte integrado para SymfonyCloud. Vamos a inicializar un proyecto en SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony project:init
 
@@ -156,7 +156,7 @@ Este comando crea algunos archivos necesarios para SymfonyCloud, tales como ``.s
 
 Añádelos a Git e inclúyelos en un *commit*:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git add .
     $ git commit -m"Add SymfonyCloud configuration"
@@ -176,7 +176,7 @@ Pasando a producción
 
 Crear un nuevo proyecto SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony project:create --title="Guestbook" --plan=development
 
@@ -188,7 +188,7 @@ Este comando hace muchas cosas:
 
 Luego, despliega:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony deploy
 
@@ -199,7 +199,7 @@ El código se despliega al hacer un *push* del repositorio Git. Al finalizar el 
 
 Comprueba que todo ha funcionado bien:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:remote

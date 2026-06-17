@@ -19,17 +19,17 @@ Ya sabes que todas las peticiones HTTP se sirven por un único punto de entrada:
 
 Hagamos un perfil en producción de la página de inicio en inglés con Blackfire a través de la extensión del navegador Blackfire:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony remote:open
 
 O directamente a través de la línea de comandos:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ blackfire curl `symfony env:urls --first`en/
+    $ blackfire curl `symfony cloud:env:url --pipe --primary`en/
 
 Dirígete a la vista "Timeline" (línea de tiempo) del perfil, deberías ver algo similar a lo siguiente:
 
@@ -64,7 +64,7 @@ La línea de tiempo es una forma excelente de entender cómo funciona parte del 
 
 Ahora, genera un perfil de la misma página desde la máquina local en el entorno de desarrollo:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`en/
@@ -107,11 +107,11 @@ Por defecto, Blackfire elimina todas las llamadas a métodos que no son lo sufic
 
 Desde la línea de comandos, utiliza el parámetro ``--debug``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire --debug curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`en/
-    $ blackfire --debug curl `symfony env:urls --first`en/
+    $ blackfire --debug curl `symfony cloud:env:url --pipe --primary`en/
 
 .. index::
     single: .env.local.prod
@@ -130,7 +130,7 @@ En producción, verías, por ejemplo, que se carga un archivo llamado ``.env.loc
 
 ¿De dónde viene? SymfonyCloud hace algunas optimizaciones cuando despliega una aplicación Symfony, como optimizar el *Composer autoloader* (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). También optimiza las variables de entorno definidas en el archivo ``.env`` (para evitar el análisis del archivo para cada solicitud) mediante la generación del archivo ``.env.local.prod``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run composer dump-env prod
@@ -150,7 +150,7 @@ Otra forma de seguir la ejecución del código es usar un **depurador de pasos**
 
 Primero, instala la extensión PHP ``xdebug``. Comprueba que esté instalada ejecutando el siguiente comando:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php -v
 

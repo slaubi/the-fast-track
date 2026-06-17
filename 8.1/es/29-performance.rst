@@ -36,7 +36,7 @@ Para trabajar con Blackfire, primero tienes que `registrarte <https://blackfire.
 
 Instala Blackfire en tu equipo local, ejecutando el siguiente script de instalación rápida:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://installer.blackfire.io/ | bash
@@ -61,7 +61,7 @@ Habilita la sonda PHP para nuestro proyecto:
 
 Reinicia el servidor web para que PHP pueda cargar Blackfire:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -69,7 +69,7 @@ Reinicia el servidor web para que PHP pueda cargar Blackfire:
 
 La herramienta de línea de comandos de Blackfire necesita estar configurada con tus credenciales personales de **cliente** (para almacenar los perfiles de tus proyectos en tu cuenta personal). Encuéntralas en la parte superior de la `página ``Settings/Credentials`` (configuración/credenciales) <https://blackfire.io/my/settings/credentials>`_ y ejecuta el siguiente comando reemplazando los marcadores de posición:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire config --client-id=xxx --client-token=xxx
@@ -112,7 +112,7 @@ Para comunicarse con el servidor, necesitas obtener tus credenciales personales 
 
 Ahora puedes lanzar el nuevo contenedor:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose stop
@@ -137,7 +137,7 @@ Si obtienes un error durante el análisis de rendimiento, aumenta el nivel de re
 
 Reinicia el servidor web:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -145,7 +145,7 @@ Reinicia el servidor web:
 
 Y revisa los *logs* en vivo (en tiempo real):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -163,7 +163,7 @@ Blackfire está incluido por defecto en todos los proyectos de SymfonyCloud.
 
 Configura las credenciales del *servidor* como variables de entorno:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set BLACKFIRE_SERVER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -195,7 +195,7 @@ Antes de que puedas desplegar para empezar a realizar las tareas de análisis, n
 
 Encuentra tu dirección IP actual:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://ifconfig.me/
@@ -276,14 +276,14 @@ El cambio de tu máquina local al entorno de producción se puede hacer cambiand
 
 O puedes usar el comando ``server:prod``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod
 
 No olvides volver a cambiar al entorno de desarrollo cuando finalice tu sesión de *profiling* (análisis de rendimiento):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod --off
@@ -296,7 +296,7 @@ Analizando el rendimiento de los recursos de la API
 
 El análisis de rendimiento de la API o la SPA se realiza mejor en la línea de comandos usando la herramienta Blackfire que se ha instalado previamente:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`api
@@ -377,20 +377,20 @@ Crea un archivo de nombre ``.blackfire.yaml`` con el siguiente contenido:
 
 Descarga el reproductor Blackfire para poder ejecutar el escenario localmente:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -OLsS https://get.blackfire.io/blackfire-player.phar
     $ chmod +x blackfire-player.phar
 
 Ejecuta este escenario en desarrollo:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ ./blackfire-player.phar run --endpoint=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL` .blackfire.yaml --variable "webmail_url=`symfony var:export MAILER_WEB_URL 2>/dev/null`" --variable="env=dev"
 
 O en producción:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ ./blackfire-player.phar run --endpoint=`symfony env:urls --first` .blackfire.yaml --variable "webmail_url=NONE" --variable="env=prod"

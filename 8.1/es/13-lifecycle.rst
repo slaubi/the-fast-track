@@ -59,7 +59,7 @@ Las URLs de las conferencias no son útiles: ``/conference/1``. Y lo que es más
 
 Añade una nueva propiedad ``slug`` para las conferencias (una cadena de 255 caracteres que no permita valores nulos):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slug||string||255||no)
 
     $ symfony console make:entity Conference
@@ -69,7 +69,7 @@ Añade una nueva propiedad ``slug`` para las conferencias (una cadena de 255 car
 
 Crea un archivo de migración para agregar la nueva columna:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -78,7 +78,7 @@ Crea un archivo de migración para agregar la nueva columna:
 
 Y ejecuta esa nueva migración:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console doctrine:migrations:migrate
@@ -113,7 +113,7 @@ El truco aquí es agregar la columna y permitirle que acepte valores ``nulos``, 
 
 La migración debería funcionar bien ahora:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -155,7 +155,7 @@ Debido a que la aplicación pronto usará *slugs* para encontrar cada conferenci
 
 Debido a que utilizamos un validador para garantizar la unicidad de los slugs, necesitamos agregar el componente Symfony Validator:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req validator
 
@@ -164,14 +164,14 @@ Debido a que utilizamos un validador para garantizar la unicidad de los slugs, n
 
 Como habrás adivinado, necesitamos realizar la danza de la migración:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 .. index::
     single: Command;doctrine:migrations:migrate
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -187,7 +187,7 @@ Generar un *slug* que se lea bien en una URL (donde cualquier cosa que no sean c
 
 En lugar de reinventar la rueda, usemos el componente de Symfony ``String``, que facilita la manipulación de las cadenas y proporciona un *slugger*:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req string
 

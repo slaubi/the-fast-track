@@ -7,7 +7,7 @@ Describiendo la estructura de datos
 
 Para trabajar con la base de datos desde PHP, vamos a hacer uso de `Doctrine`_, un conjunto de librerías que ayudan a los desarrolladores a gestionar bases de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "orm:^2"
 
@@ -42,7 +42,7 @@ Docker Compose y SymfonyCloud funcionan perfectamente con Symfony gracias a esta
 
 Comprueba todas las variables de entorno expuestas ejecutando ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:export
 
@@ -92,7 +92,7 @@ Una conferencia puede describirse con algunas propiedades:
 
 El *bundle* Maker puede ayudarnos a generar una clase (una clase *Entity*) que representa una conferencia:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
 
     $ symfony console make:entity Conference
@@ -228,7 +228,7 @@ Doctrine agregó una propiedad ``id`` para almacenar la clave primaria de la fil
 
 A continuación, genera una clase Entity para los comentarios de la conferencia:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime||no)
 
     $ symfony console make:entity Comment
@@ -250,7 +250,7 @@ Las dos entidades, Conference y Comment, deben estar vinculadas entre sí. Una c
 
 Usa el comando ``make:entity`` de nuevo para agregar esta relación a la  clase ``Conference``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(comments||OneToMany||Comment||conference||no||yes)
 
     $ symfony console make:entity Conference
@@ -449,7 +449,7 @@ Acabo de darme cuenta de que nos hemos olvidado de añadir una propiedad a la en
 
 Ejecuta ``make:entity`` una vez más y añade una propiedad/columna ``photoFilename`` de tipo ``string``, pero permite que pueda ser ``null``, ya que subir una foto es opcional:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(photoFilename||string||255||yes)
 
     $ symfony console make:entity Comment
@@ -469,7 +469,7 @@ Una *migración* es una clase que describe los cambios necesarios para actualiza
 
 Veamos qué genera Doctrine:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -510,7 +510,7 @@ Actualizando la base de datos local
 
 Ahora puedes ejecutar la migración generada para actualizar el esquema de la base de datos local:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate

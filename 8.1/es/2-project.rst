@@ -57,10 +57,10 @@ Para seguir pareciendo anticuado, podría haber creado un CD con el código fuen
 
 Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-5.2-2>`_ en algún lugar de tu equipo local:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=5.2-2 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 Este repositorio contiene todo el código que aparece en el libro.
 
@@ -80,7 +80,7 @@ Mejor aún, el repositorio no es sólo la versión final del código en la rama 
 
 Si eres perezoso, puedes obtener el estado del código al final de cada paso seleccionando la etiqueta correcta. Por ejemplo, si deseas leer y probar el código al final del paso 10, ejecuta lo siguiente:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10
@@ -89,7 +89,7 @@ Al igual que hicimos para clonar el repositorio, no usaremos ``git checkout`` si
 
 También puedes consultar cualquier paso intermedio:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10.2
@@ -101,7 +101,7 @@ De nuevo, te recomiendo que lo programes tú mismo. Pero si te quedas atascado, 
 
 ¿No estás seguro de que todo está bien en el subpaso 10.2? Obtén las diferencias:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git diff step-10-1...step-10-2
@@ -114,7 +114,7 @@ De nuevo, te recomiendo que lo programes tú mismo. Pero si te quedas atascado, 
 
 ¿Quieres saber cuándo se ha creado o modificado un archivo?
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git log -- src/Controller/ConferenceController.php

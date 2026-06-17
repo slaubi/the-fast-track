@@ -22,7 +22,7 @@ Recuerda que el proyecto se creó con muy pocas dependencias. Sin motor de plant
 
 Para empezar, vamos a agregar el componente Symfony Profiler, una herramienta que te ayudará a ahorrar tiempo a la hora de identificar la causa de un problema:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req profiler --dev
 
@@ -62,7 +62,7 @@ Gestionando la configuración de los entornos
 
 La variable de entorno ``APP_ENV`` se puede establecer empleando variables de entorno "reales" en tu terminal:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ export APP_ENV=dev
@@ -98,7 +98,7 @@ Registrando todas las cosas
 
 De entrada, las capacidades de registro en el *log* y la depuración están limitadas en los nuevos proyectos. Agreguemos más herramientas que nos ayuden a investigar los problemas en el desarrollo, pero también los de producción:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req logger
 
@@ -108,7 +108,7 @@ De entrada, las capacidades de registro en el *log* y la depuración están limi
 
 Para usar las herramientas de depuración, vamos a instalarlas sólo en desarrollo:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req debug --dev
 
@@ -140,7 +140,7 @@ Tómate tu tiempo para investigar la información que te ofrece Symfony Profiler
 
 Los registros del *log* también son muy útiles en las sesiones de depuración. Symfony tiene un comando útil para rastrear todos los registros del *log* (desde el servidor web, desde PHP y también desde tu aplicación):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -191,7 +191,7 @@ Cuando actualices la página, observa el nuevo icono del "punto de mira" que hay
 
 Revierte los cambios antes de hacer commit de los demás cambios realizados en este paso:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout public/index.php
 
@@ -224,14 +224,14 @@ Depurando en entorno de producción
 
 La depuración de los entornos de producción siempre es más complicada. Por ejemplo, no tienes acceso a Symfony Profiler. Los registros son menos descriptivos. Pero es posible analizar estos registros del *log*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony logs
 
 Puedes incluso conectarte a través de SSH al contenedor web:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony ssh

@@ -9,7 +9,7 @@ Al igual que para Twig, el componente de seguridad ya está instalado a través 
     single: Components;Security
     single: Security
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req security
 
@@ -27,7 +27,7 @@ Para que la entidad ``Admin`` pueda integrarse con el sistema de autenticación 
 
 Utiliza el comando dedicado ``make:user`` en lugar del tradicional ``make:entity`` para crear la entidad ``Admin``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(yes||username||yes)
 
     $ symfony console make:user Admin
@@ -87,7 +87,7 @@ Dejamos que Symfony seleccione el mejor algoritmo posible para la codificación 
 
 Hora de generar una migración y migrar la base de datos:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
     $ symfony console doctrine:migrations:migrate -n
@@ -105,7 +105,7 @@ No desarrollaremos un sistema dedicado para crear cuentas de administración. Un
 
 Elige lo que quieras como contraseña y ejecuta el siguiente comando para generar la contraseña codificada:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(admin)
 
     $ symfony console security:encode-password
@@ -140,7 +140,7 @@ Creando un administrador
 
 Inserta el usuario administrador a través de una sentencia SQL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run psql -c "INSERT INTO admin (id, username, roles, password) \
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
@@ -162,7 +162,7 @@ Ahora que tenemos un usuario administrador, podemos asegurar el panel de adminis
 
 Ejecuta el comando ``make:auth`` para actualizar la configuración de seguridad, generar una plantilla de inicio de sesión y crear un *autenticador* :
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||AppAuthenticator||SecurityController||yes)
 
     $ symfony console make:auth
@@ -218,7 +218,7 @@ Como indica la salida del comando, necesitamos personalizar la ruta en el métod
 
     ¿Cómo recuerdo que la ruta de EasyAdmin es ``admin`` (como configuramos en ``App\Controller\Admin\DashboardController``)? No lo sé. Puedes echar un vistazo al archivo, pero también puedes ejecutar el siguiente comando que muestra la asociación entre los nombres de ruta y las rutas:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:router
 

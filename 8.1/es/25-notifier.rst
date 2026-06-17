@@ -15,7 +15,7 @@ Hay muchas maneras de notificar a los usuarios. El correo electrónico es el pri
 
 El componente Symfony Notifier implementa muchas estrategias de notificación:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req notifier
 
@@ -275,7 +275,7 @@ Cuando se reciban esos mensajes, queremos que se nos avise en un sistema de mens
 
 Instala el soporte de Slack para Symfony Notifier:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req slack-notifier
 
@@ -286,14 +286,14 @@ Para empezar, genera el DSN de Slack con un token de acceso de Slack y el identi
 
 Como el token de acceso es un dato sensible, guarda el DSN de Slack en el almacén secreto:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ symfony console secrets:set SLACK_DSN
 
 Haz lo mismo para producción:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ APP_ENV=prod symfony console secrets:set SLACK_DSN

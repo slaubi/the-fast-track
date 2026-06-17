@@ -15,7 +15,7 @@ Instalando API Platform
 
 Es posible exponer una API escribiendo algo de código, pero si queremos usar estándares, es mejor utilizar una solución que se encargue del trabajo pesado. Una solución como API Platform:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req api
 
@@ -31,66 +31,60 @@ Solo necesitamos unas pocas anotaciones en la clase Conference para configurar l
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Conference.php
-    +++ b/src/Entity/Conference.php
-    @@ -2,16 +2,25 @@
+    --- i/src/Entity/Conference.php
+    +++ w/src/Entity/Conference.php
+    @@ -2,29 +2,45 @@
 
      namespace App\Entity;
 
-    +use ApiPlatform\Core\Annotation\ApiResource;
+    +use ApiPlatform\Metadata\ApiResource;
+    +use ApiPlatform\Metadata\Get;
+    +use ApiPlatform\Metadata\GetCollection;
      use App\Repository\ConferenceRepository;
      use Doctrine\Common\Collections\ArrayCollection;
      use Doctrine\Common\Collections\Collection;
      use Doctrine\ORM\Mapping as ORM;
      use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-    +use Symfony\Component\Serializer\Annotation\Groups;
+    +use Symfony\Component\Serializer\Attribute\Groups;
      use Symfony\Component\String\Slugger\SluggerInterface;
 
-     /**
-      * @ORM\Entity(repositoryClass=ConferenceRepository::class)
-      * @UniqueEntity("slug")
-    + *
-    + * @ApiResource(
-    + *     collectionOperations={"get"={"normalization_context"={"groups"="conference:list"}}},
-    + *     itemOperations={"get"={"normalization_context"={"groups"="conference:item"}}},
-    + *     order={"year"="DESC", "city"="ASC"},
-    + *     paginationEnabled=false
-    + * )
-      */
+     #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
+     #[UniqueEntity('slug')]
+    +#[ApiResource(
+    +    operations: [
+    +        new Get(normalizationContext: ['groups' => 'conference:item']),
+    +        new GetCollection(normalizationContext: ['groups' => 'conference:list'])
+    +    ],
+    +    order: ['year' => 'DESC', 'city' => 'ASC'],
+    +    paginationEnabled: false,
+    +)]
      class Conference
      {
-    @@ -20,21 +29,25 @@ class Conference
-          * @ORM\GeneratedValue
-          * @ORM\Column(type="integer")
-          */
+         #[ORM\Id]
+         #[ORM\GeneratedValue]
+         #[ORM\Column]
     +    #[Groups(['conference:list', 'conference:item'])]
-         private $id;
+         private ?int $id = null;
+
+         #[ORM\Column(length: 255)]
+    +    #[Groups(['conference:list', 'conference:item'])]
+         private ?string $city = null;
+
+         #[ORM\Column(length: 4)]
+    +    #[Groups(['conference:list', 'conference:item'])]
+         private ?string $year = null;
+
+         #[ORM\Column]
+    +    #[Groups(['conference:list', 'conference:item'])]
+         private ?bool $isInternational = null;
 
          /**
-          * @ORM\Column(type="string", length=255)
-          */
-    +    #[Groups(['conference:list', 'conference:item'])]
-         private $city;
+    @@ -34,6 +50,7 @@ class Conference
+         private Collection $comments;
 
-         /**
-          * @ORM\Column(type="string", length=4)
-          */
+         #[ORM\Column(length: 255, unique: true)]
     +    #[Groups(['conference:list', 'conference:item'])]
-         private $year;
-
-         /**
-          * @ORM\Column(type="boolean")
-          */
-    +    #[Groups(['conference:list', 'conference:item'])]
-         private $isInternational;
-
-         /**
-    @@ -45,6 +58,7 @@ class Conference
-         /**
-          * @ORM\Column(type="string", length=255, unique=true)
-          */
-    +    #[Groups(['conference:list', 'conference:item'])]
-         private $slug;
+         private ?string $slug = null;
 
          public function __construct()
 
@@ -127,84 +121,72 @@ Haz lo mismo con los comentarios:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Entity/Comment.php
-    +++ b/src/Entity/Comment.php
-    @@ -2,13 +2,26 @@
+    --- i/src/Entity/Comment.php
+    +++ w/src/Entity/Comment.php
+    @@ -2,41 +2,63 @@
 
      namespace App\Entity;
 
-    +use ApiPlatform\Core\Annotation\ApiFilter;
-    +use ApiPlatform\Core\Annotation\ApiResource;
-    +use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+    +use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+    +use ApiPlatform\Metadata\ApiFilter;
+    +use ApiPlatform\Metadata\ApiResource;
+    +use ApiPlatform\Metadata\Get;
+    +use ApiPlatform\Metadata\GetCollection;
      use App\Repository\CommentRepository;
+     use Doctrine\DBAL\Types\Types;
      use Doctrine\ORM\Mapping as ORM;
-    +use Symfony\Component\Serializer\Annotation\Groups;
+    +use Symfony\Component\Serializer\Attribute\Groups;
      use Symfony\Component\Validator\Constraints as Assert;
 
-     /**
-      * @ORM\Entity(repositoryClass=CommentRepository::class)
-      * @ORM\HasLifecycleCallbacks()
-    + *
-    + * @ApiResource(
-    + *     collectionOperations={"get"={"normalization_context"={"groups"="comment:list"}}},
-    + *     itemOperations={"get"={"normalization_context"={"groups"="comment:item"}}},
-    + *     order={"createdAt"="DESC"},
-    + *     paginationEnabled=false
-    + * )
-    + *
-    + * @ApiFilter(SearchFilter::class, properties={"conference": "exact"})
-      */
+     #[ORM\Entity(repositoryClass: CommentRepository::class)]
+     #[ORM\HasLifecycleCallbacks]
+    +#[ApiResource(
+    +    operations: [
+    +        new Get(normalizationContext: ['groups' => 'comment:item']),
+    +        new GetCollection(normalizationContext: ['groups' => 'comment:list'])
+    +    ],
+    +    order: ['createdAt' => 'DESC'],
+    +    paginationEnabled: false,
+    +)]
+    +#[ApiFilter(SearchFilter::class, properties: ['conference' => 'exact'])]
      class Comment
      {
-    @@ -17,18 +30,21 @@ class Comment
-          * @ORM\GeneratedValue
-          * @ORM\Column(type="integer")
-          */
+         #[ORM\Id]
+         #[ORM\GeneratedValue]
+         #[ORM\Column]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $id;
+         private ?int $id = null;
 
-         /**
-          * @ORM\Column(type="string", length=255)
-          */
+         #[ORM\Column(length: 255)]
          #[Assert\NotBlank]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $author;
+         private ?string $author = null;
 
-         /**
-          * @ORM\Column(type="text")
-          */
+         #[ORM\Column(type: Types::TEXT)]
          #[Assert\NotBlank]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $text;
+         private ?string $text = null;
 
-         /**
-    @@ -36,22 +52,26 @@ class Comment
-          */
+         #[ORM\Column(length: 255)]
          #[Assert\NotBlank]
          #[Assert\Email]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $email;
+         private ?string $email = null;
 
-         /**
-          * @ORM\Column(type="datetime")
-          */
+         #[ORM\Column]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $createdAt;
+         private ?\DateTimeImmutable $createdAt = null;
 
-         /**
-          * @ORM\ManyToOne(targetEntity=Conference::class, inversedBy="comments")
-          * @ORM\JoinColumn(nullable=false)
-          */
+         #[ORM\ManyToOne(inversedBy: 'comments')]
+         #[ORM\JoinColumn(nullable: false)]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $conference;
+         private ?Conference $conference = null;
 
-         /**
-          * @ORM\Column(type="string", length=255, nullable=true)
-          */
+         #[ORM\Column(length: 255, nullable: true)]
     +    #[Groups(['comment:list', 'comment:item'])]
-         private $photoFilename;
+         private ?string $photoFilename = null;
 
-         /**
+         #[ORM\Column(length: 255, options: ['default' => 'submitted'])]
 
 Utilizaremos el mismo tipo de anotaciones para configurar la clase.
 
@@ -217,29 +199,30 @@ Cuando necesites restringir los ítems devueltos por la API, crea un servicio qu
 
 .. code-block:: php
     :caption: src/Api/FilterPublishedCommentQueryExtension.php
-    :emphasize-lines: 13-15,20-22
+    :emphasize-lines: 14-16,21-23
 
     namespace App\Api;
 
-    use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
-    use ApiPlatform\Core\Bridge\Doctrine\Orm\Extension\QueryItemExtensionInterface;
-    use ApiPlatform\Core\Bridge\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+    use ApiPlatform\Doctrine\Orm\Extension\QueryCollectionExtensionInterface;
+    use ApiPlatform\Doctrine\Orm\Extension\QueryItemExtensionInterface;
+    use ApiPlatform\Doctrine\Orm\Util\QueryNameGeneratorInterface;
+    use ApiPlatform\Metadata\Operation;
     use App\Entity\Comment;
     use Doctrine\ORM\QueryBuilder;
 
     class FilterPublishedCommentQueryExtension implements QueryCollectionExtensionInterface, QueryItemExtensionInterface
     {
-        public function applyToCollection(QueryBuilder $qb, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, string $operationName = null)
+        public function applyToCollection(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, Operation $operation = null, array $context = []): void
         {
             if (Comment::class === $resourceClass) {
-                $qb->andWhere(sprintf("%s.state = 'published'", $qb->getRootAliases()[0]));
+                $queryBuilder->andWhere(sprintf("%s.state = 'published'", $queryBuilder->getRootAliases()[0]));
             }
         }
 
-        public function applyToItem(QueryBuilder $qb, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, string $operationName = null, array $context = [])
+        public function applyToItem(QueryBuilder $queryBuilder, QueryNameGeneratorInterface $queryNameGenerator, string $resourceClass, array $identifiers, Operation $operation = null, array $context = []): void
         {
             if (Comment::class === $resourceClass) {
-                $qb->andWhere(sprintf("%s.state = 'published'", $qb->getRootAliases()[0]));
+                $queryBuilder->andWhere(sprintf("%s.state = 'published'", $queryBuilder->getRootAliases()[0]));
             }
         }
     }
