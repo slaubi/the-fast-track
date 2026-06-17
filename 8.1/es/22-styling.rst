@@ -1,163 +1,80 @@
-Dando estilos a la interfaz de usuario con Webpack
-==================================================
+Dando estilo a la interfaz de usuario
+=====================================
 
 .. index::
-    single: Encore
-    single: Webpack
-    single: Components;Encore
+    single: AssetMapper
+    single: Components;AssetMapper
     single: Stylesheet
 
-No hemos dedicado tiempo al diseño de la interfaz de usuario. Para dar estilos como un profesional, usaremos un stack moderno, basado en `Webpack <https://webpack.js.org/>`_. Y para añadir un toque Symfony y facilitar su integración con la aplicación, instalaremos *Webpack Encore*:
+No hemos dedicado tiempo al diseño de la interfaz de usuario. Para darle estilo como un profesional, usaremos una pila moderna basada en *AssetMapper*, el componente de Symfony que ha estado gestionando nuestros assets desde el primer paso de este libro.
 
-.. code-block:: terminal
+AssetMapper adopta los estándares web modernos: los archivos JavaScript y CSS se sirven tal cual y se conectan entre sí mediante un *importmap*, dejando que el navegador cargue directamente los *módulos ES* nativos. Sin empaquetador, sin paso de compilación, sin Node.js.
 
-    $ symfony composer req encore
+Echa un vistazo al archivo ``importmap.php`` en la raíz del proyecto: describe los paquetes JavaScript que usa la aplicación. La función Twig ``importmap()`` que se llama en ``templates/base.html.twig`` los expone al navegador.
 
-Se ha creado un entorno Webpack completo: se han generado los ficheros ``package.json`` y ``webpack.config.js`` que contienen una configuración por defecto adecuada. Si abres ``webpack.config.js``, verás que hace uso de la abstracción *Encore* para configurar Webpack.
-
-El  archivo``package.json`` define algunos comandos que usaremos continuamente.
-
-El directorio``assets`` contiene los puntos de entrada principales para los recursos del proyecto: ``styles/app.css`` y ``app.js``.
-
-Usando Sass
------------
-
-.. index::
-    single: Sass
-
-En lugar de usar CSS plano, vamos a cambiar a `Sass <https://sass-lang.com/>`_:
-
-.. code-block:: terminal
-
-    $ mv assets/styles/app.css assets/styles/app.scss
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/assets/app.js
-    +++ b/assets/app.js
-    @@ -6,7 +6,7 @@
-      */
-
-     // any CSS you import will output into a single css file (app.css in this case)
-    -import './styles/app.css';
-    +import './styles/app.scss';
-
-     // start the Stimulus application
-     import './bootstrap';
-
-Instala el cargador de Sass:
-
-.. code-block:: terminal
-
-    $ yarn add node-sass sass-loader --dev
-
-Y habilita el cargador Sass (*Sass loader*) en webpack:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/webpack.config.js
-    +++ b/webpack.config.js
-    @@ -56,7 +56,7 @@ Encore
-         })
-
-         // enables Sass/SCSS support
-    -    //.enableSassLoader()
-    +    .enableSassLoader()
-
-         // uncomment if you use TypeScript
-         //.enableTypeScriptLoader()
-
-¿Cómo sabía qué paquetes hay que instalar? Si hubiésemos intentado procesar nuestros recursos sin instalar esos paquetes, Encore nos habría dado un precioso mensaje de error sugiriéndonos la ejecución del comando ``yarn add`` necesario para instalar las dependencias que permiten cargar los tipos de archivos``.scss``.
-
-Añadiendo Bootstrap
---------------------
+Aprovechando Bootstrap
+----------------------
 
 .. index::
     single: Bootstrap
 
-Si queremos partir de unos buenos cimientos a la hora de construir un sitio web adaptativo, puede ser muy útil la utilización de un *framework* CSS tal como `Bootstrap <https://getbootstrap.com/>`_. Instálalo como un paquete:
+Para empezar con buenos valores predeterminados y construir un sitio web responsive, un framework CSS como `Bootstrap`_ puede ayudarte mucho. Instálalo como un paquete del importmap:
 
 .. code-block:: terminal
 
-    $ yarn add bootstrap@4 jquery popper.js bs-custom-file-input --dev
+    $ symfony console importmap:require bootstrap bootstrap/dist/css/bootstrap.min.css
 
-Incluye Bootstrap en el archivo CSS (también hemos limpiado el contenido del archivo):
+El comando registra el paquete en ``importmap.php`` y lo descarga (junto con su dependencia ``@popperjs/core``) en ``assets/vendor/``; la aplicación no depende de una CDN en tiempo de ejecución.
 
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/assets/styles/app.scss
-    +++ b/assets/styles/app.scss
-    @@ -1,3 +1 @@
-    -body {
-    -    background-color: lightgray;
-    -}
-    +@import '~bootstrap/scss/bootstrap';
-
-Haz lo mismo con el archivo JS:
+Importa Bootstrap en el punto de entrada principal de JavaScript (también hemos limpiado el mensaje de bienvenida predeterminado):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/assets/app.js
-    +++ b/assets/app.js
-    @@ -7,6 +7,10 @@
-
-     // any CSS you import will output into a single css file (app.css in this case)
-     import './styles/app.scss';
+    --- i/assets/app.js
+    +++ w/assets/app.js
+    @@ -5,6 +5,6 @@ import './stimulus_bootstrap.js';
+      * This file will be included onto the page via the importmap() Twig function,
+      * which should already be in your base.html.twig.
+      */
     +import 'bootstrap';
-    +import bsCustomFileInput from 'bs-custom-file-input';
+    +import 'bootstrap/dist/css/bootstrap.min.css';
+     import './styles/app.css';
+    -
+    -console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
 
-     // start the Stimulus application
-     import './bootstrap';
-    +
-    +bsCustomFileInput.init();
+Fíjate en que ``app.css`` se importa *después* de los estilos de Bootstrap para que nuestras personalizaciones prevalezcan.
 
-El sistema de formularios de Symfony dispone de soporte para Bootstrap de forma nativa a través de un tema especial, habilítalo:
+El sistema de formularios de Symfony soporta Bootstrap de forma nativa con un tema especial, habilítalo:
 
 .. code-block:: yaml
     :caption: config/packages/twig.yaml
 
     twig:
-        form_themes: ['bootstrap_4_layout.html.twig']
+        form_themes: ['bootstrap_5_layout.html.twig']
 
 Dando estilo al HTML
 --------------------
 
-Ahora estamos listos para dar estilo a la aplicación. Descarga y descomprime el archivo en la raíz del proyecto:
+Ya estamos listos para dar estilo a la aplicación. Descarga y descomprime el archivo en la raíz del proyecto:
 
 .. code-block:: terminal
 
-    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-5.2.zip', 'guestbook-5.2.zip');"
-    $ unzip -o guestbook-5.2.zip
-    $ rm guestbook-5.2.zip
+    $ php -r "copy('https://symfony.com/uploads/assets/guestbook-8.1.zip', 'guestbook-8.1.zip');"
+    $ unzip -o guestbook-8.1.zip
+    $ rm guestbook-8.1.zip
 
-Echa un ojo a las plantillas, puedes aprender un par de trucos sobre Twig.
+Echa un vistazo a las plantillas, puede que aprendas algún truco sobre Twig.
 
-Construyendo los *assets*
--------------------------
+Sirviendo los assets
+--------------------
 
 .. index::
-    single: Symfony CLI;run
+    single: AssetMapper;asset-map:compile
 
-Un cambio importante al usar Webpack es que los archivos CSS y JS no se utilizan directamente por la aplicación. Primero necesitan ser "compilados".
+No hay nada que compilar: actualiza una página y los cambios se ven en vivo. En desarrollo, AssetMapper sirve los archivos de los assets directamente.
 
-Durante el desarrollo, la compilación de los *assets* se puede hacer a través del comando ``encore dev``:
-
-.. code-block:: terminal
-
-    $ symfony run yarn encore dev
-
-En lugar de ejecutar el comando cada vez que haya un cambio, déjalo corriendo en segundo plano para que reaccione a los cambios en JS y CSS:
-
-.. code-block:: terminal
-    :class: ignore
-
-    $ symfony run -d yarn encore dev --watch
-
-Tómate tu tiempo para observar los cambios visuales. Echa un vistazo al nuevo diseño en un navegador.
+Tómate tu tiempo para descubrir los cambios visuales. Echa un vistazo al nuevo diseño en un navegador.
 
 .. figure:: screenshots/design-homepage.png
     :alt: /
@@ -169,19 +86,24 @@ Tómate tu tiempo para observar los cambios visuales. Echa un vistazo al nuevo d
     :align: center
     :figclass: with-browser
 
-El formulario de inicio de sesión generado tiene ahora estilo ya que el bundle Maker utiliza clases CSS Bootstrap de forma predeterminada:
+El formulario de inicio de sesión generado también tiene estilo ahora, ya que el *bundle* Maker usa las clases CSS de Bootstrap de forma predeterminada:
 
 .. figure:: screenshots/login-styled.png
     :alt: /login
     :align: center
     :figclass: with-browser
 
-Para producción, Upsun detecta automáticamente si se está utilizando Encore y compila los *assets* durante la fase de compilación.
+Para producción, Upsun ejecuta automáticamente el comando ``asset-map:compile`` durante la fase de compilación: todos los assets se copian a ``public/assets/`` con un hash de versión en sus nombres de archivo, lo que permite un almacenamiento en caché HTTP seguro y de larga duración.
 
 .. sidebar:: Yendo más allá
 
-    * `Documentación de Webpack <https://webpack.js.org/concepts/>`_;
+    * La `documentación del componente AssetMapper`_ ;
 
-    * `Documentación de Symfony Webpack Encore <https://symfony.com/doc/current/frontend.html>`_;
+    * La `especificación de importmap`_ ;
 
-    * `Tutorial de Webpack Encore en SymfonyCasts <https://symfonycasts.com/screencast/webpack-encore>`_.
+    * La `documentación de Bootstrap`_ .
+
+.. _`Bootstrap`: https://getbootstrap.com/
+.. _`documentación del componente AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`especificación de importmap`: https://html.spec.whatwg.org/multipage/webappapis.html#import-maps
+.. _`documentación de Bootstrap`: https://getbootstrap.com/docs/
