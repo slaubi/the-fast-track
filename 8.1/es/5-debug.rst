@@ -50,7 +50,7 @@ Por ejemplo, todas las herramientas de depuración están habilitadas en el ento
 
 El cambio de un entorno a otro puede realizarse modificando la variable de entorno ``APP_ENV``.
 
-Cuando desplegaste el proyecto en SymfonyCloud, el entorno (almacenado en ``APP_ENV``) se cambió automáticamente a ``prod``.
+Cuando desplegaste el proyecto en Upsun, el entorno (almacenado en ``APP_ENV``) se cambió automáticamente a ``prod``.
 
 Gestionando la configuración de los entornos
 ---------------------------------------------
@@ -217,8 +217,8 @@ Depurando en entorno de producción
 -----------------------------------
 
 .. index::
-    single: SymfonyCloud;Remote Logs
-    single: SymfonyCloud;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;logs
     single: Symfony CLI;ssh
 

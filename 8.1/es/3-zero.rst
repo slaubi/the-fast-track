@@ -135,31 +135,31 @@ Preparando para producción
 ---------------------------
 
 .. index::
-    single: SymfonyCloud;Initialization
+    single: Upsun;Initialization
 
 ¿Y qué ocurre con el paso de nuestro trabajo a producción? Lo sé, ni siquiera tenemos una página HTML adecuada para dar la bienvenida a nuestros usuarios. Pero poder ver la pequeña imagen "en construcción" en un servidor de producción sería un muy buen paso. Y ya conoces el lema: *despliega temprano y a menudo*.
 
 Puedes alojar esta aplicación en cualquier proveedor que soporte PHP... lo que significa que podrás hacerlo en casi todos los proveedores de alojamiento existentes. Aún así, ten en cuenta lo siguiente: queremos la última versión de PHP y la posibilidad de alojar servicios como una base de datos, una cola de mensajes y otros más.
 
-He hecho mi elección, va a ser `SymfonyCloud <https://symfony.com/cloud>`_. Proporciona todo lo que necesitamos y ayuda a financiar el desarrollo de Symfony.
+He hecho mi elección, va a ser `Upsun <https://symfony.com/cloud>`_. Proporciona todo lo que necesitamos y ayuda a financiar el desarrollo de Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-El comando ``symfony`` trae soporte integrado para SymfonyCloud. Vamos a inicializar un proyecto en SymfonyCloud:
+El comando ``symfony`` trae soporte integrado para Upsun. Vamos a inicializar un proyecto en Upsun:
 
 .. code-block:: terminal
 
     $ symfony project:init
 
-Este comando crea algunos archivos necesarios para SymfonyCloud, tales como ``.symfony/services.yaml``, ``.symfony/routes.yaml`` y ``.symfony.cloud.yaml``.
+Este comando crea algunos archivos necesarios para Upsun, tales como ``.symfony/services.yaml``, ``.symfony/routes.yaml`` y ``.symfony.cloud.yaml``.
 
 Añádelos a Git e inclúyelos en un *commit*:
 
 .. code-block:: terminal
 
     $ git add .
-    $ git commit -m"Add SymfonyCloud configuration"
+    $ git commit -m"Add Upsun configuration"
 
 .. note::
 
@@ -174,7 +174,7 @@ Pasando a producción
 
 ¿Hora de desplegar?
 
-Crear un nuevo proyecto SymfonyCloud:
+Crear un nuevo proyecto Upsun:
 
 .. code-block:: terminal
 
@@ -184,7 +184,7 @@ Este comando hace muchas cosas:
 
 * La primera vez que ejecutes este comando, autentifícate con tus credenciales de SymfonyConnect si no lo has hecho previamente.
 
-* Proporciona un nuevo proyecto en SymfonyCloud (tienes 7 días *gratis* en cualquier nuevo proyecto de desarrollo).
+* Proporciona un nuevo proyecto en Upsun (tienes 7 días *gratis* en cualquier nuevo proyecto de desarrollo).
 
 Luego, despliega:
 
@@ -206,14 +206,14 @@ Comprueba que todo ha funcionado bien:
 
 Deberías obtener un error 404, pero yendo a ``/images/under-construction.gif`` por fin encontraremos nuestra imagen.
 
-Ten en cuenta que no obtendrás la hermosa página predeterminada de Symfony en SymfonyCloud. ¿Por qué? Pronto aprenderás que Symfony soporta varios entornos y que SymfonyCloud desplegó automáticamente el código en el entorno de producción.
+Ten en cuenta que no obtendrás la hermosa página predeterminada de Symfony en Upsun. ¿Por qué? Pronto aprenderás que Symfony soporta varios entornos y que Upsun desplegó automáticamente el código en el entorno de producción.
 
 .. index::
     single: Symfony CLI;project:delete
 
 .. tip::
 
-    Si deseas eliminar el proyecto en SymfonyCloud, utiliza el comando ``project:delete``.
+    Si deseas eliminar el proyecto en Upsun, utiliza el comando ``project:delete``.
 
 .. sidebar:: Yendo más allá
 
@@ -223,4 +223,4 @@ Ten en cuenta que no obtendrás la hermosa página predeterminada de Symfony en 
 
     * El `Servidor Web Local de Symfony <https://symfony.com/doc/current/setup/symfony_server.html>`_;
 
-    * La `documentación de SymfonyCloud <https://symfony.com/doc/cloud>`_.
+    * La `documentación de Upsun <https://symfony.com/doc/cloud>`_.

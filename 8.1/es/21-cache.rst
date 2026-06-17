@@ -549,12 +549,12 @@ Configurando una caché de proxy inverso en producción
 
 .. index::
     single: HTTP Cache;Varnish
-    single: SymfonyCloud;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 No utilices el proxy inverso de Symfony en producción. Opta siempre por un proxy inverso como Varnish en tu infraestructura o una CDN comercial.
 
-Agrega Varnish a los servicios SymfonyCloud:
+Agrega Varnish a los servicios Upsun:
 
 .. code-block:: diff
     :caption: patch_file
@@ -576,7 +576,7 @@ Agrega Varnish a los servicios SymfonyCloud:
     +            path: config.vcl
 
 .. index::
-    single: SymfonyCloud;Routes
+    single: Upsun;Routes
 
 Utiliza Varnish como el principal punto de entrada en las rutas:
 
@@ -667,6 +667,6 @@ Las URLs se ven un poco extrañas porque las URLs devueltas por ``env:urls`` ya 
 
     * `Modelo de validación de caché HTTP <https://symfony.com/doc/current/http_cache/validation.html>`_ ;
 
-    * `Caché HTTP en SymfonyCloud <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_ .
+    * `Caché HTTP en Upsun <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_ .
 
 .. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network

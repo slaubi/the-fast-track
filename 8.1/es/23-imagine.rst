@@ -160,7 +160,7 @@ Almacenando los datos subidos en producción
 --------------------------------------------
 
 .. index::
-    single: SymfonyCloud;File Service
+    single: Upsun;File Service
 
 Ya hemos definido en ``.symfony.cloud.yaml`` un directorio especial de lectura-escritura para los archivos que se vayan subiendo, pero es un punto de montaje local. Si queremos que tanto el contenedor web y el *worker* consumidor de mensajes puedan acceder al mismo punto de montaje, necesitamos crear un *servicio de ficheros* :
 

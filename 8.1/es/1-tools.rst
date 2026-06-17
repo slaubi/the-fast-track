@@ -93,7 +93,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-Por último, pero no por ello menos importante, utilizaremos la línea de comandos (CLI) de ``symfony`` para aumentar nuestra productividad. Desde el servidor web local que proporciona, hasta la integración completa con Docker y el soporte de SymfonyCloud, nos servirá para ahorrar mucho tiempo.
+Por último, pero no por ello menos importante, utilizaremos la línea de comandos (CLI) de ``symfony`` para aumentar nuestra productividad. Desde el servidor web local que proporciona, hasta la integración completa con Docker y el soporte de Upsun, nos servirá para ahorrar mucho tiempo.
 
 Instala `Symfony CLI`_ y muévelo a algún lugar dentro de tu ``$PATH``. Crea una cuenta `SymfonyConnect`_ si aún no la tienes e inicia sesión a través de ``symfony login``.
 

@@ -40,7 +40,7 @@ Uno de los grandes beneficios de usar un framework es la pequeña cantidad de c�
 
 * 20 líneas para la configuración de la infraestructura de desarrollo (Docker);
 
-* 100 líneas para la configuración de la infraestructura de producción (SymfonyCloud);
+* 100 líneas para la configuración de la infraestructura de producción (Upsun);
 
 * 5 variables de entorno explícitas.
 
@@ -55,7 +55,7 @@ Para seguir pareciendo anticuado, podría haber creado un CD con el código fuen
     single: Project;Git Repository
     single: Git;clone
 
-Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-5.2-2>`_ en algún lugar de tu equipo local:
+Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/book-8.1-1>`_ en algún lugar de tu equipo local:
 
 .. code-block:: terminal
     :class: ignore
@@ -64,7 +64,7 @@ Clona el `repositorio del libro de visitas <https://github.com/the-fast-track/bo
 
 Este repositorio contiene todo el código que aparece en el libro.
 
-Fíjate en que estamos usando ``symfony new`` en lugar de ``git clone`` ya que este comando hace algo más que simplemente clonar el repositorio (alojado en Github bajo la organización ``the-fast-track``: ``https://github.com/the-fast-track/book-5.2-2``). También inicia el servidor web, los contenedores, migra la base de datos, carga los fixtures de datos... Tras ejecutar el comando, el sitio web debería estar en activo y funcionando, listo para ser utilizado.
+Fíjate en que estamos usando ``symfony new`` en lugar de ``git clone`` ya que este comando hace algo más que simplemente clonar el repositorio (alojado en Github bajo la organización ``the-fast-track``: ``https://github.com/the-fast-track/book-8.1-1``). También inicia el servidor web, los contenedores, migra la base de datos, carga los fixtures de datos... Tras ejecutar el comando, el sitio web debería estar en activo y funcionando, listo para ser utilizado.
 
 El código está 100%  sincronizado con el código que verás en el libro (usa la URL exacta del repositorio que aparece arriba). Intentar sincronizar manualmente los cambios del libro con el código fuente del repositorio es casi imposible. Lo intenté en el pasado. Fracasé. Es simplemente imposible. Especialmente para libros como los que escribo: libros que cuentan una historia sobre el desarrollo de un sitio web. Como cada capítulo depende de los anteriores, un cambio puede tener consecuencias en todos los capítulos siguientes.
 

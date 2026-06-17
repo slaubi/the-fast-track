@@ -228,12 +228,12 @@ Manejando los datos secretos en producción
 -------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Secret
-    single: SymfonyCloud;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;var:set
 
-Para el entorno de producción, SymfonyCloud soporta la configuración de *variables de entorno sensibles*:
+Para el entorno de producción, Upsun soporta la configuración de *variables de entorno sensibles*:
 
 .. code-block:: terminal
     :class: ignore
@@ -265,7 +265,7 @@ Vuelve a añadir la clave de Akismet en el *vault* de producción, pero con su v
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
-El último paso es enviar la clave de descifrado a SymfonyCloud configurando una variable sensible:
+El último paso es enviar la clave de descifrado a Upsun configurando una variable sensible:
 
 .. code-block:: terminal
 

@@ -122,13 +122,13 @@ Y restaura los datos:
 
     Nunca ejecutes ``docker-compose down`` si no quieres perder tus datos. O crea primero una copia de seguridad.
 
-Añadiendo PostgreSQL a SymfonyCloud
+Añadiendo PostgreSQL a Upsun
 ------------------------------------
 
 .. index::
-    single: SymfonyCloud;PostgreSQL
+    single: Upsun;PostgreSQL
 
-Para la infraestructura de producción en SymfonyCloud, añadir un servicio como PostgreSQL debería hacerse en el archivo ``.symfony/services.yaml``, que ahora mismo está vacío:
+Para la infraestructura de producción en Upsun, añadir un servicio como PostgreSQL debería hacerse en el archivo ``.symfony/services.yaml``, que ahora mismo está vacío:
 
 .. code-block:: yaml
     :caption: .symfony/services.yaml
@@ -188,7 +188,7 @@ Aquí está el *diff* completo de los cambios hechos en ``.symfony.cloud.yaml``:
          locations:
              "/":
 
-Haz commit de estos cambios y vuelve a desplegar a SymfonyCloud:
+Haz commit de estos cambios y vuelve a desplegar a Upsun:
 
 .. code-block:: terminal
     :class: ignore
@@ -197,27 +197,27 @@ Haz commit de estos cambios y vuelve a desplegar a SymfonyCloud:
     $ git commit -m'Configuring the database'
     $ symfony deploy
 
-Accediendo a la base de datos SymfonyCloud
+Accediendo a la base de datos Upsun
 ------------------------------------------
 
-PostgreSQL se está ejecutando ahora tanto localmente a través de Docker como en producción en SymfonyCloud.
+PostgreSQL se está ejecutando ahora tanto localmente a través de Docker como en producción en Upsun.
 
 Como acabamos de ver, al ejecutarse ``symfony run psql`` se conecta automáticamente a la base de datos alojada por Docker gracias a las variables de entorno expuestas por ``symfony run``.
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;run psql
 
-Si deseas conectarte al PostgreSQL que está alojado en los contenedores de producción, puedes abrir un túnel SSH entre la máquina local y la infraestructura SymfonyCloud:
+Si deseas conectarte al PostgreSQL que está alojado en los contenedores de producción, puedes abrir un túnel SSH entre la máquina local y la infraestructura Upsun:
 
 .. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
 
-Por defecto, los servicios SymfonyCloud no están expuestos como variables de entorno en el equipo local. Debes hacerlo explícitamente utilizando la opción ``--expose-env-vars``. ¿Por qué? Conectarse a la base de datos de producción es una operación peligrosa. Puedes lidiar con datos *reales*. Requerir esa opción es la forma de confirmar que eso *es* lo que quieres hacer.
+Por defecto, los servicios Upsun no están expuestos como variables de entorno en el equipo local. Debes hacerlo explícitamente utilizando la opción ``--expose-env-vars``. ¿Por qué? Conectarse a la base de datos de producción es una operación peligrosa. Puedes lidiar con datos *reales*. Requerir esa opción es la forma de confirmar que eso *es* lo que quieres hacer.
 
 Ahora, conéctate a la base de datos remota de PostgreSQL con ``symfony run psql`` como antes:
 
@@ -241,10 +241,10 @@ Exponiendo variables de entorno
 -------------------------------
 
 .. index::
-    single: SymfonyCloud;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-Docker Compose y SymfonyCloud funcionan perfectamente con Symfony gracias a las variables de entorno.
+Docker Compose y Upsun funcionan perfectamente con Symfony gracias a las variables de entorno.
 
 Verifica todas las variables de entorno expuestas por ``symfony`` ejecutando ``symfony var:export``:
 
@@ -262,7 +262,7 @@ Verifica todas las variables de entorno expuestas por ``symfony`` ejecutando ``s
 
 Las variables de entorno ``PG*`` se leen por la utilidad ``psql``. ¿Qué hay de las otras?
 
-Cuando tienes abierto un túnel a SymfonyCloud con la opción ``--expose-env-vars`` activada, el comando ``var:export`` devuelve las variables de entorno remotas:
+Cuando tienes abierto un túnel a Upsun con la opción ``--expose-env-vars`` activada, el comando ``var:export`` devuelve las variables de entorno remotas:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,13 +274,13 @@ Cuando tienes abierto un túnel a SymfonyCloud con la opción ``--expose-env-var
 Describiendo tu Infraestructura
 -------------------------------
 
-Es posible que todavía no te hayas dado cuenta, pero tener la infraestructura almacenada en ficheros junto al código es muy útil. Docker y SymfonyCloud utilizan archivos de configuración para describir la infraestructura del proyecto. Cuando necesitamos un nuevo servicio adicional, los cambios en el código y los cambios en la infraestructura son parte del mismo parche.
+Es posible que todavía no te hayas dado cuenta, pero tener la infraestructura almacenada en ficheros junto al código es muy útil. Docker y Upsun utilizan archivos de configuración para describir la infraestructura del proyecto. Cuando necesitamos un nuevo servicio adicional, los cambios en el código y los cambios en la infraestructura son parte del mismo parche.
 
 .. sidebar:: Yendo más allá
 
-    * `Servicios de SymfonyCloud <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_ ;
+    * `Servicios de Upsun <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_ ;
 
-    * `Túnel SymfonyCloud <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_ ;
+    * `Túnel Upsun <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_ ;
 
     * `Documentación de PostgreSQL <https://www.postgresql.org/docs/>`_ ;
 

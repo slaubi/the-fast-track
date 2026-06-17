@@ -545,9 +545,9 @@ Desplegando la SPA en producción
 ---------------------------------
 
 .. index::
-    single: SymfonyCloud;Multi-Applications
+    single: Upsun;Multi-Applications
 
-SymfonyCloud permite desplegar múltiples aplicaciones por proyecto. Se puede añadir otra aplicación creando un archivo ``.symfony.cloud.yaml`` en cualquier subdirectorio. Crea uno bajo ``spa/`` llamado ``spa``:
+Upsun permite desplegar múltiples aplicaciones por proyecto. Se puede añadir otra aplicación creando un archivo ``.symfony.cloud.yaml`` en cualquier subdirectorio. Crea uno bajo ``spa/`` llamado ``spa``:
 
 .. code-block:: yaml
     :caption: .symfony.cloud.yaml
@@ -589,7 +589,7 @@ SymfonyCloud permite desplegar múltiples aplicaciones por proyecto. Se puede a�
             )
 
 .. index::
-    single: SymfonyCloud;Routes
+    single: Upsun;Routes
 
 Edita el archivo ``.symfony/routes.yaml`` para enrutar el subdominio ``spa.`` a la aplicación ``spa`` que se encuentra en el directorio raíz del proyecto:
 

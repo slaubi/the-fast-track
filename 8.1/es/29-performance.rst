@@ -157,9 +157,9 @@ Configurando Blackfire en producción
 -------------------------------------
 
 .. index::
-    single: SymfonyCloud;Blackfire
+    single: Upsun;Blackfire
 
-Blackfire está incluido por defecto en todos los proyectos de SymfonyCloud.
+Blackfire está incluido por defecto en todos los proyectos de Upsun.
 
 Configura las credenciales del *servidor* como variables de entorno:
 
@@ -189,7 +189,7 @@ Configurando Varnish para Blackfire
 -----------------------------------
 
 .. index::
-    single: SymfonyCloud;Varnish
+    single: Upsun;Varnish
 
 Antes de que puedas desplegar para empezar a realizar las tareas de análisis, necesitas una forma de evitar la caché HTTP de Varnish. Si no, Blackfire nunca llegará a la aplicación PHP. Vas a autorizar solo las peticiones de *profiling* que provengan de tu máquina local.
 
@@ -404,7 +404,7 @@ La gestión del rendimiento no sólo consiste en mejorar el rendimiento del cód
 
 El escenario escrito en la sección anterior puede ejecutarse automáticamente en un *workflow* de integración continua (CI), o en producción, de forma regular.
 
-En SymfonyCloud, también se permite `ejecutar los escenarios <https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_ cada vez que se crea una nueva rama o se despliega en producción para analizar automáticamente el rendimiento del nuevo código.
+En Upsun, también se permite `ejecutar los escenarios <https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_ cada vez que se crea una nueva rama o se despliega en producción para analizar automáticamente el rendimiento del nuevo código.
 
 .. sidebar:: Yendo más allá
 

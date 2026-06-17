@@ -156,14 +156,14 @@ Limpia la base de datos ejecutando el comando:
 
     $ symfony console app:comment:cleanup
 
-Configurando un Cron en SymfonyCloud
+Configurando un Cron en Upsun
 ------------------------------------
 
 .. index::
-    single: SymfonyCloud;Cron
-    single: SymfonyCloud;Croncape
+    single: Upsun;Cron
+    single: Upsun;Croncape
 
-Una de las ventajas de SymfonyCloud es que la mayor parte de la configuración se almacena en un solo archivo: ``.symfony.cloud.yaml``. El contenedor web, los *workers* y los trabajos cron se describen juntos para ayudar a su mantenimiento:
+Una de las ventajas de Upsun es que la mayor parte de la configuración se almacena en un solo archivo: ``.symfony.cloud.yaml``. El contenedor web, los *workers* y los trabajos cron se describen juntos para ayudar a su mantenimiento:
 
 .. code-block:: diff
     :caption: patch_file
@@ -208,7 +208,7 @@ Puedes forzar la ejecución de un cron desde tu máquina local:
 
     $ symfony cron comment_cleanup
 
-Ten en cuenta que los crons están configurados en todas las ramas de SymfonyCloud. Si no deseas ejecutar algunos en entornos que no sean de producción, comprueba la variable de entorno ``$SYMFONY_BRANCH``:
+Ten en cuenta que los crons están configurados en todas las ramas de Upsun. Si no deseas ejecutar algunos en entornos que no sean de producción, comprueba la variable de entorno ``$SYMFONY_BRANCH``:
 
 .. code-block:: terminal
     :class: ignore

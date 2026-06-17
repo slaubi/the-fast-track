@@ -94,7 +94,7 @@ Desplegando RabbitMQ
 --------------------
 
 .. index::
-    single: SymfonyCloud;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 Se puede añadir RabbitMQ a los servidores de producción agregándolos a la lista de servicios:
@@ -139,7 +139,7 @@ Añade la referencia también en la configuración del contenedor web y activa l
          locations:
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

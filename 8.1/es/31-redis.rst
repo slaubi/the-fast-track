@@ -14,7 +14,7 @@ Así es como puedes agregar Redis a tu proyecto en un parche:
     single: Session;Redis
     single: Redis
     single: Docker;Redis
-    single: SymfonyCloud;Redis
+    single: Upsun;Redis
 
 .. code-block:: diff
     :caption: patch_file

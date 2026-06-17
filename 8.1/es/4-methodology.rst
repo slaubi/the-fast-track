@@ -39,7 +39,7 @@ Las cadenas de caracteres raros son marcadores añadidos por Symfony Flex para q
 
 Podría ser bueno hacer *push* de tu repositorio a algún servidor externo. GitHub, GitLab o Bitbucket son buenas opciones.
 
-Si estás desplegando en SymfonyCloud, ya tienes una copia del repositorio Git, pero no deberías depender exclusivamente de él. Se usa solamente para el despliegue. No es una copia de seguridad.
+Si estás desplegando en Upsun, ya tienes una copia del repositorio Git, pero no deberías depender exclusivamente de él. Se usa solamente para el despliegue. No es una copia de seguridad.
 
 Despliegue continuo a producción
 ---------------------------------

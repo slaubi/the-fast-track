@@ -561,14 +561,14 @@ Inspecciona los mensajes fallidos y vuelve a intentarlo mediante los siguientes 
 
     $ symfony console messenger:failed:retry
 
-Ejecutando *workers* en SymfonyCloud
+Ejecutando *workers* en Upsun
 ------------------------------------
 
 .. index::
-    single: SymfonyCloud;Workers
+    single: Upsun;Workers
     single: Workers
 
-Para consumir mensajes de PostgreSQL, necesitamos ejecutar el comando ``messenger:consume`` continuamente. En SymfonyCloud, este es el rol de un *worker*:
+Para consumir mensajes de PostgreSQL, necesitamos ejecutar el comando ``messenger:consume`` continuamente. En Upsun, este es el rol de un *worker*:
 
 .. code-block:: diff
     :caption: patch_file
@@ -585,7 +585,7 @@ Para consumir mensajes de PostgreSQL, necesitamos ejecutar el comando ``messenge
     +        commands:
     +            start: symfony console messenger:consume async -vv --time-limit=3600 --memory-limit=128M
 
-Al igual que hace el comando Symfony, SymfonyCloud también gestiona los reinicios y los registros.
+Al igual que hace el comando Symfony, Upsun también gestiona los reinicios y los registros.
 
 .. index::
     single: Symfony CLI;logs

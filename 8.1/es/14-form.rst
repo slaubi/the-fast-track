@@ -490,7 +490,7 @@ Excluyendo las fotos subidas de Git
 Almacenando archivos enviados en servidores de producción
 ----------------------------------------------------------
 
-El último paso es almacenar los archivos cargados en servidores de producción. ¿Por qué tenemos que tenerlo en cuenta? Porque la mayoría de las plataformas de nube modernas utilizan contenedores de sólo lectura por varias razones. SymfonyCloud no es una excepción.
+El último paso es almacenar los archivos cargados en servidores de producción. ¿Por qué tenemos que tenerlo en cuenta? Porque la mayoría de las plataformas de nube modernas utilizan contenedores de sólo lectura por varias razones. Upsun no es una excepción.
 
 No todo es de sólo lectura en un proyecto Symfony. Nos esforzamos en incluir la mayor cantidad posible de información en la caché al construir el contenedor (durante la fase de escritura de caché), pero Symfony aún necesita poder escribir en algún lugar para la caché de usuario, los registros, las sesiones si están almacenados en el sistema de archivos, y mucho más.
 

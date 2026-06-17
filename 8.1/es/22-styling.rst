@@ -176,7 +176,7 @@ El formulario de inicio de sesión generado tiene ahora estilo ya que el bundle 
     :align: center
     :figclass: with-browser
 
-Para producción, SymfonyCloud detecta automáticamente si se está utilizando Encore y compila los *assets* durante la fase de compilación.
+Para producción, Upsun detecta automáticamente si se está utilizando Encore y compila los *assets* durante la fase de compilación.
 
 .. sidebar:: Yendo más allá
 

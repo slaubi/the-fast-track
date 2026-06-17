@@ -50,7 +50,7 @@ Los pasos necesarios para hacerlo realidad son típicos:
 
 #. Actualiza la configuración de PHP (agrega la extensión PostgreSQL PHP);
 
-#. Actualiza la infraestructura en Docker y SymfonyCloud si es necesario (agrega el servicio PostgreSQL);
+#. Actualiza la infraestructura en Docker y Upsun si es necesario (agrega el servicio PostgreSQL);
 
 #. Prueba localmente;
 
@@ -118,7 +118,7 @@ Haz pruebas localmente navegando por el sitio web. Como no hay cambios visuales 
 
 .. note::
 
-    No necesitamos los pasos 3 a 5 aquí ya que estamos reutilizando la base de datos como almacenamiento de sesión, pero el capítulo sobre el uso de Redis muestra lo sencillo que es agregar, probar e implementar un nuevo servicio tanto en Docker como en SymfonyCloud.
+    No necesitamos los pasos 3 a 5 aquí ya que estamos reutilizando la base de datos como almacenamiento de sesión, pero el capítulo sobre el uso de Redis muestra lo sencillo que es agregar, probar e implementar un nuevo servicio tanto en Docker como en Upsun.
 
 Como la nueva tabla no es "administrada" por Doctrine, debemos configurar Doctrine para que no la elimine en la próxima migración de la base de datos:
 
@@ -149,7 +149,7 @@ Desplegando una rama
 --------------------
 
 .. index::
-    single: SymfonyCloud;Environment
+    single: Upsun;Environment
 
 Antes de desplegar en producción, debemos probar la rama en la misma infraestructura que tiene producción. También debemos validar que todo funciona bien para el entorno de Symfony ``prod`` (el sitio web local utiliza el entorno de Symfony ``dev``).
 
@@ -157,7 +157,7 @@ Antes de desplegar en producción, debemos probar la rama en la misma infraestru
     single: Symfony CLI;env:delete
     single: Symfony CLI;env:create
 
-Ahora, vamos a crear un *entorno SymfonyCloud* basado en la *rama de Git*:
+Ahora, vamos a crear un *entorno Upsun* basado en la *rama de Git*:
 
 .. code-block:: terminal
     :class: hide
@@ -190,7 +190,7 @@ Una vez finalizado el despliegue, abre la nueva rama en un navegador:
 
     $ symfony open:remote
 
-Ten en cuenta que todos los comandos de SymfonyCloud funcionan en la rama actual de Git. Este comando abre la URL que ha sido desplegada para la rama ``sessions-in-db``; la URL será algo similar a ``https://sessions-in-db-xxx.eu.s5y.io/``.
+Ten en cuenta que todos los comandos de Upsun funcionan en la rama actual de Git. Este comando abre la URL que ha sido desplegada para la rama ``sessions-in-db``; la URL será algo similar a ``https://sessions-in-db-xxx.eu.s5y.io/``.
 
 Prueba el sitio web en este nuevo entorno, deberías ver todos los datos que creaste en el entorno *master*.
 
@@ -212,9 +212,9 @@ Depurando las implementaciones de producción antes del despliegue
 ------------------------------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Debugging
+    single: Upsun;Debugging
 
-Por defecto, todos los entornos SymfonyCloud utilizan la misma configuración que el entorno ``master``/``prod`` (también conocido como entorno Symfony ``prod``). Esto te permite probar la aplicación en condiciones reales. Te da la sensación de desarrollar y probar directamente en servidores de producción, pero sin los riesgos asociados con ello. Esto me recuerda a los buenos tiempos en los que estábamos realizando la implementación a través de FTP.
+Por defecto, todos los entornos Upsun utilizan la misma configuración que el entorno ``master``/``prod`` (también conocido como entorno Symfony ``prod``). Esto te permite probar la aplicación en condiciones reales. Te da la sensación de desarrollar y probar directamente en servidores de producción, pero sin los riesgos asociados con ello. Esto me recuerda a los buenos tiempos en los que estábamos realizando la implementación a través de FTP.
 
 .. index::
     single: Symfony CLI;env:debug
@@ -263,7 +263,7 @@ Y haz el despliegue:
 
     $ symfony deploy
 
-Cuando se despliega, sólo los cambios de código e infraestructura son enviados a SymfonyCloud; los datos no se ven afectados de ninguna manera.
+Cuando se despliega, sólo los cambios de código e infraestructura son enviados a Upsun; los datos no se ven afectados de ninguna manera.
 
 Limpiando
 ---------
@@ -272,7 +272,7 @@ Limpiando
     single: Symfony CLI;env:delete
     single: Git;branch
 
-Finalmente, elimina la rama Git y el entorno SymfonyCloud:
+Finalmente, elimina la rama Git y el entorno Upsun:
 
 .. code-block:: terminal
 

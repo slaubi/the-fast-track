@@ -192,7 +192,7 @@ Define el nombre de dominio y el esquema a utilizar de manera explícita:
      services:
          # default configuration for services in *this* file
 
-Las variables de entorno ``SYMFONY_DEFAULT_ROUTE_PORT`` y ``SYMFONY_DEFAULT_ROUTE_HOST`` se establecen automáticamente de forma local cuando se utiliza el comando ``symfony`` y se determinan en función de la configuración de SymfonyCloud.
+Las variables de entorno ``SYMFONY_DEFAULT_ROUTE_PORT`` y ``SYMFONY_DEFAULT_ROUTE_HOST`` se establecen automáticamente de forma local cuando se utiliza el comando ``symfony`` y se determinan en función de la configuración de Upsun.
 
 Enlazando una ruta con un controlador
 -------------------------------------
@@ -420,18 +420,18 @@ Symfony incluye comprobaciones (*assertions*) que facilitan estas pruebas, aquí
 
 Estas comprobaciones funcionan tanto cuando los correos electrónicos se envían de forma síncrona como de forma asíncrona.
 
-Enviando correos electrónicos en SymfonyCloud
+Enviando correos electrónicos en Upsun
 ----------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Emails
-    single: SymfonyCloud;Mailer
-    single: SymfonyCloud;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-No hay una configuración específica para SymfonyCloud. Todas las cuentas vienen con una cuenta Sendgrid que se utiliza automáticamente para enviar correos electrónicos.
+No hay una configuración específica para Upsun. Todas las cuentas vienen con una cuenta Sendgrid que se utiliza automáticamente para enviar correos electrónicos.
 
-Tienes que actualizar aún la configuración de SymfonyCloud para incluir la extensión PHP ``xsl`` que necesita Inky:
+Tienes que actualizar aún la configuración de Upsun para incluir la extensión PHP ``xsl`` que necesita Inky:
 
 .. code-block:: diff
     :caption: patch_file
@@ -468,4 +468,4 @@ Tienes que actualizar aún la configuración de SymfonyCloud para incluir la ext
 
     * La `documentación del componente Mailer del framework Symfony <https://symfony.com/doc/current/mailer.html>`_;
 
-    * La `documentación de SymfonyCloud sobre correos electrónicos <https://symfony.com/doc/current/cloud/services/emails.html>`_.
+    * La `documentación de Upsun sobre correos electrónicos <https://symfony.com/doc/current/cloud/services/emails.html>`_.
