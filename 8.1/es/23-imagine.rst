@@ -147,7 +147,7 @@ Modifica el workflow para gestionar el nuevo estado:
                  $this->logger->debug('Dropping comment message', ['comment' => $comment->getId(), 'state' => $comment->getState()]);
              }
 
-Ten en cuenta que ``$photoDir`` se inyecta automáticamente ya que en un paso anterior definimos esa variable como *bind* en el contenedor:
+Ten en cuenta que ``$photoDir`` se inyecta automáticamente ya que en un paso anterior definimos esa variable como *parameter* en el contenedor:
 
 .. code-block:: yaml
     :caption: config/services.yaml
@@ -162,7 +162,7 @@ Almacenando los datos subidos en producción
 .. index::
     single: Upsun;File Service
 
-Ya hemos definido en ``.symfony.cloud.yaml`` un directorio especial de lectura-escritura para los archivos que se vayan subiendo, pero es un punto de montaje local. Si queremos que tanto el contenedor web y el *worker* consumidor de mensajes puedan acceder al mismo punto de montaje, necesitamos crear un *servicio de ficheros* :
+Ya hemos definido en ``.upsun/config.yaml`` un directorio especial de lectura-escritura para los archivos que se vayan subiendo, pero es un punto de montaje local al contenedor de la aplicación. Si queremos que tanto el contenedor web y el *worker* consumidor de mensajes puedan acceder al mismo punto de montaje, necesitamos crear un *servicio de ficheros* :
 
 .. code-block:: diff
     :caption: patch_file
