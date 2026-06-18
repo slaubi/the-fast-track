@@ -323,7 +323,7 @@ Pobaw się panelem administracyjnym, wyfiltruj komentarze po konferencji lub na 
 .. code-block:: terminal
     :class: hide
 
-    $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"
+    $ symfony console dbal:run-sql "TRUNCATE conference RESTART IDENTITY CASCADE"
 
 .. sidebar:: Idąc dalej
 
