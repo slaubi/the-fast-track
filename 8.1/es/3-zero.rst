@@ -3,7 +3,7 @@ Desde cero hasta producción
 
 Me gusta ir rápido. Quiero que nuestro pequeño proyecto vea la luz lo más rápido posible. Así como... ¡ahora mismo! En producción. Como aún no hemos desarrollado nada, empezaremos por desplegar una página "En construcción" agradable y sencilla. ¡Te encantará!
 
-Pasé algo de tiempo tratando de encontrar en Internet un GIF animado chapado a la antigua y que fuera ideal para informar que estamos "En Construcción". Aquí está `el que <http://clipartmag.com/images/website-under-construction-image-6.gif>`_ voy a usar:
+Pasé algo de tiempo tratando de encontrar en Internet un GIF animado chapado a la antigua y que fuera ideal para informar que estamos "En Construcción". Aquí está `el que`_ voy a usar:
 
 .. image:: images/under-construction.gif
     :align: center
@@ -17,10 +17,18 @@ Crea un nuevo proyecto Symfony con el comando ``symfony`` que instalamos previam
 
 .. code-block:: terminal
 
-    $ symfony new guestbook --version=5.2
+    $ symfony new guestbook --version=8.1 --php=8.5 --webapp --docker --upsun
     $ cd guestbook
 
-Este comando es una pequeña abstracción sobre ``Composer`` que hace más sencilla la creación de proyectos Symfony. Utiliza un `esqueleto de proyecto <https://github.com/symfony/skeleton>`_ que incluye las dependencias mínimas; los componentes de Symfony que se necesitan para casi cualquier proyecto: una herramienta de consola y la abstracción HTTP necesaria para crear aplicaciones Web.
+Este comando es una pequeña abstracción sobre ``Composer`` que hace más sencilla la creación de proyectos Symfony. Utiliza un `esqueleto de proyecto`_ que incluye las dependencias mínimas; los componentes de Symfony que se necesitan para casi cualquier proyecto: una herramienta de consola y la abstracción HTTP necesaria para crear aplicaciones Web.
+
+Como estamos creando una aplicación web con todas sus funcionalidades, hemos añadido algunas opciones que nos facilitarán la vida:
+
+* ``--webapp``: De manera predeterminada, se crea una aplicación con la menor cantidad de dependencias posible. Para la mayoría de los proyectos web, se recomienda usar además el paquete ``webapp``. Contiene la mayoría de los paquetes necesarios para las aplicaciones web "modernas". El paquete ``webapp`` añade muchos paquetes de Symfony, incluyendo Symfony Messenger y PostgreSQL a través de Doctrine.
+
+* ``--docker``: En tu máquina local, usaremos Docker para gestionar servicios como PostgreSQL. Esta opción habilita Docker para que Symfony añada automáticamente servicios Docker en función de los paquetes requeridos (un servicio PostgreSQL al añadir el ORM o un *mail catcher* al añadir Symfony Mailer, por ejemplo).
+
+* ``--upsun``: Si quieres desplegar tu proyecto en Upsun, esta opción genera automáticamente una configuración de Upsun sensata. Upsun es la forma preferida y más sencilla de desplegar entornos de prueba, *staging* y producción de Symfony en la nube.
 
 Si echas un vistazo al repositorio GitHub para el esqueleto, notarás que está casi vacío. Sólo hay un archivo llamado ``composer.json``. Pero nuestro directorio ``guestbook`` está lleno de archivos. ¿Cómo es eso posible? La respuesta está en el paquete ``symfony/flex``. Symfony Flex es un *plugin* de Composer que se engancha al proceso de instalación. Cuando detecta un paquete para el que tiene una *receta*, la ejecuta.
 
@@ -67,7 +75,7 @@ Descarga mi imagen GIF aquí:
 .. code-block:: terminal
 
     $ mkdir public/images/
-    $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
+    $ php -r "copy('https://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
 
 Arrancando un servidor web local
 --------------------------------
@@ -120,17 +128,6 @@ Navega hacia ``/images/under-construction.gif``.  ¿Se parece a esto?
     $ git add public/images
     $ git commit -m'Add the under construction image'
 
-Añadiendo un favicon
----------------------
-
-Para evitar ser "spameados" con errores HTTP 404 en los logs debido a la falta de un favicon solicitado por los navegadores, agreguemos uno ahora:
-
-.. code-block:: terminal
-
-    $ php -r "copy('https://symfony.com/favicon.ico', 'public/favicon.ico');"
-    $ git add public/
-    $ git commit -m'Add a favicon'
-
 Preparando para producción
 ---------------------------
 
@@ -141,86 +138,75 @@ Preparando para producción
 
 Puedes alojar esta aplicación en cualquier proveedor que soporte PHP... lo que significa que podrás hacerlo en casi todos los proveedores de alojamiento existentes. Aún así, ten en cuenta lo siguiente: queremos la última versión de PHP y la posibilidad de alojar servicios como una base de datos, una cola de mensajes y otros más.
 
-He hecho mi elección, va a ser `Upsun <https://symfony.com/cloud>`_. Proporciona todo lo que necesitamos y ayuda a financiar el desarrollo de Symfony.
+He hecho mi elección, va a ser `Upsun`_. Proporciona todo lo que necesitamos y ayuda a financiar el desarrollo de Symfony.
 
 .. index::
     single: Symfony CLI;project:init
 
-El comando ``symfony`` trae soporte integrado para Upsun. Vamos a inicializar un proyecto en Upsun:
-
-.. code-block:: terminal
-
-    $ symfony project:init
-
-Este comando crea algunos archivos necesarios para Upsun, tales como ``.symfony/services.yaml``, ``.symfony/routes.yaml`` y ``.symfony.cloud.yaml``.
-
-Añádelos a Git e inclúyelos en un *commit*:
-
-.. code-block:: terminal
-
-    $ git add .
-    $ git commit -m"Add Upsun configuration"
-
-.. note::
-
-    Usar el genérico y peligroso ``git add .`` funciona correctamente ya que se ha generado un archivo ``.gitignore`` que excluye automáticamente todos los archivos a los que no queremos hacer *commit*.
+Como usamos la opción ``--upsun`` cuando creamos el proyecto, Upsun ya se ha inicializado con el único archivo de configuración que necesita, a saber, ``.upsun/config.yaml``.
 
 Pasando a producción
 ---------------------
 
 .. index::
-    single: Symfony CLI;project:create
-    single: Symfony CLI;deploy
+    single: Symfony CLI;cloud:project:create
+    single: Symfony CLI;cloud:push
 
 ¿Hora de desplegar?
 
-Crear un nuevo proyecto Upsun:
+Crear un nuevo proyecto remoto en Upsun:
 
 .. code-block:: terminal
 
-    $ symfony project:create --title="Guestbook" --plan=development
+    $ symfony cloud:project:create --title="Guestbook" --plan=development
 
 Este comando hace muchas cosas:
 
-* La primera vez que ejecutes este comando, autentifícate con tus credenciales de SymfonyConnect si no lo has hecho previamente.
+* La primera vez que ejecutes este comando, autentifícate con tus credenciales de Upsun si no lo has hecho previamente.
 
-* Proporciona un nuevo proyecto en Upsun (tienes 7 días *gratis* en cualquier nuevo proyecto de desarrollo).
+* Proporciona un nuevo proyecto en Upsun (tienes 30 días *gratis* en el primer proyecto que crees).
 
 Luego, despliega:
 
 .. code-block:: terminal
 
-    $ symfony deploy
+    $ symfony cloud:push
 
 El código se despliega al hacer un *push* del repositorio Git. Al finalizar el comando, el proyecto tendrá un nombre de dominio específico que puedes utilizar para acceder a él.
 
 .. index::
-    single: Symfony CLI;open:remote
+    single: Symfony CLI;cloud:url
 
 Comprueba que todo ha funcionado bien:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony open:remote
+    $ symfony cloud:url -1
 
 Deberías obtener un error 404, pero yendo a ``/images/under-construction.gif`` por fin encontraremos nuestra imagen.
 
 Ten en cuenta que no obtendrás la hermosa página predeterminada de Symfony en Upsun. ¿Por qué? Pronto aprenderás que Symfony soporta varios entornos y que Upsun desplegó automáticamente el código en el entorno de producción.
 
 .. index::
-    single: Symfony CLI;project:delete
+    single: Symfony CLI;cloud:project:delete
 
 .. tip::
 
-    Si deseas eliminar el proyecto en Upsun, utiliza el comando ``project:delete``.
+    Si deseas eliminar el proyecto en Upsun, utiliza el comando ``cloud:project:delete``.
 
 .. sidebar:: Yendo más allá
 
-    * El `Symfony Recipes Server <https://flex.symfony.com/>`_ , donde puedes encontrar todas las recetas disponibles para tus aplicaciones Symfony;
+    * Los repositorios de las `recetas oficiales de Symfony`_ y de las `recetas aportadas por la comunidad`_ , donde puedes enviar tus propias recetas;
 
-    * Los repositorios de las `recetas oficiales de Symfony <https://github.com/symfony/recipes>`_ y de las `recetas aportadas por la comunidad <https://github.com/symfony/recipes-contrib>`_ , donde puedes enviar tus propias recetas;
+    * El `Servidor Web Local de Symfony`_;
 
-    * El `Servidor Web Local de Symfony <https://symfony.com/doc/current/setup/symfony_server.html>`_;
+    * La `documentación de Upsun`_.
 
-    * La `documentación de Upsun <https://symfony.com/doc/cloud>`_.
+.. _`el que`: https://clipartmag.com/images/website-under-construction-image-6.gif
+.. _`esqueleto de proyecto`: https://github.com/symfony/skeleton
+.. _`Upsun`:     https://upsun.com/symfony/?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book
+.. _`recetas oficiales de Symfony`: https://github.com/symfony/recipes
+.. _`recetas aportadas por la comunidad`: https://github.com/symfony/recipes-contrib
+.. _`Servidor Web Local de Symfony`: https://symfony.com/doc/current/setup/symfony_server.html
+.. _`documentación de Upsun`: https://developer.upsun.com/docs/get-started/stacks/symfony/index?utm_source=symfony-cloud-sign-up&utm_medium=backlink&utm_campaign=Symfony-Cloud-sign-up&utm_content=symfony-book

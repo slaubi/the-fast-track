@@ -3,15 +3,9 @@ Asegurando el panel de administración
 
 La interfaz del panel de administración sólo debe ser accesible para personas de confianza. El control de acceso a este área del sitio web se puede realizar utilizando el componente Symfony Security.
 
-Al igual que para Twig, el componente de seguridad ya está instalado a través de dependencias transitivas. Añadámoslo explícitamente al archivo ``composer.json`` del proyecto:
-
 .. index::
     single: Components;Security
     single: Security
-
-.. code-block:: terminal
-
-    $ symfony composer req security
 
 Definiendo una entidad User
 ---------------------------
@@ -38,42 +32,19 @@ La clase generada contiene métodos como ``getRoles()``, ``eraseCredentials()``,
 
 Si deseas añadir más propiedades al usuario ``Admin``, utiliza ``make:entity`` .
 
-Añadamos un método ``__toString()`` como le gusta a EasyAdmin:
-
-.. code-block:: diff
-
-    --- a/src/Entity/Admin.php
-    +++ b/src/Entity/Admin.php
-    @@ -75,6 +75,11 @@ class Admin implements UserInterface
-             return $this;
-         }
-
-    +    public function __toString(): string
-    +    {
-    +        return $this->username;
-    +    }
-    +
-         /**
-          * @see UserInterface
-          */
-
 Además de generar la entidad ``Admin``, el comando también actualizó la configuración de seguridad para conectar la entidad con el sistema de autenticación:
 
 .. code-block:: diff
     :class: ignore
-    :emphasize-lines: 6,7,15,16
+    :emphasize-lines: 11,12,20
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -1,7 +1,15 @@
-     security:
-    +    encoders:
-    +        App\Entity\Admin:
-    +            algorithm: auto
-    +
-         # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -5,14 +5,18 @@ security:
+             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+         # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
          providers:
-    -        in_memory: { memory: null }
+    -        users_in_memory: { memory: null }
     +        # used to reload user from session & other features (e.g. switch_user)
     +        app_user_provider:
     +            entity:
@@ -82,8 +53,16 @@ Además de generar la entidad ``Admin``, el comando también actualizó la confi
          firewalls:
              dev:
                  pattern: ^/(_(profiler|wdt)|css|images|js)/
+                 security: false
+             main:
+                 lazy: true
+    -            provider: users_in_memory
+    +            provider: app_user_provider
 
-Dejamos que Symfony seleccione el mejor algoritmo posible para la codificación de contraseñas (el cuál evolucionará con el tiempo).
+                 # activate different ways to authenticate
+                 # https://symfony.com/doc/current/security.html#the-firewall
+
+Dejamos que Symfony seleccione el mejor algoritmo posible para generar el hash de las contraseñas (el cuál evolucionará con el tiempo).
 
 Hora de generar una migración y migrar la base de datos:
 
@@ -96,41 +75,41 @@ Generando una contraseña para el usuario administrador
 -------------------------------------------------------
 
 .. index::
-    single: Security;Encoding Passwords
+    single: Security;Password Hashes
 
-No desarrollaremos un sistema dedicado para crear cuentas de administración. Una vez más, sólo tendremos un administrador. El login será ``admin`` y necesitamos codificar la contraseña.
+No desarrollaremos un sistema dedicado para crear cuentas de administración. Una vez más, sólo tendremos un administrador. El login será ``admin`` y necesitamos generar el hash de la contraseña.
 
 .. index::
-    single: Command;security:encode-password
+    single: Command;security:hash-password
 
-Elige lo que quieras como contraseña y ejecuta el siguiente comando para generar la contraseña codificada:
+Elige lo que quieras como contraseña y ejecuta el siguiente comando para generar el hash de la contraseña:
 
 .. code-block:: terminal
     :class: answers(admin)
 
-    $ symfony console security:encode-password
+    $ symfony console security:hash-password
 
 .. code-block:: text
     :class: ignore
     :emphasize-lines: 11
 
-    Symfony Password Encoder Utility
-    ================================
+    Symfony Password Hash Utility
+    =============================
 
-     Type in your password to be encoded:
+     Type in your password to be hashed:
      >
 
      ------------------ ---------------------------------------------------------------------------------------------------
       Key                Value
      ------------------ ---------------------------------------------------------------------------------------------------
-      Encoder used       Symfony\Component\Security\Core\Encoder\MigratingPasswordEncoder
-      Encoded password   $argon2id$v=19$m=65536,t=4,p=1$BQG+jovPcunctc30xG5PxQ$TiGbx451NKdo+g9vLtfkMy4KjASKSOcnNxjij4gTX1s
+      Hasher used        Symfony\Component\PasswordHasher\Hasher\MigratingPasswordHasher
+      Password hash      $argon2id$v=19$m=65536,t=4,p=1$BQG+jovPcunctc30xG5PxQ$TiGbx451NKdo+g9vLtfkMy4KjASKSOcnNxjij4gTX1s
      ------------------ ---------------------------------------------------------------------------------------------------
 
-     ! [NOTE] Self-salting encoder used: the encoder generated its own built-in salt.
+     ! [NOTE] Self-salting hasher used: the hasher generated its own built-in salt.
 
 
-     [OK] Password encoding succeeded
+     [OK] Password hashing succeeded
 
 Creando un administrador
 ------------------------
@@ -152,7 +131,7 @@ Configurando la autenticación de seguridad
 -------------------------------------------
 
 .. index::
-    single: Command;make:auth
+    single: Command;make:security:form-login
     single: Security;Authenticator
     single: Security;Form Login
     single: Login
@@ -160,14 +139,14 @@ Configurando la autenticación de seguridad
 
 Ahora que tenemos un usuario administrador, podemos asegurar el panel de administración. Symfony permite varias estrategias de autenticación. Usemos un *sistema de autenticación de formularios* clásico y popular.
 
-Ejecuta el comando ``make:auth`` para actualizar la configuración de seguridad, generar una plantilla de inicio de sesión y crear un *autenticador* :
+Ejecuta el comando ``make:security:form-login`` para actualizar la configuración de seguridad, generar una plantilla de inicio de sesión y crear un *autenticador* :
 
 .. code-block:: terminal
-    :class: answers(1||AppAuthenticator||SecurityController||yes)
+    :class: answers(SecurityController||yes)
 
-    $ symfony console make:auth
+    $ symfony console make:security:form-login
 
-Selecciona ``1`` para generar un autenticador de formulario de inicio de sesión, nombra la clase autenticador ``AppAuthenticator``, el controlador ``SecurityController``, y generar una URL ``/logout`` (``yes``).
+Nombra el controlador ``SecurityController`` y genera una URL ``/logout`` (``yes``).
 
 El comando actualizó la configuración de seguridad para conectar las clases generadas:
 
@@ -175,39 +154,25 @@ El comando actualizó la configuración de seguridad para conectar las clases ge
     :class: ignore
     :emphasize-lines: 9
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -16,6 +16,13 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -15,7 +15,15 @@ security:
                  security: false
              main:
-                 anonymous: lazy
-    +            guard:
-    +                authenticators:
-    +                    - App\Security\AppAuthenticator
+                 lazy: true
+    -            provider: users_in_memory
+    +            provider: app_user_provider
+    +            form_login:
+    +                login_path: app_login
+    +                check_path: app_login
+    +                enable_csrf: true
     +            logout:
     +                path: app_logout
     +                # where to redirect after logout
     +                # target: app_any_route
 
                  # activate different ways to authenticate
-                 # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-Como indica la salida del comando, necesitamos personalizar la ruta en el método ``onAuthenticationSuccess()`` para redirigir al usuario cuando inicie sesión con éxito:
-
-.. code-block:: diff
-
-    --- a/src/Security/AppAuthenticator.php
-    +++ b/src/Security/AppAuthenticator.php
-    @@ -95,8 +95,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
-                 return new RedirectResponse($targetPath);
-             }
-
-    -        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
-    -        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
-    +        return new RedirectResponse($this->urlGenerator->generate('admin'));
-         }
-
-         protected function getLoginUrl()
+                 # https://symfony.com/doc/current/security.html#the-firewall
 
 .. index::
     single: Command;debug:router
@@ -234,15 +199,17 @@ Un sistema de seguridad consta de dos partes: *autenticación* y *autorización*
 .. code-block:: diff
     :emphasize-lines: 8
 
-    --- a/config/packages/security.yaml
-    +++ b/config/packages/security.yaml
-    @@ -35,5 +35,5 @@ security:
+    --- i/config/packages/security.yaml
+    +++ w/config/packages/security.yaml
+    @@ -34,7 +34,7 @@ security:
          # Easy way to control access for large sections of your site
          # Note: Only the *first* access control that matches will be used
          access_control:
     -        # - { path: ^/admin, roles: ROLE_ADMIN }
     +        - { path: ^/admin, roles: ROLE_ADMIN }
              # - { path: ^/profile, roles: ROLE_USER }
+
+     when@test:
 
 Las reglas ``access_control`` restringen el acceso mediante expresiones regulares. Cuando se intenta acceder a una URL que comienza con ``/admin``, el sistema de seguridad comprobará que el usuario que ha iniciado sesión tenga asignado el rol ``ROLE_ADMIN``.
 
@@ -256,7 +223,7 @@ Si intentas acceder al módulo de administración, serás redirigido a la págin
     :align: center
     :figclass: with-browser
 
-Inicia sesión usando ``admin`` y cualquier contraseña de texto plano que hayas codificado anteriormente. Si copiaste mi comando SQL exactamente, la contraseña es ``admin`` .
+Inicia sesión usando ``admin`` y cualquier contraseña de texto plano que hayas elegido anteriormente. Si copiaste mi comando SQL exactamente, la contraseña es ``admin`` .
 
 Ten en cuenta que EasyAdmin reconoce automáticamente el sistema de autenticación de Symfony:
 
@@ -276,10 +243,15 @@ Intenta hacer clic en el enlace "Cerrar sesión". ¡Lo tienes! Un panel de admin
 
 .. sidebar:: Yendo más allá
 
-    * La `documentación de Symfony Security <https://symfony.com/doc/current/security.html>`_;
+    * La `documentación de Symfony Security`_ ;
 
-    * `Tutorial de SymfonyCasts Security <https://symfonycasts.com/screencast/symfony-security>`_ ;
+    * `Tutorial de SymfonyCasts Security`_ ;
 
-    * `Cómo crear un formulario de inicio de sesión <https://symfony.com/doc/current/security/form_login_setup.html>`_ en aplicaciones Symfony;
+    * `Cómo crear un formulario de inicio de sesión`_ en aplicaciones Symfony;
 
-    * La `Chuleta de Symfony Security <https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/security_en_44.pdf>`_.
+    * La `Chuleta de Symfony Security`_ .
+
+.. _`documentación de Symfony Security`: https://symfony.com/doc/current/security.html
+.. _`Tutorial de SymfonyCasts Security`: https://symfonycasts.com/screencast/symfony-security
+.. _`Cómo crear un formulario de inicio de sesión`: https://symfony.com/doc/current/security/form_login_setup.html
+.. _`Chuleta de Symfony Security`: https://github.com/andreia/symfony-cheat-sheets/blob/master/Symfony4/security_en_44.pdf

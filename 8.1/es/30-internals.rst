@@ -128,7 +128,7 @@ En producción, verías, por ejemplo, que se carga un archivo llamado ``.env.loc
     single: Composer;Autoloader
     single: Autoloader
 
-¿De dónde viene? Upsun hace algunas optimizaciones cuando despliega una aplicación Symfony, como optimizar el *Composer autoloader* (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). También optimiza las variables de entorno definidas en el archivo ``.env`` (para evitar el análisis del archivo para cada solicitud) mediante la generación del archivo ``.env.local.prod``:
+¿De dónde viene? Upsun hace algunas optimizaciones cuando despliega una aplicación Symfony, como optimizar el *Composer autoloader* (``--optimize-autoloader --apcu-autoloader --classmap-authoritative``). También optimiza las variables de entorno definidas en el archivo ``.env`` (para evitar el análisis del archivo para cada solicitud) mediante la generación del archivo ``.env.local.php``:
 
 .. code-block:: terminal
     :class: ignore
@@ -146,7 +146,7 @@ Usando un depurador de pasos con Xdebug
 
 Las líneas de tiempo y los grafos de llamada de Blackfire permiten a los desarrolladores visualizar qué archivos/funciones/métodos son ejecutados por el motor PHP para comprender mejor el código base del proyecto.
 
-Otra forma de seguir la ejecución del código es usar un **depurador de pasos** como `Xdebug <https://xdebug.org>`_. Un depurador de pasos permite a los desarrolladores recorrer de forma interactiva el código de un proyecto PHP para depurar el flujo y examinar las estructuras de datos. Es muy útil para depurar comportamientos inesperados y reemplaza la técnica de depuración común "var_dump()/exit()".
+Otra forma de seguir la ejecución del código es usar un **depurador de pasos** como `Xdebug`_. Un depurador de pasos permite a los desarrolladores recorrer de forma interactiva el código de un proyecto PHP para depurar el flujo y examinar las estructuras de datos. Es muy útil para depurar comportamientos inesperados y reemplaza la técnica de depuración común "var_dump()/exit()".
 
 Primero, instala la extensión PHP ``xdebug``. Comprueba que esté instalada ejecutando el siguiente comando:
 
@@ -174,7 +174,7 @@ También puedes verificar que Xdebug esté habilitado para PHP-FPM yendo al nave
     :align: center
     :figclass: with-browser
 
-Ahora, habilita el modo de `debug`` de Xdebug:
+Ahora, habilita el modo ``debug`` de Xdebug:
 
 .. code-block:: ini
     :caption: php.ini
@@ -186,7 +186,7 @@ Ahora, habilita el modo de `debug`` de Xdebug:
 
 De manera predeterminada, Xdebug envía la información al puerto 9003 del host local.
 
-La activación de Xdebug se puede realizar de muchas formas, pero la más sencilla es utilizar Xdebug desde tu IDE. En este capítulo, usaremos Visual Studio Code para demostrar cómo funciona. Instala la extensión `PHP Debug <https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug>`_ iniciando la función "Quick Open" (``Ctrl+P``), pega el siguiente comando, y presiona enter:
+La activación de Xdebug se puede realizar de muchas formas, pero la más sencilla es utilizar Xdebug desde tu IDE. En este capítulo, usaremos Visual Studio Code para demostrar cómo funciona. Instala la extensión `PHP Debug`_ iniciando la función "Quick Open" (``Ctrl+P``), pega el siguiente comando, y presiona enter:
 
 .. code-block:: text
     :class: ignore
@@ -229,10 +229,16 @@ Si vas al navegador y actualizas, el IDE debería tomar el foco automáticamente
 
 Al depurar, puedes desmarcar el punto de interrupción "Todo" y establecer puntos de interrupción explícitamente en tu código.
 
-Si eres nuevo en depuradores por pasos, lee el `excelente tutorial para Visual Studio Code <https://code.visualstudio.com/Docs/editor/debugging>`_, que explica todo visualmente.
+Si eres nuevo en depuradores por pasos, lee el `excelente tutorial para Visual Studio Code`_, que explica todo visualmente.
 
 .. sidebar:: Yendo más allá
 
-    * `Documentación de depuración por pasos con Xdebug <https://xdebug.org/docs/step_debug>`_;
+    * `Documentación de depuración por pasos con Xdebug`_;
 
-    * `Depurar con Visual Studio Code <https://code.visualstudio.com/Docs/editor/debugging>`_.
+    * `Depurar con Visual Studio Code`_.
+
+.. _`Xdebug`: https://xdebug.org
+.. _`PHP Debug`: https://marketplace.visualstudio.com/items?itemName=felixfbecker.php-debug
+.. _`Documentación de depuración por pasos con Xdebug`: https://xdebug.org/docs/step_debug
+.. _`excelente tutorial para Visual Studio Code`: https://code.visualstudio.com/Docs/editor/debugging
+.. _`Depurar con Visual Studio Code`: https://code.visualstudio.com/Docs/editor/debugging

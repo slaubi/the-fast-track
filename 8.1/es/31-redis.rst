@@ -6,7 +6,7 @@ Utilizando Redis para almacenar sesiones
 
 Según el tráfico del sitio web y/o su infraestructura, es posible que desees utilizar Redis para administrar las sesiones de usuario en lugar de PostgreSQL.
 
-Cuando hablamos de bifurcar el código del proyecto para mover la sesión del sistema de archivos a la base de datos, enumeramos todos los pasos necesarios para agregar un nuevo servicio.
+Cuando hablamos de bifurcar el código del proyecto para mover las sesiones del sistema de archivos a la base de datos, enumeramos todos los pasos necesarios para agregar un nuevo servicio.
 
 Así es como puedes agregar Redis a tu proyecto en un parche:
 
@@ -87,4 +87,6 @@ Confirma y despliegua como de costumbre:
 
 .. sidebar:: Yendo más allá
 
-    * `Documentación Redis <https://redis.io/documentation>`_.
+    * `Documentación Redis`_.
+
+.. _`Documentación Redis`: https://redis.io/documentation

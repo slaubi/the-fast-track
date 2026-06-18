@@ -9,33 +9,6 @@ Ya está todo listo para crear la primera versión de la interfaz de usuario del
 
 ¿Recuerdas la llamada a ``htmlspecialchars()`` que tuvimos que hacer en el controlador para el huevo de pascua con el fin de evitar problemas de seguridad?  Esa es la razón por la que no usaremos PHP para nuestras plantillas. En su lugar, usaremos Twig. Además de ocuparse por nosotros de cambiar las secuencias de caracteres peligrosas por su equivalente inofensivo (*escaping*), `Twig`_ trae un montón de características interesantes que vamos a aprovechar, como la herencia de plantillas.
 
-Instalando Twig
----------------
-
-No necesitamos añadir Twig como una dependencia ya que ya ha sido instalado como una *dependencia transitiva* de EasyAdmin. ¿Pero qué pasa si decides cambiar a otro paquete de administración más adelante? Uno que utilice una API y un front-end de React, por ejemplo. Es probable que ya no dependa de Twig, por lo que Twig se eliminará automáticamente cuando elimines EasyAdmin.
-
-Por si acaso, digámosle a Composer que el proyecto realmente depende de Twig, independientemente de EasyAdmin. Basta con añadirlo como cualquier otra dependencia:
-
-.. code-block:: terminal
-
-    $ symfony composer req twig
-
-Ahora Twig forma parte de las dependencias principales del proyecto en ``composer.json``:
-
-.. code-block:: diff
-    :class: ignore
-
-    --- a/composer.json
-    +++ b/composer.json
-    @@ -14,6 +14,7 @@
-             "symfony/framework-bundle": "4.4.*",
-             "symfony/maker-bundle": "^1.0@dev",
-             "symfony/orm-pack": "dev-master",
-    +        "symfony/twig-pack": "^1.0",
-             "symfony/yaml": "4.4.*"
-         },
-         "require-dev": {
-
 Usando Twig para las plantillas
 -------------------------------
 
@@ -45,7 +18,7 @@ Usando Twig para las plantillas
 
 Todas las páginas del sitio web compartirán el mismo diseño y distribución de elementos principales (*layout*). Al instalar Twig, se ha creado un directorio ``templates/`` automáticamente y también se ha incluido un *layout* de ejemplo en ``base.html.twig``.
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/base.html.twig
     :class: ignore
 
@@ -54,11 +27,16 @@ Todas las páginas del sitio web compartirán el mismo diseño y distribución d
         <head>
             <meta charset="UTF-8">
             <title>{% block title %}Welcome!{% endblock %}</title>
-            {% block stylesheets %}{% endblock %}
+            <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+            {% block stylesheets %}
+            {% endblock %}
+
+            {% block javascripts %}
+                {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% endblock %}
         </head>
         <body>
             {% block body %}{% endblock %}
-            {% block javascripts %}{% endblock %}
         </body>
     </html>
 
@@ -70,7 +48,7 @@ Un *layout* puede definir elementos ``block``, que son los lugares donde las *pl
 
 Vamos a crear una plantilla para la página principal del proyecto en ``templates/conference/index.html.twig``:
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/index.html.twig
 
     {% extends 'base.html.twig' %}
@@ -102,8 +80,8 @@ Actualiza el controlador para renderizar la plantilla Twig:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
     @@ -2,22 +2,19 @@
 
      namespace App\Controller;
@@ -111,22 +89,22 @@ Actualiza el controlador para renderizar la plantilla Twig:
     +use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
+     use Symfony\Component\Routing\Attribute\Route;
     +use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
          #[Route('/', name: 'homepage')]
     -    public function index(): Response
     +    public function index(Environment $twig, ConferenceRepository $conferenceRepository): Response
          {
     -        return new Response(<<<EOF
-    -<html>
-    -    <body>
-    -        <img src="/images/under-construction.gif" />
-    -    </body>
-    -</html>
-    -EOF
+    -            <html>
+    -                <body>
+    -                    <img src="/images/under-construction.gif" />
+    -                </body>
+    -            </html>
+    -            EOF
     -        );
     +        return new Response($twig->render('conference/index.html.twig', [
     +            'conferences' => $conferenceRepository->findAll(),
@@ -154,24 +132,25 @@ Agrega un método ``show()`` en ``src/Controller/ConferenceController.php`` :
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -2,6 +2,8 @@
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -2,6 +2,9 @@
 
      namespace App\Controller;
 
     +use App\Entity\Conference;
     +use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
+    +use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
-    @@ -17,4 +19,13 @@ class ConferenceController extends AbstractController
+    @@ -17,4 +20,13 @@ final class ConferenceController extends AbstractController
                  'conferences' => $conferenceRepository->findAll(),
              ]));
          }
     +
     +    #[Route('/conference/{id}', name: 'conference')]
-    +    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
     +    {
     +        return new Response($twig->render('conference/show.html.twig', [
     +            'conference' => $conference,
@@ -180,7 +159,7 @@ Agrega un método ``show()`` en ``src/Controller/ConferenceController.php`` :
     +    }
      }
 
-Este método tiene un comportamiento especial que aún no hemos visto. Pedimos que se inyecte una instancia de ``Conference`` en el método. Pero puede haber muchos de estos en la base de datos. Symfony es capaz de determinar cuál quieres basándose en el ``{id}`` enviado en la ruta de la solicitud (siendo ``id`` la llave primaria de la tabla ``conference`` en la base de datos).
+Este método tiene un comportamiento especial que aún no hemos visto. Pedimos que se inyecte una instancia de ``Conference`` en el método. Pero puede haber muchos de estos en la base de datos. El atributo ``#[MapEntity]`` le indica a Symfony que obtenga el correcto basándose en el ``{id}`` enviado en la ruta de la solicitud (siendo ``id`` la llave primaria de la tabla ``conference`` en la base de datos).
 
 Los comentarios relacionados con la conferencia se pueden obtener a través del método ``findBy()`` que toma un criterio de búsqueda como primer argumento.
 
@@ -196,7 +175,7 @@ Los comentarios relacionados con la conferencia se pueden obtener a través del 
 
 El último paso es crear el fichero: ``templates/conference/show.html.twig``
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/show.html.twig
 
     {% extends 'base.html.twig' %}
@@ -209,7 +188,7 @@ El último paso es crear el fichero: ``templates/conference/show.html.twig``
         {% if comments|length > 0 %}
             {% for comment in comments %}
                 {% if comment.photofilename %}
-                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                    <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
                 {% endif %}
 
                 <h4>{{ comment.author }}</h4>
@@ -253,8 +232,8 @@ El último paso para terminar nuestra primera versión de la interfaz de usuario
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -7,5 +7,8 @@
 
          {% for conference in conferences %}
@@ -275,8 +254,8 @@ En su lugar, utiliza la *función* ``path()`` de Twig y usa el *nombre de la rut
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/index.html.twig
-    +++ b/templates/conference/index.html.twig
+    --- i/templates/conference/index.html.twig
+    +++ w/templates/conference/index.html.twig
     @@ -8,7 +8,7 @@
          {% for conference in conferences %}
              <h4>{{ conference }}</h4>
@@ -303,9 +282,9 @@ Crea un método llamado ``getCommentPaginator()`` en la clase  ``CommentReposito
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/CommentRepository.php
-    +++ b/src/Repository/CommentRepository.php
-    @@ -3,8 +3,10 @@
+    --- i/src/Repository/CommentRepository.php
+    +++ w/src/Repository/CommentRepository.php
+    @@ -3,19 +3,37 @@
      namespace App\Repository;
 
      use App\Entity\Comment;
@@ -315,12 +294,11 @@ Crea un método llamado ``getCommentPaginator()`` en la clase  ``CommentReposito
     +use Doctrine\ORM\Tools\Pagination\Paginator;
 
      /**
-      * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
-    @@ -14,11 +16,27 @@ use Doctrine\Persistence\ManagerRegistry;
+      * @extends ServiceEntityRepository<Comment>
       */
      class CommentRepository extends ServiceEntityRepository
      {
-    +    public const PAGINATOR_PER_PAGE = 2;
+    +    public const COMMENTS_PER_PAGE = 2;
     +
          public function __construct(ManagerRegistry $registry)
          {
@@ -333,7 +311,7 @@ Crea un método llamado ``getCommentPaginator()`` en la clase  ``CommentReposito
     +            ->andWhere('c.conference = :conference')
     +            ->setParameter('conference', $conference)
     +            ->orderBy('c.createdAt', 'DESC')
-    +            ->setMaxResults(self::PAGINATOR_PER_PAGE)
+    +            ->setMaxResults(self::COMMENTS_PER_PAGE)
     +            ->setFirstResult($offset)
     +            ->getQuery()
     +        ;
@@ -341,9 +319,9 @@ Crea un método llamado ``getCommentPaginator()`` en la clase  ``CommentReposito
     +        return new Paginator($query);
     +    }
     +
-         // /**
-         //  * @return Comment[] Returns an array of Comment objects
-         //  */
+         //    /**
+         //     * @return Comment[] Returns an array of Comment objects
+         //     */
 
 Hemos establecido el número máximo de comentarios por página en 2 para facilitar las pruebas.
 
@@ -352,37 +330,37 @@ Para gestionar la paginación en la plantilla, pasa a Twig el objeto tipo Pagina
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -6,6 +6,7 @@ use App\Entity\Conference;
-     use App\Repository\CommentRepository;
-     use App\Repository\ConferenceRepository;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -8,6 +8,7 @@ use App\Repository\ConferenceRepository;
+     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
-     use Symfony\Component\Routing\Annotation\Route;
+    +use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
-    @@ -21,11 +22,16 @@ class ConferenceController extends AbstractController
+
+    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-    +        $offset = max(0, $request->query->getInt('offset', 0));
+    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
                  'conference' => $conference,
     -            'comments' => $commentRepository->findBy(['conference' => $conference], ['createdAt' => 'DESC']),
     +            'comments' => $paginator,
-    +            'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
-    +            'next' => min(count($paginator), $offset + CommentRepository::PAGINATOR_PER_PAGE),
+    +            'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+    +            'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
              ]));
          }
      }
 
-El controlador obtiene el ``offset`` de la petición (``$request->query``) como un número entero (``getInt()``), donde por defecto es 0 si no está disponible.
+El atributo ``#[MapQueryParameter]`` mapea el parámetro ``offset`` de la cadena de consulta al argumento ``$offset`` del controlador, usando ``0`` por defecto cuando no está definido. Como el offset proviene del cliente, lo acotamos para evitar valores negativos.
 
 Los intervalos de ``previous`` (anterior) y ``next`` (siguiente) se calculan en base a toda la información que tenemos del paginador.
 
@@ -394,8 +372,8 @@ Por último, actualiza la plantilla para añadir enlaces a las páginas siguient
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/conference/show.html.twig
-    +++ b/templates/conference/show.html.twig
+    --- i/templates/conference/show.html.twig
+    +++ w/templates/conference/show.html.twig
     @@ -6,6 +6,8 @@
          <h2>{{ conference }} Conference</h2>
 
@@ -404,7 +382,7 @@ Por último, actualiza la plantilla para añadir enlaces a las páginas siguient
     +
              {% for comment in comments %}
                  {% if comment.photofilename %}
-                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" />
+                     <img src="{{ asset('uploads/photos/' ~ comment.photofilename) }}" style="max-width: 200px" />
     @@ -18,6 +20,13 @@
 
                  <p>{{ comment.text }}</p>
@@ -435,57 +413,65 @@ Ahora podrás navegar por los comentarios a través de los enlaces "Previous" y 
 Refactorizando el controlador
 -----------------------------
 
-Habrás notado que ambos métodos en ``ConferenceController`` toman un entorno (*environment*) de Twig como argumento. En lugar de inyectarlo en cada método, usemos alguna inyección en el constructor (eso hace que la lista de argumentos sea más corta y menos redundante):
+Habrás notado que ambos métodos en ``ConferenceController`` toman un entorno (*environment*) de Twig como argumento. En lugar de inyectarlo en cada método, aprovechemos el método auxiliar ``render()`` proporcionado por la clase padre:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -13,21 +13,28 @@ use Twig\Environment;
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+     use Symfony\Component\Routing\Attribute\Route;
+    -use Twig\Environment;
 
-     class ConferenceController extends AbstractController
+     final class ConferenceController extends AbstractController
      {
-    +    private $twig;
-    +
-    +    public function __construct(Environment $twig)
-    +    {
-    +        $this->twig = $twig;
-    +    }
-    +
          #[Route('/', name: 'homepage')]
     -    public function index(Environment $twig, ConferenceRepository $conferenceRepository): Response
     +    public function index(ConferenceRepository $conferenceRepository): Response
          {
     -        return new Response($twig->render('conference/index.html.twig', [
-    +        return new Response($this->twig->render('conference/index.html.twig', [
+    +        return $this->render('conference/index.html.twig', [
                  'conferences' => $conferenceRepository->findAll(),
-             ]));
+    -        ]));
+    +        ]);
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Environment $twig, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
+             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [
-    +        return new Response($this->twig->render('conference/show.html.twig', [
+    +        return $this->render('conference/show.html.twig', [
                  'conference' => $conference,
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
+                 'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
+    -        ]));
+    +        ]);
+         }
+     }
 
 .. sidebar:: Yendo más allá
 
-    * `Documentación de Twig <https://twig.symfony.com/doc/2.x/>`_ ;
+    * `Documentación de Twig`_ ;
 
-    * `Creando y usando plantillas <https://symfony.com/doc/current/templates.html>`_ en aplicaciones Symfony;
+    * `Creando y usando plantillas`_ en aplicaciones Symfony;
 
-    * `Tutorial de Twig en SymfonyCasts <https://symfonycasts.com/screencast/symfony/twig-recipe>`_ ;
+    * `Tutorial de Twig en SymfonyCasts`_ ;
 
-    * `Funciones y filtros Twig disponibles solo en Symfony <https://symfony.com/doc/current/reference/twig_reference.html>`_ ;
+    * `Funciones y filtros Twig disponibles solo en Symfony`_ ;
 
-    * El `controlador base AbstractController <https://symfony.com/doc/current/controller.html#the-base-controller-classes-services>`_ .
+    * El `controlador base AbstractController`_ .
 
 .. _`Twig`: https://twig.symfony.com/
+.. _`Documentación de Twig`: https://twig.symfony.com/doc/3.x/
+.. _`Creando y usando plantillas`: https://symfony.com/doc/current/templates.html
+.. _`Tutorial de Twig en SymfonyCasts`: https://symfonycasts.com/screencast/symfony/twig-recipe
+.. _`Funciones y filtros Twig disponibles solo en Symfony`: https://symfony.com/doc/current/reference/twig_reference.html
+.. _`controlador base AbstractController`: https://symfony.com/doc/current/controller.html#the-base-controller-classes-services

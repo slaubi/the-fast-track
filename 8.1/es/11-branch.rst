@@ -67,45 +67,24 @@ Para almacenar sesiones en la base de datos, cambia la configuración ``session.
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -7,7 +7,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
-         session:
-    -        handler_id: null
-    +        handler_id: '%env(DATABASE_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -3,7 +3,8 @@ framework:
+         secret: '%env(APP_SECRET)%'
+
+         # Note that the session will be started ONLY if you read or write from it.
+    -    session: true
+    +    session:
+    +        handler_id: '%env(resolve:DATABASE_URL)%'
+
+         #esi: true
+         #fragments: true
 
 Para almacenar sesiones en la base de datos, es necesario crear la tabla ``sessions``. Hazlo con una migración de Doctrine:
 
 .. code-block:: terminal
 
     $ symfony console make:migration
-
-Edita el archivo para agregar la creación de la tabla en el método ``up()``:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/migrations/Version00000000000000.php
-    +++ b/migrations/Version00000000000000.php
-    @@ -21,6 +21,14 @@ final class Version00000000000000 extends AbstractMigration
-         {
-             // this up() migration is auto-generated, please modify it to your needs
-
-    +        $this->addSql('
-    +            CREATE TABLE sessions (
-    +                sess_id VARCHAR(128) NOT NULL PRIMARY KEY,
-    +                sess_data BYTEA NOT NULL,
-    +                sess_lifetime INTEGER NOT NULL,
-    +                sess_time INTEGER NOT NULL
-    +            )
-    +        ');
-         }
-
-         public function down(Schema $schema): void
 
 Migra la base de datos:
 
@@ -119,23 +98,6 @@ Haz pruebas localmente navegando por el sitio web. Como no hay cambios visuales 
 .. note::
 
     No necesitamos los pasos 3 a 5 aquí ya que estamos reutilizando la base de datos como almacenamiento de sesión, pero el capítulo sobre el uso de Redis muestra lo sencillo que es agregar, probar e implementar un nuevo servicio tanto en Docker como en Upsun.
-
-Como la nueva tabla no es "administrada" por Doctrine, debemos configurar Doctrine para que no la elimine en la próxima migración de la base de datos:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/config/packages/doctrine.yaml
-    +++ b/config/packages/doctrine.yaml
-    @@ -5,6 +5,8 @@ doctrine:
-             # IMPORTANT: You MUST configure your server version,
-             # either here or in the DATABASE_URL env var (see .env file)
-             #server_version: '13'
-    +
-    +        schema_filter: ~^(?!session)~
-         orm:
-             auto_generate_proxy_classes: true
-             naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
 
 Haz commit de tus cambios a la nueva rama:
 
@@ -154,19 +116,19 @@ Desplegando una rama
 Antes de desplegar en producción, debemos probar la rama en la misma infraestructura que tiene producción. También debemos validar que todo funciona bien para el entorno de Symfony ``prod`` (el sitio web local utiliza el entorno de Symfony ``dev``).
 
 .. index::
-    single: Symfony CLI;env:delete
-    single: Symfony CLI;env:create
+    single: Symfony CLI;cloud:env:delete
+    single: Symfony CLI;cloud:env:create
 
 Ahora, vamos a crear un *entorno Upsun* basado en la *rama de Git*:
 
 .. code-block:: terminal
     :class: hide
 
-    $ symfony env:delete sessions-in-db --no-interaction
+    $ symfony cloud:env:delete sessions-in-db
 
 .. code-block:: terminal
 
-    $ symfony env:create
+    $ symfony cloud:push
 
 Este comando crea un nuevo entorno de la siguiente manera:
 
@@ -181,16 +143,16 @@ Como la implementación sigue los mismos pasos que el despliegue en producción,
 Los entornos que no son ``master`` son muy similares al ``master`` anterior, excepto por algunas pequeñas diferencias: por ejemplo, los correos electrónicos no se envían por defecto.
 
 .. index::
-    single: Symfony CLI;open:remote
+    single: Symfony CLI;cloud:url
 
 Una vez finalizado el despliegue, abre la nueva rama en un navegador:
 
 .. code-block:: terminal
     :class: ignore
 
-    $ symfony open:remote
+    $ symfony cloud:url -1
 
-Ten en cuenta que todos los comandos de Upsun funcionan en la rama actual de Git. Este comando abre la URL que ha sido desplegada para la rama ``sessions-in-db``; la URL será algo similar a ``https://sessions-in-db-xxx.eu.s5y.io/``.
+Ten en cuenta que todos los comandos de Upsun funcionan en la rama actual de Git. Este comando abre la URL que ha sido desplegada para la rama ``sessions-in-db``; la URL será algo similar a ``https://sessions-in-db-xxx.eu-5.platformsh.site/``.
 
 Prueba el sitio web en este nuevo entorno, deberías ver todos los datos que creaste en el entorno *master*.
 
@@ -199,14 +161,14 @@ Si se añaden más conferencias en el entorno ``master``, no aparecerán en el e
 Si el código se desarrolla en *master*, siempre puedes hacer *rebase* a la rama de Git y desplegar la versión actualizada, resolviendo los conflictos tanto para el código como para la infraestructura.
 
 .. index::
-    single: Symfony CLI;env:sync
+    single: Symfony CLI;cloud:env:sync
 
 Incluso puedes sincronizar los datos desde la rama *master* con el entorno ``sessions-in-db``:
 
 .. code-block:: terminal
     :class: answers(y)
 
-    $ symfony env:sync
+    $ symfony cloud:env:sync
 
 Depurando las implementaciones de producción antes del despliegue
 ------------------------------------------------------------------
@@ -217,19 +179,19 @@ Depurando las implementaciones de producción antes del despliegue
 Por defecto, todos los entornos Upsun utilizan la misma configuración que el entorno ``master``/``prod`` (también conocido como entorno Symfony ``prod``). Esto te permite probar la aplicación en condiciones reales. Te da la sensación de desarrollar y probar directamente en servidores de producción, pero sin los riesgos asociados con ello. Esto me recuerda a los buenos tiempos en los que estábamos realizando la implementación a través de FTP.
 
 .. index::
-    single: Symfony CLI;env:debug
+    single: Symfony CLI;cloud:env:debug
 
 En caso que tengas algún problema, es posible que quieras cambiar al entorno Symfony ``dev``:
 
 .. code-block:: terminal
 
-    $ symfony env:debug
+    $ symfony cloud:env:debug
 
 Cuando hayas terminado, vuelve a los ajustes de producción:
 
 .. code-block:: terminal
 
-    $ symfony env:debug --off
+    $ symfony cloud:env:debug --off
 
 .. warning::
 
@@ -238,9 +200,9 @@ Cuando hayas terminado, vuelve a los ajustes de producción:
 Probando las implementaciones de producción antes del despliegue
 -----------------------------------------------------------------
 
-Tener acceso a la próxima versión del sitio web con datos de producción te abre un abanico de oportunidades: desde pruebas visuales de regresión hasta pruebas de rendimiento. `Blackfire <https://blackfire.io>`_ es la herramienta perfecta para este trabajo.
+Tener acceso a la próxima versión del sitio web con datos de producción te abre un abanico de oportunidades: desde pruebas visuales de regresión hasta pruebas de rendimiento. `Blackfire`_ es la herramienta perfecta para este trabajo.
 
-Consulta el paso "Rendimiento" para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes del despliegue.
+Consulta el paso :doc:`Performance <29-performance>` para obtener más información sobre cómo puedes utilizar Blackfire para probar tu código antes del despliegue.
 
 Fusionando en producción
 -------------------------
@@ -261,7 +223,7 @@ Y haz el despliegue:
 
 .. code-block:: terminal
 
-    $ symfony deploy
+    $ symfony cloud:push
 
 Cuando se despliega, sólo los cambios de código e infraestructura son enviados a Upsun; los datos no se ven afectados de ninguna manera.
 
@@ -277,10 +239,12 @@ Finalmente, elimina la rama Git y el entorno Upsun:
 .. code-block:: terminal
 
     $ git branch -d sessions-in-db
-    $ symfony env:delete --env=sessions-in-db --no-interaction
+    $ symfony cloud:env:delete -e sessions-in-db
 
 .. sidebar:: Yendo más allá
 
-    * `Ramificación en Git; <https://www.git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell>`_
+    * `Ramificación en Git`_ ;
 
 .. _`resto de partes interesadas`: https://en.wikipedia.org/wiki/Project_stakeholder
+.. _`Ramificación en Git`: https://www.git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell
+.. _`Blackfire`: https://blackfire.io

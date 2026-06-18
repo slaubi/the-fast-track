@@ -1,5 +1,5 @@
-Symfony 5: La Vía Rápida
-==========================
+Symfony: La Vía Rápida
+======================
 
 .. toctree::
     :maxdepth: 1
@@ -28,12 +28,12 @@ Symfony 5: La Vía Rápida
     19-workflow
     20-emails
     21-cache
-    22-encore
+    22-styling
     23-imagine
-    24-cron
+    24-scheduler
     25-notifier
     26-api
-    27-spa
+    27-ux
     28-intl
     29-performance
     30-internals

@@ -8,38 +8,25 @@ Envío de correos electrónicos a los administradores
 
 Para asegurar que los comentarios aporten realmente información útil, el administrador debe moderarlos. Cuando un comentario se encuentra en el estado ``ham`` o ``potential_spam``, se debe enviar un *correo electrónico* al administrador con dos enlaces: uno para aceptar el comentario y otro para rechazarlo.
 
-Primero, instala el componente Symfony Mailer:
-
-.. code-block:: terminal
-
-    $ symfony composer req mailer
-
 Configurando una dirección de correo electrónico para el administrador
 ------------------------------------------------------------------------
 
-Para almacenar el correo electrónico del administrador, utiliza un parámetro de contenedor. A efectos de demostración, también permitimos que se establezca a través de una variable de entorno (aunque no debería ser necesario en la "vida real"). Para facilitar la inyección en servicios que necesitan el correo electrónico del administrador, define un ajuste de contenedor ``bind``:
+Para almacenar el correo electrónico del administrador, utiliza un parámetro de contenedor. A efectos de demostración, también permitimos que se establezca a través de una variable de entorno (aunque no debería ser necesario en la "vida real"):
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -4,6 +4,7 @@
-     # Put parameters here that don't need to change on each machine where the app is deployed
-     # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
+    @@ -5,6 +5,8 @@
+     # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
      parameters:
+         photo_dir: "%kernel.project_dir%/public/uploads/photos"
     +    default_admin_email: admin@example.com
+    +    admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
 
      services:
          # default configuration for services in *this* file
-    @@ -13,6 +14,7 @@ services:
-             bind:
-                 $photoDir: "%kernel.project_dir%/public/uploads/photos"
-                 $akismetKey: "%env(AKISMET_KEY)%"
-    +            $adminEmail: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
-
-         # makes classes in src/ available to be used as services
-         # this creates a service per class whose id is the fully-qualified class name
 
 Una variable de entorno puede ser "procesada" antes de ser utilizada. Aquí, estamos usando el procesador ``default`` para devolver el valor del parámetro ``default_admin_email`` si la variable de entorno ``ADMIN_EMAIL`` no existe.
 
@@ -53,43 +40,32 @@ En el manejador de mensajes, vamos a reemplazar la lógica de validación autom�
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/MessageHandler/CommentMessageHandler.php
-    +++ b/src/MessageHandler/CommentMessageHandler.php
-    @@ -7,6 +7,8 @@ use App\Repository\CommentRepository;
+    --- i/src/MessageHandler/CommentMessageHandler.php
+    +++ w/src/MessageHandler/CommentMessageHandler.php
+    @@ -7,6 +7,9 @@ use App\Repository\CommentRepository;
      use App\SpamChecker;
      use Doctrine\ORM\EntityManagerInterface;
      use Psr\Log\LoggerInterface;
     +use Symfony\Bridge\Twig\Mime\NotificationEmail;
+    +use Symfony\Component\DependencyInjection\Attribute\Autowire;
     +use Symfony\Component\Mailer\MailerInterface;
-     use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+     use Symfony\Component\Messenger\Attribute\AsMessageHandler;
      use Symfony\Component\Messenger\MessageBusInterface;
      use Symfony\Component\Workflow\WorkflowInterface;
-    @@ -18,15 +20,19 @@ class CommentMessageHandler implements MessageHandlerInterface
-         private $commentRepository;
-         private $bus;
-         private $workflow;
-    +    private $mailer;
-    +    private $adminEmail;
-         private $logger;
-
-    -    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, LoggerInterface $logger = null)
-    +    public function __construct(EntityManagerInterface $entityManager, SpamChecker $spamChecker, CommentRepository $commentRepository, MessageBusInterface $bus, WorkflowInterface $commentStateMachine, MailerInterface $mailer, string $adminEmail, LoggerInterface $logger = null)
-         {
-             $this->entityManager = $entityManager;
-             $this->spamChecker = $spamChecker;
-             $this->commentRepository = $commentRepository;
-             $this->bus = $bus;
-             $this->workflow = $commentStateMachine;
-    +        $this->mailer = $mailer;
-    +        $this->adminEmail = $adminEmail;
-             $this->logger = $logger;
+    @@ -20,6 +23,8 @@ class CommentMessageHandler
+             private CommentRepository $commentRepository,
+             private MessageBusInterface $bus,
+             private WorkflowInterface $commentStateMachine,
+    +        private MailerInterface $mailer,
+    +        #[Autowire('%admin_email%')] private string $adminEmail,
+             private ?LoggerInterface $logger = null,
+         ) {
          }
-
-    @@ -51,8 +57,13 @@ class CommentMessageHandler implements MessageHandlerInterface
-
+    @@ -42,8 +47,13 @@ class CommentMessageHandler
+                 $this->entityManager->flush();
                  $this->bus->dispatch($message);
-             } elseif ($this->workflow->can($comment, 'publish') || $this->workflow->can($comment, 'publish_ham')) {
-    -            $this->workflow->apply($comment, $this->workflow->can($comment, 'publish') ? 'publish' : 'publish_ham');
+             } elseif ($this->commentStateMachine->can($comment, 'publish') || $this->commentStateMachine->can($comment, 'publish_ham')) {
+    -            $this->commentStateMachine->apply($comment, $this->commentStateMachine->can($comment, 'publish') ? 'publish' : 'publish_ham');
     -            $this->entityManager->flush();
     +            $this->mailer->send((new NotificationEmail())
     +                ->subject('New comment posted')
@@ -109,14 +85,14 @@ Para enviar un correo electrónico, necesitamos un remitente (el encabezado ``Fr
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/packages/mailer.yaml
-    +++ b/config/packages/mailer.yaml
+    --- i/config/packages/mailer.yaml
+    +++ w/config/packages/mailer.yaml
     @@ -1,3 +1,5 @@
      framework:
          mailer:
              dsn: '%env(MAILER_DSN)%'
     +        envelope:
-    +            sender: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
+    +            sender: "%admin_email%"
 
 Extendiendo la plantilla del correo electrónico de notificación
 -----------------------------------------------------------------
@@ -128,7 +104,7 @@ Extendiendo la plantilla del correo electrónico de notificación
 
 La plantilla del correo electrónico de notificación se hereda de la plantilla de correo electrónico de notificación predeterminada que viene con Symfony:
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/emails/comment_notification.html.twig
 
     {% extends '@email/default/notification/body.html.twig' %}
@@ -151,7 +127,7 @@ La plantilla del correo electrónico de notificación se hereda de la plantilla 
 
 La plantilla sobreescribe algunos bloques para personalizar el mensaje de correo electrónico y poder añadir algunos enlaces que permitan al administrador aceptar o rechazar un comentario. Cualquier argumento de ruta que no sea un parámetro de ruta válido se añadirá como un elemento de cadena de consulta (la URL de rechazo tiene este aspecto ``/admin/comment/review/42?reject=true``).
 
-La plantilla predeterminada ``NotificationEmail`` utiliza `Inky <https://get.foundation/emails/docs/inky.html>`_ en lugar de HTML para diseñar correos electrónicos. Esto ayuda a crear mensajes de correo electrónico con capacidad de respuesta que son compatibles con todos los clientes de correo electrónico más populares.
+La plantilla predeterminada ``NotificationEmail`` utiliza `Inky`_ en lugar de HTML para diseñar correos electrónicos. Esto ayuda a crear mensajes de correo electrónico con capacidad de respuesta que son compatibles con todos los clientes de correo electrónico más populares.
 
 Para una máxima compatibilidad con los lectores de correo electrónico, el diseño base de la notificación incluye todas las hojas de estilo (a través del paquete CSS inliner) de forma predeterminada.
 
@@ -177,22 +153,31 @@ Define el nombre de dominio y el esquema a utilizar de manera explícita:
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/config/services.yaml
-    +++ b/config/services.yaml
-    @@ -5,6 +5,11 @@
-     # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
-     parameters:
+    --- i/config/services.yaml
+    +++ w/config/services.yaml
+    @@ -7,6 +7,7 @@ parameters:
+         photo_dir: "%kernel.project_dir%/public/uploads/photos"
          default_admin_email: admin@example.com
-    +    default_domain: '127.0.0.1'
-    +    default_scheme: 'http'
-    +
-    +    router.request_context.host: '%env(default:default_domain:SYMFONY_DEFAULT_ROUTE_HOST)%'
-    +    router.request_context.scheme: '%env(default:default_scheme:SYMFONY_DEFAULT_ROUTE_SCHEME)%'
+         admin_email: "%env(string:default:default_admin_email:ADMIN_EMAIL)%"
+    +    default_base_url: 'http://127.0.0.1'
 
      services:
          # default configuration for services in *this* file
 
-Las variables de entorno ``SYMFONY_DEFAULT_ROUTE_PORT`` y ``SYMFONY_DEFAULT_ROUTE_HOST`` se establecen automáticamente de forma local cuando se utiliza el comando ``symfony`` y se determinan en función de la configuración de Upsun.
+Luego indícale al enrutador que la use como la URI predeterminada al generar URLs fuera de una petición HTTP:
+
+.. code-block:: diff
+    :caption: patch_file
+
+    --- i/config/packages/routing.yaml
+    +++ w/config/packages/routing.yaml
+    @@ -3,3 +3,3 @@ framework:
+             # Configure how to generate URLs in non-HTTP contexts, such as CLI commands.
+             # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
+    -        default_uri: '%env(DEFAULT_URI)%'
+    +        default_uri: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
+
+La variable de entorno ``SYMFONY_DEFAULT_ROUTE_URL`` se establece automáticamente de forma local cuando se utiliza el comando ``symfony`` y se determina en función de la configuración de Upsun.
 
 Enlazando una ruta con un controlador
 -------------------------------------
@@ -211,48 +196,43 @@ La ruta ``review_comment`` no existe todavía, vamos a crear un controlador de a
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Messenger\MessageBusInterface;
-    use Symfony\Component\Routing\Annotation\Route;
-    use Symfony\Component\Workflow\Registry;
+    use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\Component\Workflow\WorkflowInterface;
     use Twig\Environment;
 
     class AdminController extends AbstractController
     {
-        private $twig;
-        private $entityManager;
-        private $bus;
-
-        public function __construct(Environment $twig, EntityManagerInterface $entityManager, MessageBusInterface $bus)
-        {
-            $this->twig = $twig;
-            $this->entityManager = $entityManager;
-            $this->bus = $bus;
+        public function __construct(
+            private Environment $twig,
+            private EntityManagerInterface $entityManager,
+            private MessageBusInterface $bus,
+        ) {
         }
 
         #[Route('/admin/comment/review/{id}', name: 'review_comment')]
-        public function reviewComment(Request $request, Comment $comment, Registry $registry): Response
+        public function reviewComment(Request $request, Comment $comment, WorkflowInterface $commentStateMachine): Response
         {
             $accepted = !$request->query->get('reject');
 
-            $machine = $registry->get($comment);
-            if ($machine->can($comment, 'publish')) {
+            if ($commentStateMachine->can($comment, 'publish')) {
                 $transition = $accepted ? 'publish' : 'reject';
-            } elseif ($machine->can($comment, 'publish_ham')) {
+            } elseif ($commentStateMachine->can($comment, 'publish_ham')) {
                 $transition = $accepted ? 'publish_ham' : 'reject_ham';
             } else {
                 return new Response('Comment already reviewed or not in the right state.');
             }
 
-            $machine->apply($comment, $transition);
+            $commentStateMachine->apply($comment, $transition);
             $this->entityManager->flush();
 
             if ($accepted) {
                 $this->bus->dispatch(new CommentMessage($comment->getId()));
             }
 
-            return $this->render('admin/review.html.twig', [
+            return new Response($this->twig->render('admin/review.html.twig', [
                 'transition' => $transition,
                 'comment' => $comment,
-            ]);
+            ]));
         }
     }
 
@@ -266,7 +246,7 @@ En lugar de crear una instancia ``Response``, hemos utilizado ``render()``, un m
 
 Una vez terminada la revisión, una pequeña plantilla agradece al administrador su arduo trabajo:
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/admin/review.html.twig
 
     {% extends 'base.html.twig' %}
@@ -284,45 +264,22 @@ Usando un receptor de correos electrónicos
 .. index::
     single: Docker;Mail Catcher
 
-En lugar de usar un servidor SMTP "real" o un proveedor externo para enviar correos electrónicos, usaremos un receptor de correo. Un receptor de correo proporciona un servidor SMTP que no entrega los correos electrónicos, sino que los hace disponibles a través de una interfaz Web:
+En lugar de usar un servidor SMTP "real" o un proveedor externo para enviar correos electrónicos, usaremos un receptor de correo. Un receptor de correo proporciona un servidor SMTP que no entrega los correos electrónicos, sino que los hace disponibles a través de una interfaz Web. Afortunadamente, Symfony ya ha configurado automáticamente un receptor de correo de este tipo para nosotros:
 
-.. code-block:: diff
-
-    --- a/docker-compose.yaml
-    +++ b/docker-compose.yaml
-    @@ -8,3 +8,7 @@ services:
-                 POSTGRES_PASSWORD: main
-                 POSTGRES_DB: main
-             ports: [5432]
-    +
-    +    mailer:
-    +        image: schickling/mailcatcher
-    +        ports: [1025, 1080]
-
-Cierra y reinicia los contenedores para agregar el receptor de correos:
-
-.. code-block:: terminal
-
-    $ docker-compose stop
-    $ docker-compose up -d
-
-También debes detener el consumidor de mensajes, ya que aún no conoce el receptor de correo:
-
-.. code-block:: terminal
-
-    $ symfony console messenger:stop-workers
-
-E inícialo de nuevo. El ``MAILER_DSN`` ahora se expone automáticamente:
-
-.. code-block:: terminal
+.. code-block:: yaml
+    :caption: compose.override.yaml
     :class: ignore
 
-    $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
-
-.. code-block:: terminal
-    :class: hide
-
-    $ sleep 10
+    ###> symfony/mailer ###
+    mailer:
+        image: axllent/mailpit
+        ports:
+        - "1025"
+        - "8025"
+        environment:
+        MP_SMTP_AUTH_ACCEPT_ANY: 1
+        MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ###< symfony/mailer ###
 
 Accediendo al Webmail
 ---------------------
@@ -374,20 +331,24 @@ Ya sabemos cómo hacer eso: envía el correo electrónico desde el bus de mensaj
 
 Una instancia ``MailerInterface`` hace el trabajo duro: cuando se define un bus, éste entrega los mensajes de correo electrónico que contiene en lugar de enviarlos. No se necesitan cambios en tu código.
 
-Pero justo ahora, el bus está enviando el correo electrónico de forma síncrona ya que no hemos configurado la cola que queremos usar para los correos electrónicos. Vamos a usar RabbitMQ de nuevo:
+El bus ya está enviando el correo electrónico de forma asíncrona según la configuración predeterminada de Messenger:
 
-.. code-block:: diff
-    :caption: patch_file
+.. code-block:: yaml
+    :caption: config/packages/messenger.yaml
+    :emphasize-lines: 4
+    :class: ignore
 
-    --- a/config/packages/messenger.yaml
-    +++ b/config/packages/messenger.yaml
-    @@ -20,3 +20,4 @@ framework:
-             routing:
-                 # Route your messages to the transports
-                 App\Message\CommentMessage: async
-    +            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+    framework:
+        messenger:
+            routing:
+                Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+                Symfony\Component\Notifier\Message\ChatMessage: async
+                Symfony\Component\Notifier\Message\SmsMessage: async
 
-Estamos utilizando el mismo transporte (RabbitMQ) para los mensajes de los comentarios y los correos electrónicos, pero esto no tiene por qué ser necesariamente así. Puedes decidir utilizar otro transporte para gestionar diferentes prioridades de mensajes, por ejemplo. El uso de diferentes transportes también te da la oportunidad de tener diferentes máquinas de trabajo manejando diferentes tipos de mensajes. Es flexible y depende de ti.
+                # Route your messages to the transports
+                App\Message\CommentMessage: async
+
+Estamos utilizando el mismo transporte para los mensajes de los comentarios y los correos electrónicos, pero esto no tiene por qué ser necesariamente así. Puedes decidir utilizar otro transporte para gestionar diferentes prioridades de mensajes, por ejemplo. El uso de diferentes transportes también te da la oportunidad de tener diferentes máquinas de trabajo manejando diferentes tipos de mensajes. Es flexible y depende de ti.
 
 Comprobando los correos electrónicos
 -------------------------------------
@@ -403,7 +364,7 @@ Symfony incluye comprobaciones (*assertions*) que facilitan estas pruebas, aquí
 .. code-block:: php
     :class: ignore
 
-    public function testMailerAssertions()
+    public function testMailerAssertions(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');
@@ -431,24 +392,8 @@ Enviando correos electrónicos en Upsun
 
 No hay una configuración específica para Upsun. Todas las cuentas vienen con una cuenta Sendgrid que se utiliza automáticamente para enviar correos electrónicos.
 
-Tienes que actualizar aún la configuración de Upsun para incluir la extensión PHP ``xsl`` que necesita Inky:
-
-.. code-block:: diff
-    :caption: patch_file
-
-    --- a/.symfony.cloud.yaml
-    +++ b/.symfony.cloud.yaml
-    @@ -4,6 +4,7 @@ type: php:8.0
-
-     runtime:
-         extensions:
-    +        - xsl
-             - pdo_pgsql
-             - apcu
-             - mbstring
-
 .. index::
-    single: Symfony CLI;env:setting:set
+    single: Symfony CLI;cloud:env:info
 
 .. note::
 
@@ -456,16 +401,23 @@ Tienes que actualizar aún la configuración de Upsun para incluir la extensión
 
     .. code-block:: terminal
 
-        $ symfony env:setting:set email on
+        $ symfony cloud:env:info enable_smtp on
 
 .. sidebar:: Yendo más allá
 
-    * `Tutorial del Mailer en SymfonyCasts <https://symfonycasts.com/screencast/mailer>`_;
+    * `Tutorial del Mailer en SymfonyCasts`_ ;
 
-    * La `documentación del lenguaje de plantillas Inky <https://get.foundation/emails/docs/inky.html>`_;
+    * La `documentación del lenguaje de plantillas Inky`_ ;
 
-    * Los `Procesadores de Variables de Entorno <https://symfony.com/doc/current/configuration/env_var_processors.html>`_;
+    * Los `Procesadores de Variables de Entorno`_ ;
 
-    * La `documentación del componente Mailer del framework Symfony <https://symfony.com/doc/current/mailer.html>`_;
+    * La `documentación del componente Mailer del framework Symfony`_ ;
 
-    * La `documentación de Upsun sobre correos electrónicos <https://symfony.com/doc/current/cloud/services/emails.html>`_.
+    * La `documentación de Upsun sobre correos electrónicos`_ .
+
+.. _`Inky`: https://get.foundation/emails/docs/inky.html
+.. _`Tutorial del Mailer en SymfonyCasts`: https://symfonycasts.com/screencast/mailer
+.. _`documentación del lenguaje de plantillas Inky`: https://get.foundation/emails/docs/inky.html
+.. _`Procesadores de Variables de Entorno`: https://symfony.com/doc/current/configuration/env_var_processors.html
+.. _`documentación del componente Mailer del framework Symfony`: https://symfony.com/doc/current/mailer.html
+.. _`documentación de Upsun sobre correos electrónicos`: https://symfony.com/doc/current/cloud/services/emails.html

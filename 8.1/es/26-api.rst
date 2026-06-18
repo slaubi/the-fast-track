@@ -23,10 +23,10 @@ Exponiendo una API para las conferencias
 ----------------------------------------
 
 .. index::
-    single: Annotations;@ApiResource
-    single: Annotations;Groups
+    single: Attributes;ApiResource
+    single: Attributes;Groups
 
-Solo necesitamos unas pocas anotaciones en la clase Conference para configurar la API:
+Solo necesitamos unos pocos atributos en la clase Conference para configurar la API:
 
 .. code-block:: diff
     :caption: patch_file
@@ -88,7 +88,7 @@ Solo necesitamos unas pocas anotaciones en la clase Conference para configurar l
 
          public function __construct()
 
-La anotación principal ``@ApiResource`` configura la API de conferencias. Restringe las operaciones posibles a ``get`` y configura varias cosas: como qué campos mostrar y cómo ordenar las conferencias.
+El atributo principal ``ApiResource`` configura la API de conferencias. Restringe las operaciones posibles a ``get`` y configura varias cosas: como qué campos mostrar y cómo ordenar las conferencias.
 
 Por defecto, el punto de entrada principal para la API es ``/api`` debido a la configuración que añadió en ``config/routes/api_platform.yaml`` la receta durante la instalación del paquete.
 
@@ -112,9 +112,9 @@ Exponiendo una API para los comentarios
 ---------------------------------------
 
 .. index::
-    single: Annotations;@ApiResource
-    single: Annotations;@ApiFilter
-    single: Annotations;Groups
+    single: Attributes;ApiResource
+    single: Attributes;ApiFilter
+    single: Attributes;Groups
 
 Haz lo mismo con los comentarios:
 
@@ -188,7 +188,7 @@ Haz lo mismo con los comentarios:
 
          #[ORM\Column(length: 255, options: ['default' => 'submitted'])]
 
-Utilizaremos el mismo tipo de anotaciones para configurar la clase.
+Utilizaremos el mismo tipo de atributos para configurar la clase.
 
 Restringiendo los comentarios expuestos por la API
 --------------------------------------------------
@@ -238,10 +238,12 @@ Configurando CORS
 
 Por defecto, la política de seguridad *same-origin* (mismo-origen) de los clientes HTTP modernos prohíbe llamar a la API desde otro dominio. El paquete CORS, instalado como parte de ``composer req api``, envía encabezados de CORS (Cross-Origin Resource Sharing) basados en la variable de entorno ``CORS_ALLOW_ORIGIN``.
 
-Por defecto, su valor, definido en ``.env``, permite realizar peticiones HTTP desde ``localhost`` y ``127.0.0.1`` en cualquier puerto. Eso es exactamente lo que necesitamos para el siguiente paso, en el que crearemos una SPA (*Single Page Application*) que tendrá su propio servidor web y que consultará a la API.
+Por defecto, su valor, definido en ``.env``, permite realizar peticiones HTTP desde ``localhost`` y ``127.0.0.1`` en cualquier puerto. Adáptalo cuando una aplicación alojada en otro dominio, como una aplicación móvil o un front-end externo, necesite llamar a la API.
 
 .. sidebar:: Yendo más allá
 
-    * `Tutorial de API Platform de SymfonyCasts <https://symfonycasts.com/screencast/api-platform>`_;
+    * `Tutorial de API Platform de SymfonyCasts`_ ;
 
     * Para habilitar el soporte de GraphQL, ejecuta ``composer require webonyx/graphql-php``, y luego abre ``/api/graphql`` en el navegador.
+
+.. _`Tutorial de API Platform de SymfonyCasts`: https://symfonycasts.com/screencast/api-platform
