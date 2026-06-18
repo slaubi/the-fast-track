@@ -340,14 +340,13 @@
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
 
-    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
+    @@ -22,11 +23,15 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
     -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
-    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
@@ -360,7 +359,7 @@
          }
      }
 
-Атрибут ``#[MapQueryParameter]`` зіставляє параметр ``offset`` з рядка запиту з аргументом контролера ``$offset`` зі значенням за замовчуванням ``0``, якщо його не встановлено. Оскільки offset надходить від клієнта, ми обмежуємо його, щоб уникнути від'ємних значень.
+Атрибут ``#[MapQueryParameter]`` зіставляє параметр ``offset`` з рядка запиту з аргументом контролера ``$offset`` зі значенням за замовчуванням ``0``, якщо його не встановлено. Оскільки offset надходить від клієнта, параметр ``min_range`` перевіряє, що воно не від'ємне; Symfony повертає відповідь 404, якщо значення некоректне.
 
 Зміщення ``previous`` і ``next`` обчислюються на основі всієї інформації, яку ми отримали з пагінатора.
 
@@ -420,7 +419,7 @@
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    @@ -9,28 +9,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
@@ -440,10 +439,9 @@
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [

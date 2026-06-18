@@ -90,17 +90,16 @@ Pour afficher le formulaire, créez-le dans le contrôleur et transmettez-le au 
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
+    @@ -23,5 +25,8 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug:conference}', name: 'conference')]
-         public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+         public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
     +
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-    @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
+    @@ -30,6 +35,7 @@ final class ConferenceController extends AbstractController
                  'comments' => $paginator,
                  'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
                  'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
@@ -310,12 +309,12 @@ Nous devrions maintenant nous occuper de la soumission du formulaire et de la pe
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
+    @@ -24,9 +30,18 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug:conference}', name: 'conference')]
-    -    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
+    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -329,7 +328,6 @@ Nous devrions maintenant nous occuper de la soumission du formulaire et de la pe
     +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
     +        }
 
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 Notez que l'objet ``Request`` est désormais injecté dans le contrôleur, car le formulaire en a besoin pour inspecter les données soumises via ``handleRequest()``.
@@ -388,14 +386,14 @@ Maintenant, nous avons tout ce qu'il nous faut pour implémenter la logique néc
          }
 
          #[Route('/conference/{slug:conference}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
     -    {
     +    public function show(
     +        Request $request,
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
-    +        #[MapQueryParameter] int $offset = 0,
+    +        #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
     +    ): Response {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);

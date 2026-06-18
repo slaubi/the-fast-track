@@ -43,10 +43,10 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,
              #[Autowire('%photo_dir%')] string $photoDir,
-             #[MapQueryParameter] int $offset = 0,
+             #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
          ): Response {
              $comment = new Comment();
-    @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
+    @@ -69,8 +72,14 @@ final class ConferenceController extends AbstractController
                  ];
                  $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
@@ -59,7 +59,6 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
     +            $notifier->send(new Notification('Can you check your submission? There are some problems with it.', ['browser']));
     +        }
     +
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 Il notificatore *invia* una *notifica* ai *destinatari* attraverso un *canale*.

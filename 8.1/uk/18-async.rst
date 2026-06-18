@@ -304,7 +304,7 @@
              CommentRepository $commentRepository,
     -        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
-             #[MapQueryParameter] int $offset = 0,
+             #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -50,6 +51,7 @@ final class ConferenceController extends AbstractController

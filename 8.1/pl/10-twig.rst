@@ -340,14 +340,13 @@ Aby móc zmieniać stronicowanie w szablonie, zamiast obiektu Doctrine Collectio
      use Symfony\Component\Routing\Attribute\Route;
      use Twig\Environment;
 
-    @@ -22,11 +23,16 @@ final class ConferenceController extends AbstractController
+    @@ -22,11 +23,15 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
     -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
-    +        $offset = max(0, $offset);
     +        $paginator = $commentRepository->getCommentPaginator($conference, $offset);
     +
              return new Response($twig->render('conference/show.html.twig', [
@@ -360,7 +359,7 @@ Aby móc zmieniać stronicowanie w szablonie, zamiast obiektu Doctrine Collectio
          }
      }
 
-Atrybut ``#[MapQueryParameter]`` mapuje parametr ``offset`` z query stringa na argument kontrolera ``$offset``, z wartością domyślną ``0``, gdy nie został ustawiony. Ponieważ offset pochodzi od klienta, ograniczamy go, aby uniknąć wartości ujemnych.
+Atrybut ``#[MapQueryParameter]`` mapuje parametr ``offset`` z query stringa na argument kontrolera ``$offset``, z wartością domyślną ``0``, gdy nie został ustawiony. Ponieważ offset pochodzi od klienta, opcja ``min_range`` sprawdza, że nie jest ujemny; Symfony zwraca odpowiedź 404, gdy wartość jest nieprawidłowa.
 
 Właściwości ``previous`` i ``next`` (przesunięcie do przodu i do tyłu) są określane na podstawie wszystkich informacji pochodzących z paginatora.
 
@@ -420,7 +419,7 @@ Być może udało Ci się zauważyć, że obie metody w ``ConferenceController``
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -9,29 +9,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    @@ -9,28 +9,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
      use Symfony\Component\Routing\Attribute\Route;
@@ -440,10 +439,9 @@ Być może udało Ci się zauważyć, że obie metody w ``ConferenceController``
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Environment $twig, #[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
     -        return new Response($twig->render('conference/show.html.twig', [
