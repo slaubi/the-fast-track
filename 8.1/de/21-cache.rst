@@ -146,7 +146,7 @@ Erstelle einen Controller, der nur das HTML-Fragment zurückgibt, welches die Ko
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Erstelle das entsprechende Template:

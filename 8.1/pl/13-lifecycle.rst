@@ -315,21 +315,29 @@ Spróbuj dodać kilka konferencji w panelu administracyjnym i zmienić miasto lu
     single: Twig;path
     single: Attributes;Route
 
-Ostatnią zmianą jest aktualizacja kontrolerów i szablonów, tak aby mechanizm routingu wykorzystywał ``slug`` zamiast ``id`` konferencji. Ponieważ parametr trasy nie jest już kluczem podstawowym encji, wskaż atrybutowi ``#[MapEntity]``, którą właściwość ma dopasować, przekazując jawne ``mapping``:
+Ostatnią zmianą jest aktualizacja kontrolerów i szablonów, tak aby mechanizm routingu wykorzystywał ``slug`` zamiast ``id`` konferencji. Ponieważ parametr trasy nie jest już kluczem podstawowym encji, użyj składni ``{slug:conference}``, aby wskazać Symfony, że ma pobrać ``$conference`` poprzez dopasowanie jej właściwości ``slug``; atrybut ``#[MapEntity]`` nie jest już potrzebny:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
+    @@ -5,7 +5,6 @@
+     use App\Entity\Conference;
+     use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+    -use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
     @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
     -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    #[Route('/conference/{slug}', name: 'conference')]
-    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    #[Route('/conference/{slug:conference}', name: 'conference')]
+    +    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $offset = max(0, $offset);
     --- i/templates/base.html.twig

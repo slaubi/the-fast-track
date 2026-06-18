@@ -146,7 +146,7 @@ Utwórz kontroler zwracający tylko fragment kodu HTML, który wyświetla konfer
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Utwórz odpowiedni szablon:

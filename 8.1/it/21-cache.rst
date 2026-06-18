@@ -146,7 +146,7 @@ Creiamo un controller che restituisce solo il frammento HTML che visualizza le c
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Creiamo il template corrispondente:

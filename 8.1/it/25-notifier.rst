@@ -37,9 +37,8 @@ Come primo passo, notifichiamo direttamente nel browser agli utenti che i commen
      use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
-    @@ -45,8 +47,9 @@ final class ConferenceController extends AbstractController
+    @@ -45,7 +47,8 @@ final class ConferenceController extends AbstractController
              Request $request,
-             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,

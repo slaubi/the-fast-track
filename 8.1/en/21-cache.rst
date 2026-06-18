@@ -146,7 +146,7 @@ Create a controller that only returns the HTML fragment that displays the confer
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Create the corresponding template:

@@ -315,21 +315,29 @@ Versuche, weitere Konferenzen im Backend hinzuzufügen und ändere  die Stadt od
     single: Twig;path
     single: Attributes;Route
 
-Die letzte Änderung besteht darin, die Controller und die Templates so anzupassen, dass diese den Konferenz-``slug`` anstelle der Konferenz-``id`` für Routen verwenden. Da der Routenparameter nicht mehr der Primärschlüssel der Entität ist, teile ``#[MapEntity]`` über ein explizites ``mapping`` mit, welche Eigenschaft abgeglichen werden soll:
+Die letzte Änderung besteht darin, die Controller und die Templates so anzupassen, dass diese den Konferenz-``slug`` anstelle der Konferenz-``id`` für Routen verwenden. Da der Routenparameter nicht mehr der Primärschlüssel der Entität ist, verwende die ``{slug:conference}``-Syntax, um Symfony anzuweisen, die ``$conference`` anhand ihrer ``slug``-Eigenschaft zu laden; das Attribut ``#[MapEntity]`` wird nicht mehr benötigt:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
+    @@ -5,7 +5,6 @@
+     use App\Entity\Conference;
+     use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+    -use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
     @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
     -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    #[Route('/conference/{slug}', name: 'conference')]
-    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    #[Route('/conference/{slug:conference}', name: 'conference')]
+    +    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $offset = max(0, $offset);
     --- i/templates/base.html.twig
