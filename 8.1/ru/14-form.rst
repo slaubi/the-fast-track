@@ -90,17 +90,16 @@
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
+    @@ -23,5 +25,8 @@ final class ConferenceController extends AbstractController
          #[Route('/conference/{slug:conference}', name: 'conference')]
-         public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+         public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
     +
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-    @@ -31,6 +36,7 @@ final class ConferenceController extends AbstractController
+    @@ -30,6 +35,7 @@ final class ConferenceController extends AbstractController
                  'comments' => $paginator,
                  'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
                  'next' => min(count($paginator), $offset + CommentRepository::COMMENTS_PER_PAGE),
@@ -310,12 +309,12 @@
          #[Route('/', name: 'homepage')]
          public function index(ConferenceRepository $conferenceRepository): Response
          {
-    @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
+    @@ -24,9 +30,18 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{slug:conference}', name: 'conference')]
-    -    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
+    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -329,7 +328,6 @@
     +            return $this->redirectToRoute('conference', ['slug' => $conference->getSlug()]);
     +        }
 
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 Обратите внимание, что объект ``Request`` теперь внедряется в контроллер, поскольку он нужен форме для проверки отправленных данных через ``handleRequest()``.
@@ -388,14 +386,14 @@
          }
 
          #[Route('/conference/{slug:conference}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
     -    {
     +    public function show(
     +        Request $request,
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,
-    +        #[MapQueryParameter] int $offset = 0,
+    +        #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
     +    ): Response {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);

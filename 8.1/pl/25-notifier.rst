@@ -43,10 +43,10 @@ Pierwszym krokiem jest poinformowanie użytkowników, że komentarze są moderow
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,
              #[Autowire('%photo_dir%')] string $photoDir,
-             #[MapQueryParameter] int $offset = 0,
+             #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
          ): Response {
              $comment = new Comment();
-    @@ -69,9 +72,15 @@ final class ConferenceController extends AbstractController
+    @@ -69,8 +72,14 @@ final class ConferenceController extends AbstractController
                  ];
                  $this->bus->dispatch(new CommentMessage($comment->getId(), $context));
 
@@ -59,7 +59,6 @@ Pierwszym krokiem jest poinformowanie użytkowników, że komentarze są moderow
     +            $notifier->send(new Notification('Can you check your submission? There are some problems with it.', ['browser']));
     +        }
     +
-             $offset = max(0, $offset);
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
 Notifier *wysyła powiadomienie* (ang. sends notification) do *odbiorców* (ang. recipients) za pośrednictwem *kanału* (ang. channel).

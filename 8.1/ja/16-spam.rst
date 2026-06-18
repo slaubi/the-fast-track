@@ -227,7 +227,7 @@ OpenAI API キーをヴォールトに追加します:
              CommentRepository $commentRepository,
     +        SpamChecker $spamChecker,
              #[Autowire('%photo_dir%')] string $photoDir,
-             #[MapQueryParameter] int $offset = 0,
+             #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0,
          ): Response {
              $comment = new Comment();
     @@ -48,6 +50,17 @@ final class ConferenceController extends AbstractController
