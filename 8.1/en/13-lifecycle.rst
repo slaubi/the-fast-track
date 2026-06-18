@@ -315,21 +315,29 @@ Try adding more conferences in the backend and change the city or the year of an
     single: Twig;path
     single: Attributes;Route
 
-The last change is to update the controllers and the templates to use the conference ``slug`` instead of the conference ``id`` for routes. As the route parameter is no longer the entity primary key, tell ``#[MapEntity]`` which property to match by passing an explicit ``mapping``:
+The last change is to update the controllers and the templates to use the conference ``slug`` instead of the conference ``id`` for routes. As the route parameter is no longer the entity primary key, use the ``{slug:conference}`` syntax to tell Symfony to fetch the ``$conference`` by matching its ``slug`` property; the ``#[MapEntity]`` attribute is no longer needed:
 
 .. code-block:: diff
     :caption: patch_file
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
+    @@ -5,7 +5,6 @@
+     use App\Entity\Conference;
+     use App\Repository\CommentRepository;
+     use App\Repository\ConferenceRepository;
+    -use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+     use Symfony\Component\HttpFoundation\Response;
+     use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
     @@ -20,7 +20,7 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
     -    #[Route('/conference/{id}', name: 'conference')]
     -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    #[Route('/conference/{slug}', name: 'conference')]
-    +    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    #[Route('/conference/{slug:conference}', name: 'conference')]
+    +    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $offset = max(0, $offset);
     --- i/templates/base.html.twig
