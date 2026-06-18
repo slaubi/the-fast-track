@@ -474,6 +474,42 @@ The admin backend is currently displaying the photo filename, but we want to see
                  ->onlyOnIndex()
              ;
 
+Deleting Photos of Removed Comments
+-----------------------------------
+
+When a comment is deleted from the admin backend, its uploaded photo lingers on disk forever. Let's clean it up with a Doctrine entity listener, as we did to generate conference slugs:
+
+.. code-block:: php
+    :caption: src/EntityListener/CommentEntityListener.php
+
+    namespace App\EntityListener;
+
+    use App\Entity\Comment;
+    use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+    use Doctrine\ORM\Event\PostRemoveEventArgs;
+    use Doctrine\ORM\Events;
+    use Symfony\Component\DependencyInjection\Attribute\Autowire;
+    use Symfony\Component\Filesystem\Filesystem;
+
+    #[AsEntityListener(event: Events::postRemove, entity: Comment::class)]
+    class CommentEntityListener
+    {
+        public function __construct(
+            private Filesystem $filesystem,
+            #[Autowire('%photo_dir%')] private string $photoDir,
+        ) {
+        }
+
+        public function postRemove(Comment $comment, PostRemoveEventArgs $event): void
+        {
+            if ($filename = $comment->getPhotoFilename()) {
+                $this->filesystem->remove($this->photoDir.'/'.$filename);
+            }
+        }
+    }
+
+The ``postRemove`` event fires right after a comment row is deleted, whether the comment is removed on its own or together with its conference. The ``photo_dir`` parameter is the same one we used to store uploads.
+
 Excluding Uploaded Photos from Git
 ----------------------------------
 
