@@ -115,13 +115,13 @@ Eine*n Administrator*in erstellen
 ---------------------------------
 
 .. index::
-    single: Symfony CLI;run psql
+    single: Command;dbal:run-sql
 
 Füge die*en Admin-Benutzer*in über einen SQL-Befehl hinzu:
 
 .. code-block:: terminal
 
-    $ symfony run psql -c "INSERT INTO admin (id, username, roles, password) \
+    $ symfony console dbal:run-sql "INSERT INTO admin (id, username, roles, password) \
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
       '\$argon2id\$v=19\$m=65536,t=4,p=1\$BQG+jovPcunctc30xG5PxQ\$TiGbx451NKdo+g9vLtfkMy4KjASKSOcnNxjij4gTX1s')"
 
