@@ -323,7 +323,7 @@ EasyAdmin надає API для полегшення зв'язування з CR
 .. code-block:: terminal
     :class: hide
 
-    $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"
+    $ symfony console dbal:run-sql "TRUNCATE conference RESTART IDENTITY CASCADE"
 
 .. sidebar:: Йдемо далі
 
