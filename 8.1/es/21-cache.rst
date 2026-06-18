@@ -146,7 +146,7 @@ Crea un controlador que sólo devuelva el fragmento HTML que muestra las confere
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Crea la plantilla correspondiente:

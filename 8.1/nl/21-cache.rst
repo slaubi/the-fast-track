@@ -146,7 +146,7 @@ Maak een controller aan die alleen het deel van de HTML terugstuurt dat de confe
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Maak de bijbehorende template aan:

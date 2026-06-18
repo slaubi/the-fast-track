@@ -76,11 +76,11 @@ Maker バンドルを使ってフォームクラスを生成します:
 
 .. code-block:: diff
     :caption: patch_file
-    :emphasize-lines: 20,30
+    :emphasize-lines: 19,29
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -2,8 +2,10 @@
+    @@ -2,7 +2,9 @@
 
      namespace App\Controller;
 
@@ -89,11 +89,10 @@ Maker バンドルを使ってフォームクラスを生成します:
     +use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
-     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     @@ -23,6 +25,9 @@ final class ConferenceController extends AbstractController
-         #[Route('/conference/{slug}', name: 'conference')]
-         public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+         #[Route('/conference/{slug:conference}', name: 'conference')]
+         public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
     +        $comment = new Comment();
     +        $form = $this->createForm(CommentType::class, $comment);
@@ -289,12 +288,11 @@ cURL などの HTTP クライアントを使用するなどして HTML バリデ
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -7,8 +7,10 @@ use App\Entity\Conference;
+    @@ -7,7 +7,9 @@ use App\Entity\Conference;
      use App\Form\CommentType;
      use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
     +use Doctrine\ORM\EntityManagerInterface;
-     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
@@ -315,9 +313,9 @@ cURL などの HTTP クライアントを使用するなどして HTML バリデ
     @@ -24,10 +30,19 @@ final class ConferenceController extends AbstractController
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(#[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
-    +    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+         #[Route('/conference/{slug:conference}', name: 'conference')]
+    -    public function show(Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
          {
              $comment = new Comment();
              $form = $this->createForm(CommentType::class, $comment);
@@ -378,24 +376,22 @@ cURL などの HTTP クライアントを使用するなどして HTML バリデ
 
     --- i/src/Controller/ConferenceController.php
     +++ w/src/Controller/ConferenceController.php
-    @@ -9,7 +9,8 @@ use App\Repository\CommentRepository;
+    @@ -9,6 +9,7 @@ use App\Repository\CommentRepository;
      use App\Repository\ConferenceRepository;
      use Doctrine\ORM\EntityManagerInterface;
-     use Symfony\Bridge\Doctrine\Attribute\MapEntity;
      use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     +use Symfony\Component\DependencyInjection\Attribute\Autowire;
      use Symfony\Component\HttpFoundation\Request;
      use Symfony\Component\HttpFoundation\Response;
      use Symfony\Component\Routing\Attribute\Route;
-    @@ -29,13 +30,24 @@ final class ConferenceController extends AbstractController
+    @@ -29,13 +30,23 @@ final class ConferenceController extends AbstractController
          }
 
-         #[Route('/conference/{slug}', name: 'conference')]
-    -    public function show(Request $request, #[MapEntity(mapping: ['slug' => 'slug'])] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
+         #[Route('/conference/{slug:conference}', name: 'conference')]
+    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter] int $offset = 0): Response
     -    {
     +    public function show(
     +        Request $request,
-    +        #[MapEntity(mapping: ['slug' => 'slug'])]
     +        Conference $conference,
     +        CommentRepository $commentRepository,
     +        #[Autowire('%photo_dir%')] string $photoDir,

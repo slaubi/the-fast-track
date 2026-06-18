@@ -37,9 +37,8 @@ Symfony Notifier コンポーネントは、通知に関する戦略をたくさ
      use Symfony\Component\Routing\Attribute\Route;
 
      final class ConferenceController extends AbstractController
-    @@ -45,8 +47,9 @@ final class ConferenceController extends AbstractController
+    @@ -45,7 +47,8 @@ final class ConferenceController extends AbstractController
              Request $request,
-             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
              CommentRepository $commentRepository,
     +        NotifierInterface $notifier,

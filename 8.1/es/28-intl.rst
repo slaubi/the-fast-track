@@ -98,16 +98,15 @@ Añade el mismo prefijo de ruta de localización a las otras URLs:
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -46,9 +46,9 @@ final class ConferenceController extends AbstractController
+    @@ -46,8 +46,8 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
          #[RateLimit('comment_submission', methods: ['POST'])]
-    -    #[Route('/conference/{slug}', name: 'conference')]
-    +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
+    -    #[Route('/conference/{slug:conference}', name: 'conference')]
+    +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug:conference}', name: 'conference')]
          public function show(
              Request $request,
-             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
 
 Ya casi hemos terminado. Ahora ya no tenemos una ruta que coincida con ``/``. Vamos a añadirla de nuevo y redirigirla a ``/en/``:

@@ -146,7 +146,7 @@ Créez un contrôleur qui ne renvoie que le fragment HTML qui affiche les confé
     +    }
     +
          #[RateLimit('comment_submission', methods: ['POST'])]
-         #[Route('/conference/{slug}', name: 'conference')]
+         #[Route('/conference/{slug:conference}', name: 'conference')]
          public function show(
 
 Créez le template correspondant :

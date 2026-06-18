@@ -98,16 +98,15 @@ Dodaj ten sam prefiks trasy dla danego kraju do innych adresów URL:
          public function conferenceHeader(ConferenceRepository $conferenceRepository): Response
          {
              return $this->render('conference/header.html.twig', [
-    @@ -46,9 +46,9 @@ final class ConferenceController extends AbstractController
+    @@ -46,8 +46,8 @@ final class ConferenceController extends AbstractController
              ]);
          }
 
          #[RateLimit('comment_submission', methods: ['POST'])]
-    -    #[Route('/conference/{slug}', name: 'conference')]
-    +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug}', name: 'conference')]
+    -    #[Route('/conference/{slug:conference}', name: 'conference')]
+    +    #[Route('/{_locale<%app.supported_locales%>}/conference/{slug:conference}', name: 'conference')]
          public function show(
              Request $request,
-             #[MapEntity(mapping: ['slug' => 'slug'])]
              Conference $conference,
 
 Prawie skończyliśmy. Nie mamy już trasy, która pasowałaby do ``/``. Dodajmy ją z powrotem i przekierujmy na ``/en/``:
