@@ -361,7 +361,7 @@ Tout d'abord, créez une paire de clés pour l'utilisation en production :
 
 .. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    Sous Linux et les systèmes d'exploitation similaires, utilisez ``APP_RUNTIME_ENV=prod`` au lieu de ``--env=prod``, car cela évite de compiler l'application pour l'environnement ``prod`` :
 
     .. code-block:: terminal
         :class: ignore

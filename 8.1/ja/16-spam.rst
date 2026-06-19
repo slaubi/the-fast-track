@@ -361,7 +361,7 @@ Symfony Rate Limiter コンポーネントを追加してください:
 
 .. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    Linux や類似の OS では、``--env=prod`` の代わりに ``APP_RUNTIME_ENV=prod`` を使用してください。これにより、アプリケーションを ``prod`` 環境向けにコンパイルすることを避けられます:
 
     .. code-block:: terminal
         :class: ignore

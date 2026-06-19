@@ -361,7 +361,7 @@ Erzeuge zunächst ein Schlüsselpaar für den Produktivbetrieb:
 
 .. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    Unter Linux und ähnlichen Betriebssystemen solltest Du ``APP_RUNTIME_ENV=prod`` anstelle von ``--env=prod`` verwenden, da dies das Kompilieren der Anwendung für das ``prod``-Environment vermeidet:
 
     .. code-block:: terminal
         :class: ignore

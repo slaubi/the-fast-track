@@ -361,7 +361,7 @@ Po pierwsze, wygeneruj parę kluczy do użytku produkcyjnego:
 
 .. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    W systemie Linux i podobnych systemach operacyjnych użyj ``APP_RUNTIME_ENV=prod`` zamiast ``--env=prod``, ponieważ pozwala to uniknąć kompilowania aplikacji dla środowiska ``prod``:
 
     .. code-block:: terminal
         :class: ignore
