@@ -12,7 +12,7 @@
 
 در پایان هر گام، commit‌کردن تغییراتتان را فراموش نکنید:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -23,12 +23,13 @@
 .. code-block:: text
     :caption: .gitignore
     :class: ignore
-    :emphasize-lines: 1,8
+    :emphasize-lines: 1,9
 
     ###> symfony/framework-bundle ###
     /.env.local
     /.env.local.php
     /.env.*.local
+    /config/secrets/prod/prod.decrypt.private.php
     /public/bundles/
     /var/
     /vendor/
@@ -38,17 +39,19 @@
 
 pushکردن مخزن خود به یک سرور، کار بسیار خوبی است. GitHub، GitLab یا Bitbucket گزینه‌های خوبی هستند.
 
-اگر پروژه خود را بر روی SymfonyCloud مستقر می کنید، پس یک کپی از مخزن Git موجود است، اما نباید به آن تکیه کنید. این کپی تنها برای استقرار مورد استفاده قرار می‌گیرد و یک نسخه‌ی پشتیبان نیست.
+.. note::
+
+    اگر پروژه خود را بر روی Upsun مستقر می‌کنید، از پیش یک کپی از مخزن Git را در اختیار دارید، زیرا Upsun هنگام استفاده از ``cloud:push`` در پشت صحنه از Git بهره می‌برد. اما نباید به مخزن Git مربوط به Upsun تکیه کنید. این کپی تنها برای استقرار مورد استفاده قرار می‌گیرد و یک نسخه‌ی پشتیبان نیست.
 
 استقرار در محیط عمل‌آوری به صورت مستمر
 -----------------------------------------------------------------------
 
 .. index::
-    single: Symfony CLI;deploy
+    single: Symfony CLI;cloud:push
 
 یک عادت خوب دیگر، استقرار مکرر است. مستقرکردن در پایان هر گام، دارای بسامد مناسبی است (نه خیلی تندتند است نه خیلی دیربه‌دیر):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony deploy
+    $ symfony cloud:push
