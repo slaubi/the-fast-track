@@ -3,8 +3,7 @@
 
 اپلیکیشن Guestbook، بازخوردهای مربوط به کنفرانس‌ها را جمع‌آوری می‌کند. اما ما در بازخورددادن به کاربرانمان عالی نیستیم.
 
-As comments are moderated, they probably don't understand why their comments are not published instantly. They might even re-submit them thinking there was some technical problems. Giving them feedback after posting a comment would be
-great.
+از آنجایی که کامنت‌ها تعدیل می‌شوند، کاربران احتمالاً نمی‌فهمند چرا کامنت‌هایشان بی‌درنگ منتشر نمی‌شود. آن‌ها حتی ممکن است با تصور اینکه مشکلی فنی پیش آمده، کامنت‌هایشان را دوباره ارسال کنند. دادن بازخورد به آن‌ها پس از ارسال یک کامنت عالی خواهد بود.
 
 علاوه بر این، احتمالاً باید وقتی کامنت کاربران منتشر شد به آن‌ها اطلاع دهیم. ما از آن‌ها رایانامه درخواست می‌کنیم تا بتوانیم از آن استفاده کنیم.
 
