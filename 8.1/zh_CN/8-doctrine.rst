@@ -33,9 +33,9 @@ Doctrine 是如何知道数据库连接信息的呢？Doctrine 的 recipe 添加
 
 你可以在 ``.env`` 或 ``.env.local`` 文件中手工定义 ``DATABASE_URL`` 变量。事实上，你能在 ``.env`` 文件里看到 ``DATABASE_URL`` 变量的一个例子，它是由包的 recipe 所添加。但由于 Docker 暴露出来的 PostgreSQL 端口不是固定的，这个方案会很繁琐。其实有个更好的方案。
 
-我们不用把 ``DATABASE_URL`` 硬编码在一个文件中，我们只要在所有命令前加上 ``symfony`` 前缀。这样的话 Docker 运行的服务会被自动检测到（当隧道打开的时候，SymfonyCloud 的服务也会被检测到），环境变量也会被自动设置好。
+我们不用把 ``DATABASE_URL`` 硬编码在一个文件中，我们只要在所有命令前加上 ``symfony`` 前缀。这样的话 Docker 运行的服务会被自动检测到（当隧道打开的时候，Upsun 的服务也会被检测到），环境变量也会被自动设置好。
 
-借助于环境变量，Docker Compose 以及 SymfonyCloud 可以和 Symfony 无缝对接。
+借助于环境变量，Docker Compose 以及 Upsun 可以和 Symfony 无缝对接。
 
 .. index::
     single: Symfony CLI;var:export
@@ -52,7 +52,7 @@ Doctrine 是如何知道数据库连接信息的呢？Doctrine 的 recipe 添加
     DATABASE_URL=postgres://main:main@127.0.0.1:32781/main?sslmode=disable&charset=utf8
     # ...
 
-你还记得在 Docker 和 SymfonyCloud 里使用的 ``database`` 这个 *服务名* 吗？服务名用来作为环境变量名的前缀，比如 ``DATABASE_URL``。如果你的服务根据 Symfony 的约定来命名，那么就不需要其它的配置了。
+你还记得在 Docker 和 Upsun 里使用的 ``database`` 这个 *服务名* 吗？服务名用来作为环境变量名的前缀，比如 ``DATABASE_URL``。如果你的服务根据 Symfony 的约定来命名，那么就不需要其它的配置了。
 
 .. note::
 
@@ -522,7 +522,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 迁移生产数据库结构需要的步骤和你所熟知的一样：提交代码更新后部署。
 
-当部署项目时，SymfonyCloud 会更新代码，如果需要的话，它也会执行数据库结构迁移（它会检测 ``doctrine:migrations:migrate`` 命令是否存在）。
+当部署项目时，Upsun 会更新代码，如果需要的话，它也会执行数据库结构迁移（它会检测 ``doctrine:migrations:migrate`` 命令是否存在）。
 
 .. sidebar:: 深入学习
 

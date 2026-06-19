@@ -192,7 +192,7 @@
      services:
          # default configuration for services in *this* file
 
-当使用 ``symfony`` 命令时，``SYMFONY_DEFAULT_ROUTE_HOST`` 和 ``SYMFONY_DEFAULT_ROUTE_PORT`` 这两个环境变量会在本地自动设置；在 SymfonyCloud 上，它们的值根据配置项来自动设置。
+当使用 ``symfony`` 命令时，``SYMFONY_DEFAULT_ROUTE_HOST`` 和 ``SYMFONY_DEFAULT_ROUTE_PORT`` 这两个环境变量会在本地自动设置；在 Upsun 上，它们的值根据配置项来自动设置。
 
 把路由接入控制器
 ------------------------
@@ -420,18 +420,18 @@ Symfony 自带一些断言，让这样的测试变得很容易，这里有一个
 
 不管邮件是同步还是异步发送，都能正常使用这些断言。
 
-在 SymfonyCloud 上发送邮件
+在 Upsun 上发送邮件
 --------------------------------
 
 .. index::
-    single: SymfonyCloud;Emails
-    single: SymfonyCloud;Mailer
-    single: SymfonyCloud;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-SymfonyCloud 上没有特别的配置要做。所有的账户自带一个 SendGrid 账户，它会自动用来发送邮件。
+Upsun 上没有特别的配置要做。所有的账户自带一个 SendGrid 账户，它会自动用来发送邮件。
 
-你仍然需要更新 SymfonyCloud 配置，来包含Inky所需的 ``xsl`` PHP 扩展：
+你仍然需要更新 Upsun 配置，来包含Inky所需的 ``xsl`` PHP 扩展：
 
 .. code-block:: diff
     :caption: patch_file
@@ -468,4 +468,4 @@ SymfonyCloud 上没有特别的配置要做。所有的账户自带一个 SendGr
 
     * `Symfony 框架的 Mailer 文档 <https://symfony.com/doc/current/mailer.html>`_；
 
-    * `SymfonyCloud 关于邮件的文档 <https://symfony.com/doc/current/cloud/services/emails.html>`_。
+    * `Upsun 关于邮件的文档 <https://symfony.com/doc/current/cloud/services/emails.html>`_。

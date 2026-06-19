@@ -157,9 +157,9 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 ----------------------------------
 
 .. index::
-    single: SymfonyCloud;Blackfire
+    single: Upsun;Blackfire
 
-在所有的 SymfonyCloud 项目里，Blackfire 是默认包含的。
+在所有的 Upsun 项目里，Blackfire 是默认包含的。
 
 把 *服务器* 凭证设置为环境变量：
 
@@ -189,7 +189,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 ----------------------------
 
 .. index::
-    single: SymfonyCloud;Varnish
+    single: Upsun;Varnish
 
 你需要有一个方式绕过 Varnish 的 HTTP 缓存，才能部署并开始分析性能。不然的话，Blackfire 永远不会到达 PHP 应用程序。你只能授权来自于你本地机器的分析请求。
 
@@ -404,7 +404,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 上节写的情节可用于在持续集成工作流中自动运行，也可以在生产环境中自动定期执行。
 
-每次你在 SymfonyCloud 上创建新分支或是部署到生产环境来自动检测代码性能时，SymfonyCloud 也可以 `运行浏览情节 <https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_。
+每次你在 Upsun 上创建新分支或是部署到生产环境来自动检测代码性能时，Upsun 也可以 `运行浏览情节 <https://blackfire.io/docs/integrations/paas/symfonycloud#builds-level-enterprise>`_。
 
 .. sidebar:: 深入学习
 

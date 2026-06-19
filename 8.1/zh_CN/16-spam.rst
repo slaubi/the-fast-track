@@ -228,12 +228,12 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 ------------------------------------
 
 .. index::
-    single: SymfonyCloud;Secret
-    single: SymfonyCloud;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;var:set
 
-在生产环境中，SymfonyCloud 支持设置 *敏感环境变量*：
+在生产环境中，Upsun 支持设置 *敏感环境变量*：
 
 .. code-block:: terminal
     :class: ignore
@@ -265,7 +265,7 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
-最后一步是通过设置一个敏感环境变量，把解密秘钥发送给 SymfonyCloud：
+最后一步是通过设置一个敏感环境变量，把解密秘钥发送给 Upsun：
 
 .. code-block:: terminal
 

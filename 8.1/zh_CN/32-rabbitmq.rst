@@ -94,7 +94,7 @@ RabbitMQ 是一个非常流行的消息代理，你可以用它来代替 Postgre
 ---------------
 
 .. index::
-    single: SymfonyCloud;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 将 RabbitMQ 加入服务列表，就可以把它加进生产服务器。
@@ -139,7 +139,7 @@ RabbitMQ 是一个非常流行的消息代理，你可以用它来代替 Postgre
          locations:
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

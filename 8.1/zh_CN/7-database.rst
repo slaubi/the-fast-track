@@ -122,13 +122,13 @@ PostgreSQL 是我们选用的数据库。
 
     如果你不想丢失数据，绝不要使用 ``docker-compose down``。或者先备份一下。
 
-在 SymfonyCloud 中加入 PostgreSQL
+在 Upsun 中加入 PostgreSQL
 -------------------------------------
 
 .. index::
-    single: SymfonyCloud;PostgreSQL
+    single: Upsun;PostgreSQL
 
-在 SymfonyCloud 的生产环境软件设施里，添加一个诸如 PostgreSQL 这样的服务，是通过修改 ``.symfony/services.yaml`` 这个文件来完成的，该文件目前还是空的：
+在 Upsun 的生产环境软件设施里，添加一个诸如 PostgreSQL 这样的服务，是通过修改 ``.symfony/services.yaml`` 这个文件来完成的，该文件目前还是空的：
 
 .. code-block:: yaml
     :caption: .symfony/services.yaml
@@ -188,7 +188,7 @@ PostgreSQL 是我们选用的数据库。
          locations:
              "/":
 
-提交这些改变，然后重新部署到 SymfonyCloud：
+提交这些改变，然后重新部署到 Upsun：
 
 .. code-block:: terminal
     :class: ignore
@@ -197,27 +197,27 @@ PostgreSQL 是我们选用的数据库。
     $ git commit -m'Configuring the database'
     $ symfony deploy
 
-连入 SymfonyCloud 数据库
+连入 Upsun 数据库
 -----------------------------
 
-现在 PostgreSQL 在本地借助 Docker 运行，同时也在 SymfonyCloud 的生产环境中运行。
+现在 PostgreSQL 在本地借助 Docker 运行，同时也在 Upsun 的生产环境中运行。
 
 正如我们所见，运行 ``symfony run psql`` 会自动连接到 Docker 里的数据库，这要归功于 ``symfony run`` 暴露出的环境变量。
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;run psql
 
-如果你想要连接到生产环境容器中的 PostgreSQL，你需要打开一个 SSH 隧道来接通你的本地电脑和 SymfonyCloud 平台设施：
+如果你想要连接到生产环境容器中的 PostgreSQL，你需要打开一个 SSH 隧道来接通你的本地电脑和 Upsun 平台设施：
 
 .. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
 
-默认情况下，SymfonyCloud 服务不会在你的本地电脑上以环境变量暴露出来。要想把它们暴露出来，你必须明确设置 ``--expose-env-vars`` 选项。为什么要这样呢？连接到生产数据库是一个危险的操作。你可能会破坏 *真实的* 数据。强制设置那个选项，是要你确认这 *的确是* 你想要做的操作。
+默认情况下，Upsun 服务不会在你的本地电脑上以环境变量暴露出来。要想把它们暴露出来，你必须明确设置 ``--expose-env-vars`` 选项。为什么要这样呢？连接到生产数据库是一个危险的操作。你可能会破坏 *真实的* 数据。强制设置那个选项，是要你确认这 *的确是* 你想要做的操作。
 
 现在，用 ``symfony run psql`` 连接到远程的 PostgreSQL 服务器，和以前一样：
 
@@ -241,10 +241,10 @@ PostgreSQL 是我们选用的数据库。
 ------------------
 
 .. index::
-    single: SymfonyCloud;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-借助于环境变量，Docker Compose 和 SymfonyCloud 可以和 Symfony 无缝对接。
+借助于环境变量，Docker Compose 和 Upsun 可以和 Symfony 无缝对接。
 
 执行 ``symfony var:export`` 可以查看 ``symfony`` 暴露出的所有环境变量：
 
@@ -262,7 +262,7 @@ PostgreSQL 是我们选用的数据库。
 
 ``psql`` 小工具会读取 ``PG*`` 形式的环境变量。那其它环境变量呢？
 
-如果一条隧道设置了 ``--expose-env-vars`` 选项并且连接到了 SymfonyCloud，那么 ``var:export`` 命令就会返回远程的环境变量：
+如果一条隧道设置了 ``--expose-env-vars`` 选项并且连接到了 Upsun，那么 ``var:export`` 命令就会返回远程的环境变量：
 
 .. code-block:: terminal
     :class: ignore
@@ -274,13 +274,13 @@ PostgreSQL 是我们选用的数据库。
 描述你的基础设施
 ------------------------
 
-你可能还没意识到，把基础设施信息存储在文件中，并和代码放在一起，会有很多好处。Docker 和 SymfonyCloud 用配置文件来描述项目的基础设施。当一个新功能需要一个额外服务时，代码的改动和基础设施信息的改动会来自同一个补丁。
+你可能还没意识到，把基础设施信息存储在文件中，并和代码放在一起，会有很多好处。Docker 和 Upsun 用配置文件来描述项目的基础设施。当一个新功能需要一个额外服务时，代码的改动和基础设施信息的改动会来自同一个补丁。
 
 .. sidebar:: 深入学习
 
-    * `SymfonyCloud 服务 <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_；
+    * `Upsun 服务 <https://symfony.com/doc/current/cloud/services/intro.html#available-services>`_；
 
-    * `SymfonyCloud 隧道 <https://symfony.com/doc/master/cloud/services/intro.html#connecting-to-a-service>`_；
+    * `Upsun 隧道 <https://symfony.com/doc/master/cloud/services/intro.html#connecting-to-a-service>`_；
 
     * `PostgreSQL 文档 <https://www.postgresql.org/docs/>`_；
 

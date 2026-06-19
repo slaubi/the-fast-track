@@ -93,7 +93,7 @@ Symfony CLI
 
 .. index:: Symfony CLI
 
-最后但同样重要的一点是，我们会使用 ``symfony`` 命令来提高生产率。它提供了本地 web 服务器，可以与 Docker 完整集成，并且支持 SymfonyCloud，这些都可以为我们节省很多时间。
+最后但同样重要的一点是，我们会使用 ``symfony`` 命令来提高生产率。它提供了本地 web 服务器，可以与 Docker 完整集成，并且支持 Upsun，这些都可以为我们节省很多时间。
 
 安装 `Symfony CLI`_  并且把它移动到你的 ``$PATH`` 路径下。如果你还没有 `SymfonyConnect`_  账号，就去创建一个，然后用 ``symfony login`` 登录。
 

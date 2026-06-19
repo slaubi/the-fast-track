@@ -50,7 +50,7 @@
 
 #. 如果需要的话，更新 PHP 配置（比如增加 PHP 的 PostgreSQL 扩展）；
 
-#. 如果需要的话，更新 Docker 和 SymfonyCloud 的软件环境配置（增加 PostgreSQL 服务）；
+#. 如果需要的话，更新 Docker 和 Upsun 的软件环境配置（增加 PostgreSQL 服务）；
 
 #. 在本地测试；
 
@@ -118,7 +118,7 @@
 
 .. note::
 
-    由于我们在会话存储里重用了数据库，我们不需要第 3 到第 5 步，但在关于 Redis 的那一章里，我们会看到在 Docker 和 SymfonyCloud 里增加、测试和部署一个新服务是很直接明了的。
+    由于我们在会话存储里重用了数据库，我们不需要第 3 到第 5 步，但在关于 Redis 的那一章里，我们会看到在 Docker 和 Upsun 里增加、测试和部署一个新服务是很直接明了的。
 
 由于这个新表并不是由 Doctrine 来“管理”的，所以我们必须配置 Doctrine，以防它在下次数据库迁移时将该表移除：
 
@@ -149,7 +149,7 @@
 ------------------
 
 .. index::
-    single: SymfonyCloud;Environment
+    single: Upsun;Environment
 
 在部署到生成环境之前，我们必须在和生成环境一样的软件配置中测试这个分支。我们也需要确保在 Symfony 的 ``prod`` 环境中一切正常运行（本地网站则使用了 Symfony 的 ``dev`` 环境）。
 
@@ -157,7 +157,7 @@
     single: Symfony CLI;env:delete
     single: Symfony CLI;env:create
 
-现在，让我们来根据 *Git 分支* 创建一个 *SymfonyCloud 环境*：
+现在，让我们来根据 *Git 分支* 创建一个 *Upsun 环境*：
 
 .. code-block:: terminal
     :class: hide
@@ -190,7 +190,7 @@
 
     $ symfony open:remote
 
-请注意所有的 SymfonyCloud 命令在当前 Git 分支上都可以运行。上面的操作会打开 ``sessions-in-db`` 分支上部署的 URL，它的形式类似 ``https://sessions-in-db-xxx.eu.s5y.io/``。
+请注意所有的 Upsun 命令在当前 Git 分支上都可以运行。上面的操作会打开 ``sessions-in-db`` 分支上部署的 URL，它的形式类似 ``https://sessions-in-db-xxx.eu.s5y.io/``。
 
 在新环境中测试下网站，你应该会看到在主环境中添加的所有数据。
 
@@ -212,9 +212,9 @@
 ------------------------------
 
 .. index::
-    single: SymfonyCloud;Debugging
+    single: Upsun;Debugging
 
-默认情况下，所有 SymfonyCloud 上的环境设置和 ``master``/``prod`` 环境是一样的（也就是 Symfony 的 ``prod`` 环境）。这样你才能在真实条件下测试应用程序。你会觉得像是在生产服务器上直接开发和测试，但此时你却没有直接操作生产服务器的风险。这让我想起来了过去用 FTP 部署时的美好时光。
+默认情况下，所有 Upsun 上的环境设置和 ``master``/``prod`` 环境是一样的（也就是 Symfony 的 ``prod`` 环境）。这样你才能在真实条件下测试应用程序。你会觉得像是在生产服务器上直接开发和测试，但此时你却没有直接操作生产服务器的风险。这让我想起来了过去用 FTP 部署时的美好时光。
 
 .. index::
     single: Symfony CLI;env:debug
@@ -263,7 +263,7 @@
 
     $ symfony deploy
 
-部署的时候，只有代码和软件环境配置的更新会被推送到 SymfonyCloud；数据不会受到任何影响。
+部署的时候，只有代码和软件环境配置的更新会被推送到 Upsun；数据不会受到任何影响。
 
 清理
 ------
@@ -272,7 +272,7 @@
     single: Symfony CLI;env:delete
     single: Git;branch
 
-最后，移除 Git 分支和 SymfonyCloud 环境：
+最后，移除 Git 分支和 Upsun 环境：
 
 .. code-block:: terminal
 

@@ -160,7 +160,7 @@
 ---------------------------------------
 
 .. index::
-    single: SymfonyCloud;File Service
+    single: Upsun;File Service
 
 我们已经在 ``.symfony.cloud.yaml`` 里为上传文件定义了一个特殊的可读写目录。但是挂载是本地的。如果我们想要让 web 容器和消息消费者的 worker 进程也可以访问同一个挂载，我们需要创建一个 *文件服务*：
 

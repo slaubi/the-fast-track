@@ -128,7 +128,7 @@
     single: Composer;Autoloader
     single: Autoloader
 
-它是哪来的呢？当部署一个 Symfony 应用程序时，SymfonyCloud 会做一些优化，比如优化 Composer 加载器（``--optimize-autoloader --apcu-autoloader --classmap-authoritative``）。它也对定义在 ``.env`` 文件中的环境变量进行优化（来避免每次请求都解析这个文件），优化的方式就是生成 ``.env.local.php`` 文件。
+它是哪来的呢？当部署一个 Symfony 应用程序时，Upsun 会做一些优化，比如优化 Composer 加载器（``--optimize-autoloader --apcu-autoloader --classmap-authoritative``）。它也对定义在 ``.env`` 文件中的环境变量进行优化（来避免每次请求都解析这个文件），优化的方式就是生成 ``.env.local.php`` 文件。
 
 .. code-block:: terminal
     :class: ignore

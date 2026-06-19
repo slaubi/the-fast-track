@@ -549,12 +549,12 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
 
 .. index::
     single: HTTP Cache;Varnish
-    single: SymfonyCloud;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 不要在生产环境中使用 Symfony 的反向代理。总是优先选用你平台上类似 Varnish 的反向代理，或者选用商业 CDN。
 
-在 SymfonyCloud 服务中加入 Varnish：
+在 Upsun 服务中加入 Varnish：
 
 .. code-block:: diff
     :caption: patch_file
@@ -576,7 +576,7 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
     +            path: config.vcl
 
 .. index::
-    single: SymfonyCloud;Routes
+    single: Upsun;Routes
 
 用 Varnish 作为路由的主入口：
 
@@ -667,6 +667,6 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
 
     * `HTTP 缓存有效模型 <https://symfony.com/doc/current/http_cache/validation.html>`_；
 
-    * `SymfonyCloud中的HTTP缓存 <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_。
+    * `Upsun中的HTTP缓存 <https://symfony.com/doc/current/cloud/cookbooks/cache.html>`_。
 
 .. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network
