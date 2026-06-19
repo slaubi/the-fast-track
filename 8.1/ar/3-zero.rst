@@ -15,7 +15,7 @@
 
 أنشيء مشروع جديد باستخدام  أداة سطر الأوامر الخاصة بسيمفوني ``symfony`` التي قمنا بتثبيتها سويا من قبل:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony new guestbook --version=5.2
     $ cd guestbook
@@ -64,7 +64,7 @@
 
 تنزيل الصورة المتحركة الخاصة بي هنا:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir public/images/
     $ php -r "copy('http://clipartmag.com/images/website-under-construction-image-6.gif', 'public/images/under-construction.gif');"
@@ -79,13 +79,13 @@
 
 من مجلد المشروع، قم ببدء خادم الويب في الخلفية (استخدم العلامة ``-d``):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony server:start -d
 
 يبدأ الخادم في العمل باستخدام أول منفذ متاح بداية من 8000. للوصول السريع، قم بفتح الموقع في المتصفح باستخدام سطر الأوامر:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local
@@ -114,7 +114,7 @@
 
 راض ؟ دعنا نسجل التزام عملنا commit our work:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add public/images
@@ -125,7 +125,7 @@
 
 لتجنب الإزعاج الناتج عن تكرار ظهور خطأ 404 الخاص ببروتوكل HTTP في سجلات الأحداث بسبب فقد عنصر favicon المطلوب عن طريق المتصفح، دعنا نضيف واحدا الأن:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ php -r "copy('https://symfony.com/favicon.ico', 'public/favicon.ico');"
     $ git add public/
@@ -148,7 +148,7 @@
 
 سطر الأوامر ``symfony`` لديه دعم متضمن لخدمة SymfonyCloud. دعنا نقوم بتجهيز مشروع لـ  SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony project:init
 
@@ -156,7 +156,7 @@
 
 قم باضافتهم إلى Git و سجل التزامك بالكود commit:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git add .
     $ git commit -m"Add SymfonyCloud configuration"
@@ -176,7 +176,7 @@
 
 أنشيء مشروع SymfonyCloud جديد:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony project:create --title="Guestbook" --plan=development
 
@@ -188,7 +188,7 @@
 
 بعد ذلك، ارفع deploy:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony deploy
 
@@ -199,7 +199,7 @@
 
 تأكد من أن كل شيء يعمل بشكل جيد:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:remote

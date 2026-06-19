@@ -10,7 +10,7 @@
 
 اولا , قم بتثبيت مكون Symfony Mailer
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mailer
 
@@ -157,7 +157,7 @@
 
 تعتبر هاتان الميزتان جزءًا من ملحقات Twig الاختيارية التي يجب تثبيتها:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
@@ -301,25 +301,25 @@
 
 أغلق وأعد تشغيل الحاويات لإضافة ماسك البريد (mail catcher):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
 يجب عليك أيضًا إيقاف مستهلك الرسائل لأنه ليس على علم بعد بمُلتقط البريد:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console messenger:stop-workers
 
 وابدأ مرة أخرى. يتم الآن عرض ``MAILER_DSN`` تلقائيًا:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -332,7 +332,7 @@
 
 يمكنك فتح بريد الويب (webmail) من محطة طرفية (terminal):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:webmail
@@ -454,7 +454,7 @@
 
     لتكون علي الجانب الآمن، رسائل البريد الالكتروني يتم ارسالها فقط علي الفرع الرئيسي (``master`` branch) بشكل افتراضي (default). قم بتفعيل SMTP بشكل صريح علي الفروع غير الرئيسية (non-``master`` branches) إدا كنت تعرف ما تفعله.
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony env:setting:set email on
 

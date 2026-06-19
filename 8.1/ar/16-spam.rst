@@ -27,7 +27,7 @@
 
 لإجراء مكالمات API ، استخدم Symfony HttpClient Component:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req http-client
 
@@ -157,7 +157,7 @@
 
 أضف مفتاح Akismet في الخزنة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ symfony console secrets:set AKISMET_KEY
@@ -235,7 +235,7 @@
 
 للإنتاج ، يضمن SymfonyCloud إعداد *متغيرات البيئة الحساسة*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set --sensitive AKISMET_KEY=abcdef
@@ -247,7 +247,7 @@
 
 أولاً ، قم بإنشاء زوج من المفاتيح لاستخدام الإنتاج:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=prod symfony console secrets:generate-keys
 
@@ -260,20 +260,20 @@
 
 أعد إضافة سر Akismet في قبو الإنتاج ولكن بقيمته للإنتاج:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(abcdef)
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
 الخطوة الأخيرة هي إرسال مفتاح فك التشفير إلى SymfonyCloud عن طريق تعيين متغير حساس:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:set --sensitive SYMFONY_DECRYPTION_SECRET=`php -r 'echo base64_encode(include("config/secrets/prod/prod.decrypt.private.php"));'`
 
 يمكنك إضافة جميع الملفات وتنفيذها ؛ تمت إضافة مفتاح فك التشفير في .gitignore تلقائيًا ، لذلك لن يتم الالتزام به أبدًا. لمزيد من الأمان ، يمكنك إزالته من جهازك المحلي حيث تم نشره الآن:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -f config/secrets/prod/prod.decrypt.private.php
 

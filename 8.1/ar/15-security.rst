@@ -9,7 +9,7 @@
     single: Components;Security
     single: Security
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req security
 
@@ -27,7 +27,7 @@
 
 استخدم الأمر المخصص "make: user '' لإنشاء كيان  Entity "المدير/Admin '' بدلاً من الكيان التقليدي "make: entity'':
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(yes||username||yes)
 
     $ symfony console make:user Admin
@@ -87,7 +87,7 @@
 
 حان الوقت لإنشاء ترحيل (migration) وترحيل قاعدة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
     $ symfony console doctrine:migrations:migrate -n
@@ -105,7 +105,7 @@
 
 اختر ما تريده ككلمة مرور وقم بتشغيل الأمر التالي لإنشاء كلمة المرور المشفرة encoded password:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(admin)
 
     $ symfony console security:encode-password
@@ -140,7 +140,7 @@
 
 أدخل المستخدم المدير عبر عبارة SQL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run psql -c "INSERT INTO admin (id, username, roles, password) \
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
@@ -162,7 +162,7 @@
 
 قم بتشغيل الأمر " make: auth '' لتحديث إعداد الأمان (The security configuration ) ، وإنشاء قالب تسجيل دخول ، وإنشاء *authenticator*:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||AppAuthenticator||SecurityController||yes)
 
     $ symfony console make:auth
@@ -218,7 +218,7 @@
 
     كيف أتذكر أن مسار EasyAdmin هو ``admin`` (كما هو محدد في ``App\Controller\Admin\DashboardController``)؟ لا أتذكر. يمكنك النظر للملف وأيضا إذا قمت بتشغيل الأمر التالي الذي يوضح الارتباط بين أسماء المسارات route names  والمسارات paths :
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:router
 

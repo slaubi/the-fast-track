@@ -22,7 +22,7 @@
 
 في البداية، لنقوم بإضافة محلل سيمفوني، منقذ للوقت عندما تريد معرفة السبب الرئيسي لمشكلة معينة:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req profiler --dev
 
@@ -62,7 +62,7 @@
 
 يمكن أن يتم ضبط متغير ``APP_ENV`` عن طريق استخدام متغيرات بيئة عمل "حقيقية" في شاشة الاومر الخاصة بيك:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ export APP_ENV=dev
@@ -98,7 +98,7 @@
 
 خارج الصندوق، تكون إمكانيات التسجيل وتصحيح الاخطاء محدودة علي المشاريع الجديدة. لنقوم بإضافة المزيد من الادوات لتساعدنا علي التحقق من المشاكل اثناء التطوير، ولكن أيضاً في الانتاجية:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req logger
 
@@ -108,7 +108,7 @@
 
 ادوات استقصاء وتصحيح المشاكل، لنقوم بتنصيبهم فقط في التطوير:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req debug --dev
 
@@ -140,7 +140,7 @@
 
 التجسيلات مفيدة أيضاً في جلسات استقصاء وتصحيح الاخطاء. يمتلك سيمفوني علي أمر مناسب لتعقب (طباعة tail) كل التسجيلات (من الخادم، PHP، وتطبيقك):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -191,7 +191,7 @@
 
 استرجع التغييرات قبل تنفيذ التغييرات الاخري التم تم إجراؤها في هذه الخطوة:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout public/index.php
 
@@ -224,14 +224,14 @@
 
 إستقصاء وتصحيح اخطاء خوادم الانتاجية أكثر صعوبة دائماً. ليس لديك حق الوصول لمحلل سيموفني علي سبيل المثال. السجلات اقل طولاً (verbose). ولكن طباعة او تذيل (tailing) السجلات ممكن:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony logs
 
 يمكنك حتي الاتصال بواسطة SSH علي حاوية الويب:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony ssh

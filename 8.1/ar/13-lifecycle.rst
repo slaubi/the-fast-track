@@ -59,7 +59,7 @@
 
 قم بإضافة خاصية `` slug `` جديدة للمؤتمرات (سلسلة غير قابلة للإلغاء من 255 حرفًا):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slug||string||255||no)
 
     $ symfony console make:entity Conference
@@ -69,7 +69,7 @@
 
 قم بإنشاء ملف ترحيل لإضافة العمود الجديد:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -78,7 +78,7 @@
 
 وتنفيذ هذا الترحيل الجديد:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console doctrine:migrations:migrate
@@ -113,7 +113,7 @@
 
 يجب أن يتم الترحيل بشكل جيد الآن:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -155,7 +155,7 @@
 
 نظرًا لأننا نستخدم مدققًا لضمان التفرد في الاسم القصير، نحتاج إلى إضافة مكون Symfony Validator:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req validator
 
@@ -164,14 +164,14 @@
 
 كما كنت قد خمنت ، نحتاج إلى أداء رقصة الترحيل:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 .. index::
     single: Command;doctrine:migrations:migrate
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -187,7 +187,7 @@
 
 بدلاً من إعادة اختراع العجلة ، دعنا نستخدم مكون  ``String`` ل Symfony، الذي يخفف من معالجة السلاسل strings  ويوفر *slugger*:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req string
 

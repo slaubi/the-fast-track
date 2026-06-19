@@ -12,7 +12,7 @@
 
 لا تنسى ان تقوم بعملية commit للتغييرات التي قمت بها
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -23,12 +23,13 @@
 .. code-block:: text
     :caption: .gitignore
     :class: ignore
-    :emphasize-lines: 1,8
+    :emphasize-lines: 1,9
 
     ###> symfony/framework-bundle ###
     /.env.local
     /.env.local.php
     /.env.*.local
+    /config/secrets/prod/prod.decrypt.private.php
     /public/bundles/
     /var/
     /vendor/
@@ -48,7 +49,7 @@
 
 من العادات الاخرى الجيدة هو ان تقوم بالنشر بشكل دوري. النشر في اخر كل خطوة هي سرعة جيدة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony deploy
+    $ symfony cloud:push

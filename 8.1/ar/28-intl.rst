@@ -194,7 +194,7 @@
 
 اعتمادًا على الإعدادات المحلية ، لا يتم دائمًا كتابة اسم الإعدادات المحلية. لتكبير حجم الجمل بشكل صحيح ، نحتاج إلى عامل تصفية يدرك Unicode ، كما هو منصوص عليه في المكون Symfony String وتطبيق Twig الخاص به:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig/string-extra
 
@@ -233,7 +233,7 @@
 
 لبدء ترجمة موقع الويب ، نحتاج إلى تثبيت مكون ترجمة سيمفوني:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req translation
 
@@ -310,7 +310,7 @@
 
 بدلاً من إنشاء ملفات الترجمة يدويًا ، استخدم الأمر `translation: update``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console translation:update fr --force --domain=messages --sort=asc
 

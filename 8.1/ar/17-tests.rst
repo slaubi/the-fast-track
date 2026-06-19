@@ -10,7 +10,7 @@
 
 سيمفوني يعتمد علي PHPUnit لاختبار الوحدات. لنقم بتنصيبه
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req phpunit --dev
 
@@ -24,7 +24,7 @@
 
 ``SpamChecker`` هو أول شئ سنقوم بكتابة إختبارات له. لصنع وحدة :
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:test TestCase SpamCheckerTest
 
@@ -76,7 +76,7 @@
 
 قم بتشغيل الاختبارات للتحقق من نجاحها:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit
 
@@ -177,7 +177,7 @@
 
     كان يمكننا صنع الاختبار عن طريق حزمة الصانع:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console make:test WebTestCase Controller\\ConferenceController
 
@@ -208,7 +208,7 @@
 
 لإنجاح الاختبارات ، يجب علينا تعيين سر ``AKISMET_KEY`` لبيئة ``test`` هذه:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ APP_ENV=test symfony console secrets:set AKISMET_KEY
@@ -228,14 +228,14 @@
 
 قبل التمكن من تشغيل الاختبار ، نحتاج إلى "initialize" قاعدة بيانات ``test`` (إنشاء قاعدة البيانات وترحيلها):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony console doctrine:database:create
     $ APP_ENV=test symfony console doctrine:migrations:migrate -n
 
 إذا قمت بإجراء الاختبارات الآن ، فلن تتفاعل PHPUnit مع قاعدة بيانات التطوير الخاصة بك بعد الآن. لإجراء الاختبارات الجديدة فقط ، مرر المسار إلى مسار الفصل الدراسي الخاص بهم:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -256,7 +256,7 @@
 
 لنقوم بتنصيب حزمة تركيبات Doctrine:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req orm-fixtures --dev
 
@@ -356,7 +356,7 @@
 
     اذا كنت لا تتذكر أي خدمة تحتاجها لمهمة معينة. استخدم ``debug:autowiring`` مع بعض الكلمات:
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring encoder
 
@@ -367,7 +367,7 @@
 
 تحميل التركيبات لاختبار قاعدة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -434,7 +434,7 @@
 
 لنتاكد من أن الاختبار الجديد أخضر:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -473,13 +473,13 @@
 
 قم بتشغيل الإختبارات مرة أخري للتاكد من أن كل شئ أخضر:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
 اذا أردت التحقق من النتيجة في المتصفح ، أوقف خادم الويب وأعد تشغيله لبيئة ``test``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -498,7 +498,7 @@
 
 إذا قمت بتشغيل الاختبارات مره اخري، ستفشل، حيث انه هناك اكثر من تعليق في قاعدة البيانات، المتإكد الذي يتحقق من عدد التعليقات يفشل. نحتاج ان نعيد حاله قاعدة البيانات كل مره نقوم بتشغيل الاختبارات عن طريق إعادة تشغيل التركيبات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -539,7 +539,7 @@
 
 متي تريد ان تشغل الاختبارات، استخدم ``make tests``
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -608,12 +608,12 @@
 
 لتقوم بإعادة ضبط قاعدة البيانات بين الاختبارات، قم بتنصيب DoctrineTestBundle:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony composer config extra.symfony.allow-contrib true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
 
@@ -657,7 +657,7 @@
 
 ينبغي ان تكون الاختبارات خضراء الآن:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -670,7 +670,7 @@
 
 الاختبارات الوظيفيه تستخدم متصفح مخصص يتصل بيسمفوني مباشرة. لكن يمكنك استخدام متصفح حقيقي يتصل بـ HTTP بفضل Panther من سيمفوني:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req panther --dev
 

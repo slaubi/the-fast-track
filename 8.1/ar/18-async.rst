@@ -18,7 +18,7 @@
 
 أضف خاصية (property) الحالة `state`` إلي فئة (كلاس) التعليقات ``Comment``.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(state||string||255||no)
 
     $ symfony console make:entity Comment
@@ -28,7 +28,7 @@
 
 قم بإنشاء database migration:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -56,7 +56,7 @@
 
 قم بتحديث قاعدة البيانات (Migrate the database):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -175,7 +175,7 @@
 
 إدارة التعليمات البرمجية (code) الغير متزامنة (asynchronous) في سيمفوني Symfony تعتبر وظيفة مكون ال Messenger:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req messenger
 
@@ -405,13 +405,13 @@
 
 إعداد جداول ومشغلات PostgreSQL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
 وترحيل قاعدة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -430,7 +430,7 @@
 
 كما قد تخيلت، فإن سيمفوني يأتي معه أمر خاص بالمستهلك. قم بإستخدامه الأن:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:consume async -vv
@@ -469,7 +469,7 @@
 
 قم بتشغيل مستهلك الرسالة مرة اخري، ولكن ارسله الي الخلفية:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
@@ -486,7 +486,7 @@
 
 سوف تتدفق السجلات عن طريق ``symfony server:log`` مع جميع السجلات القادمة من PHP، خادم الويب، والتطبيق (الابلاكيشن):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -497,7 +497,7 @@
 
 استخدم أمر ال ``server:status`` لسرد جميع العمال بالخلفية الذي يتم ادارتهم عن طريق المشروع الحالي:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:status
@@ -507,7 +507,7 @@
 
 لإقاف احد العمال، قم باقاف خادم الويب او اقتل ال PID المعطي عن طريق امر ال ``server:status``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ kill 15774
@@ -554,7 +554,7 @@
 
 إفحص الرسائل الفاشلة وقم باعادة محاولة إرسالهم عن طريق الاوامر التالية:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console messenger:failed:show
@@ -592,7 +592,7 @@
 
 للحصول علي سجلات العامل، قم بأستخدام:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony logs --worker=messages all

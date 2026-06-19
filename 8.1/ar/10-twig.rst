@@ -16,7 +16,7 @@
 
 ولإجراء جيد ، دعنا نخبر Composer أن المشروع يعتمد حقًا على Twig ، بشكل مستقل عن EasyAdmin. إضافتها مثل أي تبعية أخرى كافية:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig
 
@@ -235,7 +235,7 @@
 
 يأتي الخطأ من `` format_datetime `` فلتر لأنه ليس جزءًا من نواة Twig. تمنحك رسالة الخطأ تلميحًا حول ال package  الذي يجب تثبيته لإصلاح المشكلة:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/intl-extra:^3"
 

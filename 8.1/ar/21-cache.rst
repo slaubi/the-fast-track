@@ -66,7 +66,7 @@
 
 التحقق من ذلك على الصفحة الرئيسية:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -237,7 +237,7 @@
 
 بما أن الوكيل العكسي لSymfony يدعم ESIs ، فلنراجع سجلاته (قم بإزالة ذاكرة التخزين المؤقت أولاً - انظر "Purging" أدناه):
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -285,7 +285,7 @@
 
 تم تمكين ذاكرة التخزين المؤقت الآن لكلا من الطلبين:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -312,7 +312,7 @@
 
 قم بإزالة المستمع لأننا لسنا بحاجة إليه بعد الآن:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm src/EventSubscriber/TwigEventSubscriber.php
 
@@ -324,7 +324,7 @@
 You can manually remove all the HTTP cache by removing the
 ``var/cache/dev/http_cache/`` directory:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -rf var/cache/dev/http_cache/
 
@@ -376,7 +376,7 @@ You can manually remove all the HTTP cache by removing the
 
 قم بإبطال الصفحة الرئيسية ورأس المؤتمر عبر مكالمات cURL التالية:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
@@ -438,7 +438,7 @@ You can manually remove all the HTTP cache by removing the
 
 يسمح لك مكون  Symfony Process بتشغيل أمر والحصول على النتيجة مرة أخرى (standard and error output) ؛ قم بتثبيته:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req process
 
@@ -475,7 +475,7 @@ You can manually remove all the HTTP cache by removing the
 
     يمكنك استخدام الأمر `` command:make `` لإنشاء الأمر:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ symfony console make:command app:step:info
@@ -486,7 +486,7 @@ You can manually remove all the HTTP cache by removing the
 
 ماذا لو أردنا تخزين النتيجة  لبضع دقائق؟ استخدم ذاكرة التخزين المؤقت Symfony:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req cache
 
@@ -650,7 +650,7 @@ You can manually remove all the HTTP cache by removing the
 
 امسح بعض عناوين URL:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header

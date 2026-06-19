@@ -53,12 +53,12 @@ RabbitMQ هو وسيط رسائل شائع جدًا يمكنك استخدامه 
 
 لإجبار Docker Compose على أخذ حاوية RabbitMQ في الاعتبار ، أوقف الحاويات وأعد تشغيلها:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -71,7 +71,7 @@ RabbitMQ هو وسيط رسائل شائع جدًا يمكنك استخدامه 
 
 إذا كنت تريد رؤية قوائم الانتظار والرسائل التي تتدفق عبر RabbitMQ ، فافتح واجهة إدارة الويب الخاصة به:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:rabbitmq
@@ -146,7 +146,7 @@ RabbitMQ هو وسيط رسائل شائع جدًا يمكنك استخدامه 
 
 عندما يتم تثبيت خدمة RabbitMQ على مشروع ، يمكنك الوصول إلى واجهة إدارة الويب الخاصة به عن طريق فتح النفق أولاً:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open

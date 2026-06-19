@@ -7,7 +7,7 @@
 
 للتعامل مع قاعدة البيانات من PHP ، سوف نعتمد على `Doctrine`_ ، وهي مجموعة من المكتبات التي تساعد المطورين على إدارة قواعد البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "orm:^2"
 
@@ -42,7 +42,7 @@
 
 تحقق من جميع متغيرات البيئة المكشوفة عن طريق تنفيذ ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:export
 
@@ -92,7 +92,7 @@
 
 يمكن أن تساعدنا حزمة Maker في إنشاء فئة (فئة *Entity*) تمثل مؤتمرًا:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
 
     $ symfony console make:entity Conference
@@ -228,7 +228,7 @@
 
 الآن ، قم بإنشاء فئة كيان لتعليقات المؤتمر:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime||no)
 
     $ symfony console make:entity Comment
@@ -250,7 +250,7 @@
 
 استخدم الأمر ``make:entity`` مرة أخرى لإضافة هذه العلاقة إلى فئة ``Conference``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(comments||OneToMany||Comment||conference||no||yes)
 
     $ symfony console make:entity Conference
@@ -449,7 +449,7 @@
 
 شغِّل ``make:entity``  مرة أخرى وأضف خاصية / عمود ``photoFilename`` من نوع ``string`` ، لكن اسمح له أن يكون ``null`` لأن تحميل الصورة اختياري:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(photoFilename||string||255||yes)
 
     $ symfony console make:entity Comment
@@ -469,7 +469,7 @@
 
 دعونا نرى ما أنتجته Doctrine:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -510,7 +510,7 @@
 
 يمكنك الآن تشغيل الترحيل الذي تم إنشاؤه لتحديث مخطط قاعدة البيانات المحلية:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate

@@ -57,10 +57,10 @@
 
 استنسخ `guestbook repository <https://github.com/symfony/guestbook.example.com>`_ في مكان ما على جهازك المحلي.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=5.2-2 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 هذا المستودع يتضمن كل الكود الموجود بالكتاب.
 
@@ -80,7 +80,7 @@
 
 اذا كنت كسولا، تستطيع جلب حالة الكود في نهاية كل خطوة عن طريق تفريغ الوسم المناسب. مثلا، اذا أردت قراءة واختبار الكود في نهاية الخطوة رقم 10، قم بتنفيذ التالي:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10
@@ -89,7 +89,7 @@
 
 يمكنك أيضا فحص أي خطوة فرعية:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10.2
@@ -101,7 +101,7 @@
 
 لست متأكدا أنك حصلت على كل شيء بشكل صحيح في الخطوة الفرعية 10.2 ؟ راجع الفروقات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git diff step-10-1...step-10-2
@@ -114,7 +114,7 @@
 
 تريد معرفة متى تم انشاء أو تعديل ملف؟
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git log -- src/Controller/ConferenceController.php

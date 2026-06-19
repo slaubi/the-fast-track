@@ -46,13 +46,13 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 بدء Docker Compose في الخلفية (`` -d``):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose up -d
 
 انتظر قليلاً للسماح بتشغيل قاعدة البيانات والتحقق من أن كل شيء يسير على ما يرام:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose ps
@@ -63,7 +63,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 إذا لم تكن هناك حاويات قيد التشغيل أو إذا كان عمود ``State`` لا يقرأ ``Up`` ، فتحقق من سجلات Docker Compose:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose logs
@@ -82,7 +82,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 بفضل هذه الاتفاقيات، أصبح الوصول إلى قاعدة البيانات عبر ``symfony run`` أسهل كثيرًا:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
@@ -91,7 +91,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
     إذا لم يكن لديك مشغل ``psql`` الثنائي على مضيفك المحلي ، يمكنك أيضًا تشغيله عبر ``docker-compose``:
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ docker-compose exec database psql main
@@ -106,14 +106,14 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 استخدم ``pg_dump`` لتفريغ بيانات قاعدة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run pg_dump --data-only > dump.sql
 
 واستعادة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql < dump.sql
@@ -190,7 +190,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 قم بتنفيذ هذه التغييرات ثم أعد النشر إلى SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -212,7 +212,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 إذا كنت ترغب في الاتصال بـ PostgreSQL المستضافة على حاويات الإنتاج ، يمكنك فتح نفق SSH بين الجهاز المحلي والبنية الأساسية لــ SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
@@ -221,14 +221,14 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 الآن ، قم بالاتصال بقاعدة بيانات PostgreSQL عن بعد من خلال ``symfony run psql`` كما كان من قبل:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
 
 عند الانتهاء ، لا تنس إغلاق النفق:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:close
@@ -248,7 +248,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 تحقق من كل متغيرات البيئة المكشوفة بواسطة ``symfony`` عن طريق تنفيذ ``symfony var:export``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:export
@@ -264,7 +264,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 عندما يكون النفق مفتوحًا لـ SymfonyCloud مع مجموعة العلامة ``--expose-env-vars``، فإن الأمر ``var:export`` يُرجع متغيرات البيئة البعيدة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars

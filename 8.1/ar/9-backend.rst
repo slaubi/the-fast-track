@@ -15,19 +15,19 @@
 
 أولاً، أضف EasyAdmin للمشروع:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "admin:^3"
 
 يقوم EasyAdmin تلقائيًا بإنشاء منطقة إدارة لتطبيقك بناءً على وحدات تحكم محددة. إنشاء ملف ``src/Controller/Admin/`` الدليل حيث سنخزن وحدات التحكم هذه:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ mkdir src/Controller/Admin/
 
 تحتوي جميع الحزم المثبتة على تهيئة مثل هذه الموجودة ضمن دليل ``config/package/``. في معظم الأوقات ، تم اختيار الإعدادات الافتراضية بعناية للعمل مع معظم التطبيقات.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(DashboardController||src/Controller/Admin/)
 
     $ symfony console make:admin:dashboard
@@ -89,7 +89,7 @@
 
 دعونا ننشئ CRUD للمؤتمرات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -126,7 +126,7 @@
 
 افعل الشيء نفسه للتعليقات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(0||src/Controller/Admin/||App\\Controller\\Admin)
 
     $ symfony console make:admin:crud
@@ -337,7 +337,7 @@
 
 العب مع المسؤول ، وقم بتصفية التعليقات حسب المؤتمر ، أو ابحث عن التعليقات عبر البريد الإلكتروني على سبيل المثال. المشكلة الوحيدة هي أنه يمكن لأي شخص الوصول إلى الواجهة الخلفية. لا تقلق ، سنقوم بتأمينه في خطوة مستقبلية.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony run psql -c "TRUNCATE conference RESTART IDENTITY CASCADE"

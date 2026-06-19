@@ -15,7 +15,7 @@
 
 يطبق مكون Symfony Notifier Component استراتيجيات إعلام عديدة:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req notifier
 
@@ -275,7 +275,7 @@
 
 تثبيت دعم Slack لـ Symfony Notifier:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req slack-notifier
 
@@ -286,14 +286,14 @@
 
 نظرًا لأن رمز الوصول حساس ، قم بتخزين Slack DSN في المتجر السري:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ symfony console secrets:set SLACK_DSN
 
 تفعل الشيء نفسه بالنسبة للإنتاج:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ APP_ENV=prod symfony console secrets:set SLACK_DSN

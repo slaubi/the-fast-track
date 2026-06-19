@@ -20,7 +20,7 @@
 
 لانشاء وحدات تحكم دون اي عناء، يمكننا استخدام حزمة ``symfony/maker-bundle``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req maker --dev
 
@@ -33,7 +33,7 @@
 
 يقوم امر ``list`` المدمج مع سيمفوني بسرد جميع الاوامر الموجودة في مساحة الاسم المعطاة؛ استخدمه لتقوم باكتشاف جميع المولدات التي توفرها حزمة maker.
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony console list make
@@ -49,7 +49,7 @@
 
 لادارة الـannotations نحتاج لاضافة تَبعية أخري:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req annotations
 
@@ -63,7 +63,7 @@
 
 إنشاء اول *وحدة تحكم* خاصة بك عن طريق امر ``make:controller``:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:controller ConferenceController
 

@@ -36,7 +36,7 @@
 
 قم بتثبيت Blackfire على جهازك المحلي عن طريق تشغيل البرنامج النصي للتثبيت السريع التالي:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://installer.blackfire.io/ | bash
@@ -61,7 +61,7 @@
 
 أعد تشغيل خادم الويب حتى يتمكن PHP من تحميل Blackfire:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -69,7 +69,7 @@
 
 يلزم تهيئة أداة Blackfire CLI باستخدام بيانات اعتمادك الشخصية **client** (لتخزين ملفات تعريف المشروع الخاصة بك تحت حسابك الشخصي). ابحث عنها أعلى صفحة ``Settings/Credentials`` `page <https://blackfire.io/my/settings/credentials>`_ وقم بتنفيذ الأمر التالي عن طريق استبدال العناصر النائبة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire config --client-id=xxx --client-token=xxx
@@ -112,7 +112,7 @@
 
 يمكنك الآن تشغيل الحاوية الجديدة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose stop
@@ -137,7 +137,7 @@
 
 أعد تشغيل خادم الويب:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -145,7 +145,7 @@
 
 وتتبع السجلات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -163,7 +163,7 @@
 
 قم بإعداد بيانات اعتماد * server * كمتغيرات بيئة:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set BLACKFIRE_SERVER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -195,7 +195,7 @@
 
 ابحث عن عنوان IP الحالي الخاص بك:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://ifconfig.me/
@@ -276,14 +276,14 @@
 
 أو يمكنك استخدام الأمر ``server:prod``:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod
 
 لا تنسَ تبديلها مرة أخرى إلى نقطة التطوير عند انتهاء جلسة عمل ملفات التعريف:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod --off
@@ -296,7 +296,7 @@
 
 من الأفضل عمل توصيف API أو SPA على CLI عبر Blackfire CLI Tool التي قمت بتثبيتها مسبقًا:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`api
@@ -377,20 +377,20 @@
 
 قم بتنزيل مشغل Blackfire لتتمكن من تشغيل السيناريو محليًا:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -OLsS https://get.blackfire.io/blackfire-player.phar
     $ chmod +x blackfire-player.phar
 
 قم بتشغيل هذا السيناريو في التطوير:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ ./blackfire-player.phar run --endpoint=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL` .blackfire.yaml --variable "webmail_url=`symfony var:export MAILER_WEB_URL 2>/dev/null`" --variable="env=dev"
 
 أو في الإنتاج:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ ./blackfire-player.phar run --endpoint=`symfony env:urls --first` .blackfire.yaml --variable "webmail_url=NONE" --variable="env=prod"

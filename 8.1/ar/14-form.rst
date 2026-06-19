@@ -15,7 +15,7 @@
 
 استخدم ال Maker bundle لإنشاء فئة نموذج:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:form CommentFormType Comment
 
@@ -198,7 +198,7 @@
 
 قيد الصورة يعمل بالتحقق من نوع mime ؛ تتطلب مكون Mime لجعله يعمل:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mime
 
@@ -432,7 +432,7 @@
 
 انقر عليه للوصول إلى ملف طلب POST ، وانتقل إلى لوحة "النموذج / Form":
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ rm -rf var/cache

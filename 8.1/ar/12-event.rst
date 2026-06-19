@@ -15,9 +15,9 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/templates/base.html.twig
-    +++ b/templates/base.html.twig
-    @@ -14,6 +14,15 @@
+    --- i/templates/base.html.twig
+    +++ w/templates/base.html.twig
+    @@ -12,6 +12,15 @@
              {% endblock %}
          </head>
          <body>
@@ -41,23 +41,22 @@
 .. code-block:: diff
     :class: ignore
 
-    --- a/src/Controller/ConferenceController.php
-    +++ b/src/Controller/ConferenceController.php
-    @@ -29,12 +29,13 @@ class ConferenceController extends AbstractController
+    --- i/src/Controller/ConferenceController.php
+    +++ w/src/Controller/ConferenceController.php
+    @@ -21,11 +21,12 @@ final class ConferenceController extends AbstractController
          }
 
          #[Route('/conference/{id}', name: 'conference')]
-    -    public function show(Request $request, Conference $conference, CommentRepository $commentRepository): Response
-    +    public function show(Request $request, Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository): Response
+    -    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
+    +    public function show(#[MapEntity] Conference $conference, CommentRepository $commentRepository, ConferenceRepository $conferenceRepository, #[MapQueryParameter(options: ['min_range' => 0])] int $offset = 0): Response
          {
-             $offset = max(0, $request->query->getInt('offset', 0));
              $paginator = $commentRepository->getCommentPaginator($conference, $offset);
 
-             return new Response($this->twig->render('conference/show.html.twig', [
+             return $this->render('conference/show.html.twig', [
     +            'conferences' => $conferenceRepository->findAll(),
                  'conference' => $conference,
                  'comments' => $paginator,
-                 'previous' => $offset - CommentRepository::PAGINATOR_PER_PAGE,
+                 'previous' => $offset - CommentRepository::COMMENTS_PER_PAGE,
 
 تخيل أنك مضطر لتحديث العشرات من وحدات التحكم. وتفعل نفس الشيء مع كل ما هو جديد. هذه ليست عملية للغاية. يجب أن تكون هناك طريقة أفضل.
 
@@ -94,45 +93,42 @@
 
 أنت تعرف الأغنية عن ظهر قلب الآن ، استخدم حزمة صانع لإنشاء مشترك Subscriber:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(Symfony\\Component\\HttpKernel\\Event\\ControllerEvent)
 
-    $ symfony console make:subscriber TwigEventSubscriber
+    $ symfony console make:listener TwigEventListener
 
 يسألك الأمر عن الحدث الذي تريد الاستماع إليه. اختر حدث `` Symfony \ Component \ HttpKernel \ Event \ ControllerEvent `` ، الذي يتم إرساله قبل استدعاء وحدة التحكم. هذا هو أفضل وقت لحقن المتغير العالمي `` للمؤتمرات '' حتى يتمكن Twig من الوصول إليه عندما تقوم وحدة التحكم بتقديم القالب. قم بتحديث المشترك كما يلي:
 
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/EventSubscriber/TwigEventSubscriber.php
-    +++ b/src/EventSubscriber/TwigEventSubscriber.php
-    @@ -2,14 +2,25 @@
+    --- i/src/EventListener/TwigEventListener.php
+    +++ w/src/EventListener/TwigEventListener.php
+    @@ -2,14 +2,22 @@
 
-     namespace App\EventSubscriber;
+     namespace App\EventListener;
 
     +use App\Repository\ConferenceRepository;
-     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+     use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
      use Symfony\Component\HttpKernel\Event\ControllerEvent;
     +use Twig\Environment;
 
-     class TwigEventSubscriber implements EventSubscriberInterface
+     final class TwigEventListener
      {
-    +    private $twig;
-    +    private $conferenceRepository;
-    +
-    +    public function __construct(Environment $twig, ConferenceRepository $conferenceRepository)
-    +    {
-    +        $this->twig = $twig;
-    +        $this->conferenceRepository = $conferenceRepository;
+    +    public function __construct(
+    +        private Environment $twig,
+    +        private ConferenceRepository $conferenceRepository,
+    +    ) {
     +    }
     +
-         public function onControllerEvent(ControllerEvent $event)
+         #[AsEventListener]
+         public function onControllerEvent(ControllerEvent $event): void
          {
     -        // ...
     +        $this->twig->addGlobal('conferences', $this->conferenceRepository->findAll());
          }
-
-         public static function getSubscribedEvents()
+     }
 
 الآن ، يمكنك إضافة أي عدد تريده من وحدات التحكم: سيكون متغير متغيرات `` المؤتمرات `` متاحًا دائمًا في Twig.
 
@@ -148,20 +144,20 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/src/Repository/ConferenceRepository.php
-    +++ b/src/Repository/ConferenceRepository.php
-    @@ -19,6 +19,11 @@ class ConferenceRepository extends ServiceEntityRepository
+    --- i/src/Repository/ConferenceRepository.php
+    +++ w/src/Repository/ConferenceRepository.php
+    @@ -16,6 +16,11 @@ class ConferenceRepository extends ServiceEntityRepository
              parent::__construct($registry, Conference::class);
          }
 
-    +    public function findAll()
+    +    public function findAll(): array
     +    {
     +        return $this->findBy([], ['year' => 'ASC', 'city' => 'ASC']);
     +    }
     +
-         // /**
-         //  * @return Conference[] Returns an array of Conference objects
-         //  */
+         //    /**
+         //     * @return Conference[] Returns an array of Conference objects
+         //     */
 
 في نهاية هذه الخطوة ، يجب أن يبدو موقع الويب كما يلي:
 

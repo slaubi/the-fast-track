@@ -21,12 +21,12 @@
 
 يبدأ سير العمل بإنشاء فرع Git:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git branch -D sessions-in-db || true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout -b sessions-in-db
 
@@ -80,7 +80,7 @@
 
 لتخزين الجلسات في قاعدة البيانات ، نحتاج إلى إنشاء جدول ``sessions``. افعل ذلك من خلال ترحيل Doctrine:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -109,7 +109,7 @@
 
 ترحيل قاعدة البيانات:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -139,7 +139,7 @@
 
 التزم بتغييراتك في الفرع الجديد:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -159,12 +159,12 @@
 
 الآن ، دعنا ننشئ * بيئة ل SymfonyCloud * على أساس * فرع Git * :
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony env:delete sessions-in-db --no-interaction
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:create
 
@@ -185,7 +185,7 @@
 
 بمجرد الإنتهاء من النشر ، افتح الفرع الجديد في متصفح:
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:remote
@@ -203,7 +203,7 @@
 
 يمكنك حتى مزامنة البيانات من الفرع الرئيسي(Master) مرة أخرى إلى بيئة  "sessions-in-db":
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony env:sync
@@ -221,13 +221,13 @@
 
 في حالة وجود مشكلة ، قد ترغب في التغيير  إلى بيئة "dev" ل Symfony :
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug
 
 عند الانتهاء ، ارجع إلى إعدادات الإنتاج:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug --off
 
@@ -252,14 +252,14 @@
 
 عندما تكون راضيًا عن تغييرات في الفرع ، قم بدمج الكود والبنية التحتية مرة أخرى في فرع Git الرئيسي (master):
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout master
     $ git merge sessions-in-db
 
 وقم بالنشر:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony deploy
 
@@ -274,7 +274,7 @@
 
 وأخيرًا ، قم بالتنظيف بإزالة فرع Git وبيئة SymfonyCloud:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git branch -d sessions-in-db
     $ symfony env:delete --env=sessions-in-db --no-interaction
