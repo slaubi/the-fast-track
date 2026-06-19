@@ -7,7 +7,7 @@
 
 我们要依赖 `Doctrine`_ 来让 PHP 处理数据库，它由一组类库组成，这些类库可以帮助开发者管理数据库。
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "orm:^2"
 
@@ -42,7 +42,7 @@ Doctrine 是如何知道数据库连接信息的呢？Doctrine 的 recipe 添加
 
 通过执行 ``symfony var:export`` 来查看所有暴露出来的环境变量：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:export
 
@@ -92,7 +92,7 @@ Doctrine 是如何知道数据库连接信息的呢？Doctrine 的 recipe 添加
 
 *Maker Bundle* 能帮我们生成一个代表会议的类（即一个 *实体* 类）：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(city||string||255||no||year||string||4||no||isInternational||boolean||no)
 
     $ symfony console make:entity Conference
@@ -228,7 +228,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 现在，我们来生成一个会议评论的实体类。
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(author||string||255||no||text||text||no||email||string||255||no||createdAt||datetime||no)
 
     $ symfony console make:entity Comment
@@ -250,7 +250,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 再次使用 ``make:entity`` 命令，通过它把这种关系添加到 ``Conference`` 类：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(comments||OneToMany||Comment||conference||no||yes)
 
     $ symfony console make:entity Conference
@@ -449,7 +449,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 再次执行 ``make:entity`` 命令，这次增加一个 ``string`` 类型的 ``photoFilename`` 属性/列，但是要允许它可以取 ``null`` 值，因为上传照片是可选的：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(photoFilename||string||255||yes)
 
     $ symfony console make:entity Comment
@@ -469,7 +469,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 让我们来看下 Doctrine 生成了什么：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -510,7 +510,7 @@ Doctrine添加了一个``id``属性来存储数据库表中的行主键。主键
 
 现在你可以运行生成的迁移来更新本地数据库结构：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate

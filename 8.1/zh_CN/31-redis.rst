@@ -19,72 +19,71 @@
 .. code-block:: diff
     :caption: patch_file
 
-    --- a/.symfony.cloud.yaml
-    +++ b/.symfony.cloud.yaml
-    @@ -4,6 +4,7 @@ type: php:8.0
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -37,6 +37,7 @@ applications:
+                     - iconv
+                     - mbstring
+                     - pdo_pgsql
+    +                - redis
+                     - sodium
+                     - xsl
 
-     runtime:
-         extensions:
-    +        - redis
-             - blackfire
-             - xsl
-             - pdo_pgsql
-    @@ -26,6 +27,7 @@ disk: 512
+    @@ -62,6 +63,7 @@ applications:
 
-     relationships:
-         database: "db:postgresql"
-    +    redis: "rediscache:redis"
+             relationships:
+                 database: "database:postgresql"
+    +            redis: "rediscache:redis"
 
-     web:
-         locations:
-    --- a/.symfony/services.yaml
-    +++ b/.symfony/services.yaml
-    @@ -15,3 +15,6 @@ varnish:
-     files:
-         type: network-storage:1.0
-         disk: 256
+             hooks:
+                 build: |
+    --- i/.upsun/config.yaml
+    +++ w/.upsun/config.yaml
+    @@ -21,3 +21,6 @@ services:
+                 type: network-storage:2.0
+
+    +    rediscache:
+    +        type: redis:8.0
     +
-    +rediscache:
-    +    type: redis:5.0
-    --- a/config/packages/framework.yaml
-    +++ b/config/packages/framework.yaml
-    @@ -7,7 +7,7 @@ framework:
-         # Enables session support. Note that the session will ONLY be started if you read or write from it.
-         # Remove or comment this section to explicitly disable session support.
+     applications:
+    --- i/compose.yaml
+    +++ w/compose.yaml
+    @@ -14,6 +14,10 @@ services:
+           # - ./docker/db/data:/var/lib/postgresql/data:rw
+     ###< doctrine/doctrine-bundle ###
+
+    +  redis:
+    +    image: redis:8.0-alpine
+    +    ports: [6379]
+    +
+     volumes:
+     ###> doctrine/doctrine-bundle ###
+       database_data:
+    --- i/config/packages/framework.yaml
+    +++ w/config/packages/framework.yaml
+    @@ -4,3 +4,3 @@ framework:
+         # Note that the session will be started ONLY if you read or write from it.
          session:
-    -        handler_id: '%env(DATABASE_URL)%'
+    -        handler_id: '%env(resolve:DATABASE_URL)%'
     +        handler_id: '%env(REDIS_URL)%'
-             cookie_secure: auto
-             cookie_samesite: lax
-
-    --- a/docker-compose.yaml
-    +++ b/docker-compose.yaml
-    @@ -17,3 +17,7 @@ services:
-             image: blackfire/blackfire
-             env_file: .env.local
-             ports: [8707]
-    +
-    +    redis:
-    +        image: redis:5-alpine
-    +        ports: [6379]
 
 这难道不 *漂亮* 吗？
 
 “重启” Docker 来启动 Redis 服务：
 
-.. code-block:: bash
+.. code-block:: terminal
 
-    $ docker-compose stop
-    $ docker-compose up -d
+    $ docker compose stop
+    $ docker compose up -d --remove-orphans
 
 通过浏览网站来在本地测试；一切应该如之前一样正常运行。
 
 提交并且像往常一样部署：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony deploy
+    $ symfony cloud:push
 
 .. sidebar:: 深入学习
 

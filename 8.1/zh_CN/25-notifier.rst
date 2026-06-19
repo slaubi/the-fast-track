@@ -15,7 +15,7 @@
 
 Symfony 的 Notifier 组件实现了很多通知策略：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req notifier
 
@@ -275,7 +275,7 @@ Symfony 的 Notifier 组件实现了很多通知策略：
 
 为 Symfony 的消息通知器安装 Slack 支持：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req slack-notifier
 
@@ -286,14 +286,14 @@ Symfony 的 Notifier 组件实现了很多通知策略：
 
 由于访问令牌是敏感信息，要把 Slack 的 DSN 存储在机密存储中：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ symfony console secrets:set SLACK_DSN
 
 在生产环境中也是一样：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(slack://ACCESS_TOKEN@default?channel=CHANNEL)
 
     $ APP_ENV=prod symfony console secrets:set SLACK_DSN

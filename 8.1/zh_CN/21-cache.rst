@@ -66,7 +66,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 
 在首页上检查缓存：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -147,7 +147,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 
 创建相应的模板：
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/header.html.twig
 
     <ul>
@@ -237,7 +237,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 
 由于 Symfony 的反向代理的确支持 ESI，我们来查看下日志（先清空缓存，请看下面的“清理缓存”）：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -285,7 +285,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 
 现在两个请求都被缓存了：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl -s -I -X GET https://127.0.0.1:8000/
@@ -312,7 +312,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 
 移除事件监听器，我们不再需要它了：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm src/EventSubscriber/TwigEventSubscriber.php
 
@@ -324,7 +324,7 @@ Symfony 的 HTTP 反向代理（由 ``HttpCache`` 类实现）不但是一个功
 You can manually remove all the HTTP cache by removing the
 ``var/cache/dev/http_cache/`` directory:
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -rf var/cache/dev/http_cache/
 
@@ -376,7 +376,7 @@ You can manually remove all the HTTP cache by removing the
 
 用下面的 cURL 命令来让首页和会议页头的缓存失效：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/
     $ curl -s -I -X PURGE -u admin:admin `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`/admin/http-cache/conference_header
@@ -438,7 +438,7 @@ You can manually remove all the HTTP cache by removing the
 
 Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的输出结果（标准输出和错误输出）；我们来安装它：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req process
 
@@ -475,7 +475,7 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
 
     你也可以用 ``make:command`` 来新建这个命令：
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ symfony console make:command app:step:info
@@ -486,7 +486,7 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
 
 如果你想要把输出的内容缓存几分钟，那要怎么做？使用 Symfony 缓存：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req cache
 
@@ -650,7 +650,7 @@ Symfony 的 Process 组件可以用来运行一个命令，并且获得命令的
 
 现在清理一些 URL 缓存：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`
     $ curl -X PURGE -H 'x-purge-token PURGE_NOW' `symfony env:urls --first`conference_header

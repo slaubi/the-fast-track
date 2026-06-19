@@ -27,7 +27,7 @@
 
 用 Symfony 的 HttpClient 组件来发起 API 调用：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req http-client
 
@@ -157,7 +157,7 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
 把 Akismet 秘钥装进保险箱：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ symfony console secrets:set AKISMET_KEY
@@ -235,7 +235,7 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
 在生产环境中，SymfonyCloud 支持设置 *敏感环境变量*：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set --sensitive AKISMET_KEY=abcdef
@@ -247,7 +247,7 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
 首先，为生产环境生成一对秘钥：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=prod symfony console secrets:generate-keys
 
@@ -260,20 +260,20 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
 把 Akismet 的秘钥加入生产环境的保险箱中，但这次是用针对生产环境的值：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(abcdef)
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
 最后一步是通过设置一个敏感环境变量，把解密秘钥发送给 SymfonyCloud：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony var:set --sensitive SYMFONY_DECRYPTION_SECRET=`php -r 'echo base64_encode(include("config/secrets/prod/prod.decrypt.private.php"));'`
 
 你可以添加和提交所有文件；解密秘钥已经被自动加到 ``.gitignore`` 里了，所以它永远不会被提交。既然已经部署完了，出于安全考虑，你可以将它从你的本地电脑中移除：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ rm -f config/secrets/prod/prod.decrypt.private.php
 

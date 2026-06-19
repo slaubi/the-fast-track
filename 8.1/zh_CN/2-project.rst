@@ -57,10 +57,10 @@
 
 在你本地电脑上找个地方克隆这个代码仓库 `guestbook repository <https://github.com/the-fast-track/book-5.2-2>`_：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony new --version=5.2-2 --book guestbook
+    $ symfony new --version=8.1-1 --book guestbook
 
 该仓库包含了本书的所有代码。
 
@@ -80,7 +80,7 @@
 
 如果你想偷懒的话，你用正确的标签就可以得到每一个步骤结尾的代码。比如，如果你想要读取并测试步骤 10 结尾处的代码，就执行下面的命令：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10
@@ -89,7 +89,7 @@
 
 你也能签出任何子步骤的代码：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:checkout 10.2
@@ -101,7 +101,7 @@
 
 你不确定在子步骤 10.2 里把所有事情都弄对了吗？去看一下代码比对：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git diff step-10-1...step-10-2
@@ -114,7 +114,7 @@
 
 你想要知道一个文件是何时创建或改动的？
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git log -- src/Controller/ConferenceController.php

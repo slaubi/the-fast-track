@@ -10,7 +10,7 @@
 
 Symfony 使用 PHPUnit 进行单元测试。我们来安装它：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req phpunit --dev
 
@@ -24,7 +24,7 @@ Symfony 使用 PHPUnit 进行单元测试。我们来安装它：
 
 ``SpamChecker`` 是我们第一个要测试的类。生成一个单元测试：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:test TestCase SpamCheckerTest
 
@@ -76,7 +76,7 @@ Symfony 使用 PHPUnit 进行单元测试。我们来安装它：
 
 运行测试来检查它们是否通过：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony php bin/phpunit
 
@@ -177,7 +177,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
     我们其实也可以用 *Maker Bundle* 来生成这个测试：
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console make:test WebTestCase Controller\\ConferenceController
 
@@ -208,7 +208,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 为了使测试能够运行，我们必须为 ``test`` 环境设置 ``AKISMET_KEY`` 这个秘钥：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(AKISMET_KEY_VALUE)
 
     $ APP_ENV=test symfony console secrets:set AKISMET_KEY
@@ -228,14 +228,14 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 在可以运行测试之前，我们需要“初始化” ``test`` 数据库（创建这个数据库并对它迁移）：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony console doctrine:database:create
     $ APP_ENV=test symfony console doctrine:migrations:migrate -n
 
 如果你现在运行测试，PHPUnit 不会再影响到开发环境里的数据库。如果只是运行新的测试，就要传入这些类的路径：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -256,7 +256,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 安装 Doctrine Fixtures 这个 bundle：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req orm-fixtures --dev
 
@@ -356,7 +356,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
     如果你不确定要为某个任务使用哪个服务，可以用 ``debug:autowiring``，再加上一些关键词：
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:autowiring encoder
 
@@ -367,7 +367,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 为 ``test`` 环境对应的数据库载入 fixture 数据：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -434,7 +434,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 检查新的测试能否通过：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
@@ -473,13 +473,13 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 再运行下测试，检查测试是否通过：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ APP_ENV=test symfony php bin/phpunit tests/Controller/ConferenceControllerTest.php
 
 如果你想要在浏览器中检查结果，停止 Web 服务器，并且在 ``test`` 环境下重新运行它：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -498,7 +498,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 如果你再运行一次测试，它应该会失败。由于现在数据库里有更多的评论，检查评论数量的断言就不成立了。我们需要在多次测试之间重置数据库的状态，这是通过在每次测试之前重新载入 fixture 数据来实现的。
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ APP_ENV=test symfony console doctrine:fixtures:load
@@ -539,7 +539,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 无论何时你要进行测试，就使用 ``make tests``：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -608,12 +608,12 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 为了在测试之间重置数据库，我们来安装 DoctrineTestBundle：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony composer config extra.symfony.allow-contrib true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "dama/doctrine-test-bundle:^6" --dev
 
@@ -657,7 +657,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 测试应该再次通过了：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ make tests
 
@@ -670,7 +670,7 @@ PHPUnit 的 *data providers* 让我们可以在多个测试用例中复用同一
 
 功能测试用一个特殊的浏览器来直接调用 Symfony 层。但你也可以借助 Symfony Panther，用一个真正的浏览器和真正的 HTTP 层。
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req panther --dev
 

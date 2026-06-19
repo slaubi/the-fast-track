@@ -36,7 +36,7 @@ Blackfire 由几部分组成：
 
 运行下面这个快速安装脚本，它会在你的本地机器上安装 Blackfire：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://installer.blackfire.io/ | bash
@@ -61,7 +61,7 @@ Blackfire 由几部分组成：
 
 重启 web 服务器来让 PHP 加载 Blackfire：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -69,7 +69,7 @@ Blackfire 由几部分组成：
 
 Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这样你的项目配置才能存储在你的个人账号下）。你能在 ``Settings/Credentials`` `页 <https://blackfire.io/my/settings/credentials>`_ 的顶部找到这个凭证，用它来替换以下这个命令中的占位符，并且执行该命令：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire config --client-id=xxx --client-token=xxx
@@ -112,7 +112,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 现在你可以启动新容器：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose stop
@@ -137,7 +137,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 重启 web 服务器：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:stop
@@ -145,7 +145,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 显示最近的日志：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:log
@@ -163,7 +163,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 把 *服务器* 凭证设置为环境变量：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:set BLACKFIRE_SERVER_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -195,7 +195,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 获取你当前的 IP 地址：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ curl https://ifconfig.me/
@@ -276,14 +276,14 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 或者你可以用 ``server:prod`` 命令：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod
 
 当这次分析结束后，不要忘了切换回开发环境：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:prod --off
@@ -296,7 +296,7 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 对 API 或者单页应用进行分析的首选工具就是你之前安装的 Blackfire 命令行程序：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ blackfire curl `symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL`api
@@ -377,20 +377,20 @@ Blackfire 命令行工具需要用你个人的 *客户端* 凭证来配置（这
 
 下载 Blackfire 播放器，这样才能在本地运行浏览情节：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ curl -OLsS https://get.blackfire.io/blackfire-player.phar
     $ chmod +x blackfire-player.phar
 
 在开发环境中运行浏览情节：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ ./blackfire-player.phar run --endpoint=`symfony var:export SYMFONY_PROJECT_DEFAULT_ROUTE_URL` .blackfire.yaml --variable "webmail_url=`symfony var:export MAILER_WEB_URL 2>/dev/null`" --variable="env=dev"
 
 或是在生产环境中：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ ./blackfire-player.phar run --endpoint=`symfony env:urls --first` .blackfire.yaml --variable "webmail_url=NONE" --variable="env=prod"

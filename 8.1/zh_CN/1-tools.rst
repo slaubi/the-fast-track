@@ -102,14 +102,14 @@ Symfony CLI
 .. index::
     single: Symfony CLI;server:ca:install
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony server:ca:install
 
 运行下面的命令，来检查你的电脑是否符合所需的全部条件：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony book:check-requirements

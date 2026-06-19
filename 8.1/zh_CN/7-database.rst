@@ -46,13 +46,13 @@ PostgreSQL 是我们选用的数据库。
 
 在后台运行 Docker Compose（使用 ``-d`` 选项）：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose up -d
 
 先稍等一下，让数据库启动，然后检查是否一切正常：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose ps
@@ -63,7 +63,7 @@ PostgreSQL 是我们选用的数据库。
 
 如果没有容器在运行，或者 ``State`` 栏不是显示为 ``Up``，检查一下Docker Compose 的日志：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ docker-compose logs
@@ -82,7 +82,7 @@ PostgreSQL 是我们选用的数据库。
 
 多亏这些约定，使用 ``symfony run`` 来连接数据库方便多了。
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
@@ -91,7 +91,7 @@ PostgreSQL 是我们选用的数据库。
 
     如果你在本机上没有 ``psql`` 这个二进制文件，你也可以通过 ``docker-compose`` 来运行它：
 
-    .. code-block:: bash
+    .. code-block:: terminal
         :class: ignore
 
         $ docker-compose exec database psql main
@@ -106,14 +106,14 @@ PostgreSQL 是我们选用的数据库。
 
 使用 ``pg_dump`` 来导出数据库的数据：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run pg_dump --data-only > dump.sql
 
 并且恢复数据：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql < dump.sql
@@ -190,7 +190,7 @@ PostgreSQL 是我们选用的数据库。
 
 提交这些改变，然后重新部署到 SymfonyCloud：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -212,7 +212,7 @@ PostgreSQL 是我们选用的数据库。
 
 如果你想要连接到生产环境容器中的 PostgreSQL，你需要打开一个 SSH 隧道来接通你的本地电脑和 SymfonyCloud 平台设施：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
@@ -221,14 +221,14 @@ PostgreSQL 是我们选用的数据库。
 
 现在，用 ``symfony run psql`` 连接到远程的 PostgreSQL 服务器，和以前一样：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run psql
 
 连接完后，不要忘了关掉隧道：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:close
@@ -248,7 +248,7 @@ PostgreSQL 是我们选用的数据库。
 
 执行 ``symfony var:export`` 可以查看 ``symfony`` 暴露出的所有环境变量：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony var:export
@@ -264,7 +264,7 @@ PostgreSQL 是我们选用的数据库。
 
 如果一条隧道设置了 ``--expose-env-vars`` 选项并且连接到了 SymfonyCloud，那么 ``var:export`` 命令就会返回远程的环境变量：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars

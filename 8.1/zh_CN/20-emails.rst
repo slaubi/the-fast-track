@@ -10,7 +10,7 @@
 
 首先，安装 Symfony 的 Mailer 组件：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mailer
 
@@ -128,7 +128,7 @@
 
 通知邮件模板继承自 Symfony 自带的默认通知邮件模板：
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/emails/comment_notification.html.twig
 
     {% extends '@email/default/notification/body.html.twig' %}
@@ -157,7 +157,7 @@
 
 这两个功能都来自可选的 Twig 扩展，我们会安装它：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/cssinliner-extra:^3" "twig/inky-extra:^3"
 
@@ -266,7 +266,7 @@
 
 当审核完成后，为着管理员的辛勤工作，用一个简洁的模板向他们表达感谢：
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/admin/review.html.twig
 
     {% extends 'base.html.twig' %}
@@ -301,25 +301,25 @@
 
 关闭并再次启动容器来加入邮件捕获器：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
 你也必须终止消息消费者，因为它还不知道邮件捕捉器的存在：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console messenger:stop-workers
 
 并且重新启动它。现在 ``MAILER_DSN`` 会被自动暴露出来：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony run -d --watch=config,src,templates,vendor symfony console messenger:consume async
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -332,7 +332,7 @@
 
 你能在终端里打开网页版邮箱：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:webmail
@@ -454,7 +454,7 @@ SymfonyCloud 上没有特别的配置要做。所有的账户自带一个 SendGr
 
     保险起见，默认情况下邮件 *仅仅* 在 ``master`` 分支上发送。如果你知道你所做的意味着什么，你可以启动 SMTP 服务：
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony env:setting:set email on
 

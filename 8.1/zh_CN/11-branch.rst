@@ -21,12 +21,12 @@
 
 这个工作流从创建一个 Git 分支开始：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ git branch -D sessions-in-db || true
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout -b sessions-in-db
 
@@ -80,7 +80,7 @@
 
 为了把会话存储在数据库中，我们需要创建 ``sessions`` 表。用 Doctrine 的数据库迁移来实现：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
 
@@ -109,7 +109,7 @@
 
 迁移数据库：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony console doctrine:migrations:migrate
@@ -139,7 +139,7 @@
 
 把你的修改提交到这条新分支：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -159,12 +159,12 @@
 
 现在，让我们来根据 *Git 分支* 创建一个 *SymfonyCloud 环境*：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ symfony env:delete sessions-in-db --no-interaction
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:create
 
@@ -185,7 +185,7 @@
 
 当部署完成后，用浏览器打开这个新分支的页面：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:remote
@@ -203,7 +203,7 @@
 
 你甚至可以把 master 上的数据同步回 ``sessions-in-db`` 环境：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(y)
 
     $ symfony env:sync
@@ -221,13 +221,13 @@
 
 出问题的时候，你可以切换到 Symfony 的 ``dev`` 环境：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug
 
 当排查完错误后，返回到生产环境的设置：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony env:debug --off
 
@@ -252,14 +252,14 @@
 
 当你对分支上的改动满意后，把代码和软件环境配置合并到 Git 的 master 分支：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git checkout master
     $ git merge sessions-in-db
 
 然后部署：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony deploy
 
@@ -274,7 +274,7 @@
 
 最后，移除 Git 分支和 SymfonyCloud 环境：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ git branch -d sessions-in-db
     $ symfony env:delete --env=sessions-in-db --no-interaction

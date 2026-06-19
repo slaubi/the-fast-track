@@ -9,7 +9,7 @@
     single: Components;Security
     single: Security
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req security
 
@@ -27,7 +27,7 @@
 
 使用量身定做的 ``make:user`` 命令来创建 ``Admin`` 实体，而不是用传统的 ``make:entity`` 命令：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(yes||username||yes)
 
     $ symfony console make:user Admin
@@ -87,7 +87,7 @@
 
 是时候生成一个数据库结构迁移文件，并且更新数据库结构了：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:migration
     $ symfony console doctrine:migrations:migrate -n
@@ -105,7 +105,7 @@
 
 选一个你想要的密码，然后运行以下的命令来生成一个加密后的密码：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(admin)
 
     $ symfony console security:encode-password
@@ -140,7 +140,7 @@
 
 用 SQL 语句插入一个管理员用户：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony run psql -c "INSERT INTO admin (id, username, roles, password) \
       VALUES (nextval('admin_id_seq'), 'admin', '[\"ROLE_ADMIN\"]', \
@@ -162,7 +162,7 @@
 
 运行 ``make:auth`` 命令来更新安全方面的配置，生成一个登录页模板，并且创建一个 *认证器*：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: answers(1||AppAuthenticator||SecurityController||yes)
 
     $ symfony console make:auth
@@ -218,7 +218,7 @@
 
     我是如何记住 EasyAdmin 路由的名字叫 ``admin`` 的（正如在 ``App\Controller\Admin\DashboardController`` 里所配置的）？其实我并不记得。你可以看一下控制器文件，但你可以运行下面这个命令，它会展示路由名和路径之间的关联：
 
-    .. code-block:: bash
+    .. code-block:: terminal
 
         $ symfony console debug:router
 

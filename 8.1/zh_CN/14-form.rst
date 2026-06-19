@@ -15,7 +15,7 @@
 
 用 *Maker bundle* 生成一个表单类：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony console make:form CommentFormType Comment
 
@@ -198,7 +198,7 @@
 
 图片约束是通过检查 mime 类型来实现的；加入 Mime 组件来使它工作：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req mime
 
@@ -432,7 +432,7 @@
 
 点击那个链接，可以打开那个 POST 请求的分析页，然后进入 “Form” 面板：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ rm -rf var/cache

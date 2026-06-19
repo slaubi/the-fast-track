@@ -16,7 +16,7 @@
 
 为了万无一失，让我们再告诉 Composer，不管用不用 EasyAdmin，我们的项目确实依赖 Twig。把它和其它依赖一样加进来就够了：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req twig
 
@@ -45,7 +45,7 @@
 
 网站的所有页面会共享一样的 *布局*。当安装 Twig 时，它自动创建了 ``templates/`` 目录，而且 ``base.html.twig`` 文件里新建了一个样本布局。
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/base.html.twig
     :class: ignore
 
@@ -70,7 +70,7 @@
 
 让我们在 ``templates/conference/index.html.twig`` 文件里为项目首页创建一个模板。
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/index.html.twig
 
     {% extends 'base.html.twig' %}
@@ -196,7 +196,7 @@
 
 最后一步就是创建 ``templates/conference/show.html.twig`` 文件：
 
-.. code-block:: twig
+.. code-block:: html+twig
     :caption: templates/conference/show.html.twig
 
     {% extends 'base.html.twig' %}
@@ -235,7 +235,7 @@
 
 这个错误是由于 ``format_datetime`` 过滤器并不是 Twig 核心的一部分。错误信息提示你要安装哪个包来解决问题。
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ symfony composer req "twig/intl-extra:^3"
 

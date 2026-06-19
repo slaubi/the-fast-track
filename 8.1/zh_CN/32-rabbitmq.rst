@@ -53,12 +53,12 @@ RabbitMQ 是一个非常流行的消息代理，你可以用它来代替 Postgre
 
 为了强制让 RabbitMQ 容器在 Docker Compose 中生效，把容器都关闭，并且重启它们：
 
-.. code-block:: bash
+.. code-block:: terminal
 
     $ docker-compose stop
     $ docker-compose up -d
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: hide
 
     $ sleep 10
@@ -71,7 +71,7 @@ RabbitMQ 是一个非常流行的消息代理，你可以用它来代替 Postgre
 
 如果你想要看到 RabbitMQ 中往来的队列和消息，打开它的网站管理界面：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony open:local:rabbitmq
@@ -146,7 +146,7 @@ RabbitMQ 是一个非常流行的消息代理，你可以用它来代替 Postgre
 
 当项目中安装了 RabbitMQ 服务，你可以通过先打开隧道来访问它的网站管理界面：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open

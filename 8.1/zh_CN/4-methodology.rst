@@ -12,7 +12,7 @@
 
 在每个步骤的结尾，不要忘了提交你的改动：
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
     $ git add .
@@ -23,12 +23,13 @@
 .. code-block:: text
     :caption: .gitignore
     :class: ignore
-    :emphasize-lines: 1,8
+    :emphasize-lines: 1,9
 
     ###> symfony/framework-bundle ###
     /.env.local
     /.env.local.php
     /.env.*.local
+    /config/secrets/prod/prod.decrypt.private.php
     /public/bundles/
     /var/
     /vendor/
@@ -48,7 +49,7 @@
 
 另外一个好习惯就是频繁地部署。在每个步骤末尾做次部署是一个不错的节奏。
 
-.. code-block:: bash
+.. code-block:: terminal
     :class: ignore
 
-    $ symfony deploy
+    $ symfony cloud:push
