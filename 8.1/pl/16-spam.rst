@@ -359,7 +359,7 @@ Po pierwsze, wygeneruj parę kluczy do użytku produkcyjnego:
 
     $ symfony console secrets:generate-keys --env=prod
 
-.. note:
+.. note::
 
     On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
 

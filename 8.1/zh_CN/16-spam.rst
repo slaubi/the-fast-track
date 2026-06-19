@@ -251,7 +251,7 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
     $ APP_ENV=prod symfony console secrets:generate-keys
 
-.. note:
+.. note::
 
     The ``APP_ENV=prod`` part before the command allows setting the ``APP_ENV`` environment variable only for this command. On Windows, use ``--env=prod`` instead: ``symfony console secrets:generate-keys --env=prod``
 

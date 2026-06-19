@@ -251,7 +251,7 @@
 
     $ APP_ENV=prod symfony console secrets:generate-keys
 
-.. note:
+.. note::
 
     The ``APP_ENV=prod`` part before the command allows setting the ``APP_ENV`` environment variable only for this command. On Windows, use ``--env=prod`` instead: ``symfony console secrets:generate-keys --env=prod``
 
