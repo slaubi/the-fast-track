@@ -192,7 +192,7 @@
      services:
          # default configuration for services in *this* file
 
-يتم تعريف متغيرات بيئة العمل ``SYMFONY_DEFAULT_ROUTE_HOST`` و ``SYMFONY_DEFAULT_ROUTE_PORT`` محلياً عن استخدام شاشة اوامر سيمفوني (symfony CLI) ويتم تحديده بناءاً علي الاعدادات علي سيمفوني كلاود SymfonyCloud.
+يتم تعريف متغيرات بيئة العمل ``SYMFONY_DEFAULT_ROUTE_HOST`` و ``SYMFONY_DEFAULT_ROUTE_PORT`` محلياً عن استخدام شاشة اوامر سيمفوني (symfony CLI) ويتم تحديده بناءاً علي الاعدادات علي سيمفوني كلاود Upsun.
 
 توصيل مسار (Route) إلى جهاز تحكم (Controller)
 -----------------------------------------------------------------
@@ -420,18 +420,18 @@
 
 تعمل هذه التأكيدات عندما يتم إرسال رسائل البريد الإلكتروني بشكل متزامن أو غير متزامن.
 
-إرسال رسائل بريد الكتروني علي سحابية سيمفوني (SymfonyCloud)
+إرسال رسائل بريد الكتروني علي سحابية سيمفوني (Upsun)
 -------------------------------------------------------------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Emails
-    single: SymfonyCloud;Mailer
-    single: SymfonyCloud;SMTP
+    single: Upsun;Emails
+    single: Upsun;Mailer
+    single: Upsun;SMTP
     single: Emails
 
-لا يوجد تكوين محدد لـ SymfonyCloud. تأتي جميع الحسابات مع حساب Sendgrid الذي يتم استخدامه تلقائيًا لإرسال رسائل البريد الإلكتروني.
+لا يوجد تكوين محدد لـ Upsun. تأتي جميع الحسابات مع حساب Sendgrid الذي يتم استخدامه تلقائيًا لإرسال رسائل البريد الإلكتروني.
 
-ما زلت بحاجة إلى تحديث تهيئة SymfonyCloud لتضمين ملحق PHP لـ xsl الذي يحتاجه Inky:
+ما زلت بحاجة إلى تحديث تهيئة Upsun لتضمين ملحق PHP لـ xsl الذي يحتاجه Inky:
 
 .. code-block:: diff
     :caption: patch_file

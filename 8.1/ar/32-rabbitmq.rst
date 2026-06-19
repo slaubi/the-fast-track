@@ -94,7 +94,7 @@ RabbitMQ هو وسيط رسائل شائع جدًا يمكنك استخدامه 
 ---------------
 
 .. index::
-    single: SymfonyCloud;RabbitMQ
+    single: Upsun;RabbitMQ
     single: RabbitMQ
 
 يمكن إضافة RabbitMQ إلى خوادم الإنتاج عن طريق إضافته إلى قائمة الخدمات:
@@ -139,7 +139,7 @@ RabbitMQ هو وسيط رسائل شائع جدًا يمكنك استخدامه 
          locations:
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;open:remote:rabbitmq

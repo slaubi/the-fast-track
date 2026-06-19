@@ -228,12 +228,12 @@
 --------------------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Secret
-    single: SymfonyCloud;Environment Variable
+    single: Upsun;Secret
+    single: Upsun;Environment Variable
     single: Secret
     single: Symfony CLI;var:set
 
-للإنتاج ، يضمن SymfonyCloud إعداد *متغيرات البيئة الحساسة*:
+للإنتاج ، يضمن Upsun إعداد *متغيرات البيئة الحساسة*:
 
 .. code-block:: terminal
     :class: ignore
@@ -265,7 +265,7 @@
 
     $ APP_ENV=prod symfony console secrets:set AKISMET_KEY
 
-الخطوة الأخيرة هي إرسال مفتاح فك التشفير إلى SymfonyCloud عن طريق تعيين متغير حساس:
+الخطوة الأخيرة هي إرسال مفتاح فك التشفير إلى Upsun عن طريق تعيين متغير حساس:
 
 .. code-block:: terminal
 

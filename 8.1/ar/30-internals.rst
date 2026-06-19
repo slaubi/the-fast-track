@@ -128,7 +128,7 @@
     single: Composer;Autoloader
     single: Autoloader
 
-حيث أنها لا تأتي من؟ تقوم SymfonyCloud ببعض التحسينات عند نشر تطبيق Symfony مثل تحسين التحميل التلقائي للملحن (`` - --optimize-autoloader --apcu-autoloader --classmap-Authoritative``). كما أنه يحسن متغيرات البيئة المعرفة في ملف `` .env`` (لتجنب تحليل الملف لكل طلب) عن طريق إنشاء ملف `` .env.local.prod`` php``:
+حيث أنها لا تأتي من؟ تقوم Upsun ببعض التحسينات عند نشر تطبيق Symfony مثل تحسين التحميل التلقائي للملحن (`` - --optimize-autoloader --apcu-autoloader --classmap-Authoritative``). كما أنه يحسن متغيرات البيئة المعرفة في ملف `` .env`` (لتجنب تحليل الملف لكل طلب) عن طريق إنشاء ملف `` .env.local.prod`` php``:
 
 .. code-block:: terminal
     :class: ignore

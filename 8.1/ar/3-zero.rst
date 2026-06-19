@@ -135,31 +135,31 @@
 ------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Initialization
+    single: Upsun;Initialization
 
 ماذا عن رفع المنتج النهائي للنشر؟ أعرف، ليس لدينا حتى الأن صفحة HTML مناسبة للترحيب بالمستخدمين. لكن إذا تمكنا من عرض صورة "تحت الإنشاء" على خادم المنتج النهائي فستكون خطوة عظيمة للأمام. وأنت تعرف المقولة: *انشر عملك بشكل مبكر ودائم*
 
 يمكنك استضافة هذا التطبيق على أي مقدم خدمة يدعم PHP .. مما يعني تقريبا كل مقدمي الخدمات. افحص بعض الأشياء رغم ذلك: نريد أخر نسخة من PHP وإمكانية استضافة خدمات مثل قاعدة بيانات، قائمة الانتظار queue، وبعض الخدمات الأخرى.
 
-لقد حددت اختياري، سيكون `SymfonyCloud <https://symfony.com/cloud>`_. تقدم كل ما نحتاجه و تساعد في تمويل عملية التطوير الخاصة بسيمفوني.
+لقد حددت اختياري، سيكون `Upsun <https://symfony.com/cloud>`_. تقدم كل ما نحتاجه و تساعد في تمويل عملية التطوير الخاصة بسيمفوني.
 
 .. index::
     single: Symfony CLI;project:init
 
-سطر الأوامر ``symfony`` لديه دعم متضمن لخدمة SymfonyCloud. دعنا نقوم بتجهيز مشروع لـ  SymfonyCloud:
+سطر الأوامر ``symfony`` لديه دعم متضمن لخدمة Upsun. دعنا نقوم بتجهيز مشروع لـ  Upsun:
 
 .. code-block:: terminal
 
     $ symfony project:init
 
-هذا الأمر يقوم بانشاء عدة ملفات تحتاجها خدمة SymfonyCloud, مثل ``.symfony/services.yaml``, ``.symfony/routes.yaml`` و ``.symfony.cloud.yaml``.
+هذا الأمر يقوم بانشاء عدة ملفات تحتاجها خدمة Upsun, مثل ``.symfony/services.yaml``, ``.symfony/routes.yaml`` و ``.symfony.cloud.yaml``.
 
 قم باضافتهم إلى Git و سجل التزامك بالكود commit:
 
 .. code-block:: terminal
 
     $ git add .
-    $ git commit -m"Add SymfonyCloud configuration"
+    $ git commit -m"Add Upsun configuration"
 
 .. note::
 
@@ -174,7 +174,7 @@
 
 وقت نشر المنتج؟
 
-أنشيء مشروع SymfonyCloud جديد:
+أنشيء مشروع Upsun جديد:
 
 .. code-block:: terminal
 
@@ -184,7 +184,7 @@
 
 * المرة الأولى التي تنفذ فيها هذا الأمر، قم بعمل المصادقة مع اعدادات دخولك لـ SymfonyConnect اذا لم تقم بذلك من قبل.
 
-* تقوم بتوفير مشروع جديد على SymfonyCloud (تحصل على 7 أيام *مجانا* على أي مشروع تطوير جديد).
+* تقوم بتوفير مشروع جديد على Upsun (تحصل على 7 أيام *مجانا* على أي مشروع تطوير جديد).
 
 بعد ذلك، ارفع deploy:
 
@@ -206,14 +206,14 @@
 
 يجب أن تحصل على 404، لكن التصفح إلى ``/images/under-construction.gif`` سيكشف عن ما تم عمله.
 
-لاحظ أنك لم تحصل على صفحة سيمفوني الافتراضية الجميلة على SymfonyCloud. لماذا؟ ستتعلم قريبا أن سيمفوني تدعم أكثر من بيئة وقامت SymfonyCloud بشكل تلقائي بالنشر مستخدمة بيئة المنتج النهائي.
+لاحظ أنك لم تحصل على صفحة سيمفوني الافتراضية الجميلة على Upsun. لماذا؟ ستتعلم قريبا أن سيمفوني تدعم أكثر من بيئة وقامت Upsun بشكل تلقائي بالنشر مستخدمة بيئة المنتج النهائي.
 
 .. index::
     single: Symfony CLI;project:delete
 
 .. tip::
 
-    اذا أردت حذف المشروع من SymfonyCloud، يمكنك استخدام أمر ``project:delete``.
+    اذا أردت حذف المشروع من Upsun، يمكنك استخدام أمر ``project:delete``.
 
 .. sidebar:: الذهاب أبعد من ذلك
 
@@ -223,4 +223,4 @@
 
     * `خادم الويب المحلي الخاص بسيمفوني <https://symfony.com/doc/current/setup/symfony_server.html>`_؛
 
-    * `وثائق دعم SymfonyCloud <https://symfony.com/doc/cloud>`_.
+    * `وثائق دعم Upsun <https://symfony.com/doc/cloud>`_.

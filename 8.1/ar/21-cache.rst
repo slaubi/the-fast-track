@@ -549,12 +549,12 @@ You can manually remove all the HTTP cache by removing the
 
 .. index::
     single: HTTP Cache;Varnish
-    single: SymfonyCloud;Varnish
+    single: Upsun;Varnish
     single: Varnish
 
 لا تستخدم وكيل Symfony العكسي في الإنتاج. من الأفضل دائمًا استخدام وكيل عكسي مثل Varnish على البنية التحتية أو CDN تجاري.
 
-أضف Varnish إلى خدمات SymfonyCloud:
+أضف Varnish إلى خدمات Upsun:
 
 .. code-block:: diff
     :caption: patch_file
@@ -576,7 +576,7 @@ You can manually remove all the HTTP cache by removing the
     +            path: config.vcl
 
 .. index::
-    single: SymfonyCloud;Routes
+    single: Upsun;Routes
 
 استخدم Varnish كنقطة دخول رئيسية في المسارات:
 
@@ -667,6 +667,6 @@ You can manually remove all the HTTP cache by removing the
 
     * `نموذج التحقق من ذاكرة التخزين المؤقت HTTP <https://symfony.com/doc/current/http_cache/validation.html>`_؛
 
-    * `HTTP Cache في SymfonyCloud <https://symfony.com/doc/master/cloud/cookbooks/cache.html>`_.
+    * `HTTP Cache في Upsun <https://symfony.com/doc/master/cloud/cookbooks/cache.html>`_.
 
 .. _`CDN`: https://en.wikipedia.org/wiki/Content_delivery_network

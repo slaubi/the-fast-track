@@ -14,7 +14,7 @@
     single: Session;Redis
     single: Redis
     single: Docker;Redis
-    single: SymfonyCloud;Redis
+    single: Upsun;Redis
 
 .. code-block:: diff
     :caption: patch_file

@@ -561,14 +561,14 @@
 
     $ symfony console messenger:failed:retry
 
-تشغيل العمال علي SymfonyCloud
+تشغيل العمال علي Upsun
 -------------------------------------------
 
 .. index::
-    single: SymfonyCloud;Workers
+    single: Upsun;Workers
     single: Workers
 
-لإستهلاك الرسائل من PostgreSQL، نحتاج الي تشغيل امر ال ``messenger:consume`` بشكل مستمر. علي SymfonyCloud، هذا هو دور *العامل*:
+لإستهلاك الرسائل من PostgreSQL، نحتاج الي تشغيل امر ال ``messenger:consume`` بشكل مستمر. علي Upsun، هذا هو دور *العامل*:
 
 .. code-block:: diff
     :caption: patch_file
@@ -585,7 +585,7 @@
     +        commands:
     +            start: symfony console messenger:consume async -vv --time-limit=3600 --memory-limit=128M
 
-مثل سيمفوني CLI، يقوم SymfonyCloud يقوم بادارة عمليات إعادة التشغيل والسجلات.
+مثل سيمفوني CLI، يقوم Upsun يقوم بادارة عمليات إعادة التشغيل والسجلات.
 
 .. index::
     single: Symfony CLI;logs

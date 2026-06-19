@@ -122,13 +122,13 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
     لا تتصل أبدًا بـ ``docker-compose down`` إذا كنت لا تريد أن تفقد البيانات. أو النسخ الاحتياطي أولاً.
 
-إضافة PostgreSQL إلى SymfonyCloud
+إضافة PostgreSQL إلى Upsun
 -----------------------------------------
 
 .. index::
-    single: SymfonyCloud;PostgreSQL
+    single: Upsun;PostgreSQL
 
-بالنسبة للبنية التحتية للإنتاج على SymfonyCloud ، يجب إضافة خدمة مثل PostgreSQL في ملف ``.symfony/services.yaml`` الفارغ حاليا:
+بالنسبة للبنية التحتية للإنتاج على Upsun ، يجب إضافة خدمة مثل PostgreSQL في ملف ``.symfony/services.yaml`` الفارغ حاليا:
 
 .. code-block:: yaml
     :caption: .symfony/services.yaml
@@ -188,7 +188,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
          locations:
              "/":
 
-قم بتنفيذ هذه التغييرات ثم أعد النشر إلى SymfonyCloud:
+قم بتنفيذ هذه التغييرات ثم أعد النشر إلى Upsun:
 
 .. code-block:: terminal
     :class: ignore
@@ -197,27 +197,27 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
     $ git commit -m'Configuring the database'
     $ symfony deploy
 
-الوصول إلى قاعدة بيانات SymfonyCloud
+الوصول إلى قاعدة بيانات Upsun
 --------------------------------------------------------
 
-يعمل PostgreSQL الآن محليًا عبر Docker وفي الإنتاج على SymfonyCloud.
+يعمل PostgreSQL الآن محليًا عبر Docker وفي الإنتاج على Upsun.
 
 كما رأينا للتو ، فإن تشغيل ``symfony run psql`` يتصل تلقائيًا بقاعدة البيانات التي يستضيفها Docker بفضل متغيرات البيئة المتاحة بواسطة ``symfony run``.
 
 .. index::
-    single: SymfonyCloud;Tunnel
+    single: Upsun;Tunnel
     single: Symfony CLI;tunnel:open
     single: Symfony CLI;tunnel:close
     single: Symfony CLI;run psql
 
-إذا كنت ترغب في الاتصال بـ PostgreSQL المستضافة على حاويات الإنتاج ، يمكنك فتح نفق SSH بين الجهاز المحلي والبنية الأساسية لــ SymfonyCloud:
+إذا كنت ترغب في الاتصال بـ PostgreSQL المستضافة على حاويات الإنتاج ، يمكنك فتح نفق SSH بين الجهاز المحلي والبنية الأساسية لــ Upsun:
 
 .. code-block:: terminal
     :class: ignore
 
     $ symfony tunnel:open --expose-env-vars
 
-بشكل افتراضي ، لا يتم كشف خدمات SymfonyCloud كمتغيرات بيئة على الجهاز المحلي. يجب عليك القيام بذلك بشكل صريح باستخدام علامة ``--expose-env-vars``. لماذا ؟ الاتصال بقاعدة بيانات الإنتاج عملية خطيرة. يمكنك العبث مع بيانات *حقيقية*. الزامية طلب العلامة هو ما يؤكد أن هذا *بالفعل* ما تريد القيام به.
+بشكل افتراضي ، لا يتم كشف خدمات Upsun كمتغيرات بيئة على الجهاز المحلي. يجب عليك القيام بذلك بشكل صريح باستخدام علامة ``--expose-env-vars``. لماذا ؟ الاتصال بقاعدة بيانات الإنتاج عملية خطيرة. يمكنك العبث مع بيانات *حقيقية*. الزامية طلب العلامة هو ما يؤكد أن هذا *بالفعل* ما تريد القيام به.
 
 الآن ، قم بالاتصال بقاعدة بيانات PostgreSQL عن بعد من خلال ``symfony run psql`` كما كان من قبل:
 
@@ -241,10 +241,10 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 ----------------------------------
 
 .. index::
-    single: SymfonyCloud;Environment Variables
+    single: Upsun;Environment Variables
     single: Symfony CLI;var:export
 
-يعمل Docker Compose و SymfonyCloud بسلاسة مع Symfony بفضل متغيرات البيئة.
+يعمل Docker Compose و Upsun بسلاسة مع Symfony بفضل متغيرات البيئة.
 
 تحقق من كل متغيرات البيئة المكشوفة بواسطة ``symfony`` عن طريق تنفيذ ``symfony var:export``:
 
@@ -262,7 +262,7 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 
 تتم قراءة متغيرات البيئة ``PG*`` بواسطة الأداة المساعدة ``psql``. ماذا عن الآخرين؟
 
-عندما يكون النفق مفتوحًا لـ SymfonyCloud مع مجموعة العلامة ``--expose-env-vars``، فإن الأمر ``var:export`` يُرجع متغيرات البيئة البعيدة:
+عندما يكون النفق مفتوحًا لـ Upsun مع مجموعة العلامة ``--expose-env-vars``، فإن الأمر ``var:export`` يُرجع متغيرات البيئة البعيدة:
 
 .. code-block:: terminal
     :class: ignore
@@ -274,13 +274,13 @@ PostgreSQL هو محرك قاعدة البيانات الذي سنستعمل.
 وصف البنية التحتية الخاصة بك
 ----------------------------------------------------
 
-ربما لم تكن قد أدركت ذلك حتى الآن ، لكن تخزين البنية التحتية في ملفات بجانب الكود يساعد كثيرًا.Docker و SymfonyCloud يستخدمان ملفات التكوين لوصف البنية التحتية للمشروع. عندما تحتاج ميزة جديدة إلى خدمة إضافية ، فإن التغييرات البرمجية وتغييرات البنية التحتية هي جزء من نفس التصحيح.
+ربما لم تكن قد أدركت ذلك حتى الآن ، لكن تخزين البنية التحتية في ملفات بجانب الكود يساعد كثيرًا.Docker و Upsun يستخدمان ملفات التكوين لوصف البنية التحتية للمشروع. عندما تحتاج ميزة جديدة إلى خدمة إضافية ، فإن التغييرات البرمجية وتغييرات البنية التحتية هي جزء من نفس التصحيح.
 
 .. sidebar:: الذهاب أبعد من ذلك
 
-    * `خدمات SymfonyCloud <https://symfony.com/doc/master/cloud/services/intro.html#available-services>`_؛
+    * `خدمات Upsun <https://symfony.com/doc/master/cloud/services/intro.html#available-services>`_؛
 
-    * `tunnel  SymfonyCloud  <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_؛
+    * `tunnel  Upsun  <https://symfony.com/doc/current/cloud/services/intro.html#connecting-to-a-service>`_؛
 
     * `PostgreSQL وثائق دعم <https://www.postgresql.org/docs/>`_؛
 

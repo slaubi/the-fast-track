@@ -50,7 +50,7 @@
 
 التبديل من بيئة عمل الي أخري يمكن ان يتم عن طريق تغير متغير بيئة العمل ``APP_ENV``.
 
-عندما تقوم بالنشر على SymfonyCloud، يتم تغير بيئة العمل (المخزنة في ``APP_ENV``) بشكل تلقائي الي ``prod``.
+عندما تقوم بالنشر على Upsun، يتم تغير بيئة العمل (المخزنة في ``APP_ENV``) بشكل تلقائي الي ``prod``.
 
 إدارة إعدادات بيئة عمل
 -----------------------------------------
@@ -217,8 +217,8 @@
 ------------------------------------
 
 .. index::
-    single: SymfonyCloud;Remote Logs
-    single: SymfonyCloud;SSH
+    single: Upsun;Remote Logs
+    single: Upsun;SSH
     single: Symfony CLI;logs
     single: Symfony CLI;ssh
 
