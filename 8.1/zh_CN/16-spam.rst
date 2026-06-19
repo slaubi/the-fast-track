@@ -106,9 +106,9 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
      [OK] Secret "OPENAI_API_KEY" encrypted in "config/secrets/dev/"; you can commit it.
 
-因为这是我们第一次运行这个命令，它会在 ``config/secret/dev/`` 目录下生成两个秘钥。然后它会把 ``OPENAI_API_KEY`` 这个机密信息也存放在同样的目录下。
+因为这是我们第一次运行这个命令，它会在 ``config/secrets/dev/`` 目录下生成两个秘钥。然后它会把 ``OPENAI_API_KEY`` 这个机密信息也存放在同样的目录下。
 
-对于开发环境下的机密信息，你可以决定来把这个保险箱以及 ``config/secret/dev/`` 目录下生成的秘钥提交到代码仓库。
+对于开发环境下的机密信息，你可以决定来把这个保险箱以及 ``config/secrets/dev/`` 目录下生成的秘钥提交到代码仓库。
 
 可以通过设置同名的环境变量来覆盖机密信息的值。
 
@@ -359,9 +359,10 @@ Symfony 可以管理用来存储许多机密信息的 *保险箱*，这可以取
 
     $ symfony console secrets:generate-keys --env=prod
 
-.. note:
+.. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    在 Linux 和类似的操作系统上，使用 ``APP_RUNTIME_ENV=prod`` 代替
+    ``--env=prod``，这样可以避免为 ``prod`` 环境编译应用：
 
     .. code-block:: terminal
         :class: ignore
