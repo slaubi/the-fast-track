@@ -359,9 +359,9 @@ Genereer eerst een keypair voor gebruik in productie:
 
     $ symfony console secrets:generate-keys --env=prod
 
-.. note:
+.. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    Gebruik op Linux en vergelijkbare besturingssystemen ``APP_RUNTIME_ENV=prod`` in plaats van ``--env=prod``, omdat dit voorkomt dat de applicatie voor de ``prod``-omgeving wordt gecompileerd:
 
     .. code-block:: terminal
         :class: ignore

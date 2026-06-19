@@ -359,9 +359,9 @@ Symfony AI підтримує багатьох постачальників мо
 
     $ symfony console secrets:generate-keys --env=prod
 
-.. note:
+.. note::
 
-    On Linux and similiar OSes, use ``APP_RUNTIME_ENV=prod`` instead of ``--env=prod`` as this avoids compiling the application for the ``prod`` environment:
+    У Linux та подібних операційних системах використовуйте ``APP_RUNTIME_ENV=prod`` замість ``--env=prod``, оскільки це дозволяє уникнути компіляції застосунку для середовища ``prod``:
 
     .. code-block:: terminal
         :class: ignore
