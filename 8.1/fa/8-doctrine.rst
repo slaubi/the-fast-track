@@ -463,7 +463,7 @@ Migrateکردن پایگاه‌داده
 
     $ symfony console make:migration
 
-Notice the generated file name in the output (a name that looks like ``migrations/Version20191019083640.php``):
+به نام فایل تولیدشده در خروجی توجه کنید (نامی شبیه ``migrations/Version20191019083640.php``):
 
 .. code-block:: php
     :caption: migrations/Version20191019083640.php
