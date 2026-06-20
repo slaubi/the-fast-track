@@ -261,7 +261,7 @@ Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>
 
 *Наслаждайтесь иллюстрацией Томаса... и книгой!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas
 

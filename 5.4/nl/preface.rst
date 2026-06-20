@@ -261,7 +261,7 @@ Steun van je familie betekent alles. Veel dank aan mijn vrouw, **Hélène** en m
 
 *Geniet van Thomas zijn illustratie... en van het boek!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas
 

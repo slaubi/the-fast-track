@@ -264,6 +264,6 @@ Le soutien de sa famille est important. Un grand merci à ma femme, **Hélène**
 
 *Profitez de l'illustration de Thomas... et du livre !*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

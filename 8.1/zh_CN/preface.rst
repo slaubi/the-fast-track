@@ -256,6 +256,6 @@ Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>
 
 *好好欣赏 Thomas 画的示意图……还有这本书！*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

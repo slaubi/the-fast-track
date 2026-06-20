@@ -258,6 +258,6 @@ Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>
 
 *Thomasのイラストレーションを楽しんでください。もちろん書籍も！*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

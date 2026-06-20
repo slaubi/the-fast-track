@@ -17,6 +17,11 @@ Files are stored as `<version>/<locale>/*.rst`, for example
 Code, directives, references, and file paths are identical across all locales of
 a given version; only the prose and the heading underlines differ.
 
+Images and screenshots are identical across locales, so each translation symlinks
+its `images/` and `screenshots/` directories to the English ones instead of
+duplicating them. The only localized image is the preface illustration, which
+each locale keeps as a real file under its own `illustrations/` directory.
+
 ## Contributing
 
 We welcome contributions, but please read the rules below before opening a pull

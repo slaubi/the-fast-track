@@ -94,6 +94,6 @@
 
 *Насолоджуйтесь ілюстрацією Thomas... і книгою!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

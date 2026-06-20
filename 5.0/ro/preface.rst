@@ -261,6 +261,6 @@ Sprijinul familiei este totul. O mulțumire mare soției mele, **Hélène** și 
 
 *Bucurați-vă de ilustrația lui Thomas... și de carte!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

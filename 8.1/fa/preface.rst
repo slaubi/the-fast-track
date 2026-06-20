@@ -259,6 +259,6 @@ Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>
 
 *از نقاشی توماس لذت ببرید ... و از کتاب!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

@@ -259,6 +259,6 @@ Guys & Gals at SymfonyCasts `https://symfonycasts.com <https://symfonycasts.com>
 
 *أستمتع بتوضيح توماس... والكتاب!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas
