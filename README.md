@@ -65,4 +65,5 @@ longer maintained once a newer one is released.
 
 ## License
 
-The book content is copyrighted. See the book's website for details.
+This work, including the code samples, is licensed under a [Creative Commons
+BY-NC-SA 4.0 license](https://creativecommons.org/licenses/by-nc-sa/4.0/).
