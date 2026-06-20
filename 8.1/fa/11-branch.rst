@@ -181,7 +181,7 @@
 .. index::
     single: Symfony CLI;cloud:env:debug
 
-در صورت بروز مشکل ، ممکن است بخواهید به محیط Symfony `` dev`` بروید:
+در صورت بروز مشکل، ممکن است بخواهید به محیط ``dev`` سیمفونی بروید:
 
 .. code-block:: terminal
 
