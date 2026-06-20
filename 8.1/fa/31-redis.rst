@@ -67,7 +67,7 @@
     -        handler_id: '%env(resolve:DATABASE_URL)%'
     +        handler_id: '%env(REDIS_URL)%'
 
-زیبا نیست؟
+*زیبا* نیست؟
 
 برای راه‌اندازی سرویس Redis، Docker را «بازراه‌اندازی» کنید:
 
