@@ -4,10 +4,6 @@ This repository holds the content of the book [Symfony: The Fast
 Track](https://symfony.com/book), the official guide to building a Symfony
 application step by step.
 
-It contains the book text only. The tooling that turns this content into HTML
-and PDF, translates it, and runs its code as a test suite lives in a separate
-repository.
-
 ## How the content is organized
 
 Files are stored as `<version>/<locale>/*.rst`, for example
@@ -25,6 +21,9 @@ a given version; only the prose and the heading underlines differ.
 
 We welcome contributions, but please read the rules below before opening a pull
 request. They keep the book consistent and reviewable across all languages.
+
+All contributions must target the latest book version. Older versions are no
+longer maintained once a newer one is released.
 
 ### Improving translations
 
