@@ -264,6 +264,6 @@ Il sostegno da parte della famiglia è tutto. Un grande ringraziamento a mia mog
 
 *Godetevi l'illustrazione di Thomas... e il libro!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

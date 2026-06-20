@@ -97,6 +97,6 @@ El apoyo familiar lo es todo. Un gran agradecimiento a mi esposa, **Hélène** y
 
 *Disfruta de la ilustración de Thomas... ¡y del libro!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas

@@ -263,7 +263,7 @@ Unterstützung durch die Familie ist das A und O. Ein großes Dankeschön an mei
 
 *Genieße Thomas' Illustration... und das Buch!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas
 

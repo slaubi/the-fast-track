@@ -254,6 +254,6 @@ Family support is everything. A big thank-you to my wife, **Hélène** and my tw
 
 *Enjoy Thomas's illustration... and the book!*
 
-.. figure:: images/illus-thomas.png
+.. figure:: illustrations/illus-thomas.png
     :align: center
     :figclass: thomas
