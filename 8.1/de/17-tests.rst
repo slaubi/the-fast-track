@@ -69,7 +69,7 @@ Lasse uns einen ersten Test für den Fall schreiben, dass die API einen Fehler z
          }
      }
 
-Die ``InMemoryPlatform``-Klasse implementiert das Plattform-Interface, ohne irgendeine externe API aufzurufen. Mit einem Callable kann sie jedes Verhalten simulieren, auch Fehler. Wir umhüllen sie mit einem echten ``Agent``, damit die Logik des ``SpamChecker`` wirklich getestet wird.
+Die ``InMemoryPlatform``-Klasse implementiert das Plattform-Interface, ohne irgendeine externe API aufzurufen. Mit einem Callable kann sie jedes Verhalten simulieren, auch Fehler. Wir umschließen sie mit einem echten ``Agent``, damit die Logik des ``SpamChecker`` wirklich getestet wird.
 
 Wenn das Modell ausgefallen ist, müssen Kommentare zu einem menschlichen Moderator gelangen: Der erwartete Score ist ``1``.
 
@@ -279,7 +279,7 @@ Generiere eine Factory für jede Entity, die die Tests brauchen:
 
     $ symfony console make:factory Comment
 
-Eine Factory beschreibt, wie eine gültige Entity gebaut wird: Für jedes Property wird dank der Faker-Bibliothek ein Standardwert generiert. Ein über eine Factory erstelltes Objekt wird auch persistiert. Passe die Standardwerte der Konferenzen an, damit sie realistischer sind:
+Eine Factory beschreibt, wie eine gültige Entity gebaut wird: Für jedes Property wird dank der Faker-Bibliothek ein Standardwert generiert. Ein über eine Factory erstelltes Objekt wird auch gespeichert. Passe die Standardwerte der Konferenzen an, damit sie realistischer sind:
 
 .. code-block:: diff
     :caption: patch_file
@@ -323,7 +323,7 @@ Mache dasselbe für die Kommentare:
          ];
      }
 
-Beachte den Standardwert von ``conference``: Wird ein Kommentar ohne explizite Konferenz erstellt, erstellt Foundry eine im Vorbeigehen.
+Beachte den Standardwert von ``conference``: Wird ein Kommentar ohne explizite Konferenz erstellt, erstellt Foundry auch eine Konferenz.
 
 Eine Website in Funktionalen Tests crawlen
 ------------------------------------------

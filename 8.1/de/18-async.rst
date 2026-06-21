@@ -451,7 +451,7 @@ Um einen Worker zu stoppen, stoppe den Webserver oder beende die PID, die durch 
 Fehlgeschlagene Messages erneut verarbeiten
 -------------------------------------------
 
-Was passiert, wenn die Datenbank während des Verarbeitens einer Message ausgefallen ist? Es gibt keine Auswirkungen für Personen, die Kommentare abgeben, aber die Nachricht schlägt fehl und Spam wird nicht überprüft.
+Was passiert, wenn die Datenbank während des Verarbeitens einer Message ausgefallen ist? Es gibt keine Auswirkungen für Personen, die Kommentare abgeben, aber die Message schlägt fehl und Spam wird nicht überprüft.
 
 Der Messenger hat einen Wiederholungsmechanismus, wenn beim Verarbeiten einer Message ein Fehler auftritt:
 
