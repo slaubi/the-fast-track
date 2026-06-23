@@ -124,7 +124,7 @@ Datenbank-Daten exportieren und importieren
     single: Symfony CLI;run pg_dump
     single: Symfony CLI;run psql
 
-Verwende ``pg_dump`` um did Datenbank-Daten zu exportieren:
+Verwende ``pg_dump`` um die Datenbank-Daten zu exportieren:
 
 .. code-block:: terminal
     :class: ignore
