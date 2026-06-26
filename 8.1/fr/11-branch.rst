@@ -48,8 +48,7 @@ Les étapes nécessaires pour le faire sont classiques :
 
 #. Écrivez et/ou mettez à jour le code si nécessaire ;
 
-#. Update the PHP configuration if needed (like adding the PostgreSQL PHP
-   extension);
+#. Mettez à jour la configuration PHP si nécessaire (comme l'ajout de l'extension PHP PostgreSQL) ;
 
 #. Mettez à jour l'infrastructure pour Docker et Upsun si nécessaire (ajoutez le service PostgreSQL) ;
 
