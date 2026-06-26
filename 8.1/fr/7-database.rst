@@ -91,7 +91,7 @@ S'il n'y a pas de conteneurs en cours d'exécution ou si la colonne ``State`` n'
 Accéder à la base de données locale
 --------------------------------------
 
-Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker compose ps``).
+L'utilitaire en ligne de commande ``psql`` peut s'avérer utile de temps en temps. Mais vous devez vous souvenir des identifiants et du nom de la base de données. Moins évident, vous devez aussi connaître le port local sur lequel la base de données tourne sur l'hôte. Docker choisit un port aléatoire afin que vous puissiez travailler sur plusieurs projets utilisant PostgreSQL en même temps (le port local fait partie de la sortie de ``docker compose ps``).
 
 Si vous utilisez ``psql`` avec la commande ``symfony``, vous n'avez pas besoin de vous souvenir de quoi que ce soit.
 
