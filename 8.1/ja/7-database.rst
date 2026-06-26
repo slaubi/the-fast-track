@@ -91,7 +91,7 @@ Docker Compose をバックグラウンドで起動します (``-d``):
 ローカルのデータベースへのアクセス
 ---------------------------------------------------
 
-Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker compose ps``).
 
 Symfony CLI で ``psql`` を実行する際は、何も覚えておく必要はありません。
 

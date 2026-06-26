@@ -91,7 +91,7 @@ Si no hay contenedores en marcha o si en la columna ``State`` no dice ``Up``, co
 Accediendo a la base de datos local
 -----------------------------------
 
-Usar la utilidad de línea de comandos de ``psql`` puede resultar útil de vez en cuando, pero necesitas recordar las credenciales y el nombre de la base de datos. Menos obvio aún es que también necesitas saber el puerto local en el que se ejecuta la base de datos en el host. Docker elige un puerto aleatorio para que puedas trabajar en más de un proyecto usando PostgreSQL al mismo tiempo (el puerto local es parte de la salida de ``docker-compose ps``).
+Usar la utilidad de línea de comandos de ``psql`` puede resultar útil de vez en cuando, pero necesitas recordar las credenciales y el nombre de la base de datos. Menos obvio aún es que también necesitas saber el puerto local en el que se ejecuta la base de datos en el host. Docker elige un puerto aleatorio para que puedas trabajar en más de un proyecto usando PostgreSQL al mismo tiempo (el puerto local es parte de la salida de ``docker compose ps``).
 
 Si se ejecuta ``psql`` a través de la interfaz de línea de comandos de Symfony, no necesitas recordar nada.
 

@@ -91,7 +91,7 @@ Als er geen containers draaien of als de ``State`` kolom niet ``Up`` bevat, beki
 De lokale database benaderen
 ----------------------------
 
-Het ``psql`` command-line hulpprogramma kan soms van pas komen. Je moet dan wel de inloggegevens en de naam van de database onthouden. Maar iets minder handig is dat je ook moet weten op welke lokale poort de database op de host draait. Docker kiest hiervoor namelijk een willekeurige poort, zodat je aan meer dan één project tegelijk met PostgreSQL kunt werken (de lokale poort kan je vinden via het ``docker-compose ps`` commando).
+Het ``psql`` command-line hulpprogramma kan soms van pas komen. Je moet dan wel de inloggegevens en de naam van de database onthouden. Maar iets minder handig is dat je ook moet weten op welke lokale poort de database op de host draait. Docker kiest hiervoor namelijk een willekeurige poort, zodat je aan meer dan één project tegelijk met PostgreSQL kunt werken (de lokale poort kan je vinden via het ``docker compose ps`` commando).
 
 Als je ``psql`` via de Symfony CLI draait, hoef je niets te onthouden.
 

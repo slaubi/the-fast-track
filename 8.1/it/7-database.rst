@@ -91,7 +91,7 @@ Se non ci sono container in esecuzione o se la  colonna ``State`` non mostra la 
 Accesso al database locale
 --------------------------
 
-Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker-compose ps``).
+Using the ``psql`` command-line utility might prove useful from time to time. But you need to remember the credentials and the database name. Less obvious, you also need to know the local port the database runs on the host. Docker chooses a random port so that you can work on more than one project using PostgreSQL at the same time (the local port is part of the output of ``docker compose ps``).
 
 Se si esegue ``psql`` tramite la CLI di Symfony, non è necessario ricordare nulla.
 
