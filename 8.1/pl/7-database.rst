@@ -91,7 +91,7 @@ Jeśli nie ma uruchomionych kontenerów lub jeśli kolumna ``State`` nie ma wart
 Dostęp do lokalnej bazy danych
 -------------------------------
 
-Korzystanie z narzędzia ``psql`` w linii poleceń może okazać się przydatne od czasu do czasu, ale musisz wtedy znać dane uwierzytelniające i nazwę bazy danych a także, co jest mniej oczywiste, lokalny port, na którym działa baza danych. Docker wybiera losowy port, dzięki czemu możesz pracować nad więcej niż jednym projektem korzystającym z serwera PostgreSQL w tym samym czasie (port lokalny jest częścią danych wyjściowych ``docker-compose ps``).
+Korzystanie z narzędzia ``psql`` w linii poleceń może okazać się przydatne od czasu do czasu, ale musisz wtedy znać dane uwierzytelniające i nazwę bazy danych a także, co jest mniej oczywiste, lokalny port, na którym działa baza danych. Docker wybiera losowy port, dzięki czemu możesz pracować nad więcej niż jednym projektem korzystającym z serwera PostgreSQL w tym samym czasie (port lokalny jest częścią danych wyjściowych ``docker compose ps``).
 
 Jeśli uruchomisz ``psql`` za pomocą Symfony CLI nie musisz o niczym pamiętać.
 
